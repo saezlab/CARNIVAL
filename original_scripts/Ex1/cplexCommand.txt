@@ -1,0 +1,4 @@
+read testFile.lp
+optimize
+write results1.txt sol
+quit
