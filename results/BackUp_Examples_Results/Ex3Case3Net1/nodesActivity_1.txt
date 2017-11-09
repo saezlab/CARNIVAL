@@ -1,0 +1,7 @@
+Nodes	Activity
+G1	0
+G2	0
+P1	-1
+TF1	0
+P2	-1
+TF2	0

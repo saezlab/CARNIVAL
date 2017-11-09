@@ -24,6 +24,7 @@ source("src/write_constraints_objFunction.R")
 source("src/write_constraints_objFunction_all.R")
 source("src/write_objective_function.R")
 source("src/write_objective_function_all.R")
+source("src/writeLPFile.R")
 
 
 

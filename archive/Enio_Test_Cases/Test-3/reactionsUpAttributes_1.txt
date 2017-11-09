@@ -1,0 +1,7 @@
+variable	exp	value
+xb19_1	ReactionUp P1=TF1	1
+xb20_1	ReactionUp TF1=G1	0
+xb21_1	ReactionUp TF1=G2	0
+xb22_1	ReactionUp P2=TF2	0
+xb23_1	ReactionUp TF2=G2	0
+xb24_1	ReactionUp TF2=G1	0

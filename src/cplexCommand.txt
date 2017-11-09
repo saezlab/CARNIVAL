@@ -1,0 +1,4 @@
+read testFile.lp
+optimize
+write results_cplex.txt sol
+quit
