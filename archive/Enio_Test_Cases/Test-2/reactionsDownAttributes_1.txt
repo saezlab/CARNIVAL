@@ -1,0 +1,3 @@
+variable	exp	value
+xb12_1	ReactionDown P=TF	0
+xb13_1	ReactionDown TF=G	0

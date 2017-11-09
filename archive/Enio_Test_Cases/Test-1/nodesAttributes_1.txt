@@ -1,0 +1,3 @@
+variable	exp	value
+xb2_1	Species TF	0
+xb1_1	Species P	-1

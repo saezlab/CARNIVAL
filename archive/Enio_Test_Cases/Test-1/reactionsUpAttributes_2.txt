@@ -1,0 +1,2 @@
+variable	exp	value
+xb7_2	ReactionUp P=TF	1

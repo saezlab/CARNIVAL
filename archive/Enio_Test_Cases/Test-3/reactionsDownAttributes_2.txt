@@ -1,0 +1,7 @@
+variable	exp	value
+xb25_2	ReactionDown P1=TF1	1
+xb26_2	ReactionDown TF1=G1	1
+xb27_2	ReactionDown TF1=G2	1
+xb28_2	ReactionDown P2=TF2	0
+xb29_2	ReactionDown TF2=G2	0
+xb30_2	ReactionDown TF2=G1	0

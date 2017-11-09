@@ -1,0 +1,4 @@
+variable	exp	value
+xb4_1	SpeciesUP P	0
+xb5_1	SpeciesUP TF	0
+xb6_1	SpeciesUP G	0
