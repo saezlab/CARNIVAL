@@ -6,9 +6,9 @@ rm(list=ls()) # clear environment
 cat("\014") # clear screen
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example    <- 1 # c(1,2,3)
+Example    <- 1 # c(1,2,3,4)
 Case_study <- 1 # c(1,2,3,4) or c(c(1,2),c(1,4))
-Network    <- 1 # c(1,2) == c("positive","negative") / c("pos-pos","pos-neg") / c("same_sign","inverse_sign")
+Network    <- 1 # c(1,2) == c("positive","negative") / c("pos-pos","pos-neg") / c("same_sign","inverse_sign") / c("pos_FB","neg_FB")
 Result_dir <- "Ex1Case1Net1" # specify a name for result directory; if NULL, then date and time will be used by default
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
@@ -47,6 +47,11 @@ if (Example == 1) {
   network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,".sif",sep=""), sep = "\t", header = FALSE)
   inputs       <- read.table(paste("examples/Ex3/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
   measurements <- read_delim(paste("examples/Ex3/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
+} else if (Example == 4) {
+  if (Network == 1) { Net <- "PosFB" } else if (Network == 2) { Net <- "NegFB" }
+  network      <- read.table(paste("examples/Ex4/network_Ex4_",Net,".sif",sep=""), sep = "\t", header = FALSE)
+  inputs       <- read.table(paste("examples/Ex4/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
+  measurements <- read_delim(paste("examples/Ex4/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
 }
 
 # Input processing
