@@ -1,0 +1,6 @@
+mipgap	0.1
+timelimit	14400.000000
+number_solutions	1
+measurements_file	measurements_Case7.txt
+inputs_file	inputs_Case7.txt
+network_file	network_Ex4_PosFB_plusOne.sif
