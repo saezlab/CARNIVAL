@@ -1,6 +1,7 @@
 # CRILPR compilation of R-functions
 
 source("src/all_constraints.R")
+source("src/all_constraints_wLoop.R")
 source("src/buildDataMatrix.R")
 source("src/create_variables.R")
 source("src/create_variables_all.R")
@@ -22,9 +23,8 @@ source("src/write_constraints_7.R")
 source("src/write_constraints_8.R")
 source("src/write_constraints_objFunction.R")
 source("src/write_constraints_objFunction_all.R")
+source("src/write_dist_variables.R")
+source("src/write_loop_constraints.R")
 source("src/write_objective_function.R")
 source("src/write_objective_function_all.R")
 source("src/writeLPFile.R")
-
-
-

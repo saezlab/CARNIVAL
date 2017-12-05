@@ -1,4 +1,0 @@
-Nodes	Activity
-C	0
-A	-1
-B	0
