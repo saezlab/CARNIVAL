@@ -59,7 +59,7 @@ write_loop_constraints <- function(variables=variables, distVariables=distVariab
     
   }
 
-  return(c(constraints1, constraints2, constraints3, constraints4, constraints5))
-  # return(c(constraints3, constraints4, constraints5))
+  # return(c(constraints1, constraints2, constraints3, constraints4, constraints5))
+  return(c(constraints3, constraints4, constraints5))
 
 }

@@ -1,3 +1,4 @@
+##
 write_constraints_8 <- function(variables=variables, inputs=inputs){
   
   constraints8 <- list()
@@ -61,6 +62,44 @@ write_constraints_8 <- function(variables=variables, inputs=inputs){
     }
     
   }
+  
+  if(nrow(inputsZero) > 0){
+    
+    for(i in 1:nrow(inputsZero)){
+      
+      ss <- variables[[inputsZero[i, 1]]]$variables[which(variables[[inputsZero[i, 1]]]$exp==paste0("Species ", colnames(inputs)[inputsZero[i, 2]], " in experiment ", inputsZero[i, 1]))]
+      
+      constraints8[[inputsZero[i, 1]]] <- c(constraints8[[inputsZero[i, 1]]], paste0(ss, " = 0"))
+      
+    }
+    
+  }
+  
+  if(nrow(inputsUp) > 0){
+    
+    for(i in 1:nrow(inputsUp)){
+      
+      ss <- variables[[inputsUp[i, 1]]]$variables[which(variables[[inputsUp[i, 1]]]$exp==paste0("Species ", colnames(inputs)[inputsUp[i, 2]], " in experiment ", inputsUp[i, 1]))]
+      
+      constraints8[[inputsUp[i, 1]]] <- c(constraints8[[inputsUp[i, 1]]], paste0(ss, " = 1"))
+      
+    }
+    
+  }
+  
+  if(nrow(inputsDown) > 0){
+    
+    for(i in 1:nrow(inputsDown)){
+      
+      ss <- variables[[inputsDown[i, 1]]]$variables[which(variables[[inputsDown[i, 1]]]$exp==paste0("Species ", colnames(inputs)[inputsDown[i, 2]], " in experiment ", inputsDown[i, 1]))]
+      
+      constraints8[[inputsDown[i, 1]]] <- c(constraints8[[inputsDown[i, 1]]], paste0(ss, " = -1"))
+      
+    }
+    
+  }
+  
+  print(constraints8)
   
   return(unlist(constraints8))
   
