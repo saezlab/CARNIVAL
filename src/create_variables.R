@@ -86,23 +86,27 @@ create_variables <- function(pknList=pknList, dataMatrix = dataMatrix, condition
   ##
   #Introducing distance variables
   
-  dist <- list()
-  for(i in 1:ncol(inputs)){
-    
-    dist[[length(dist)+1]] <- paste0("dist_", sapply(strsplit(expNodesALL[idxNodes], split = " "), "[[", 2), "_", colnames(inputs)[i])
-    
-  }
+  dist <- paste0("dist_", sapply(strsplit(expNodesALL[idxNodes], split = " "), "[[", 2))
+  
+  distExp <- paste0("Distance ", sapply(strsplit(expNodesALL[idxNodes], split = " "), "[[", 2))
+  
+  ##
+  #Introducing B variables
+  
+  varB <- paste0("B_", sapply(strsplit(expNodes, split = " "),function(x) x[2]), "_", conditionIDX)
+  expVarB <- paste0("B variable for ", sapply(strsplit(expNodes, split = " "),function(x) x[2]), " in experiment ", conditionIDX)
   
   
   # output
-  res <- list(variables=c(nodesALL, edgesALL), exp=c(expNodesALL, expEdgesALL), idxNodes=idxNodes, idxNodesUp=idxNodesUp, 
+  res <- list(variables=c(nodesALL, edgesALL, varB, dist), exp=c(expNodesALL, expEdgesALL, expVarB, distExp), idxNodes=idxNodes, idxNodesUp=idxNodesUp, 
               idxNodesDown=idxNodesDown, idxEdgesUp=idxEdgesUp, idxEdgesDown=idxEdgesDown, signs=signs,
               reactionSource=reactionSource, reactionTarget=reactionTarget, expNodesReduced=expNodesReduced,
               expNodesReducedUpSource=expNodesReducedUpSource, expNodesReducedDownSource=expNodesReducedDownSource,
               expNodesReducedDownTarget=expNodesReducedDownTarget, expNodesReducedUpTarget=expNodesReducedUpTarget,
               expEdgesReducedSource=expEdgesReducedSource, expEdgesReducedTarget=expEdgesReducedTarget,
               idxExperimentNodes=idxExperimentNodes, idxExperimentEdges=idxExperimentEdges,
-              expNodesReducedUp=expNodesReducedUp, expNodesReducedDown=expNodesReducedDown, dist=dist)
+              expNodesReducedUp=expNodesReducedUp, expNodesReducedDown=expNodesReducedDown, idxB = (length(c(nodesALL, edgesALL))+1):(length(c(nodesALL, edgesALL))+length(varB)), 
+              idxDist = (length(c(nodesALL, edgesALL))+length(varB)+1):(length(c(nodesALL, edgesALL))+length(varB)+length(dist)))
   
   return(res)
   

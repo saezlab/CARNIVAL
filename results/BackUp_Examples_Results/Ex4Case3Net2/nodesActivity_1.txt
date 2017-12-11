@@ -1,0 +1,5 @@
+Nodes	Activity
+C	0
+S	0
+A	0
+B	0

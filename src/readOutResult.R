@@ -13,9 +13,10 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   
   for(i in 1:length(cplexSolution$variables)){
     
-    if(strsplit(cplexSolution$variables[[i]][1], split = "_")[[1]][2] == as.character(conditionIDX) && !grepl(pattern = "absDiff", x = cplexSolution$variables[[i]][1])){
+    if(strsplit(cplexSolution$variables[[i]][1], split = "_")[[1]][2] == as.character(conditionIDX) && !grepl(pattern = "absDiff", x = cplexSolution$variables[[i]][1]) &&
+       length(which(variables[[conditionIDX]]$variables%in%cplexSolution$variables[[i]][1])) > 0){
       
-      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="Species"){
+      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables%in%cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="Species"){
         
         nodes <- rbind(nodes, c(cplexSolution$variables[[i]][1], 
                                 gsub(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], pattern = paste0(" in experiment ", conditionIDX), replacement = ""),
@@ -148,6 +149,11 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   } else {
     sif <- sif[-1,] # simply remove an empty line
   }
+  
+  if (nrow(sif)==0) {
+    sif <- NULL
+  }
+  
   
   nodesAct <- nodes[,-1]
   colnames(nodesAct) <- c("Nodes","Activity")

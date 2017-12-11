@@ -1,6 +1,7 @@
 write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alpha=alpha, beta=beta){
   
   measured <- gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dsID], pattern = "DS:", replacement = "")
+  measured <- c(measured, gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dnID], pattern = "DN:", replacement = ""))
   
   idxMeasured <- c()
   for(i in 1:length(measured)){
