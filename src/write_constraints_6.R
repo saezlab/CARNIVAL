@@ -1,4 +1,4 @@
-write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix) {
+write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix, inputs = inputs) {
   
   constraints6 <- c()
   
@@ -29,6 +29,14 @@ write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix) {
       }
       
       constraints6 <- c(constraints6, paste0(pp1, pp2, " <= 0"))
+      
+    }
+    
+    for(j in 1:ncol(inputs)){
+      
+      cc <- paste0(variables[[i]]$variables[which(variables[[i]]$exp==paste0("SpeciesUP ", colnames(inputs)[j], " in experiment ", i))], " <= 0")
+      
+      constraints6 <- c(constraints6, cc)
       
     }
     
