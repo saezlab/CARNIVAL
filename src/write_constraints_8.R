@@ -1,5 +1,5 @@
 ##
-write_constraints_8 <- function(variables=variables, inputs=inputs){
+write_constraints_8 <- function(variables=variables, inputs=inputs, pknList=pknList){
   
   constraints8 <- c()
   
@@ -22,10 +22,13 @@ write_constraints_8 <- function(variables=variables, inputs=inputs){
     constraints8 <- c(constraints8, cc)
     
     ##
-    kk <- paste0("Species ", colnames(inputs), " in experiment ", ii)
-    cc <- paste0(variables[[ii]]$variables[variables[[ii]]$idxNodes[which(variables[[ii]]$exp[variables[[ii]]$idxNodes] %in% kk)]], " - ", 
-                 variables[[ii]]$variables[variables[[ii]]$idxB[which(variables[[ii]]$exp[variables[[ii]]$idxNodes] %in% kk)]], " = 0")
-    constraints8 <- c(constraints8, cc)
+    # kk <- paste0("Species ", colnames(inputs), " in experiment ", ii)
+    if (length(setdiff(as.character(pknList[, 1]), as.character(pknList[, 3])))>0) {
+      kk <- paste0("Species ", setdiff(as.character(pknList[, 1]), as.character(pknList[, 3])), " in experiment ", ii)
+      cc <- paste0(variables[[ii]]$variables[variables[[ii]]$idxNodes[which(variables[[ii]]$exp[variables[[ii]]$idxNodes] %in% kk)]], " - ", 
+                   variables[[ii]]$variables[variables[[ii]]$idxB[which(variables[[ii]]$exp[variables[[ii]]$idxNodes] %in% kk)]], " = 0")
+      constraints8 <- c(constraints8, cc)
+    }
     
   }
   

@@ -14,6 +14,7 @@ write_boundaries <- function(variables=variables, oF=oF){
     bounds <- c(bounds, paste0("\t", "-1 <= ", variables[[i]]$variables[variables[[i]]$idxB], " <= 1"))
     bounds <- c(bounds, paste0("\t", "0 <= ", variables[[i]]$variables[variables[[i]]$idxDist], " <= ", M))
     bounds <- c(bounds, paste0("\t", "0 <= ", unique(strsplit(oF, split = " ")[[1]][grep(pattern = "absDiff", x = strsplit(oF, split = " ")[[1]])]), " <= 2"))
+    bounds <- c(bounds, paste0("\t", "0 <= ", variables[[i]]$variables[variables[[i]]$idxDist], " <= ", M))
     
   }
   
