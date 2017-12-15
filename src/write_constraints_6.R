@@ -15,7 +15,11 @@ write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix, inpu
     idx1 <- which(rowSums(adj)==0)
     idx2 <- setdiff(1:nrow(adj), idx1)
     
-    constraints6 <- c(constraints6, paste0(variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("SpeciesUP ", rownames(adj)[idx1], " in experiment ", ii))], " <= 0"))
+    if(length(idx1)>0){
+      
+      constraints6 <- c(constraints6, paste0(variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("SpeciesUP ", rownames(adj)[idx1], " in experiment ", ii))], " <= 0"))
+      
+    }
     
     for(i in 1:length(idx2)){
       

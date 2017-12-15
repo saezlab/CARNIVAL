@@ -1,7 +1,7 @@
 write_constraints_7 <- function(variables=variables, dataMatrix=dataMatrix, inputs = inputs) {
   
   library(igraph)
-  constraints6 <- c()
+  constraints7 <- c()
   
   for(ii in 1:length(variables)){
     
@@ -15,18 +15,20 @@ write_constraints_7 <- function(variables=variables, dataMatrix=dataMatrix, inpu
     idx1 <- which(rowSums(adj)==0)
     idx2 <- setdiff(1:nrow(adj), idx1)
     
-    constraints6 <- c(constraints6, paste0(variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("SpeciesDown ", rownames(adj)[idx1], " in experiment ", ii))], " <= 0"))
+    if (length(idx1)>0) {
+      constraints7 <- c(constraints7, paste0(variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("SpeciesDown ", rownames(adj)[idx1], " in experiment ", ii))], " <= 0"))
+    } 
     
     for(i in 1:length(idx2)){
       
       cc <- paste0(variables[[ii]]$variables[which(variables[[ii]]$exp==paste0("SpeciesDown ", rownames(adj)[idx2[i]], " in experiment ", ii))], 
                    paste(paste0(" - ", variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("ReactionDown ", colnames(adj)[which(adj[idx2[i], ]>0)], "=", rownames(adj)[idx2[i]], " in experiment ", ii))]), collapse = ""), " <= 0")
       
-      constraints6 <- c(constraints6, cc)
+      constraints7 <- c(constraints7, cc)
       
     }
     
   }
   
-  return(constraints6)
+  return(constraints7)
 }

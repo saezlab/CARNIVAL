@@ -43,17 +43,18 @@ write_loop_constraints <- function(variables=variables, pknList=pknList, inputs=
     cc <- paste0(M, " ", reactionsDown, " + dist_", sapply(strsplit(kk, split = "="), function(x) x[1]), " - dist_", sapply(strsplit(kk, split = "="), function(x) x[2]), " <= ", M-1)
     constraints2 <- c(constraints2, cc)
     
-    ##
-    species <-  unique(c(pknList[, 1], pknList[, 3]))
-    
-    cc <- paste0("dist_", species, " >= 0")
-    constraints3 <- c(constraints3, cc)
-    
-    cc <- paste0("dist_", species, " <= ", M-1)
-    constraints4 <- c(constraints4, cc)
+    # ##
+    # species <-  unique(c(pknList[, 1], pknList[, 3]))
+    # 
+    # cc <- paste0("dist_", species, " >= 0")
+    # constraints3 <- c(constraints3, cc)
+    # 
+    # cc <- paste0("dist_", species, " <= ", M-1)
+    # constraints4 <- c(constraints4, cc)
     
   }
   
-  return(c(constraints1, constraints2, constraints3, constraints4))
+  # return(c(constraints1, constraints2, constraints3, constraints4))
+  return(c(constraints1, constraints2))
   
 }
