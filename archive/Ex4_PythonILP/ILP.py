@@ -305,8 +305,10 @@ m.write("main.lp")
 m.solve()
 m.populate_solution_pool()
 
+
 # parse the solution
 nsol=m.solution.pool.get_num()
+
 
 #get values
 sol=[ m.solution.pool.get_values(i) for i in range(nsol)]
@@ -316,45 +318,67 @@ Bs=[ [sol[i][j] for j in list(Bdic.itervalues()) ] for i in range(nsol) ]
 ups=[ [sol[i][j] for j in list(updic.itervalues()) ] for i in range(nsol) ]
 ums=[ [sol[i][j] for j in list(umdic.itervalues()) ] for i in range(nsol) ]
 
+xps=[ [sol[i][j] for j in list(xpdic.itervalues()) ] for i in range(nsol) ]
+xms=[ [sol[i][j] for j in list(xmdic.itervalues()) ] for i in range(nsol) ]
+
+
 xnames=list(xdic.iterkeys())
 #ynames=list(ydic.iterkeys())
 Bnames=list(Bdic.iterkeys())
 upnames=list(updic.iterkeys())
 umnames=list(umdic.iterkeys())
 
+xpnames=list(xpdic.iterkeys())
+xmnames=list(xmdic.iterkeys())
 
-#f=open("output.txt", 'w')
-#for i in range(len(xs[0])):
-#    f.write("%s\t" %xnames[i])
-#    for j in range(nsol):
-#        f.write("%f\t" %xs[j][i])
-#    f.write("\n")
-#
+
+
+f=open("output.txt", 'w')
+for i in range(len(xs[0])):
+    f.write("%s\t" %xnames[i])
+    for j in range(nsol):
+        f.write("%f\t" %xs[j][i])
+    f.write("\n")
+
 #for i in range(len(ys[0])):
 #    f.write("%s\t" %ynames[i])
 #    for j in range(nsol):
 #        f.write("%f\t" %ys[j][i])
 #    f.write("\n")
-#
-#for i in range(len(Bs[0])):
-#    f.write("%s\t" %Bnames[i])
-#    for j in range(nsol):
-#        f.write("%f\t" %Bs[j][i])
-#    f.write("\n")
-#    
-#for i in range(len(ups[0])):
-#    f.write("%s\t" %upnames[i])
-#    for j in range(nsol):
-#        f.write("%f\t" %ups[j][i])
-#    f.write("\n")
-#
-#for i in range(len(ums[0])):
-#    f.write("%s\t" %umnames[i])
-#    for j in range(nsol):
-#        f.write("%f\t" %ums[j][i])
-#    f.write("\n")
-#
-#f.close()
+
+for i in range(len(Bs[0])):
+    f.write("%s\t" %Bnames[i])
+    for j in range(nsol):
+        f.write("%f\t" %Bs[j][i])
+    f.write("\n")
+    
+for i in range(len(ups[0])):
+    f.write("%s\t" %upnames[i])
+    for j in range(nsol):
+        f.write("%f\t" %ups[j][i])
+    f.write("\n")
+
+for i in range(len(ums[0])):
+    f.write("%s\t" %umnames[i])
+    for j in range(nsol):
+        f.write("%f\t" %ums[j][i])
+    f.write("\n")
+
+for i in range(len(xps[0])):
+    f.write("%s\t" %xpnames[i])
+    for j in range(nsol):
+        f.write("%f\t" %xps[j][i])
+    f.write("\n")
+
+for i in range(len(xms[0])):
+    f.write("%s\t" %xmnames[i])
+    for j in range(nsol):
+        f.write("%f\t" %xms[j][i])
+    f.write("\n")
+
+
+
+f.close()
 
 # calculate average xs and us
 
