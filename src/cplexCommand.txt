@@ -1,4 +1,5 @@
 read testFile.lp
+set mip tolerances mipgap 0.1
 optimize
 write results_cplex.txt sol
 quit
