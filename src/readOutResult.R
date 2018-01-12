@@ -3,74 +3,53 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   cplexSolutionData <- xmlParse(cplexSolutionFileName)
   cplexSolution <- xmlToList(cplexSolutionData)
   
-  sif <- matrix(data = "", nrow = 1, ncol = 3)
-  nodes <- matrix(data = "", nrow = 1, ncol = 3)
-  nodesUp <- matrix(data = "", nrow = 1, ncol = 3)
-  nodesDown <- matrix(data = "", nrow = 1, ncol = 3)
-  edgesUp <- matrix(data = "", nrow = 1, ncol = 3)
-  edgesDown <- matrix(data = "", nrow = 1, ncol = 3)
+  x1 = lapply(cplexSolution[[4]], "[[", 1)
+  vars <- unlist(x1)
+  
+  idxNodes <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodes])
+  idxNodesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodesUp])
+  idxNodesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodesDown])
+  idxEdgesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesUp])
+  idxEdgesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesDown])
+  
+  x2 = lapply(cplexSolution[[4]], "[[", 3)
+  values <- unlist(x2)
+  
+  valNodes <- values[idxNodes]
+  valNodesDown <- values[idxNodesDown]
+  valNodesUp <- values[idxNodesUp]
+  valEdgesUp <- values[idxEdgesUp]
+  valEdgesDown <- values[idxEdgesDown]
+  
+  # expNodes <- gsub(variables[[conditionIDX]]$exp[idxNodes], pattern = paste0(" in experiment ", conditionIDX), replacement = "")
+  # expNodesDown <- gsub(variables[[conditionIDX]]$exp[idxNodesDown], pattern = paste0(" in experiment ", conditionIDX), replacement = "")
+  # expNodesUp <- gsub(variables[[conditionIDX]]$exp[idxNodesUp], pattern = paste0(" in experiment ", conditionIDX), replacement = "")
+  # expEdgesUp <- gsub(variables[[conditionIDX]]$exp[idxEdgesUp], pattern = paste0(" in experiment ", conditionIDX), replacement = "")
+  
+  sif <- matrix(data = "", nrow = 1, ncol = 2)
+  nodes <- matrix(data = "", nrow = length(idxNodes), ncol = 2)
+  nodesUp <- matrix(data = "", nrow = length(idxNodesUp), ncol = 2)
+  nodesDown <- matrix(data = "", nrow = length(idxNodesDown), ncol = 2)
+  edgesUp <- matrix(data = "", nrow = length(idxEdgesUp), ncol = 2)
+  edgesDown <- matrix(data = "", nrow = length(idxEdgesDown), ncol = 2)
   ctrl <- 0
   
-  for(i in 1:length(cplexSolution$variables)){
-    
-    if(strsplit(cplexSolution$variables[[i]][1], split = "_")[[1]][2] == as.character(conditionIDX) && !grepl(pattern = "absDiff", x = cplexSolution$variables[[i]][1]) &&
-       length(which(variables[[conditionIDX]]$variables%in%cplexSolution$variables[[i]][1])) > 0){
-      
-      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables%in%cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="Species"){
-        
-        nodes <- rbind(nodes, c(cplexSolution$variables[[i]][1], 
-                                gsub(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], pattern = paste0(" in experiment ", conditionIDX), replacement = ""),
-                                as.numeric(cplexSolution$variables[[i]][3])))
-        
-      }
-      
-      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="SpeciesUP"){
-        
-        nodesUp <- rbind(nodesUp, c(cplexSolution$variables[[i]][1], 
-                                    gsub(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], pattern = paste0(" in experiment ", conditionIDX), replacement = ""),
-                                    as.numeric(cplexSolution$variables[[i]][3])))
-        
-      }
-      
-      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="SpeciesDown"){
-        
-        nodesDown <- rbind(nodesDown, c(cplexSolution$variables[[i]][1], 
-                                        gsub(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], pattern = paste0(" in experiment ", conditionIDX), replacement = ""),
-                                        as.numeric(cplexSolution$variables[[i]][3])))
-        
-      }
-      
-      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="ReactionUp"){
-        
-        edgesUp <- rbind(edgesUp, c(cplexSolution$variables[[i]][1], 
-                                    gsub(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], pattern = paste0(" in experiment ", conditionIDX), replacement = ""),
-                                    as.numeric(cplexSolution$variables[[i]][3])))
-        
-      }
-      
-      if(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], split = " ")[[1]][1]=="ReactionDown"){
-        
-        edgesDown <- rbind(edgesDown, c(cplexSolution$variables[[i]][1], 
-                                        gsub(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==cplexSolution$variables[[i]][1])], pattern = paste0(" in experiment ", conditionIDX), replacement = ""),
-                                        as.numeric(cplexSolution$variables[[i]][3])))
-        
-      }
-      
-    }
-    
-  }
+  colnames(nodes) <- c("variable", "value")
+  colnames(nodesUp) <- c("variable", "value")
+  colnames(nodesDown) <- c("variable", "value")
+  colnames(edgesUp) <- c("variable", "value")
+  colnames(edgesDown) <- c("variable", "value")
   
-  colnames(nodes) <- c("variable", "node", "value")
-  colnames(nodesUp) <- c("variable", "node", "value")
-  colnames(nodesDown) <- c("variable", "node", "value")
-  colnames(edgesUp) <- c("variable", "edge", "value")
-  colnames(edgesDown) <- c("variable", "edge", "value")
-  
-  nodes <- nodes[-1, ]
-  nodesUp <- nodesUp[-1, ]
-  nodesDown <- nodesDown[-1, ]
-  edgesUp <- edgesUp[-1, ]
-  edgesDown <- edgesDown[-1, ]
+  nodes[, 1] <- vars[idxNodes]
+  nodes[, 2] <- values[idxNodes]
+  nodesUp[, 1] <- vars[idxNodesUp]
+  nodesUp[, 2] <- values[idxNodesUp]
+  nodesDown[, 1] <- vars[idxNodesDown]
+  nodesDown[, 2] <- values[idxNodesDown]
+  edgesUp[, 1] <- vars[idxEdgesUp]
+  edgesUp[, 2] <- values[idxEdgesUp]
+  edgesDown[, 1] <- vars[idxEdgesDown]
+  edgesDown[, 2] <- values[idxEdgesDown]
   
   if(class(edgesDown) != "matrix"){
     
@@ -84,54 +63,57 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
     
   }
   
-  nodes[, 2] <- unlist(strsplit(nodes[, 2], split = " "))[c(FALSE, TRUE)]
-  nodesDown[, 2] <- unlist(strsplit(nodesDown[, 2], split = " "))[c(FALSE, TRUE)]
-  nodesUp[, 2] <- unlist(strsplit(nodesUp[, 2], split = " "))[c(FALSE, TRUE)]
-  edgesDown[, 2] <- unlist(strsplit(edgesDown[, 2], split = " "))[c(FALSE, TRUE)]
-  edgesUp[, 2] <- unlist(strsplit(edgesUp[, 2], split = " "))[c(FALSE, TRUE)]
-
+  # nodes[, 2] <- unlist(strsplit(nodes[, 2], split = " "))[c(FALSE, TRUE)]
+  # nodesDown[, 2] <- unlist(strsplit(nodesDown[, 2], split = " "))[c(FALSE, TRUE)]
+  # nodesUp[, 2] <- unlist(strsplit(nodesUp[, 2], split = " "))[c(FALSE, TRUE)]
+  # edgesDown[, 2] <- unlist(strsplit(edgesDown[, 2], split = " "))[c(FALSE, TRUE)]
+  # edgesUp[, 2] <- unlist(strsplit(edgesUp[, 2], split = " "))[c(FALSE, TRUE)]
+  
+  pknList <- as.matrix(pknList)
   sif <- matrix(data = "", nrow = 1, ncol = 3)
-  kk1 <- as.numeric(which(edgesUp[, 3] == 1))
+  colnames(sif) <- colnames(pknList)
+  kk1 <- as.numeric(which(edgesUp[, 2] == 1))
   if(length(kk1) > 0){
     
     for(i in 1:length(kk1)){
       
-      ss <- strsplit(gsub(pattern = "ReactionUp ", replacement = "", x = edgesUp[kk1[i], 2]), split = "=")[[1]][1]
-      tt <- strsplit(gsub(pattern = "ReactionUp ", replacement = "", x = edgesUp[kk1[i], 2]), split = "=")[[1]][2]
+      ss <- strsplit(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==edgesUp[kk1[i], 1])], split = " ")[[1]][2], split = "=")[[1]][1]
+      tt <- strsplit(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==edgesUp[kk1[i], 1])], split = " ")[[1]][2], split = "=")[[1]][2]
       
-      # if((nodes[which(nodes[, 2]==paste0("Species ", ss)), 3] != "0") && (nodes[which(nodes[, 2]==paste0("Species ", tt)), 3] != "0")){
+      # if((as.numeric(edgesUp[which(edgesUp[, 2]==paste0(ss, "=", tt)), 2])==as.numeric(nodesUp[which(nodesUp[, 2]==tt), 2]))){
       #   
       #   sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
       #   
       # }
       
-      if((as.numeric(edgesUp[which(edgesUp[, 2]==paste0(ss, "=", tt)), 3])==as.numeric(nodesUp[which(nodesUp[, 2]==tt), 3]))){
+      if(as.numeric(edgesUp[kk1[i], 2])==as.numeric(nodes[which(nodes[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("Species ", tt, " in experiment ", conditionIDX))]), 2])){
         
-        sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
+        # sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
+        sif <- rbind(sif, pknList[kk1[i], ])
         
       }
       
     }
     
   }
-  kk1 <- as.numeric(which(edgesDown[, 3] == 1))
+  kk1 <- as.numeric(which(edgesDown[, 2] == 1))
   if(length(kk1) > 0){
     
     for(i in 1:length(kk1)){
       
-      ss <- strsplit(gsub(pattern = "ReactionDown ", replacement = "", x = edgesDown[kk1[i], 2]), split = "=")[[1]][1]
-      tt <- strsplit(gsub(pattern = "ReactionDown ", replacement = "", x = edgesDown[kk1[i], 2]), split = "=")[[1]][2]
+      ss <- strsplit(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==edgesDown[kk1[i], 1])], split = " ")[[1]][2], split = "=")[[1]][1]
+      tt <- strsplit(strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==edgesDown[kk1[i], 1])], split = " ")[[1]][2], split = "=")[[1]][2]
       
-      # if((nodes[which(nodes[, 2]==paste0("Species ", ss)), 3] != "0") && (nodes[which(nodes[, 2]==paste0("Species ", tt)), 3] != "0") && 
-      #    (nodes[which(nodes[, 2]==paste0("Species ", ss)), 3] != "-0") && (nodes[which(nodes[, 2]==paste0("Species ", tt)), 3] != "-0")){
+      # if((as.numeric(edgesDown[which(edgesDown[, 2]==paste0(ss, "=", tt)), 2])==as.numeric(nodesDown[which(nodesDown[, 2]==tt), 2]))){
       #   
       #   sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
       #   
       # }
       
-      if((as.numeric(edgesDown[which(edgesDown[, 2]==paste0(ss, "=", tt)), 3])==as.numeric(nodesDown[which(nodesDown[, 2]==tt), 3]))){
+      if(as.numeric(edgesDown[kk1[i], 2])==(-1)*as.numeric(nodes[which(nodes[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("Species ", tt, " in experiment ", conditionIDX))]), 2])){
         
-        sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
+        # sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
+        sif <- rbind(sif, pknList[kk1[i], ])
         
       }
       
@@ -155,11 +137,24 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   }
   
   
-  nodesAct <- nodes[,-1]
+  nodesAct <- nodes
   colnames(nodesAct) <- c("Nodes","Activity")
   
+  idx <- intersect(which(nodesAct[, 2] != "0"), which(nodesAct[, 2] != "-0"))
+  
+  activityNodes <- matrix(data = , nrow = length(idx), ncol = 2)
+  activityNodes[, 2] <- nodesAct[idx, 2]
+  # activityNodes[, 1] <- unlist(lapply(strsplit(variables[[conditionIDX]]$exp[match(variables[[conditionIDX]]$variables, nodesAct[idx, 1])], split = " "), "[[", 2))
+  for(i in 1:length(idx)){
+    
+    activityNodes[i, 1] <- strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==nodesAct[idx[i], 1])], split = " ")[[1]][2]
+    
+  }
+  colnames(activityNodes) <- c("Nodes","Activity")
+  
   write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".sif"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  write.table(x = nodesAct, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  # write.table(x = nodesAct, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   
   if (Export_all) {
     write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
@@ -168,5 +163,7 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
     write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   }
-
+  
+  return(sif)
+  
 }
