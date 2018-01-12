@@ -152,7 +152,7 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   }
   colnames(activityNodes) <- c("Nodes","Activity")
   
-  write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".sif"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   # write.table(x = nodesAct, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   
