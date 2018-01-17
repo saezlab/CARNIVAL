@@ -96,6 +96,12 @@ create_variables <- function(pknList=pknList, dataMatrix = dataMatrix, condition
   varB <- paste0("B_", sapply(strsplit(expNodes, split = " "),function(x) x[2]), "_", conditionIDX)
   expVarB <- paste0("B variable for ", sapply(strsplit(expNodes, split = " "),function(x) x[2]), " in experiment ", conditionIDX)
   
+  ##
+  #Matching table for u variables
+  uTable <- matrix(data = , nrow = length(idxEdgesUp), ncol = 2)
+  uTable[, 1] <- c(nodesALL, edgesALL, varB, dist)[idxEdgesUp]
+  uTable[, 2] <- c(nodesALL, edgesALL, varB, dist)[idxEdgesDown]
+  
   
   # output
   res <- list(variables=c(nodesALL, edgesALL, varB, dist), exp=c(expNodesALL, expEdgesALL, expVarB, distExp), idxNodes=idxNodes, idxNodesUp=idxNodesUp, 
@@ -106,7 +112,7 @@ create_variables <- function(pknList=pknList, dataMatrix = dataMatrix, condition
               expEdgesReducedSource=expEdgesReducedSource, expEdgesReducedTarget=expEdgesReducedTarget,
               idxExperimentNodes=idxExperimentNodes, idxExperimentEdges=idxExperimentEdges,
               expNodesReducedUp=expNodesReducedUp, expNodesReducedDown=expNodesReducedDown, idxB = (length(c(nodesALL, edgesALL))+1):(length(c(nodesALL, edgesALL))+length(varB)), 
-              idxDist = (length(c(nodesALL, edgesALL))+length(varB)+1):(length(c(nodesALL, edgesALL))+length(varB)+length(dist)))
+              idxDist = (length(c(nodesALL, edgesALL))+length(varB)+1):(length(c(nodesALL, edgesALL))+length(varB)+length(dist)), uTable = uTable)
   
   return(res)
   
