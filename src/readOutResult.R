@@ -142,19 +142,34 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   
   idx <- intersect(which(nodesAct[, 2] != "0"), which(nodesAct[, 2] != "-0"))
   
-  activityNodes <- matrix(data = , nrow = length(idx), ncol = 2)
-  activityNodes[, 2] <- nodesAct[idx, 2]
-  # activityNodes[, 1] <- unlist(lapply(strsplit(variables[[conditionIDX]]$exp[match(variables[[conditionIDX]]$variables, nodesAct[idx, 1])], split = " "), "[[", 2))
-  for(i in 1:length(idx)){
-    
-    activityNodes[i, 1] <- strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==nodesAct[idx[i], 1])], split = " ")[[1]][2]
-    
-  }
-  colnames(activityNodes) <- c("Nodes","Activity")
+  if (length(idx)!=0) {
   
-  write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  # write.table(x = nodesAct, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    activityNodes <- matrix(data = , nrow = length(idx), ncol = 2)
+    activityNodes[, 2] <- nodesAct[idx, 2]
+    # activityNodes[, 1] <- unlist(lapply(strsplit(variables[[conditionIDX]]$exp[match(variables[[conditionIDX]]$variables, nodesAct[idx, 1])], split = " "), "[[", 2))
+    for(i in 1:length(idx)){
+      
+      activityNodes[i, 1] <- strsplit(variables[[conditionIDX]]$exp[which(variables[[conditionIDX]]$variables==nodesAct[idx[i], 1])], split = " ")[[1]][2]
+      
+    }
+    colnames(activityNodes) <- c("Nodes","Activity")
+  
+  } else if (length(idx)==0) {
+    activityNodes = "All node activities are 0"
+  }
+  
+  if (!is.null(sif)) {
+    write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  } else {
+    sif = "Empty network returned"
+    write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+  }
+  
+  if (length(idx)!=0) {
+    write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  } else {
+    write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+  }
   
   if (Export_all) {
     write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
