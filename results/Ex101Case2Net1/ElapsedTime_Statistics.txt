@@ -1,0 +1,28 @@
+Elapsed time statistics
+
+- Writing constrints
+   user  system elapsed 
+ 33.011   7.050  41.036 
+ 
+- ILP optimisation
+Root node processing (before b&c):
+  Real time             =   10.54 sec. (2919.06 ticks)
+Parallel b&c, 4 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =   10.54 sec. (2919.06 ticks)
+
+Solution pool: 7 solutions saved.
+
+MIP - Integer optimal, tolerance (0.1/1e-06):  Objective =  1.2600000000e+03
+Current MIP best bound =  1.1400000000e+03 (gap = 120, 9.52%)
+Solution time =   10.54 sec.  Iterations = 1539  Nodes = 0 (1)
+Deterministic time = 2919.23 ticks  (276.88 ticks/sec)
+
+- SIF writing
+   user  system elapsed 
+ 12.958   0.980  14.629 
+ 
+ 
