@@ -1,0 +1,75 @@
+,Perturbation name,Gene,Perturbation type
+0,betaxolol,ADRB1,-1
+1,betaxolol,ADRB2,-1
+2,IGF2 (insulin-like growth factor II),IGF1R,1
+3,IGF2 (insulin-like growth factor II),IGF2R,1
+4,INS (insulin),INSR,1
+5,IFNG (interferon gamma),IFNGR1,1
+6,IFNG (interferon gamma),IFNGR2,1
+7,carbachol,CHRM1,1
+8,carbachol,CHRM2,1
+9,norethindrone,AR,1
+10,norethindrone,ESR1,1
+11,promethazine,HRH1,-1
+12,promethazine,DRD2,-1
+13,epigallocatechin gallate,,
+14,PROK2 (prokineticin-2),PROKR1,1
+15,PROK2 (prokineticin-2),PROKR2,1
+16,riluzole hydrochloride,,
+17,tetradecanoylphorbol acetate,PRKCA,1
+18,tetradecanoylphorbol acetate,PRKCB,1
+19,tetradecanoylphorbol acetate,PRKCG,1
+20,IL4 (interleukin-4),IL4R,1
+21,sirolimus,MTOR,-1
+22,SHH (sonic hedgehog protein),SHH,1
+23,clomipramine,ADRA1A,-1
+24,clomipramine,ADRA1B,-1
+25,clomipramine,ADRA1D,-1
+26,clomipramine,ADRB1,-1
+27,clomipramine,ADRB2,-1
+28,tolmetin,PTGS2,-1
+29,sodium chloride,,
+30,CNTF (ciliary neurotrophic factor),CNTFR,1
+31,CNTF (ciliary neurotrophic factor),IL6R,1
+32,serotonin hydrochloride,HTR2A,1
+33,bisacodyl,,
+34,TGFA (protransforming growth factor alpha),EGFR,1
+35,EGF (pro-epidermal growth factor),EGFR,1
+36,NTF3 (neurotrophin-3),NTRK3,1
+37,NTF3 (neurotrophin-3),NTRK2,1
+38,HBEGF (proheparin-binding EGF-like growth factor),EGFR,1
+39,taurocholic acid,,
+40,IL11 (interleukin-11),IL11RA,1
+41,IL11 (interleukin-11),IL6ST,1
+42,dexamethasone acetate,NR3C1,1
+43,oxalylglycine,,
+44,CL3L1 (C-C motif chemokine 3-like 1),CCR5,1
+45,clenbuterol,ADRB1,1
+46,clenbuterol,ADRB2,1
+47,pyrilamine,HRH1,-1
+48,forskolin,CREB1,1
+49,benperidol,,
+50,ODN2006,TLR9,1
+51,FGF8 (fibroblast growth factor 8),FGF8,1
+52,FSL1,TLR2,1
+53,PDGFB (platelet-derived growth factor subunit B),PDGFB,1
+54,TNFA (tumor necrosis factor),TNF,1
+55,PolyIC,TLR3,1
+56,WISP3 (WNT1-inducible-signaling pathway protein 3),,
+57,betahistine,HRH1,-1
+58,FLIC_SALTY (flagellin),TLR5,1
+59,C12iEDAP,NOD1,1
+60,cholesterol,,
+61,nisoxetine,ADRA1A,1
+62,nisoxetine,ADRA1B,1
+63,nisoxetine,ADRA1D,1
+64,nisoxetine,ADRB1,1
+65,nisoxetine,ADRB2,1
+66,IL1B (interleukin-1 beta),IL1R1,1
+67,decitabine,DNMT1,-1
+68,formaldehyde,,
+69,hexestrol,ESR1,1
+70,hexestrol,ESR2,1
+71,AREG (amphiregulin),EGFR,1
+72,cisapride,CHRM1,1
+73,cisapride,CHRM2,1
