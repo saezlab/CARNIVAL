@@ -1,6 +1,7 @@
-# Measurement data formatting from csv files
+# Validation scripts
 
-setwd("~/Desktop/CARNIVAL_Validation/Validation/") # set working directory (relative)
+rm(list=ls());cat("\014")
+setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/validation/") # set working directory (relative)
 
 # E-MTAB-2091_PP5min.csv & E-MTAB-2091_PP25min.csv
 PP5min <- read.table("E-MTAB-2091_PP5min.csv",header=T,sep=",",stringsAsFactors = F)
@@ -9,7 +10,10 @@ MeasuredPP <- colnames(PP5min)[4:ncol(PP5min)]
 
 # nodesActivity_Betaxolol.txt
 # NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol.txt",header=T,sep="\t",stringsAsFactors = F)
-NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy.txt",header=T,sep="\t",stringsAsFactors = F)
+# NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy.txt",header=T,sep="\t",stringsAsFactors = F)
+# NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy_Update_Net1.txt",header=T,sep="\t",stringsAsFactors = F)
+# NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy_Update_Net4.txt",header=T,sep="\t",stringsAsFactors = F)
+NodeAct_Betaxolol <- read.delim("formaldehyde/nodesActivity_formaldehyde_Net1.txt",header=T,sep="\t",stringsAsFactors = F)
 Overlapped_Proteins <- intersect(MeasuredPP,NodeAct_Betaxolol[,1])
 
 # Writing results for the overlapped proteins
@@ -24,6 +28,9 @@ for (counter in 1:length(Overlapped_Proteins)) {
   Result_Matrix[counter,] <- c(Current_Overlapped_Protein,Current_CARNIVAL_output,Current_PP5min_meas,Current_PP25min_meas)
 }
 
-write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
+# write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
+# write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol_Net1.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
+# write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol_Net4.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
+write.table(x = Result_Matrix,file = "formaldehyde/Validation_Results_formaldehyde_Net1.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
 
 # --- End of script --- #
