@@ -13,8 +13,9 @@ ScaffoldNet <- c(1,4) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF 
 ScaffoldName <- c("omnipath","signor","babur","generic")
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
-for (counter_compound in 1:length(Compounds)) {
-
+# for (counter_compound in 1:length(Compounds)) {
+for (counter_compound in 23:length(Compounds)) {
+    
   for (counter_network in 1:length(ScaffoldNet)) {
     
     Network <- ScaffoldNet[counter_network]
@@ -68,6 +69,7 @@ for (counter_compound in 1:length(Compounds)) {
     Elapsed_1 <- proc.time() - ptm
     
     # Solve ILP problem with cplex, remove temp files, and return to the main directory
+    
     ptm <- proc.time()
     system(paste0(getwd(), "/cplex -f cplexCommand.txt"))
     Elapsed_2 <- proc.time() - ptm
@@ -79,8 +81,12 @@ for (counter_compound in 1:length(Compounds)) {
     
     # Write result files
     ptm <- proc.time()
-    for(i in 1:length(variables)){
-      sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all)
+    if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
+      for(i in 1:length(variables)){
+        sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all)
+      }
+    } else {
+      print("No result to be written")
     }
     Elapsed_3 <- proc.time() - ptm
     
@@ -88,6 +94,8 @@ for (counter_compound in 1:length(Compounds)) {
     ElapsedAll <- as.data.frame(matrix(t(c(Elapsed_1[3],Elapsed_2[3],Elapsed_3[3])),3,1))
     rownames(ElapsedAll) <- c("WriteConstraints:","CplexSolving:","ExportResults:")
     write.table(x = ElapsedAll,file = paste("results/",dir_name,"/elapsed_time.txt",sep=""),col.names = F,row.names = T,quote = F)
+    
+  
   }
 }
 
