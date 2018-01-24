@@ -112,8 +112,12 @@ setwd(current_dir)
 
 # Write result files
 ptm <- proc.time()
-for(i in 1:length(variables)){
-  sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all)
+if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
+  for(i in 1:length(variables)){
+    sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all)
+  }
+} else {
+  print("No result to be written")
 }
 Elapsed_3 <- proc.time() - ptm
 
