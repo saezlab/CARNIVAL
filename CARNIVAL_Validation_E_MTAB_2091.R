@@ -11,13 +11,16 @@ cat("\014") # clear screen
 Compounds <- t(read.table(file = "~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/data/All_Compound_Names.tsv",sep = "\r"))
 ScaffoldNet <- c(1,4) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
 ScaffoldName <- c("omnipath","signor","babur","generic")
+InputType <- 2 # [1,2] 1 = Direct targets plus PROGENy; 2 = Only Direct targets; 3 = Direct targets plus STRING
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
-# for (counter_compound in 1:length(Compounds)) {
-for (counter_compound in 23:length(Compounds)) {
+for (counter_compound in 1:length(Compounds)) {
+# for (counter_compound in 9:10) {
     
   for (counter_network in 1:length(ScaffoldNet)) {
     
+    print(paste0("Optimising compound Nr ", toString(counter_compound),"/",toString(length(Compounds))," : " ,Compounds[counter_compound]," - Using network: ",ScaffoldName[counter_network]))
+  
     Network <- ScaffoldNet[counter_network]
     NetName <- ScaffoldName[ScaffoldNet[counter_network]]    
     
@@ -38,7 +41,11 @@ for (counter_compound in 23:length(Compounds)) {
     if (is.null(Result_dir)) {
       dir_name <- paste("results_",Sys.time(),sep="")
     } else {
-      dir_name <- paste0("validation_",Result_dir)
+      if (InputType==1) {
+        dir_name <- paste0("validation_",Result_dir)
+      } else if (InputType==2) {
+        dir_name <- paste0("validation_",Result_dir,"_MainTarget")
+      }
     }
     dir.create(dir_name); setwd(current_dir)
     
@@ -54,7 +61,13 @@ for (counter_compound in 23:length(Compounds)) {
     } else {
       stop("Please choose the provided model scaffolds")
     }
-    inputs       <- read.table(paste0("archive/CARNIVAL_Validation/E-MTAB-2091/annotation/DrugTarget_",Compounds[counter_compound],"_plusPROGENy_CutOff_50.tsv"), sep="\t", header = TRUE)
+    if (InputType==1) {
+      inputs       <- try(read.table(paste0("archive/CARNIVAL_Validation/E-MTAB-2091/annotation/DrugTarget_",Compounds[counter_compound],"_plusPROGENy_CutOff_50.tsv"), sep="\t", header = TRUE))
+      if(inherits(inputs, "try-error")) next
+    } else if (InputType==2) {
+      inputs       <- try(read.table(paste0("archive/CARNIVAL_Validation/E-MTAB-2091/annotation/DrugTarget_",Compounds[counter_compound],".tsv"), sep="\t", header = TRUE))
+      if(inherits(inputs, "try-error")) next
+    }
     measurements <- read_delim(paste0("archive/CARNIVAL_Validation/E-MTAB-2091/data/Dorothea_",Compounds[counter_compound],"_Cutoff_1.tsv"), "\t", escape_double = FALSE, trim_ws = TRUE)
     
     # Input processing
@@ -95,7 +108,6 @@ for (counter_compound in 23:length(Compounds)) {
     rownames(ElapsedAll) <- c("WriteConstraints:","CplexSolving:","ExportResults:")
     write.table(x = ElapsedAll,file = paste("results/",dir_name,"/elapsed_time.txt",sep=""),col.names = F,row.names = T,quote = F)
     
-  
   }
 }
 
