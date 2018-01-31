@@ -7,10 +7,10 @@ rm(list=ls()) # clear environment
 cat("\014") # clear screen
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example    <- 1 # c(1,2,3,4,5,6,101,102) # Ex4 = Feedback/Cycle motif, Ex5 = Mike's example; Ex6 = Propanolol example; Ex101 = Validation Single; Ex102 = Validation Multiple
+Example    <- 6 # c(1,2,3,4,5,6,101,102) # Ex4 = Feedback/Cycle motif, Ex5 = Mike's example; Ex6 = Propanolol example; Ex101 = Validation Single; Ex102 = Validation Multiple
 Case_study <- 1 # c(1,2,3,4) or c(c(1,2),c(1,4))
 Network    <- 1 # c(1,2) == c("positive","negative") / c("pos-pos","pos-neg") / c("same_sign","inverse_sign") / c("ABC","SABC") / "Mike" / "PPNL" / c("Omnipath","Signor","Babur")
-Result_dir <- "Ex1Case1Net1" # specify a name for result directory; if NULL, then date and time will be used by default
+Result_dir <- "Ex6Case1Net1" # specify a name for result directory; if NULL, then date and time will be used by default
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
 # ============================== #
@@ -61,14 +61,14 @@ if (Example == 1) {
 } else if (Example == 6) {
   # network      <- read.table("examples/Ex6/Network_Generic_FIN_RemovedTFGenes.sif", sep = "\t", header = FALSE)
   network      <- read.table("examples/Ex6/Network_Generic_FIN_RemovedTFGenes_NoHyphen.sif", sep = "\t", header = FALSE)
-  inputs       <- read.table("examples/Ex6/Propanolol_inputs_only_ADRB1.txt", sep="\t", header = TRUE)
-  # inputs       <- read.table("examples/Ex6/Propanolol_inputs.txt", sep="\t", header = TRUE)
+  # inputs       <- read.table("examples/Ex6/Propanolol_inputs_only_ADRB1.txt", sep="\t", header = TRUE)
+  inputs       <- read.table("examples/Ex6/Propanolol_inputs.txt", sep="\t", header = TRUE)
   measurements <- read_delim("examples/Ex6/TFActs_TGG_PPNL_Human_ivt_24h_high_UpDown.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
 } else if (Example == 101) {
   if (Network==1) {
     network      <- read.table("examples/ValEx1/OmniPathSIF_NoHyphen.tsv", sep = "\t", header = FALSE)
   } else if (Network==2) {
-    network      <- read.delim("examples/ValEx1/SignorSIF_NoHyphenNoSlashNoColon.tsv", sep = "\t", header = FALSE)
+    network      <- read.delim("examples/ValEx1/SignorSIF_NoHyphenNoSlashNoColonNoSpace.tsv", sep = "\t", header = FALSE)
   } else if (Network==3) {
     network      <- read.table("examples/ValEx1/BaburSIF_NoHyphen.tsv", sep = "\t", header = FALSE)
   } else if (Network==4) {
@@ -79,12 +79,17 @@ if (Example == 1) {
   # inputs       <- read.table("examples/ValEx1/DrugTarget_Input_betaxolol.tsv", sep="\t", header = TRUE)
   # inputs       <- read.table("examples/ValEx1/DrugTarget_Input_betaxolol_plusPROGENy.tsv", sep="\t", header = TRUE)
   # inputs       <- read.table("examples/ValEx1/DrugTarget_betaxolol_plusPROGENy_CutOff_50.tsv", sep="\t", header = TRUE)
+  # inputs       <- read.table("examples/ValEx1/DrugTarget_EGF.tsv", sep="\t", header = TRUE)
   # inputs       <- read.table("examples/ValEx1/DrugTarget_EGF_plusPROGENy_CutOff_50.tsv", sep="\t", header = TRUE)
-  inputs       <- read.table("examples/ValEx1/DrugTarget_formaldehyde_plusPROGENy_CutOff_50.tsv", sep="\t", header = TRUE)
+  # inputs       <- read.table("examples/ValEx1/DrugTarget_formaldehyde.tsv", sep="\t", header = TRUE)
+  # inputs       <- read.table("examples/ValEx1/DrugTarget_formaldehyde_plusPROGENy_CutOff_50.tsv", sep="\t", header = TRUE)
+  inputs       <- read.table("examples/ValEx1/DrugTarget_TNFA.tsv", sep="\t", header = TRUE)
+  # inputs       <- read.table("examples/ValEx1/DrugTarget_TNFA_plusPROGENy_CutOff_50.tsv", sep="\t", header = TRUE)
   # measurements <- read_delim("examples/ValEx1/Dorothea_CutOff_Abs_1p5_betaxolol", "\t", escape_double = FALSE, trim_ws = TRUE)
   # measurements <- read_delim("examples/ValEx1/Dorothea_betaxolol_Cutoff_1.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
   # measurements <- read_delim("examples/ValEx1/Dorothea_EGF_Cutoff_1.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
-  measurements <- read_delim("examples/ValEx1/Dorothea_formaldehyde_Cutoff_1.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+  # measurements <- read_delim("examples/ValEx1/Dorothea_formaldehyde_Cutoff_1.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+  measurements <- read_delim("examples/ValEx1/Dorothea_TNFA_Cutoff_1.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
 } else {
   stop("Please select the provided examples or add your own example to the list")
 }
@@ -114,7 +119,7 @@ setwd(current_dir)
 ptm <- proc.time()
 if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
   for(i in 1:length(variables)){
-    sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all)
+    sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
   }
 } else {
   print("No result to be written")
