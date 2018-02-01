@@ -3,7 +3,13 @@
 setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/network") # set working directory (relative)
 
 # OmniPathRefHGNC.csv
-OmniPath <- read.table("OmniPathRefHGNC.csv",header = T,sep=",")
+OmniPath <- read.table("OmniPathRefHGNC.csv",header = T,sep=",") # n=14636
+
+# Scan for interactions with more number of literature
+OmniPath_2RefUp <- OmniPath[OmniPath[,5]>1,] # n=7243
+OmniPath_3RefUp <- OmniPath[OmniPath[,5]>2,] # n=4677
+OmniPath_5RefUp <- OmniPath[OmniPath[,5]>4,] # n=2530
+
 OmniPathSIF <- OmniPath[,2:4]
 OmniPathSIF <- OmniPathSIF[order(OmniPathSIF[,1],OmniPathSIF[,3]),]
 write.table(x = OmniPathSIF,file = "OmniPathSIF.tsv",quote = F,sep = "\t",col.names = F,row.names = F)
