@@ -10,7 +10,7 @@ cat("\014") # clear screen
 Example    <- 6 # c(1,2,3,4,5,6,101,102) # Ex4 = Feedback/Cycle motif, Ex5 = Mike's example; Ex6 = Propanolol example; Ex101 = Validation Single; Ex102 = Validation Multiple
 Case_study <- 1 # c(1,2,3,4) or c(c(1,2),c(1,4))
 Network    <- 1 # c(1,2) == c("positive","negative") / c("pos-pos","pos-neg") / c("same_sign","inverse_sign") / c("ABC","SABC") / "Mike" / "PPNL" / c("Omnipath","Signor","Babur")
-Result_dir <- "Ex6Case1Net1" # specify a name for result directory; if NULL, then date and time will be used by default
+Result_dir <- "Ex6Case2Net1" # specify a name for result directory; if NULL, then date and time will be used by default
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
 # ============================== #
@@ -119,7 +119,7 @@ setwd(current_dir)
 ptm <- proc.time()
 if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
   for(i in 1:length(variables)){
-    sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
+    sif <- readOutResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
   }
 } else {
   print("No result to be written")
