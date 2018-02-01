@@ -93,8 +93,9 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
       #   
       # }
       
-      if(as.numeric(edgesUp[kk1[i], 2])==as.numeric(nodes[which(nodes[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("Species ", tt, " in experiment ", conditionIDX))]), 2])){
-        
+      # if(as.numeric(edgesUp[kk1[i], 2])==as.numeric(nodes[which(nodes[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("Species ", tt, " in experiment ", conditionIDX))]), 2])){
+      if(as.numeric(edgesUp[kk1[i], 2])==as.numeric(nodesUp[which(nodesUp[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("SpeciesUP ", tt, " in experiment ", conditionIDX))]), 2])){
+          
         # sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
         sif <- rbind(sif, pknList[kk1[i], ])
         Dot_text <- c(Dot_text,paste0(ss,"->",tt," [penwidth=",toString(1),", color=black]"))
@@ -120,8 +121,9 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
       #   
       # }
       
-      if(as.numeric(edgesDown[kk1[i], 2])==(-1)*as.numeric(nodes[which(nodes[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("Species ", tt, " in experiment ", conditionIDX))]), 2])){
-        
+      # if(as.numeric(edgesDown[kk1[i], 2])==(-1)*as.numeric(nodes[which(nodes[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("Species ", tt, " in experiment ", conditionIDX))]), 2])){
+      if(as.numeric(edgesDown[kk1[i], 2])==as.numeric(nodesDown[which(nodesDown[, 1]==variables[[conditionIDX]]$variables[which(variables[[conditionIDX]]$exp==paste0("SpeciesDown ", tt, " in experiment ", conditionIDX))]), 2])){
+          
         # sif <- rbind(sif, as.matrix(pknList[intersect(which(as.character(pknList$Node1)==ss), which(as.character(pknList$Node2)==tt)), ]))
         sif <- rbind(sif, pknList[kk1[i], ])
         Dot_text <- c(Dot_text,paste0(ss,"->",tt," [penwidth=",toString(1),", color=red]"))
@@ -175,8 +177,7 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   if (!is.null(sif)) {
     write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   } else {
-    sif = "Empty network returned"
-    write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+    write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
   }
   
   if (length(idx)!=0) {
@@ -184,61 +185,84 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   } else {
     write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
   }
+
+  # Map DOT figure (only when SIF network is present)
   
-  IdxMapped <- NULL
-  
-  # Map input(s)' activities
-  
-  ColorNode <- c("black","red")
-  ColorNodeAll <- c("lavender","mistyrose")
-  inputsName <- colnames(inputs)
-  
-  for (counter in 1:length(inputsName)) {
-    if (length(which(inputsName[counter]==activityNodes[,1]))>0) {
-      IdxInput <- which(inputsName[counter]==activityNodes[,1])
-      Dot_text <- c(Dot_text,paste0(inputsName[counter]," [style=filled, color=",
-                    if (activityNodes[IdxInput,2]>0) {paste0(ColorNode[1],", fillcolor=",ColorNodeAll[1])} 
-                    else if (activityNodes[IdxInput,2]<0) {paste0(ColorNode[2],", fillcolor=",ColorNodeAll[2])},", shape=invhouse];"))
-      IdxMapped <- c(IdxMapped, IdxInput)
+  if (!is.null(sif)) {
+    ColorNode <- c("black","red")
+    ColorNodeAll <- c("lavender","mistyrose")
+    IdxMapped <- NULL
+    
+    
+    # Screen for only inputs in the final SIF network
+    AllNodeSIF <- unique(c(sif[,1],sif[,3]))
+    AllInputs <- colnames(inputs)
+    inputsName <- NULL
+    for (counter in 1:length(AllInputs)) {
+      if (sum(AllInputs[counter]==AllNodeSIF)>0) {
+        inputsName <- c(inputsName,AllInputs[counter])
+      }
     }
-  }
-
-  # Map measurement(s)' activities
-  
-  ColorNode <- c("black","red")
-  measName <- colnames(measurements)
-  
-  for (counter in 1:length(measName)) {
-    if (length(which(measName[counter]==activityNodes[,1]))>0) {
-      IdxMeas <- which(measName[counter]==activityNodes[,1])
-      Dot_text <- c(Dot_text,paste0(measName[counter]," [style=filled, color=",
-                                    if (activityNodes[IdxMeas,2]>0) {paste0(ColorNode[1],", fillcolor=",ColorNodeAll[1])} 
-                                    else if (activityNodes[IdxMeas,2]<0) {paste0(ColorNode[2],", fillcolor=",ColorNodeAll[2])},", shape=doublecircle];"))
-      IdxMapped <- c(IdxMapped, IdxMeas)
+    
+    # Map input(s)' activities
+    for (counter in 1:length(inputsName)) {
+      if (length(which(inputsName[counter]==activityNodes[,1]))>0) {
+        IdxInput <- which(inputsName[counter]==activityNodes[,1])
+        Dot_text <- c(Dot_text,paste0(inputsName[counter]," [style=filled, color=",
+                      if (activityNodes[IdxInput,2]>0) {paste0(ColorNode[1],", fillcolor=",ColorNodeAll[1])} 
+                      else if (activityNodes[IdxInput,2]<0) {paste0(ColorNode[2],", fillcolor=",ColorNodeAll[2])},", shape=invhouse];"))
+        IdxMapped <- c(IdxMapped, IdxInput)
+      }
     }
-  }
-
   
-  # Map the rest of nodes activities
-
-  RemainingNodeIdx <- (1:nrow(activityNodes))[-IdxMapped]
-
-  if (length(RemainingNodeIdx)>0) {
-    for (counter in 1:length(RemainingNodeIdx)) {
-        Dot_text <- c(Dot_text,paste0(activityNodes[counter,1]," [style=filled, fillcolor=",
-                                      if (activityNodes[counter,2]>0) {ColorNodeAll[1]}
-                                      else if (activityNodes[counter,2]<0) {ColorNodeAll[2]},"];"))
+    # Map measurement(s)' activities
+    AllMeas <- colnames(measurements)
+    measName <- NULL
+    for (counter in 1:length(AllMeas)) {
+      if (sum(AllMeas[counter]==AllNodeSIF)>0) {
+        measName <- c(measName,AllMeas[counter])
+      }
     }
-  }
+    
+    for (counter in 1:length(measName)) {
+      if (length(which(measName[counter]==activityNodes[,1]))>0) {
+        IdxMeas <- which(measName[counter]==activityNodes[,1])
+        Dot_text <- c(Dot_text,paste0(measName[counter]," [style=filled, color=",
+                                      if (activityNodes[IdxMeas,2]>0) {paste0(ColorNode[1],", fillcolor=",ColorNodeAll[1])} 
+                                      else if (activityNodes[IdxMeas,2]<0) {paste0(ColorNode[2],", fillcolor=",ColorNodeAll[2])},", shape=doublecircle];"))
+        IdxMapped <- c(IdxMapped, IdxMeas)
+      }
+    }
   
     
-  Dot_text <- c(Dot_text,"")
-  Dot_text <- c(Dot_text,"")
-  Dot_text <- c(Dot_text,"}")
+    # Map the rest of nodes activities
   
-  fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, ".dot"))
-  writeLines(Dot_text,fileConn)
-  close(fileConn)
+    RemainingNodeIdx <- (1:nrow(activityNodes))[-IdxMapped]
+    RemainingNodeName <- activityNodes[RemainingNodeIdx,1]
+    
+    RestOfNodeIdx <- NULL
+    for (counter in 1:length(RemainingNodeName)) {
+      if (sum(RemainingNodeName[counter]==AllNodeSIF)>0) {
+        RestOfNodeIdx <- c(RestOfNodeIdx,which(RemainingNodeName[counter]==activityNodes[,1]))
+      }
+    }
+    if (length(RestOfNodeIdx)>0) {
+      for (counter in 1:length(RestOfNodeIdx)) {
+          Dot_text <- c(Dot_text,paste0(activityNodes[RestOfNodeIdx[counter],1]," [style=filled, fillcolor=",
+                                        if (activityNodes[RestOfNodeIdx[counter],2]>0) {ColorNodeAll[1]}
+                                        else if (activityNodes[RestOfNodeIdx[counter],2]<0) {ColorNodeAll[2]},"];"))
+      }
+    }
+    
+      
+    Dot_text <- c(Dot_text,"")
+    Dot_text <- c(Dot_text,"")
+    Dot_text <- c(Dot_text,"}")
+    
+    fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, ".dot"))
+    writeLines(Dot_text,fileConn)
+    close(fileConn)
+  } 
   
   if (Export_all) {
     write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
