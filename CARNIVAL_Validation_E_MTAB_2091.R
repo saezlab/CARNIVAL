@@ -14,13 +14,17 @@ ScaffoldName <- c("omnipath","signor","babur","generic")
 InputType <- 2 # [1,2] 1 = Direct targets plus PROGENy; 2 = Only Direct targets; 3 = Direct targets plus STRING
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
-for (counter_compound in 1:length(Compounds)) {
-# for (counter_compound in 9:10) {
+# for (counter_compound in 1:length(Compounds)) {
+for (counter_compound in 33:length(Compounds)) {
     
   for (counter_network in 1:length(ScaffoldNet)) {
     
-    print(paste0("Optimising compound Nr ", toString(counter_compound),"/",toString(length(Compounds))," : " ,Compounds[counter_compound]," - Using network: ",ScaffoldName[counter_network]))
-  
+    print("")
+    print("=========================================")
+    print(paste0("Optimising compound Nr ", toString(counter_compound),"/",toString(length(Compounds))," : " ,Compounds[counter_compound]," - Using network: ",ScaffoldName[ScaffoldNet[counter_network]]))
+    print("=========================================")
+    print("")
+    
     Network <- ScaffoldNet[counter_network]
     NetName <- ScaffoldName[ScaffoldNet[counter_network]]    
     
@@ -96,7 +100,7 @@ for (counter_compound in 1:length(Compounds)) {
     ptm <- proc.time()
     if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
       for(i in 1:length(variables)){
-        sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all)
+        sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
       }
     } else {
       print("No result to be written")
