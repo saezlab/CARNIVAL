@@ -7,7 +7,11 @@ setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-
 ScaffoldNet <- 2 # 1=generic, 2=Omnipath
 
 # Select stimuli's targets
-StimuliTarget <- 2 # 1=all, 2=only main
+StimuliTarget <- 1 # 1=all, 2=only main
+
+# Select cutoff measure (better to use absolute value for fold-change?)
+DiscretPP <- 1 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
+PP1_Cutoff <- 0.1; PP2_MulFactor <- 0.5; PP3_MulFactor <- 0.5
 
 # ================================================== #
 
@@ -15,6 +19,64 @@ StimuliTarget <- 2 # 1=all, 2=only main
 PP5min <- read.table("E-MTAB-2091_PP5min.csv",header=T,sep=",",stringsAsFactors = F)
 PP25min <- read.table("E-MTAB-2091_PP25min.csv",header=T,sep=",",stringsAsFactors = F)
 MeasuredPP <- colnames(PP5min)[4:ncol(PP5min)] # Same list and order between PP5min and PP25min
+
+# CutOff for pp-Meansurement
+CutOff_PP_Up <- NULL; CutOff_PP_Down <- NULL
+
+if (DiscretPP == 1) {
+  
+  for (counter in 1:2) { # 2 time-point measurements
+    CutOffPhospho <- PP1_Cutoff 
+    CutOff_PP_Up <- rbind(CutOff_PP_Up, rep(PP1_Cutoff,length(MeasuredPP)))
+    CutOff_PP_Down <- rbind(CutOff_PP_Down,rep((-1)*PP1_Cutoff,length(MeasuredPP)))
+  }
+  
+} else if (DiscretPP==2) {
+  
+  for (counter in 1:2) { # 2 time-point measurements
+    if (counter==1) {Phospho=PP5min} else if (counter==2) {Phospho=PP25min}
+    PP_Means <- colMeans(Phospho[,4:ncol(Phospho)])
+    PP_SD <- apply(Phospho[,4:ncol(Phospho)],2,sd)
+    CutOff_PP_Up   <- rbind(CutOff_PP_Up,PP_Means+(PP2_MulFactor*PP_SD))
+    CutOff_PP_Down <- rbind(CutOff_PP_Down,PP_Means-(PP2_MulFactor*PP_SD))
+  }
+  
+} else if (DiscretPP==3) {
+  
+  for (counter in 1:2) { # 2 time-point measurements
+    if (counter==1) {Phospho=PP5min} else if (counter==2) {Phospho=PP25min}
+    PP_Median <- apply(Phospho[,4:ncol(Phospho)],2,median)
+    PP_Means <- colMeans(Phospho[,4:ncol(Phospho)])
+    PP_MAD <- NULL
+    for (counter2 in 1:length(MeasuredPP)) {
+      PP_MAD <- c(PP_MAD,sum(abs((Phospho[,counter2+3] - PP_Means[counter2])))/nrow(Phospho))
+    }
+    CutOff_PP_Up  <- rbind(CutOff_PP_Up,PP_Median+(PP3_MulFactor*PP_MAD))
+    CutOff_PP_Down <- rbind(CutOff_PP_Down,PP_Median-(PP3_MulFactor*PP_MAD))
+  }
+}
+
+
+
+# Plot distribution of pp-measurements
+
+# pdf("PP5min_Density_Plot.pdf")
+# 
+# PP5min_Density_List <- list()
+# for (counter in 1:(length(MeasuredPP))) {
+#   d <- density(as.numeric(PP5min[,counter+3]))
+#   plot(d, type="n",main=MeasuredPP[counter])
+#   polygon(d, col="red",border="gray")
+#   # hist(as.numeric(PP5min[1,4:nrow(PP5min)]))
+#   PP5min_Density_List[[counter]] <- as.numeric(PP5min[,counter+3])
+# }
+# dev.off()
+#  
+# PP5min_Density_All <- unlist(PP5min_Density_List)
+# pdf("PP5min_All_Histogram.pdf")
+# hist(PP5min_Density_All)
+# dev.off()
+
 
 # Manual annotation of gene names with HGNC symbol (GeneCards)
 #                    "AKT1" "CREB1" "EGFR" "ERK1" "FAK1" "GSK3B" "HSP27" "IKBA" "JNK2" "MEK1" "MKK6" "NFKB" "p38MAPK" "P53" "P70S6K" "RPS6" "SHP2" "WNK1" "RSK1"  
@@ -54,7 +116,6 @@ colnames(ValResMat) <- ValResMatCol
 rownames(ValResMat) <- Compounds
 ValResMatSign <- ValResMat
 
-CutOff <- 0.1
 ValResMatSignCutOff <- ValResMat
 
 for (counter_compound in 1:length(Compounds)) {
@@ -88,8 +149,10 @@ for (counter_compound in 1:length(Compounds)) {
                                                                                                        # sign(if (abs(Current_PP25min_meas)<=CutOff) {Current_PP25min_meas=0} else {Current_PP25min_meas}))
         # if (abs(Current_PP5min_meas)<=CutOff || abs(Current_PP25min_meas)<=CutOff) {c(NA,NA,NA)} else {c(Current_CARNIVAL_output,sign(Current_PP5min_meas),sign(Current_PP25min_meas))}
           c(Current_CARNIVAL_output, 
-            if (abs(Current_PP5min_meas)<=CutOff) {NA} else {sign(Current_PP5min_meas)},
-            if (abs(Current_PP25min_meas)<=CutOff) {NA} else {sign(Current_PP25min_meas)})
+            if (Current_PP5min_meas < CutOff_PP_Up[1,Idx_ValResMat] & Current_PP5min_meas > CutOff_PP_Down[1,Idx_ValResMat]) {NA} else {sign(Current_PP5min_meas)},
+            if (Current_PP25min_meas < CutOff_PP_Up[2,Idx_ValResMat] & Current_PP25min_meas > CutOff_PP_Down[2,Idx_ValResMat]) {NA} else {sign(Current_PP25min_meas)})
+            # if (abs(Current_PP5min_meas)<=CutOff) {NA} else {sign(Current_PP5min_meas)},
+            # if (abs(Current_PP25min_meas)<=CutOff) {NA} else {sign(Current_PP25min_meas)})
       }
       
       write.table(x = Result_Matrix,file = paste0("Validation_Results_",Compounds[counter_compound],"_",ScaffoldName,StimTarget,".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
@@ -130,7 +193,11 @@ for (counter_diff in 1:length(MeasuredPP)){
 # legend("topright", legend=c("PP-5min", "PP-25min"),col=c("red", "blue"), lty=1, cex=0.8,inset = 0.02)
 # dev.off()
 
-pdf(paste0("Average_Difference_",ScaffoldName,StimTarget,".pdf"))
+pdf(paste0("Average_Difference_",ScaffoldName,StimTarget,
+           if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP1_Cutoff))} 
+           else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP2_MulFactor))} 
+           else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP3_MulFactor))}
+           ,".pdf"))
 
 plot(1:length(MeasuredPP),DiffMat[1,],type = 'p',col='red',cex=DiffMat[2,]/10,
      xlab = "Measured-PP",ylab="Distance",
@@ -146,7 +213,11 @@ dev.off()
 
 write.table(x = ValResMat,file = paste0("Summary_Validation_Results_",ScaffoldName,StimTarget,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
 write.table(x = ValResMatSign,file = paste0("Summary_Validation_Sign_Results_",ScaffoldName,StimTarget,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
-write.table(x = ValResMatSignCutOff,file = paste0("Summary_Validation_SignCutOff_Results_",ScaffoldName,StimTarget,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
+write.table(x = ValResMatSignCutOff,file = paste0("Summary_Validation_SignCutOff_Results_",ScaffoldName,StimTarget,
+                                                  if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP1_Cutoff))} 
+                                                  else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP2_MulFactor))} 
+                                                  else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP3_MulFactor))}
+                                                  ,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
 write.table(x = DiffMat,file = paste0("Summary_Validation_AverageDistance_",ScaffoldName,StimTarget,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
 
 # # === Individual result === #
