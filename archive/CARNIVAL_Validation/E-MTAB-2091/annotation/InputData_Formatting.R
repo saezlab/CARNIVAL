@@ -8,8 +8,8 @@ Dorothea <- read.table("E-MTAB-2091_DoRothEA.csv",header=T,sep=",",stringsAsFact
 Progeny <- read.table("E-MTAB-2091_PROGENy.csv",header=T,sep=",",stringsAsFactors = F)
 
 # Select discretisation measure
-DiscretPGN <- 3 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
-PGN1_Cutoff <- 50; PGN2_MulFactor <- 2.5; PGN3_MulFactor <- 2.5
+DiscretPGN <- 2 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
+PGN1_Cutoff <- 50; PGN2_MulFactor <- 2; PGN3_MulFactor <- 2
 
 # Generate continuous mismatched weight?
 MismatchWeight <- 1 # 1=yes, 0=no
@@ -76,11 +76,15 @@ if (DiscretPGN == 1) {
 }
 
 # Combined data measurement file writing
-Progeny_CutOff <- Progeny[,2:ncol(Progeny)]
-Progeny_CutOff[Progeny_CutOff<CutOff_PGN_Up & Progeny_CutOff>CutOff_PGN_Down] <- NaN
-Progeny_CutOff[Progeny_CutOff>=CutOff_PGN_Up] <- 1
-Progeny_CutOff[Progeny_CutOff<=CutOff_PGN_Down] <- -1
-Progeny_CutOff[is.nan(as.matrix(Progeny_CutOff))] <- 0
+Progeny_Cutoff <- Progeny[,2:ncol(Progeny)]
+
+for (counter in 1:ncol(Progeny_Cutoff)) {
+  Progeny_Cutoff[which(Progeny_Cutoff[,counter]<CutOff_PGN_Up[counter] & Progeny_Cutoff[,counter]>CutOff_PGN_Down[counter]),counter] <- NaN
+  Progeny_Cutoff[which(Progeny_Cutoff[,counter]>=CutOff_PGN_Up[counter]),counter] <- 1
+  Progeny_Cutoff[which(Progeny_Cutoff[,counter]<=CutOff_PGN_Down[counter]),counter] <- -1
+  Progeny_Cutoff[which(is.nan(as.matrix(Progeny_Cutoff[,counter]))),counter] <- 0
+}
+
 # ColNamesNew <- substring(colnames(Progeny_CutOff),5)
 # colnames(Progeny_CutOff) <- ColNamesNew
 write.table(x = Progeny_CutOff,file = paste0("Progeny_All_",
