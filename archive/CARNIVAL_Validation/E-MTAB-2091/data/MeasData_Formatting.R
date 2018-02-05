@@ -8,8 +8,8 @@ setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-
 Dorothea <- read.table("E-MTAB-2091_DoRothEA.csv",header=T,sep=",",stringsAsFactors = F)
 
 # Select discretisation measure
-DiscretDRT <- 3 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
-DRT1_Cutoff <- 1; DRT2_MulFactor <- 2.5; DRT3_MulFactor <- 2.5
+DiscretDRT <- 2 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
+DRT1_Cutoff <- 1; DRT2_MulFactor <- 2; DRT3_MulFactor <- 2
 
 # Generate continuous mismatched weight?
 MismatchWeight <- 1 # 1=yes, 0=no
@@ -96,10 +96,14 @@ if (DiscretDRT == 1) {
 
 # Combined data measurement file writing
 Dorothea_Cutoff <- Dorothea[,2:ncol(Dorothea)]
-Dorothea_Cutoff[Dorothea_Cutoff<CutOff_DRT_Up & Dorothea_Cutoff>CutOff_DRT_Down] <- NaN
-Dorothea_Cutoff[Dorothea_Cutoff>=CutOff_DRT_Up] <- 1
-Dorothea_Cutoff[Dorothea_Cutoff<=CutOff_DRT_Down] <- -1
-Dorothea_Cutoff[is.nan(as.matrix(Dorothea_Cutoff))] <- 0
+
+for (counter in 1:ncol(Dorothea_Cutoff)) {
+  Dorothea_Cutoff[which(Dorothea_Cutoff[,counter]<CutOff_DRT_Up[counter] & Dorothea_Cutoff[,counter]>CutOff_DRT_Down[counter]),counter] <- NaN
+  Dorothea_Cutoff[which(Dorothea_Cutoff[,counter]>=CutOff_DRT_Up[counter]),counter] <- 1
+  Dorothea_Cutoff[which(Dorothea_Cutoff[,counter]<=CutOff_DRT_Down[counter]),counter] <- -1
+  Dorothea_Cutoff[which(is.nan(as.matrix(Dorothea_Cutoff[,counter]))),counter] <- 0
+}
+
 ColNamesNew <- substring(colnames(Dorothea_Cutoff),4)
 colnames(Dorothea_Cutoff) <- ColNamesNew
 write.table(x = Dorothea_Cutoff,file = paste0("Dorothea_All_",
