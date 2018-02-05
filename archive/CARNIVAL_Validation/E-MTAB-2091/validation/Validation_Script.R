@@ -1,17 +1,21 @@
 # Validation scripts
 
 rm(list=ls());cat("\014")
+
+# Load all R-functions
+setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL") # set working directory (relative)
+source("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/src/CRILPR_Functions.R")
 setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/validation/") # set working directory (relative)
 
 # Select network
 ScaffoldNet <- 2 # 1=generic, 2=Omnipath
 
 # Select stimuli's targets
-StimuliTarget <- 1 # 1=all, 2=only main
+StimuliTarget <- 2 # 1=all, 2=only main
 
 # Select cutoff measure (better to use absolute value for fold-change?)
-DiscretPP <- 1 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
-PP1_Cutoff <- 0.1; PP2_MulFactor <- 0.5; PP3_MulFactor <- 0.5
+DiscretPP <- 3 # 1=absolute value, 2=mean+/-2.5*SD (Gaussian), 3= median+/-2.5*mean_abs_diff
+PP1_Cutoff <- 1; PP2_MulFactor <- 0.5; PP3_MulFactor <- 0.5
 
 # ================================================== #
 
@@ -102,7 +106,7 @@ for (counter in 1:length(CompoundsPP_All)) {
 CompoundsPP_Names <- unlist(CompoundsPP_Names)
 
 if (ScaffoldNet==1) {ScaffoldName <- "generic"} else if (ScaffoldNet==2) {ScaffoldName <- "omnipath"}
-if (StimuliTarget==1) {StimTarget <- ""} else if (StimuliTarget==2) {StimTarget <- "_MainTarget"}
+if (StimuliTarget==1) {StimTarget <- "";ResultDIR <- "Main_and_PROGENy_Targets"} else if (StimuliTarget==2) {StimTarget <- "_MainTarget";ResultDIR <-"Main_Targets_Only"}
 
 # === All combined result === #
 Compounds <- t(read.table(file = "~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/data/All_Compound_Names.tsv",sep = "\r"))
@@ -123,9 +127,9 @@ for (counter_compound in 1:length(Compounds)) {
     
   print(paste0("Now mapping: ",Compounds[counter_compound]))
   
-  if (file.exists(paste0("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/results/validation_",Compounds[counter_compound],"_",ScaffoldName,StimTarget,"/nodesActivity_1.txt"))) {
+  if (file.exists(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/",ResultDIR,"/validation_",Compounds[counter_compound],"_",ScaffoldName,StimTarget,"/nodesActivity_1.txt"))) {
     
-    NodeAct_current <- read.delim(paste0("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/results/validation_",Compounds[counter_compound],"_",ScaffoldName,StimTarget,"/nodesActivity_1.txt"),header=T,sep="\t",stringsAsFactors = F)
+    NodeAct_current <- read.delim(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/",ResultDIR,"/validation_",Compounds[counter_compound],"_",ScaffoldName,StimTarget,"/nodesActivity_1.txt"),header=T,sep="\t",stringsAsFactors = F)
     
     Overlapped_Proteins <- intersect(MeasuredPP_HGNC,NodeAct_current[,1])
   
