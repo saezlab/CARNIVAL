@@ -1,0 +1,52 @@
+Chemical Name,Chemical Name,Score,PubChem CID,Score,DrugBank,Score
+betaxolol,1-{4-[2-(Cyclopropylmethoxy)ethyl]phenoxy}-3-(isopropylamino)-2-propanol,1.0,2369,1.0,DB00195,1.0
+IGF2,Not Found,0.0,Not Found,0.0,Not Found,0.0
+INS,"1,2,3,4,5,6-Cyclohexanehexol",0.5,892,0.5,Not Found,0.0
+IFNG,Not Found,0.0,Not Found,0.0,Not Found,0.0
+sirolimus,"(1R,9S,12S,15R,16E,18R,19R,21R,23S,24E,26E,28E,30S,32S,35R)-1,18-Dihydroxy-12-{(2R)-1-[(1S,3R,4R)-4-hydroxy-3-methoxycyclohexyl]-2-propanyl}-19,30-dimethoxy-15,17,21,23,29,35-hexamethyl-11,36-dioxa-4-azatricyclo[30.3.1.0~4,9~]hexatriaconta-16,24,26,28-tetraene-2,3,10,14,20-pentone",1.0,5284616,1.0,Not Found,0.0
+carbachol,"2-(Carbamoyloxy)-N,N,N-trimethylethanaminium chloride",1.0,521353,1.0,DB00411,1.0
+norethindrone,"Estr-4-en-3-one, 17-ethynyl-17-hydroxy-, (17beta)-",1.0,6230,1.0,DB00717,1.0
+promethazine,Phenergan,1.0,4927,1.0,DB01069,1.0
+epigallocatechin_gallate,"Benzoic acid, 3,4,5-trihydroxy-, (2R,3R)-3,4-dihydro-5,7-dihydroxy-2-(3,4,5-trihydroxyphenyl)-2H-1-benzopyran-3-yl ester",1.0,65064,1.0,Not Found,0.0
+PROK2,Not Found,0.0,Not Found,0.0,Not Found,0.0
+riluzole_hydrochloride,"2-Benzothiazolamine, 6-(trifluoromethoxy)-, hydrochloride (1:1)",0.5,6419992,0.5,Not Found,0.0
+tetradecanoylphorbol_acetate,"Tetradecanoic acid, (1aR,1bS,4aR,7aS,7bS,8R,9R,9aS)-9a-(acetyloxy)-1a,1b,4,4a,5,7a,7b,8,9,9a-decahydro-4a,7b-dihydroxy-3-(hydroxymethyl)-1,1,6,8-tetramethyl-5-oxo-1H-cyclopropa[3,4]benz[1,2-e]azulen-9-yl ester",1.0,27924,1.0,Not Found,0.0
+IL4,Not Found,0.0,Not Found,0.0,Not Found,0.0
+sodium_chloride,Not Found,0.0,5234,1.0,Not Found,0.0
+IL1B,Not Found,0.0,Not Found,0.0,Not Found,0.0
+SHH,Zolinza,1.0,5311,1.0,DB02546,1.0
+tolmetin,[1-Methyl-5-(4-methylbenzoyl)-1H-pyrrol-2-yl]acetic acid,1.0,5509,1.0,DB00500,1.0
+clomipramine,"5H-Dibenz[b,f]azepine-5-propanamine, 3-chloro-10,11-dihydro-N,N-dimethyl-",1.0,2801,1.0,DB01242,1.0
+CNTF,Not Found,0.0,Not Found,0.0,Not Found,0.0
+serotonin_hydrochloride,3-(2-Aminoethyl)-1H-indol-5-ol hydrochloride (1:1),0.5,11469926,0.5,Not Found,0.0
+bisacodyl,"Phenol, 4,4'-(2-pyridinylmethylene)bis-, diacetate (ester)",1.0,2391,1.0,Not Found,0.0
+TGFA,"1H-Pyrazole-1-carbothioamide, 3-(6-methyl-2-pyridinyl)-N-phenyl-4-(4-quinolinyl)-",0.5,16218924,0.5,Not Found,0.0
+EGF,Not Found,0.0,56841751,0.5,Not Found,0.0
+NTF3,Not Found,0.0,Not Found,0.0,Not Found,0.0
+HBEGF,Not Found,0.0,Not Found,0.0,Not Found,0.0
+taurocholic_acid,"2-{[(3alpha,5beta,7alpha,12alpha)-3,7,12-Trihydroxy-24-oxocholan-24-yl]amino}ethanesulfonic acid",0.75,6675,0.75,Not Found,0.0
+IL11,Not Found,0.0,Not Found,0.0,Not Found,0.0
+dexamethasone_acetate,"(11beta,16alpha)-9-Fluoro-11,17-dihydroxy-16-methyl-3,20-dioxopregna-1,4-dien-21-yl acetate",1.0,40469526,1.0,Not Found,0.0
+CL3L1,Not Found,0.0,Not Found,0.0,Not Found,0.0
+clenbuterol,"Benzenemethanol, 4-amino-3,5-dichloro-alpha-[[(1,1-dimethylethyl)amino]methyl]-",1.0,2783,1.0,DB01407,1.0
+pyrilamine,"N-(4-Methoxybenzyl)-N',N'-dimethyl-N-(2-pyridinyl)-1,2-ethanediamine",0.75,4992,0.75,DB06691,0.75
+forskolin,"(3R,4aR,5S,6S,6aS,10S,10aR,10bS)-6,10,10b-Trihydroxy-3,4a,7,7,10a-pentamethyl-1-oxo-3-vinyldodecahydro-1H-benzo[f]chromen-5-yl acetate",1.0,47936,1.0,DB02587,1.0
+betahistine,"2-Pyridineethanamine, N-methyl-",1.0,2366,1.0,DB06698,1.0
+benperidol,"1-{1-[4-(4-Fluorophenyl)-4-oxobutyl]-4-piperidinyl}-1,3-dihydro-2H-benzimidazol-2-one",1.0,16363,1.0,Not Found,0.0
+ODN2006,Not Found,0.0,Not Found,0.0,Not Found,0.0
+FGF8,Not Found,0.0,Not Found,0.0,Not Found,0.0
+FSL1,Not Found,0.0,Not Found,0.0,Not Found,0.0
+PDGFB,Not Found,0.0,Not Found,0.0,Not Found,0.0
+TNFA,Not Found,0.0,Not Found,0.0,Not Found,0.0
+PolyIC,4-Amino-1-(5-O-phosphono-beta-D-arabinofuranosyl)-2(1H)-pyrimidinone - 5'-inosinic acid (1:1),0.5,274740,0.5,Not Found,0.0
+WISP3,Not Found,0.0,Not Found,0.0,Not Found,0.0
+oxalylglycine,"Glycine, N-(carboxycarbonyl)-",0.5,3080614,0.5,Not Found,0.0
+glucose,D-Glucose,1.0,5793,1.0,Not Found,0.0
+FLIC_SALTY,Not Found,0.0,Not Found,0.0,Not Found,0.0
+C12iEDAP,Not Found,0.0,Not Found,0.0,Not Found,0.0
+cholesterol,"Cholest-5-en-3-ol, (3beta)-",1.0,5997,1.0,Not Found,0.0
+nisoxetine,"Benzenepropanamine, gamma-(2-methoxyphenoxy)-N-methyl-",1.0,4500,1.0,Not Found,0.0
+formaldehyde,Not Found,0.0,712,1.0,DB03843,1.0
+decitabine,"4-Amino-1-(2-deoxy-beta-D-erythro-pentofuranosyl)-1,3,5-triazin-2(1H)-one",0.75,451668,0.75,DB01262,0.75
+AREG,Not Found,0.0,Not Found,0.0,Not Found,0.0
+cisapride,"Benzamide, 4-amino-5-chloro-N-[1-[3-(4-fluorophenoxy)propyl]-3-methoxy-4-piperidinyl]-2-methoxy-",1.0,2769,1.0,DB00604,0.1364
