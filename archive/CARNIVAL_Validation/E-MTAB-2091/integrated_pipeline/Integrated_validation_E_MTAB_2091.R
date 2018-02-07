@@ -11,14 +11,14 @@ cat("\014") # clear screen
 
 Compounds <- t(read.table(file = "resources/All_Compound_Names.tsv",sep = "\r"))
 # ScaffoldNet <- c(1,2,3) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
-ScaffoldNet <- 1 # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
+ScaffoldNet <- c(1,3) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
 ScaffoldName <- c("omnipath","generic","signor")
 InputType <- 1 # [1,2] 1 = Direct targets plus PROGENy; 2 = Only Direct targets; 3 = Direct targets plus STRING
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
-# for (counter_compound in 1:length(Compounds)) {
-for (counter_compound in 34:length(Compounds)) {
-    # for (counter_compound in 5:10) {
+for (counter_compound in 1:length(Compounds)) {
+# for (counter_compound in 31:length(Compounds)) {
+# for (counter_compound in 30:31) {
     
   for (counter_network in 1:length(ScaffoldNet)) {
     
@@ -76,7 +76,8 @@ for (counter_compound in 34:length(Compounds)) {
     }
     
     # measurements <- try(read_delim(paste0("measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), "\t", escape_double = FALSE, trim_ws = TRUE))
-    measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
+    # measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
+    measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_1.5_PGN_MeanSDCutOff_1.5/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
     if(inherits(measurements, "try-error")) next
     
     # Input processing
@@ -88,7 +89,8 @@ for (counter_compound in 34:length(Compounds)) {
     # Write constraints as ILP inputs
     print("Writing constraints...")
     ptm <- proc.time()
-    variables <- writeLPFile(data,pknList,inputs,0.1)
+    variables <- try(writeLPFile(data,pknList,inputs,0.1))
+    if(inherits(variables, "try-error")) next
     Elapsed_1 <- proc.time() - ptm
     
     # Solve ILP problem with cplex, remove temp files, and return to the main directory
