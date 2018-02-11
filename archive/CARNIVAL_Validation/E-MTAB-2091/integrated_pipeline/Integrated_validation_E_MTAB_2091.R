@@ -10,15 +10,16 @@ rm(list=ls()) # clear environment
 cat("\014") # clear screen
 
 Compounds <- t(read.table(file = "resources/All_Compound_Names.tsv",sep = "\r"))
-# ScaffoldNet <- c(1,2,3) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
-ScaffoldNet <- c(1,3) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
+ScaffoldNet <- c(1,2,3) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
+# ScaffoldNet <- c(1,3) # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
+# ScaffoldNet <- 2 # c(1,2,3,4) # Model2 [Signor] has an issue with writeSIF and Model3 [Babur] is too large to write constraints
 ScaffoldName <- c("omnipath","generic","signor")
-InputType <- 1 # [1,2] 1 = Direct targets plus PROGENy; 2 = Only Direct targets; 3 = Direct targets plus STRING
+InputType <- 2 # [1,2] 1 = Only Direct targets; 2 = Direct targets plus STRING
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
 for (counter_compound in 1:length(Compounds)) {
-# for (counter_compound in 31:length(Compounds)) {
-# for (counter_compound in 30:31) {
+# for (counter_compound in 9:length(Compounds)) {
+# for (counter_compound in 7:8) {
     
   for (counter_network in 1:length(ScaffoldNet)) {
     
@@ -52,7 +53,7 @@ for (counter_compound in 1:length(Compounds)) {
       if (InputType==1) {
         dir_name <- paste0("validation_",Result_dir)
       } else if (InputType==2) {
-        dir_name <- paste0("validation_",Result_dir,"_MainTarget")
+        dir_name <- paste0("validation_",Result_dir,"_STITCH_input")
       }
     }
     dir.create(dir_name); setwd(current_dir)
@@ -71,13 +72,13 @@ for (counter_compound in 1:length(Compounds)) {
       inputs       <- try(read.table(paste0("inputs/Inputs_Main_",Compounds[counter_compound],".tsv"), sep="\t", header = TRUE))
       if(inherits(inputs, "try-error")) next
     } else if (InputType==2) {
-      # inputs       <- try(read.table(paste0("inputs/Inputs_Main_STITCH_",Compounds[counter_compound],".tsv"), sep="\t", header = TRUE))
+      inputs       <- try(read.table(paste0("inputs/Inputs_Main_STITCH_",Compounds[counter_compound],"_CutOff_800.tsv"), sep="\t", header = TRUE))
       if(inherits(inputs, "try-error")) next
     }
     
-    # measurements <- try(read_delim(paste0("measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), "\t", escape_double = FALSE, trim_ws = TRUE))
-    # measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
-    measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_1.5_PGN_MeanSDCutOff_1.5/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
+    measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
+    # measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_1.5_PGN_MeanSDCutOff_1.5/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
+    # measurements <- try(read.table(paste0("measurements/DRT_MeanSDCutOff_1_PGN_MeanSDCutOff_1/Meas_DRT_PGN_",Compounds[counter_compound],".tsv"), sep="\t", header=TRUE))
     if(inherits(measurements, "try-error")) next
     
     # Input processing
@@ -108,7 +109,8 @@ for (counter_compound in 1:length(Compounds)) {
     ptm <- proc.time()
     if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
       for(i in 1:length(variables)){
-        sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
+        try(sif <- readOutResult(cplexSolutionFileName = paste("results/",dir_name,"/results_cplex.txt",sep=""), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements))
+        if(inherits(variables, "try-error")) next
       }
     } else {
       print("No result to be written")
