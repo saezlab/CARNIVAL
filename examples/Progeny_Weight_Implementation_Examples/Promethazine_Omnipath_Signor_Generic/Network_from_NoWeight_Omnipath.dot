@@ -1,0 +1,22 @@
+digraph {
+
+AKT1->EYA1 [penwidth=1, color=black]
+AKT1->RUNX2 [penwidth=1, color=black]
+EYA1->FGF3 [penwidth=1, color=black]
+FGF3->FOXI1 [penwidth=1, color=black]
+GNA11->PIK3CA [penwidth=1, color=black]
+PIK3CA->AKT1 [penwidth=1, color=black]
+ADRA1A->GNA11 [penwidth=1, color=red]
+CHRM1->GNA11 [penwidth=1, color=red]
+ADRA1A [style=filled, color=red, fillcolor=mistyrose, shape=invhouse];
+CHRM1 [style=filled, color=red, fillcolor=mistyrose, shape=invhouse];
+FOXI1 [style=filled, color=black, fillcolor=lavender, shape=doublecircle];
+RUNX2 [style=filled, color=black, fillcolor=lavender, shape=doublecircle];
+AKT1 [style=filled, fillcolor=lavender];
+EYA1 [style=filled, fillcolor=lavender];
+FGF3 [style=filled, fillcolor=lavender];
+GNA11 [style=filled, fillcolor=mistyrose];
+PIK3CA [style=filled, fillcolor=lavender];
+
+
+}
