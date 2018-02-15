@@ -1,4 +1,4 @@
-write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables, alpha=alpha, beta=beta) {
+write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables,scores=scores,weights=weights, alpha=alpha, beta=beta) {
   
   OF <- "Obj:\t"
   
@@ -11,9 +11,9 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
     var <- variables[[i]]
     
     if (i==1) {
-      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var, alpha = alpha, beta = beta))
+      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var,scores=scores,weights=weights, alpha = alpha, beta = beta))
     } else {
-      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, alpha = alpha, beta = beta))
+      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, scores=scores,weights=weights,alpha = alpha, beta = beta))
     }
     
   }
