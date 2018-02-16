@@ -7,10 +7,10 @@ rm(list=ls()) # clear environment
 cat("\014") # clear screen
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example    <- 6 # c(1,2,3,4,5,6,101,102) # Ex4 = Feedback/Cycle motif, Ex5 = Mike's example; Ex6 = Propanolol example; Ex101 = Validation Single; Ex102 = Validation Multiple
+Example    <- 8 # c(1,2,3,4,5,6,7,8,101,102) # Ex4 = Feedback/Cycle motif, Ex5 = Mike's example; Ex6 = Propanolol example; Ex7 = ToyWeight; Ex8 = PromethazineWeight; Ex101 = Validation Single; Ex102 = Validation Multiple
 Case_study <- 1 # c(1,2,3,4) or c(c(1,2),c(1,4))
 Network    <- 1 # c(1,2) == c("positive","negative") / c("pos-pos","pos-neg") / c("same_sign","inverse_sign") / c("ABC","SABC") / "Mike" / "PPNL" / c("Omnipath","Signor","Babur")
-Result_dir <- "Ex6Case2Net1" # specify a name for result directory; if NULL, then date and time will be used by default
+Result_dir <- "Ex8Case1Net1" # specify a name for result directory; if NULL, then date and time will be used by default
 Export_all <- 0 # c(0,1) export all ILP variables or not; if 0, only cplex results, predicted node values and sif file will be written
 
 # ============================== #
@@ -64,6 +64,21 @@ if (Example == 1) {
   # inputs       <- read.table("examples/Ex6/Propanolol_inputs_only_ADRB1.txt", sep="\t", header = TRUE)
   inputs       <- read.table("examples/Ex6/Propanolol_inputs.txt", sep="\t", header = TRUE)
   measurements <- read_delim("examples/Ex6/TFActs_TGG_PPNL_Human_ivt_24h_high_UpDown.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+} else if (Example == 7) {
+  network      <- read.table("examples/Progeny_Weight_Implementation_Examples/ToyWeight/Network_ToyWeight.txt", sep = "\t", header = FALSE)
+  inputs       <- read.table("examples/Progeny_Weight_Implementation_Examples/ToyWeight/Input_ToyWeight.txt", sep="\t", header = TRUE)
+  measurements <- read_delim("examples/Progeny_Weight_Implementation_Examples/ToyWeight/Meas_ToyWeight.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+  if (Case_study==2) {
+    pathwayscore <- read.table("examples/Progeny_Weight_Implementation_Examples/ToyWeight/PathwayScore_ToyWeight.txt", sep = "\t", header = TRUE)
+  }
+} else if (Example == 8) {
+  network      <- read.table("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/resources/OmniPathSIF_NoHyphen.tsv", sep = "\t", header = FALSE)
+  inputs       <- try(read.table(paste0("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/inputs/Inputs_Main_promethazine.tsv"), sep="\t", header = TRUE))
+  # inputs       <- try(read.table(paste0("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/inputs/Inputs_Main_STITCH_promethazine_CutOff_800.tsv"), sep="\t", header = TRUE))
+  measurements <- try(read.table(paste0("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/measurements/DRT_MeanSDCutOff_2_PGN_MeanSDCutOff_2/Meas_DRT_PGN_promethazine.tsv"), sep="\t", header=TRUE))
+  if (Case_study==2) {
+    pathwayscore <- read.table("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/inputs/Inputs_Main_STITCH_promethazine_CutOff_800.tsv", sep = "\t", header = TRUE)
+  }
 } else if (Example == 101) {
   if (Network==1) {
     network      <- read.table("examples/ValEx1/OmniPathSIF_NoHyphen.tsv", sep = "\t", header = FALSE)
@@ -100,9 +115,37 @@ pknList <- as.data.frame(network)
 colnames(pknList) <- c("Node1", "Sign", "Node2")
 setwd(paste0(current_dir,"/src/")) # temporary shift to src directory
 
+if (exists("pathwayscore")) {
+  if (nrow(pathwayscore)==1) {
+    if (length(unique(as.numeric(pathwayscore)))!=1) {
+      nodeWeights <- 1 - 2*((abs(pathwayscore) - min(abs(pathwayscore),na.rm=T)) / (max(abs(pathwayscore),na.rm=T) - min(abs(pathwayscore),na.rm=T)))
+    } else { 
+      nodeWeights <- pathwayscore # if all pathway scores are the same, then use pathwayscore as the nodeWeights directly
+    }
+    names(nodeWeights) <- colnames(pathwayscore)
+    scores <- as.numeric(pathwayscore); names(scores) <- names(nodeWeights)
+  } else {
+    # progenyScores <- read_csv("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/data/E-MTAB-2091_PROGENy.csv")
+    # pathwayscore <- progenyScores[,2:ncol(progenyScores)]
+    pathwayscore_current <- pathwayscore[1,]
+    nodeWeights <- NULL
+    for (counter_pw in 1:ncol(pathwayscoreAll)) {
+      ss <- abs(as.numeric(as.matrix(pathwayscoreAll[, counter_pw])))
+      nodeWeights <- c(nodeWeights, 1-2*(ss[1]-min(ss, na.rm = TRUE))/(max(ss, na.rm = TRUE)-min(ss, na.rm = TRUE)))
+    }
+    names(nodeWeights) <- colnames(pathwayscore)
+    scores <- as.numeric(pathwayscore_current); names(scores) <- names(nodeWeights)
+    # names(scores) <- c("AR", "EGFR", "ESR1", "HIF1A", "JAK1", "MAPK1", "NFKB1", "PIK3CA", "TGFBR1", "TNFRSF1A", "TNFSF10", "KDR", "CTNNB1", "TP53")
+    # names(nodeWeights) <- c("AR", "EGFR", "ESR1", "HIF1A", "JAK1", "MAPK1", "NFKB1", "PIK3CA", "TGFBR1", "TNFRSF1A", "TNFSF10", "KDR", "CTNNB1", "TP53")
+  }
+} else {
+  scores <- NULL
+  nodeWeights <- NULL
+}
+
 # Write constraints as ILP inputs
 ptm <- proc.time()
-variables <- writeLPFile(data,pknList,inputs,0.1)
+variables <- writeLPFile(data,pknList,inputs,0.1,alpha=100,beta=20,scores=scores,nodeWeights=nodeWeights)
 Elapsed_1 <- proc.time() - ptm
 
 # Solve ILP problem with cplex, remove temp files, and return to the main directory
