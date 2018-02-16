@@ -1,4 +1,4 @@
-write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, scores = scores, weights = weights, alpha=alpha, beta=beta){
+write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alpha=alpha, beta=beta, scores = scores, nodeWeights = nodeWeights ){
   
   if(is.null(scores)){
     
@@ -53,28 +53,28 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     objectiveFunction <- paste0("", objectiveFunction)
     
-    # weights <- scores
-    # absoluteWeights <- abs(weights)
-    # for(i in 1:length(weights)){
+    # nodeWeights <- scores
+    # absolutenodeWeights <- abs(nodeWeights)
+    # for(i in 1:length(nodeWeights)){
     #   
-    #   # weights[i] <- sign(scores[i])*(1-(absoluteWeights[i] - min(absoluteWeights, na.rm = TRUE))/(max(absoluteWeights, na.rm = TRUE) - min(absoluteWeights, na.rm = TRUE)))
-    #   weights[i] <- 1 - 2*(absoluteWeights[i] - min(absoluteWeights, na.rm = TRUE))/(max(absoluteWeights, na.rm = TRUE) - min(absoluteWeights, na.rm = TRUE))
+    #   # nodeWeights[i] <- sign(scores[i])*(1-(absolutenodeWeights[i] - min(absolutenodeWeights, na.rm = TRUE))/(max(absolutenodeWeights, na.rm = TRUE) - min(absolutenodeWeights, na.rm = TRUE)))
+    #   nodeWeights[i] <- 1 - 2*(absolutenodeWeights[i] - min(absolutenodeWeights, na.rm = TRUE))/(max(absolutenodeWeights, na.rm = TRUE) - min(absolutenodeWeights, na.rm = TRUE))
     #   
     # }
-    # absoluteWeights <- abs(weights)
+    # absolutenodeWeights <- abs(nodeWeights)
     
-    weightedSpecies <- paste0("Species ", names(weights))
+    weightedSpecies <- paste0("Species ", names(nodeWeights))
     
     ##
     idx1 <- which(variables$expNodesReduced%in%weightedSpecies[which(scores > 0)])
+
+    objectiveFunctionUp1 <- ""
     
     if(length(idx1) > 0){
       
-      objectiveFunctionUp1 <- ""
-
       for(i in 1:length(idx1)){
         
-        ww <- weights[which(weightedSpecies==variables$expNodesReduced[idx1[i]])]
+        ww <- nodeWeights[which(weightedSpecies==variables$expNodesReduced[idx1[i]])]
         
         if(sign(ww)==1){
           
@@ -101,7 +101,7 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
       
       for(i in 1:length(idx2)){
         
-        ww <- weights[which(weightedSpecies==variables$expNodesReduced[idx2[i]])]
+        ww <- nodeWeights[which(weightedSpecies==variables$expNodesReduced[idx2[i]])]
         
         if(sign(ww)==1){
           
