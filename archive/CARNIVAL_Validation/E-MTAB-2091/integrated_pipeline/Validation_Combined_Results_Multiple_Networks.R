@@ -1,14 +1,15 @@
-# Validation scripts - Integrated Pipeline
+# Validation scripts - Integrated Pipeline - Combined results
 
 # Clear all variables, screen and figures
 rm(list=ls());cat("\014");if (length(dev.list())>0){dev.off()}
 
-# Select network (1=omnipath, 2=generic, 3=signor)
-ScaffoldNet <- 3 # Single
-# ScaffoldNet <- c(1,2,3) # Multiple
-
+# Select network (1=omnipath, 2=generic, 3=signor) # Now select all 3
+# ScaffoldNet <- 1 # Single
+ScaffoldNetAll <- c(1,2,3) # Multiople
+ScaffoldNameAll <- c("omnipath","generic","signor")
+  
 # Select stimuli's targets (1=only main, 2=main+STITCH)
-StimuliTarget <- 2 # Single
+StimuliTarget <- 1 # Single
 # StimuliTarget <- c(1,2) # Multiple
 
 # Select SD-Cutoff for input loading (c(1,1.5,2))
@@ -30,7 +31,7 @@ PlotThresholdCoverage <- T
 # ===== STEP 1: READ-IN RESULTS AND GENERATE SUMMARY ===== #
 # ======================================================== #
 
-if (ScaffoldNet==1) {ScaffoldName <- "omnipath"} else if (ScaffoldNet==2) {ScaffoldName <- "generic"} else if (ScaffoldNet==3) {ScaffoldName <- "signor"}
+# if (ScaffoldNet==1) {ScaffoldName <- "omnipath"} else if (ScaffoldNet==2) {ScaffoldName <- "generic"} else if (ScaffoldNet==3) {ScaffoldName <- "signor"}
 if (StimuliTarget==1) {DIR_STITCH <- "";FOLDER_STITCH <-""; STITCH_Label <- ""} else if (StimuliTarget==2) {DIR_STITCH <- "STITCH_input/"; FOLDER_STITCH <-"_STITCH_input";STITCH_Label <- "_STITCH"}
 
 # Load source scripts
@@ -80,93 +81,150 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   # Load compounds' names from input datasets (n=52)
   Compounds <- t(read.table(file = "~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/resources/All_Compound_Names.tsv",sep = "\r"))
   
-  # Prepare results matrix
-  ValResMat <- as.data.frame(matrix(NA,length(Compounds),length(MeasuredPP)*3))
-  ValResMatCol <- NULL
-  for (counter in 1:length(MeasuredPP)) {
-    ValResMatCol <- c(ValResMatCol,paste0(MeasuredPP[counter],"_Mod"),paste0(MeasuredPP[counter],"_5m"),paste0(MeasuredPP[counter],"_25m"))
-  }
-  colnames(ValResMat) <- ValResMatCol
-  rownames(ValResMat) <- Compounds
-  ValResMatSign <- ValResMat 
-  ValResMatSignCutOff <- ValResMat
-  ValResMatReal <- ValResMat
-  ValResMatReal[1:length(ValResMatReal)] <- 0
-  ValResMatAll <- ValResMat 
-  ValResMatAll[1:length(ValResMatAll)] <- 0
-  #ValResMatAll[1:length(ValResMatAll)] <- NA
+  # ==================================== #
+  # Initialise Collection of all results #
+  # ==================================== #
   
-  NoActivityID <- NULL # Manual count OnlyMainTargets n=11
-  NoNetworkID <- NULL # Check the existence of written dot file
+  ValResMat_Nets <- list()
+  ValResMatSign_Nets <- list()
+  ValResMatSignCutOff_Nets <- list()
+  ValResMatReal_Nets <- list()
+  ValResMatAll_Nets <- list()
+  ModAct_All_Nets <- list()
+  NoActivityID_Nets <- list()
+  NoNetworkID_Nets <- list()
   
-  ModAct_All <- list()
-
-  for (counter_compound in 1:length(Compounds)) {
-  # for (counter_compound in 1:15) {
-      
-    print(paste0("Now mapping: ",Compounds[counter_compound]))
-      
-    if (file.exists(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/Integrated/",DIR_STITCH,"ThresholdSD",toString(Meas_Cutoff),"/validation_",Compounds[counter_compound],"_",ScaffoldName,FOLDER_STITCH,"/nodesActivity_1.txt"))) {
+  for (counter_net in 1:length(ScaffoldNetAll)) {
+    
+    ScaffoldNet <- ScaffoldNetAll[counter_net]
+    if (ScaffoldNet==1) {ScaffoldName <- "omnipath"} else if (ScaffoldNet==2) {ScaffoldName <- "generic"} else if (ScaffoldNet==3) {ScaffoldName <- "signor"}
   
-      if (file.exists(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/Integrated/",DIR_STITCH,"ThresholdSD",toString(Meas_Cutoff),"/validation_",Compounds[counter_compound],"_",ScaffoldName,FOLDER_STITCH,"/ActivityNetwork_1.dot"))) {
+    # Prepare results matrix
+    ValResMat <- as.data.frame(matrix(NA,length(Compounds),length(MeasuredPP)*3))
+    ValResMatCol <- NULL
+    for (counter in 1:length(MeasuredPP)) {
+      ValResMatCol <- c(ValResMatCol,paste0(MeasuredPP[counter],"_Mod"),paste0(MeasuredPP[counter],"_5m"),paste0(MeasuredPP[counter],"_25m"))
+    }
+    colnames(ValResMat) <- ValResMatCol
+    rownames(ValResMat) <- Compounds
+    ValResMatSign <- ValResMat 
+    ValResMatSignCutOff <- ValResMat
+    ValResMatReal <- ValResMat
+    ValResMatReal[1:length(ValResMatReal)] <- 0
+    ValResMatAll <- ValResMat 
+    ValResMatAll[1:length(ValResMatAll)] <- 0
+    #ValResMatAll[1:length(ValResMatAll)] <- NA
+    
+    NoActivityID <- NULL # Manual count OnlyMainTargets n=11
+    NoNetworkID <- NULL # Check the existence of written dot file
+    
+    ModAct_All <- list()
+    
+    for (counter_compound in 1:length(Compounds)) {
+    # for (counter_compound in 1:15) {
         
-        Idx_Condition <- which(Compounds[counter_compound]==CompoundsPP_Names)
+      print(paste0("Now mapping: ",Compounds[counter_compound]))
         
-        for (counter_all in 4:ncol(PP5min)) { # same for PP25min
-          Current_PP5min_meas_all <- PP5min_Cutoff[Idx_Condition,counter_all-3]
-          Current_PP25min_meas_all <- PP25min_Cutoff[Idx_Condition,counter_all-3]
-          ValResMatAll[counter_compound,(((counter_all-1-3)*3)+2):(((counter_all-1-3)*3)+3)] <- c(Current_PP5min_meas_all,Current_PP25min_meas_all)
-          ValResMatReal[counter_compound,(((counter_all-1-3)*3)+2):(((counter_all-1-3)*3)+3)] <- c(PP5min[Idx_Condition,counter_all],PP25min[Idx_Condition,counter_all])
-        }
-        
-        
-        NodeAct_current <- read.delim(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/Integrated/",DIR_STITCH,"ThresholdSD",toString(Meas_Cutoff),"/validation_",Compounds[counter_compound],"_",ScaffoldName,FOLDER_STITCH,"/nodesActivity_1.txt"),header=T,sep="\t",stringsAsFactors = F)
-        Overlapped_Proteins <- intersect(MeasuredPP_HGNC,NodeAct_current[,1])
-        
-        if (length(Overlapped_Proteins)>0) {  
-          # Writing results for the overlapped proteins
-          Result_Matrix <- matrix(NA,length(Overlapped_Proteins),4)
-          colnames(Result_Matrix) <- c("Protein","CARNIVAL","PP5min","PP25min")
-          for (counter in 1:length(Overlapped_Proteins)) {
-            Current_Overlapped_Protein <- Overlapped_Proteins[counter]
-            Current_CARNIVAL_output <- NodeAct_current$Activity[NodeAct_current$Nodes==Current_Overlapped_Protein]
-            Current_PP5min_meas <- PP5min[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)+3]
-            Current_PP25min_meas <- PP25min[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)+3]
-            Result_Matrix[counter,] <- c(Current_Overlapped_Protein,Current_CARNIVAL_output,Current_PP5min_meas,Current_PP25min_meas)
-            # map to summarised matrix
-            Idx_ValResMat <- which(Current_Overlapped_Protein==MeasuredPP_HGNC)
-            ValResMatReal[counter_compound,(((Idx_ValResMat-1)*3)+1)] <- Current_CARNIVAL_output
-            ValResMat[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <- c(Current_CARNIVAL_output,Current_PP5min_meas,Current_PP25min_meas)
-            ValResMatSign[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <- c(Current_CARNIVAL_output,sign(Current_PP5min_meas),sign(Current_PP25min_meas))
-            ValResMatSignCutOff[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <- # c(Current_CARNIVAL_output,
-                                                                                                           # sign(if (abs(Current_PP5min_meas)<=CutOff) {Current_PP5min_meas=0} else {Current_PP5min_meas}),                                                                                                       
-                                                                                                           # sign(if (abs(Current_PP25min_meas)<=CutOff) {Current_PP25min_meas=0} else {Current_PP25min_meas}))
-            # if (abs(Current_PP5min_meas)<=CutOff || abs(Current_PP25min_meas)<=CutOff) {c(NA,NA,NA)} else {c(Current_CARNIVAL_output,sign(Current_PP5min_meas),sign(Current_PP25min_meas))}
-              c(Current_CARNIVAL_output, 
-                if (PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {NA} else {PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]},
-                if (PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {NA} else {PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]})
-                # if (Current_PP5min_meas < CutOff_PP_Up[1,Idx_ValResMat] & Current_PP5min_meas > CutOff_PP_Down[1,Idx_ValResMat]) {NA} else {sign(Current_PP5min_meas)},
-                # if (Current_PP25min_meas < CutOff_PP_Up[2,Idx_ValResMat] & Current_PP25min_meas > CutOff_PP_Down[2,Idx_ValResMat]) {NA} else {sign(Current_PP25min_meas)})
-                # if (abs(Current_PP5min_meas)<=CutOff) {NA} else {sign(Current_PP5min_meas)},
-                # if (abs(Current_PP25min_meas)<=CutOff) {NA} else {sign(Current_PP25min_meas)})
-            ValResMatAll[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <-
-              c(if(is.na(Current_CARNIVAL_output)){0}else(Current_CARNIVAL_output), 
-                if (PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {0} else {PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]},
-                if (PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {0} else {PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]})
-          } 
-          ModAct_All[[counter_compound]] <- Result_Matrix
+      if (file.exists(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/Integrated/",DIR_STITCH,"ThresholdSD",toString(Meas_Cutoff),"/validation_",Compounds[counter_compound],"_",ScaffoldName,FOLDER_STITCH,"/nodesActivity_1.txt"))) {
+    
+        if (file.exists(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/Integrated/",DIR_STITCH,"ThresholdSD",toString(Meas_Cutoff),"/validation_",Compounds[counter_compound],"_",ScaffoldName,FOLDER_STITCH,"/ActivityNetwork_1.dot"))) {
           
-          # Write a result file for individual molecules
-          # write.table(x = Result_Matrix,file = paste0("Validation_Results_",Compounds[counter_compound],"_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
+          Idx_Condition <- which(Compounds[counter_compound]==CompoundsPP_Names)
+          
+          for (counter_all in 4:ncol(PP5min)) { # same for PP25min
+            Current_PP5min_meas_all <- PP5min_Cutoff[Idx_Condition,counter_all-3]
+            Current_PP25min_meas_all <- PP25min_Cutoff[Idx_Condition,counter_all-3]
+            ValResMatAll[counter_compound,(((counter_all-1-3)*3)+2):(((counter_all-1-3)*3)+3)] <- c(Current_PP5min_meas_all,Current_PP25min_meas_all)
+            ValResMatReal[counter_compound,(((counter_all-1-3)*3)+2):(((counter_all-1-3)*3)+3)] <- c(PP5min[Idx_Condition,counter_all],PP25min[Idx_Condition,counter_all])
+          }
+          
+          
+          NodeAct_current <- read.delim(paste0("~/Desktop/RWTH_Aachen/GitHub/Modelling_Results/CARNIVAL/E-MTAB-2091/Integrated/",DIR_STITCH,"ThresholdSD",toString(Meas_Cutoff),"/validation_",Compounds[counter_compound],"_",ScaffoldName,FOLDER_STITCH,"/nodesActivity_1.txt"),header=T,sep="\t",stringsAsFactors = F)
+          Overlapped_Proteins <- intersect(MeasuredPP_HGNC,NodeAct_current[,1])
+          
+          if (length(Overlapped_Proteins)>0) {  
+            # Writing results for the overlapped proteins
+            Result_Matrix <- matrix(NA,length(Overlapped_Proteins),4)
+            colnames(Result_Matrix) <- c("Protein","CARNIVAL","PP5min","PP25min")
+            for (counter in 1:length(Overlapped_Proteins)) {
+              Current_Overlapped_Protein <- Overlapped_Proteins[counter]
+              Current_CARNIVAL_output <- NodeAct_current$Activity[NodeAct_current$Nodes==Current_Overlapped_Protein]
+              Current_PP5min_meas <- PP5min[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)+3]
+              Current_PP25min_meas <- PP25min[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)+3]
+              Result_Matrix[counter,] <- c(Current_Overlapped_Protein,Current_CARNIVAL_output,Current_PP5min_meas,Current_PP25min_meas)
+              # map to summarised matrix
+              Idx_ValResMat <- which(Current_Overlapped_Protein==MeasuredPP_HGNC)
+              ValResMatReal[counter_compound,(((Idx_ValResMat-1)*3)+1)] <- Current_CARNIVAL_output
+              ValResMat[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <- c(Current_CARNIVAL_output,Current_PP5min_meas,Current_PP25min_meas)
+              ValResMatSign[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <- c(Current_CARNIVAL_output,sign(Current_PP5min_meas),sign(Current_PP25min_meas))
+              ValResMatSignCutOff[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <- # c(Current_CARNIVAL_output,
+                                                                                                             # sign(if (abs(Current_PP5min_meas)<=CutOff) {Current_PP5min_meas=0} else {Current_PP5min_meas}),                                                                                                       
+                                                                                                             # sign(if (abs(Current_PP25min_meas)<=CutOff) {Current_PP25min_meas=0} else {Current_PP25min_meas}))
+              # if (abs(Current_PP5min_meas)<=CutOff || abs(Current_PP25min_meas)<=CutOff) {c(NA,NA,NA)} else {c(Current_CARNIVAL_output,sign(Current_PP5min_meas),sign(Current_PP25min_meas))}
+                c(Current_CARNIVAL_output, 
+                  if (PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {NA} else {PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]},
+                  if (PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {NA} else {PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]})
+                  # if (Current_PP5min_meas < CutOff_PP_Up[1,Idx_ValResMat] & Current_PP5min_meas > CutOff_PP_Down[1,Idx_ValResMat]) {NA} else {sign(Current_PP5min_meas)},
+                  # if (Current_PP25min_meas < CutOff_PP_Up[2,Idx_ValResMat] & Current_PP25min_meas > CutOff_PP_Down[2,Idx_ValResMat]) {NA} else {sign(Current_PP25min_meas)})
+                  # if (abs(Current_PP5min_meas)<=CutOff) {NA} else {sign(Current_PP5min_meas)},
+                  # if (abs(Current_PP25min_meas)<=CutOff) {NA} else {sign(Current_PP25min_meas)})
+              ValResMatAll[counter_compound,(((Idx_ValResMat-1)*3)+1):(((Idx_ValResMat-1)*3)+3)] <-
+                c(if(is.na(Current_CARNIVAL_output)){0}else(Current_CARNIVAL_output), 
+                  if (PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {0} else {PP5min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]},
+                  if (PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]==0) {0} else {PP25min_Cutoff[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)]})
+            } 
+            ModAct_All[[counter_compound]] <- Result_Matrix
+            
+            # Write a result file for individual molecules
+            # write.table(x = Result_Matrix,file = paste0("Validation_Results_",Compounds[counter_compound],"_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
+          }
+        } else {
+          NoNetworkID <- c(NoNetworkID, counter_compound)
         }
       } else {
-        NoNetworkID <- c(NoNetworkID, counter_compound)
+        NoActivityID <- c(NoActivityID, counter_compound)
       }
-    } else {
-      NoActivityID <- c(NoActivityID, counter_compound)
     }
+    
+    ValResMat_Nets[[counter_net]] <- ValResMat
+    ValResMatSign_Nets[[counter_net]] <- ValResMatSign
+    ValResMatSignCutOff_Nets[[counter_net]] <- ValResMatSignCutOff
+    ValResMatReal_Nets[[counter_net]] <- ValResMatReal
+    ValResMatAll_Nets[[counter_net]] <- ValResMatAll
+    ModAct_All_Nets[[counter_net]] <- ModAct_All
+    NoActivityID_Nets[[counter_net]] <- NoActivityID
+    NoNetworkID_Nets[[counter_net]] <- NoNetworkID
   }
 
+  # Combine results from certain variables
+  # ValResMatAll
+
+  ModelResults <- matrix(NA,nrow(ValResMatAll_Nets[[1]]),ncol(ValResMatAll_Nets[[1]])/3*length(ScaffoldNetAll))
+  
+  ColText1 <- paste0(rep(MeasuredPP,each=3),"-")
+  ColText2 <- rep(ScaffoldNameAll,times=ncol(ValResMatAll_Nets[[1]])/3)
+  
+  colnames(ModelResults) <- paste0(ColText1,ColText2)
+    
+
+  for (counter_readout in 1:(ncol(ValResMatAll_Nets[[1]])/3)) {
+    
+    ModelResults[,((counter_readout-1)*3)+1] <- ValResMatAll_Nets[[1]][,((counter_readout-1)*3)+1]
+    ModelResults[,((counter_readout-1)*3)+2] <- ValResMatAll_Nets[[2]][,((counter_readout-1)*3)+2]
+    ModelResults[,((counter_readout-1)*3)+3] <- ValResMatAll_Nets[[3]][,((counter_readout-1)*3)+3]
+    
+  }
+      
+  ModelCombined <- matrix(NA,nrow(ValResMatAll_Nets[[1]]),ncol(ValResMatAll_Nets[[1]])/3)
+  colnames(ModelCombined) <- MeasuredPP
+
+  for (counter_combine in 1:(ncol(ValResMatAll_Nets[[1]])/3)) {
+    
+    ModelCombined[,counter_combine] <- sign(rowSums(ModelResults[,(((counter_combine-1)*3)+1) : (((counter_combine-1)*3)+3)]))
+    
+  }
+  
+  
   
   # =============================================== #
   # ===== STEP 2: PLOT REPRESENTATIVE FIGURES ===== #
@@ -177,6 +235,11 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   # ===== FIGURE 1: MODEL vs DIST.PP-DATA ===== #
   # =========================================== #
   
+  # Need ValResMat -> Map back combined values
+  ValResMatAll <- ValResMatAll_Nets[[1]]
+  for (counter_map in 1:(ncol(ValResMatAll)/3)) {
+    ValResMatAll[,((counter_map-1)*3)+1] <- ModelCombined[,counter_map]
+  }
   
   # Calculate accuracy from all datapoints
   AccuMat <- matrix(NA,9,length(MeasuredPP_HGNC))
@@ -198,13 +261,13 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
     AccuMat[,counter_diff] <- c(length(NoActivityID)+length(NoNetworkID),Accu5minZero,Accu5minPerf,Accu5minMM,Accu5minInv,Accu25minZero,Accu25minPerf,Accu25minMM,Accu25minInv)
   }
   
-  write.table(x = AccuMat,file = paste0("Accuracy_Validation_Results_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),
+  write.table(x = AccuMat,file = paste0("Accuracy_Validation_Results_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),
                                         if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
                                         else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
                                         else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
                                         ,STITCH_Label,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
   
-  pdf(paste0("Stastic_Validation_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),
+  pdf(paste0("Stastic_Validation_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),
              if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
              else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
              else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
@@ -214,7 +277,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
        # xlab = "Measured-PP",
        ylab="Counts",
        ylim = c(0,54),
-       main = paste0("Validation ",ScaffoldName," MeasC/o:",toString(Meas_Cutoff)," ppC/o:",toString(PP_Cutoff[counter_ppCutOff]),STITCH_Label),axes = F)
+       main = paste0("Validation CombinedNets MeasC/o:",toString(Meas_Cutoff)," ppC/o:",toString(PP_Cutoff[counter_ppCutOff]),STITCH_Label),axes = F)
   axis(1, at=seq(1,length(MeasuredPP),by=1),labels=MeasuredPP, las = 2)
   axis(2, at=seq(0,length(Compounds),by=5),labels=seq(0,length(Compounds),by=5), las = 2)
   points(1:length(MeasuredPP),AccuMat[2,],type = 'p', pch=16,col='blue',cex=1)
@@ -367,6 +430,11 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   # ===== FIGURE 2: DIFF ANALYSIS ===== #
   # =================================== #
   
+  # Need ValResMatSignCutOff -> Map back combined values
+  ValResMatSignCutOff <- ValResMatSignCutOff_Nets[[1]]
+  for (counter_map in 1:(ncol(ValResMatSignCutOff)/3)) {
+    ValResMatSignCutOff[,((counter_map-1)*3)+1] <- ModelCombined[,counter_map]
+  }
   
   # Analysis on the difference of predicted node activity and measurement (here use ValResMatSignCutOff)
   DiffMat <- matrix(NA,4,length(MeasuredPP_HGNC))
@@ -386,7 +454,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
     DiffMat[,counter_diff] <- c(sum(Diff5min)/length(Diff5min),length(Diff5min),sum(Diff25min)/length(Diff25min),length(Diff25min))
   }
 
-  pdf(paste0("Average_Difference_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),
+  pdf(paste0("Average_Difference_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),
              if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
              else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
              else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
@@ -395,7 +463,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   plot(1:length(MeasuredPP),DiffMat[1,],type = 'p',col='red',cex=DiffMat[2,]/2,
        xlab = "Measured-PP",ylab="Distance",
        ylim = c(0,2.3),
-       main = paste0("AvgDiff ",ScaffoldName," MeasC/o:",toString(Meas_Cutoff)," ppC/o:",toString(PP_Cutoff[counter_ppCutOff]),STITCH_Label),axes = F)
+       main = paste0("AvgDiff CombinedNets MeasC/o:",toString(Meas_Cutoff)," ppC/o:",toString(PP_Cutoff[counter_ppCutOff]),STITCH_Label),axes = F)
   axis(1, at=seq(1,length(MeasuredPP),by=1),labels=MeasuredPP, las = 2)
   axis(2, at=seq(0,2.3,by=0.2),labels=seq(0,2.3,by=0.2), las = 2)
   points(1:length(MeasuredPP),DiffMat[3,],type = 'p', col='blue',cex=DiffMat[4,]/12)
@@ -409,7 +477,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
 # === Global ROC-curve === #
 # ======================== #
 
-pdf(paste0("Global_ROC_Statistics_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
+pdf(paste0("Global_ROC_Statistics_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
 
 library(RColorBrewer)
 ROCcols <- brewer.pal(length(PP_Cutoff), "Spectral")
@@ -429,7 +497,7 @@ for (counter_ROCplot in 1:length(PP_Cutoff)) {
     if (counter_ROCplot!=length(PP_Cutoff)) {
       plot(roc.perf25m,col=ROCcols[counter_ROCplot],lty=2,xlab="",ylab="")
     } else {
-      plot(roc.perf25m,col=ROCcols[counter_ROCplot],lty=2,main=paste0("Global ROC-curve - ",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label))
+      plot(roc.perf25m,col=ROCcols[counter_ROCplot],lty=2,main=paste0("Global ROC-curve - CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label))
     }
     abline(a=0, b= 1,col="grey")
     GlobalROCauc <- c(GlobalROCauc,c(round(as.numeric(auc.perf5m@y.values),digits=2),round(as.numeric(auc.perf25m@y.values),digits=2)))
@@ -455,11 +523,18 @@ dev.off()
 # ===== FIGURE 3: MODEL vs CONT.PP-DATA ===== #
 # =========================================== #
 
+# Need ValResMatReal -> Map back combined values
+ValResMatReal <- ValResMatReal_Nets[[1]]
+for (counter_map in 1:(ncol(ValResMatReal)/3)) {
+  ValResMatReal[,((counter_map-1)*3)+1] <- ModelCombined[,counter_map]
+}
+
+
 # Plot distribution of node value to real-pp data (from ValResMatReal)
 # First remove the empty models
 DistModelPP <- ValResMatReal[-c(NoActivityID,NoNetworkID),]
 
-pdf(paste0("FitDistribution_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
+pdf(paste0("FitDistribution_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
 
 require(reshape2)
 require(ggplot2)
@@ -493,7 +568,7 @@ p <- ggplot(data = MeltedDataBoxplot, aes(x=Condition, y=ppValue)) +
   # geom_boxplot(aes(fill=Condition)) + geom_dotplot(aes(fill=Condition,alpha=0.3),binaxis='y', stackdir='centerwhole', dotsize=1, stackratio=0) # Boxplots
   # geom_dotplot(aes(fill=Condition,alpha=0.3),binaxis='y', stackdir='up', dotsize=1, stackratio=0) + geom_boxplot(width=0.1) # Dotplots
 
-p + facet_wrap( ~ Readout, scales="free")+ theme(axis.text.x=element_blank())+ scale_fill_manual(values=c("#AED6F1", "#5DADE2", "#2E86C1","#A9DFBF", "#52BE80", "#229954"))+ ggtitle(paste0("FitDistribution_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label))
+p + facet_wrap( ~ Readout, scales="free")+ theme(axis.text.x=element_blank())+ scale_fill_manual(values=c("#AED6F1", "#5DADE2", "#2E86C1","#A9DFBF", "#52BE80", "#229954"))+ ggtitle(paste0("FitDistribution_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label))
 
 dev.off()
 
@@ -502,7 +577,21 @@ dev.off()
 # ===== FIGURE 4: GSEA ANALYSIS ===== #
 # =================================== #
 
+# Need ModAct_All -> Map back combined values (different approach)
+ModAct_All_pool <- ModAct_All_Nets[[1]]
+for (counter_map in 1:length(ModAct_All_pool)) {
+  ModAct_All_pool[[counter_map]] <- rbind(ModAct_All_Nets[[1]][[counter_map]],ModAct_All_Nets[[2]][[counter_map]],ModAct_All_Nets[[3]][[counter_map]])
+}
+
+ModAct_All <- list()
+for (counter_map in 1:length(ModAct_All_pool)) {
+  ModAct_All[[counter_map]] <- unique(ModAct_All_pool[[counter_map]])
+}
+
+
 # Implement Aurelien's GSEA with piano
+
+library(piano)
 
 nCores <- 2
 nPerm <- 10000
@@ -513,7 +602,8 @@ colnames(gsaResAll) <- c("DistSP-5m","pAdjSP-5m","DistSM-5m","pAdjSM-5m","DistSP
 
 geneSetStat <- c("fgsea","median")
 
-for (counter_compound in 1:length(Compounds)) {
+# for (counter_compound in 1:length(Compounds)) {
+for (counter_compound in 1:length(ModAct_All)) {
   print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(Compounds))))
   Idx_Condition <- which(Compounds[counter_compound]==CompoundsPP_Names)
   PP5min_current <- PP5min[Idx_Condition,4:ncol(PP5min)]
@@ -538,7 +628,8 @@ for (counter_compound in 1:length(Compounds)) {
       
       # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=24) {
       # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=2) {
-      if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0)) {
+      if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=2  & counter_compound!=24) {
+      # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0)) {
         geneSet <- loadGSC(GS_matrix)
         gsaRes5min <- NULL; gsaRes25min <- NULL;
         gsaRes5min <- runGSA(unlist(PP5min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "fgsea", ncpus = nCores, nPerm = nPerm, gsSizeLim = c(1,Inf))
@@ -628,21 +719,21 @@ gsaResAll_plot[,4] <- (-1)*log10(gsaResAll_plot[,4])
 gsaResAll_plot[,6] <- (-1)*log10(gsaResAll_plot[,6])
 gsaResAll_plot[,8] <- (-1)*log10(gsaResAll_plot[,8])
 
-pdf(paste0("GSEA_Valcano_Validation_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
+pdf(paste0("GSEA_Valcano_Validation_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
 
 plot(gsaResAll_plot[,1],gsaResAll_plot[,2],type = 'p',pch=2,col='blue',cex=1,
      xlab = "GSEA score",ylab="-log10(Adj-pVal)",
-     ylim = c(0,1.2),xlim= c(-1,1),
+     ylim = c(0,2),xlim= c(-1,1),
      main = paste0("GSEA/Adj-pVal ",ScaffoldName," MeasC/o:",toString(Meas_Cutoff),STITCH_Label),axes = F)
 axis(1, at=seq(-1,1,by=0.2),labels=seq(-1,1,by=0.2), las = 2,cex.axis=1)
-axis(2, at=seq(0,1.2,by=0.2),labels=seq(0,1.2,by=0.2), las = 2)
+axis(2, at=seq(0,2,by=0.2),labels=seq(0,2,by=0.2), las = 2)
 points(gsaResAll_plot[,3],gsaResAll_plot[,4],type = 'p',pch=2, col='goldenrod1',cex=1)
 points(gsaResAll_plot[,5],gsaResAll_plot[,6],type = 'p',pch=16, col='darkgreen',cex=1)
 points(gsaResAll_plot[,7],gsaResAll_plot[,8],type = 'p',pch=16, col='firebrick2',cex=1)
-lines(rep(0,length(seq(0,1.2,by=0.2))),seq(0,1.2,by=0.2),type = "l",lty=2, col='grey',cex=1)
-lines(seq(-1,1,by=0.2),rep(0.6,length(seq(-1,1,by=0.2))),type = "l",lty=2, col='grey',cex=1)
+lines(rep(0,length(seq(0,2,by=0.2))),seq(0,2,by=0.2),type = "l",lty=2, col='grey',cex=1)
+lines(seq(-1,1,by=0.2),rep(1.0,length(seq(-1,1,by=0.2))),type = "l",lty=2, col='grey',cex=1)
 
-legend("topright", legend=c("SetUp-5m","SetDn-5m","SetUp-25m","SetDn-25m"),col=c("blue", "goldenrod1","darkgreen","firebrick2"),pch = c(2,2,16,16), cex=0.7,inset = 0)
+legend("top", legend=c("SetUp-5m","SetDn-5m","SetUp-25m","SetDn-25m"),col=c("blue", "goldenrod1","darkgreen","firebrick2"),pch = c(2,2,16,16), cex=0.7,inset = 0)
 
 dev.off()
 
@@ -664,17 +755,17 @@ if (PlotThresholdCoverage) {
   AggregatedData <- matrix(NA,9,length(CutOffRange)) 
   
   for (counter in 1:length(CutOffRange)) {
-    CurrentSummary <- read.table(paste0("Accuracy_Validation_Results_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),"_MeanSDCutOff_",toString(CutOffRange[counter]),STITCH_Label,".tsv"),sep = "\t", stringsAsFactors = F,header = T)
+    CurrentSummary <- read.table(paste0("Accuracy_Validation_Results_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),"_MeanSDCutOff_",toString(CutOffRange[counter]),STITCH_Label,".tsv"),sep = "\t", stringsAsFactors = F,header = T)
     AggregatedData[,counter] <- rowMeans(CurrentSummary)
   }
   
-  pdf(paste0("Matching_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
+  pdf(paste0("Matching_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
   
   par(mar=c(5.1, 4.1, 4.1, 5.1), xpdPlotThresholdCoverage=TRUE)
   plot(1:length(CutOffRange),AggregatedData[1,],type = 'p', pch=15, col='black',cex=0.8,
        xlab = "Measured-PP",ylab="Counts",
        ylim = c(0,max(AggregatedData)+5),
-       main = paste0("Matching ",ScaffoldName," MeasC/o:",toString(Meas_Cutoff),STITCH_Label),axes = F)
+       main = paste0("Matching CombinedNets MeasC/o:",toString(Meas_Cutoff),STITCH_Label),axes = F)
   axis(1, at=seq(1,length(CutOffRange),by=1),labels=CutOffRange, las = 2)
   axis(2, at=seq(0,max(AggregatedData)+5,by=5),labels=seq(0,max(AggregatedData)+5,by=5), las = 2)
   points(1:length(CutOffRange),AggregatedData[2,],type = 'p', pch=16,col='blue',cex=1)
