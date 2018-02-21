@@ -4,11 +4,11 @@
 rm(list=ls());cat("\014");if (length(dev.list())>0){dev.off()}
 
 # Select network (1=omnipath, 2=generic, 3=signor)
-ScaffoldNet <- 3 # Single
+ScaffoldNet <- 1 # Single
 # ScaffoldNet <- c(1,2,3) # Multiple
 
 # Select stimuli's targets (1=only main, 2=main+STITCH)
-StimuliTarget <- 2 # Single
+StimuliTarget <- 1 # Single
 # StimuliTarget <- c(1,2) # Multiple
 
 # Select SD-Cutoff for input loading (c(1,1.5,2))
@@ -100,7 +100,8 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   NoNetworkID <- NULL # Check the existence of written dot file
   
   ModAct_All <- list()
-
+  ModAct_All[length(Compounds)] <- list(NULL)
+  
   for (counter_compound in 1:length(Compounds)) {
   # for (counter_compound in 1:15) {
       
@@ -166,7 +167,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
       NoActivityID <- c(NoActivityID, counter_compound)
     }
   }
-
+  print(" ")
   
   # =============================================== #
   # ===== STEP 2: PLOT REPRESENTATIVE FIGURES ===== #
@@ -513,8 +514,8 @@ colnames(gsaResAll) <- c("DistSP-5m","pAdjSP-5m","DistSM-5m","pAdjSM-5m","DistSP
 
 geneSetStat <- c("fgsea","median")
 
-for (counter_compound in 1:length(Compounds)) {
-  print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(Compounds))))
+for (counter_compound in 1:length(ModAct_All)) {
+  print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(ModAct_All))))
   Idx_Condition <- which(Compounds[counter_compound]==CompoundsPP_Names)
   PP5min_current <- PP5min[Idx_Condition,4:ncol(PP5min)]
   PP25min_current <- PP25min[Idx_Condition,4:ncol(PP5min)]
@@ -525,7 +526,7 @@ for (counter_compound in 1:length(Compounds)) {
       GS_matrix <- matrix(NA,nrow(ModAct_All[[counter_compound]]),2)
       if (nrow(ModAct_All[[counter_compound]])>1) {
         GS_matrix[,1] <- ModAct_All[[counter_compound]][,1]
-        GS_matrix[,2] <- ModAct_All[[counter_compound]][,2]
+        GS_matrix[,2] <- sign(ModAct_All[[counter_compound]][,2])
         GS_matrix_plusIdx  <- which(as.numeric(GS_matrix[,2])>0)
         GS_matrix_minusIdx <- which(as.numeric(GS_matrix[,2])<0)
         # GS_matrix[GS_matrix_plusIdx,2]  <- "Up"; GS_matrix[GS_matrix_minusIdx,2] <- "Dn"
