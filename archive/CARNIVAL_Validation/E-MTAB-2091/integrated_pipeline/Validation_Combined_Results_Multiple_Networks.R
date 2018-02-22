@@ -837,13 +837,21 @@ if (PlotCombinedGSEA) {
   All_InputNames <- c("","_STITCH")
   
   ModAct_PlotCombined <- list()
+  Compounds <- t(read.table(file = "~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/resources/All_Compound_Names.tsv",sep = "\r"))
   
+  MatName <- NULL
   for (counter_GSEA1 in 1:length(All_MeasCutOff)) {
     for (counter_GSEA2 in 1:length(All_InputType)) {  
       ModAct_PlotCombined[[((counter_GSEA1-1)*2)+counter_GSEA2]] <- read.table(paste0("Pooled_ModelActivity_CombinedNets_MeasCutOff_",toString(All_MeasCutOff[counter_GSEA1]),All_InputNames[All_InputType[counter_GSEA2]],".tsv"),header = T,sep = "\t",stringsAsFactors = F)
+      MatName <- c(MatName,paste0("MeasC/O_",toString(All_MeasCutOff[counter_GSEA1]),All_InputNames[All_InputType[counter_GSEA2]]))
     }
   }
   
+  library(piano)
+  nCores=2;nPerm=10000;gsaResAll<-NULL
+  gsaResAll <- matrix(NA,length(ModAct_PlotCombined),8)
+  rownames(gsaResAll) <- MatName
+  colnames(gsaResAll) <- c("DistSP_5m","pAdjSP_5m","DistSM_5m","pAdjSM_5m","DistSP_25m","pAdjSP_25m","DistSM_25m","pAdjSM_25m")
   
   for (counter_GSEA_combined in 1:length(ModAct_PlotCombined)) {
   
@@ -891,38 +899,38 @@ if (PlotCombinedGSEA) {
       if (OrderDist[1]==1) {
         
         # 5 min
-        gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[1]
-        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
-        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
-        gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[2]
-        if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[2]}
-        else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[2]}
+        gsaResAll[counter_GSEA_combined,1] <- gsaRes5min$statDistinctDir[1]
+        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
+        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,3] <- gsaRes5min$statDistinctDir[2]
+        if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_GSEA_combined,4] <- gsaRes5min$pAdjDistinctDirUp[2]}
+        else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_GSEA_combined,4] <- gsaRes5min$pAdjDistinctDirDn[2]}
         
         # 25 min
-        gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[1]
-        if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
-        else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
-        gsaResAll[counter_compound,7] <- gsaRes25min$statDistinctDir[2]
-        if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirUp[2]}
-        else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirDn[2]}
+        gsaResAll[counter_GSEA_combined,5] <- gsaRes25min$statDistinctDir[1]
+        if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
+        else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,7] <- gsaRes25min$statDistinctDir[2]
+        if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_GSEA_combined,8] <- gsaRes25min$pAdjDistinctDirUp[2]}
+        else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_GSEA_combined,8] <- gsaRes25min$pAdjDistinctDirDn[2]}
         
       } else if (OrderDist[1]==-1) {
         
         # 5 min
-        gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[1]
-        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
-        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
-        gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[2]
-        if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[2]}
-        else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[2]}
+        gsaResAll[counter_GSEA_combined,3] <- gsaRes5min$statDistinctDir[1]
+        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
+        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,1] <- gsaRes5min$statDistinctDir[2]
+        if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_GSEA_combined,2] <- gsaRes5min$pAdjDistinctDirUp[2]}
+        else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_GSEA_combined,2] <- gsaRes5min$pAdjDistinctDirDn[2]}
         
         # 25 min
-        gsaResAll[counter_compound,7] <- gsaRes25min$statDistinctDir[1]
-        if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirUp[1]}
-        else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirDn[1]}
-        gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[2]
-        if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[2]}
-        else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[2]}
+        gsaResAll[counter_GSEA_combined,7] <- gsaRes25min$statDistinctDir[1]
+        if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,8] <- gsaRes25min$pAdjDistinctDirUp[1]}
+        else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,8] <- gsaRes25min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,5] <- gsaRes25min$statDistinctDir[2]
+        if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_GSEA_combined,6] <- gsaRes25min$pAdjDistinctDirUp[2]}
+        else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_GSEA_combined,6] <- gsaRes25min$pAdjDistinctDirDn[2]}
         
       }
     } else if (length(gsaRes5min$statDistinctDir)==1) {
@@ -930,26 +938,26 @@ if (PlotCombinedGSEA) {
       if (OrderDist[1]==1) {
         
         # 5 min
-        gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[1]
-        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
-        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,1] <- gsaRes5min$statDistinctDir[1]
+        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
+        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
         
         # 25 min
-        gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[1]
-        if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
-        else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,5] <- gsaRes25min$statDistinctDir[1]
+        if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
+        else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
         
       } else if (OrderDist[1]==-1) {
         
         # 5 min
-        gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[1]
-        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
-        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,3] <- gsaRes5min$statDistinctDir[1]
+        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
+        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
         
         # 25 min
-        gsaResAll[counter_compound,7] <- gsaRes5min$statDistinctDir[1]
-        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,8] <- gsaRes5min$pAdjDistinctDirUp[1]}
-        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,8] <- gsaRes5min$pAdjDistinctDirDn[1]}
+        gsaResAll[counter_GSEA_combined,7] <- gsaRes5min$statDistinctDir[1]
+        if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_GSEA_combined,8] <- gsaRes5min$pAdjDistinctDirUp[1]}
+        else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_GSEA_combined,8] <- gsaRes5min$pAdjDistinctDirDn[1]}
         
       }
       
@@ -965,19 +973,28 @@ gsaResAll_plot[,4] <- (-1)*log10(gsaResAll_plot[,4])
 gsaResAll_plot[,6] <- (-1)*log10(gsaResAll_plot[,6])
 gsaResAll_plot[,8] <- (-1)*log10(gsaResAll_plot[,8])
 
+max_yscale <- max(gsaResAll_plot[,c(2,4,6,8)])
+# gsaResAll_plot <- cbind(gsaResAll_plot,rownames(gsaResAll) )
+# colnames(gsaResAll_plot)[9] <- "LabelName"
+
 pdf(paste0("GSEA_Valcano_Validation_CombinedNets_MeasCutOff_CombinedSettings.pdf"))
 
 plot(gsaResAll_plot[,1],gsaResAll_plot[,2],type = 'p',pch=2,col='blue',cex=1,
      xlab = "GSEA score",ylab="-log10(Adj-pVal)",
-     ylim = c(0,2),xlim= c(-1,1),
+     ylim = c(0,max_yscale+0.5),xlim= c(-1,1),
      main = paste0("GSEA/Adj-pVal CombinedNets CombinedSettings"),axes = F)
+IdxPval <- which(gsaResAll_plot[,2]>-log10(0.05)); if(length(IdxPval)>0){ for (counter in 1:length(IdxPval)) {text(gsaResAll_plot[IdxPval[counter],1]+0.1,gsaResAll_plot[IdxPval[counter],2]+0.1,MatName[IdxPval[counter]],cex=0.7)} }
 axis(1, at=seq(-1,1,by=0.2),labels=seq(-1,1,by=0.2), las = 2,cex.axis=1)
-axis(2, at=seq(0,2,by=0.2),labels=seq(0,2,by=0.2), las = 2)
+axis(2, at=seq(0,max_yscale+0.5,by=0.2),labels=seq(0,max_yscale+0.5,by=0.2), las = 2)
 points(gsaResAll_plot[,3],gsaResAll_plot[,4],type = 'p',pch=2, col='goldenrod1',cex=1)
+IdxPval <- which(gsaResAll_plot[,4]>-log10(0.05)); if(length(IdxPval)>0){ for (counter in 1:length(IdxPval)) {text(gsaResAll_plot[IdxPval[counter],3]+0.1,gsaResAll_plot[IdxPval[counter],4]+0.1,MatName[IdxPval[counter]],cex=0.7)} }
 points(gsaResAll_plot[,5],gsaResAll_plot[,6],type = 'p',pch=16, col='darkgreen',cex=1)
+IdxPval <- which(gsaResAll_plot[,6]>-log10(0.05)); if(length(IdxPval)>0){ for (counter in 1:length(IdxPval)) {text(gsaResAll_plot[IdxPval[counter],5]+0.1,gsaResAll_plot[IdxPval[counter],6]+0.1,MatName[IdxPval[counter]],cex=0.7)} }
 points(gsaResAll_plot[,7],gsaResAll_plot[,8],type = 'p',pch=16, col='firebrick2',cex=1)
-lines(rep(0,length(seq(0,2,by=0.2))),seq(0,2,by=0.2),type = "l",lty=2, col='grey',cex=1)
-lines(seq(-1,1,by=0.2),rep(1.0,length(seq(-1,1,by=0.2))),type = "l",lty=2, col='grey',cex=1)
+IdxPval <- which(gsaResAll_plot[,8]>-log10(0.05)); if(length(IdxPval)>0){ for (counter in 1:length(IdxPval)) {text(gsaResAll_plot[IdxPval[counter],7]+0.1,gsaResAll_plot[IdxPval[counter],8]+0.1,MatName[IdxPval[counter]],cex=0.7)} }
+lines(rep(0,length(seq(0,max_yscale+0.5,by=0.2))),seq(0,max_yscale+0.5,by=0.2),type = "l",lty=2, col='grey',cex=1)
+# lines(seq(-1,1,by=0.2),rep(-log10(0.1),length(seq(-1,1,by=0.2))),type = "l",lty=2, col='grey',cex=1)
+lines(seq(-1,1,by=0.2),rep(-log10(0.05),length(seq(-1,1,by=0.2))),type = "l",lty=2, col='darkgrey',cex=1)
 
 legend("top", legend=c("SetUp-5m","SetDn-5m","SetUp-25m","SetDn-25m"),col=c("blue", "goldenrod1","darkgreen","firebrick2"),pch = c(2,2,16,16), cex=0.7,inset = 0)
 
