@@ -19,6 +19,7 @@ rm(list=ls()); cat('\014'); if (length(dev.list()>0)) {dev.off()}
 # ebits R-package: https://github.com/mschubert/ebits - see also suggested installation script
 setwd('~/Desktop/RWTH_Aachen/GitHub/ebits/')
 source("https://bioconductor.org/biocLite.R")
+# biocLite("hgu133plus2.db") # for human annotation
 source("ebits_installation_script.R")
 
 # Install necessary packages (if needed)
@@ -30,6 +31,7 @@ library(modules)
 library(oligo)
 library(matrixStats)
 library(io)
+library(hgu133plus2.db)
 library(gplots)
 library(RColorBrewer)
 
@@ -39,11 +41,20 @@ io = import('io')
 ma = import('process/microarray')
 idmap = import('process/idmap')
 
-setwd('~/Desktop/RWTH_Aachen/GitHub/CARNIVAL_TransQST/data')
+setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/TransQST_pipeline/data/")
+
+AllDrugs <- c("APAP","CCl4","CYCA","DFN","PPNL")
+SelectedDrug <- 5
 
 # Assign directory of raw dataset
-# APAP - Liver
-dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/APAP/acetaminophen.Human.in_vitro.Liver/celfiles' # APAP In vitro Human
+# Primary Human Hepatocyte
+
+if (SelectedDrug==1) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/APAP/acetaminophen.Human.in_vitro.Liver/celfiles' # APAP In vitro Human
+} else if (SelectedDrug==2) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/CCl4/carbon_tetrachloride.Human.in_vitro.Liver/celfiles/'  # CCl4 In vitro Human
+} else if (SelectedDrug==3) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/CYCA/cyclosporine_A.Human.in_vitro.Liver/celfiles/' # CYCA In vitro Human
+} else if (SelectedDrug==4) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/Diclofenac/diclofenac.Human.in_vitro.Liver/celfiles/' # DFN In vitro Human
+} else if (SelectedDrug==5) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/PPNL/propranolol.Human.in_vitro.Liver/celfiles/' # PPNL In vitro Human
+}
 
 # List and read all cel files
 celfiles = list.files(dir, pattern= '.CEL', full.names = TRUE)
@@ -55,22 +66,36 @@ expr = ma$qc(rawData) %>%
   ma$annotate(summarize='hgnc_symbol')
 # ma$annotate(summarize='entrezgene')
 
-save(expr,file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata")
+if (SelectedDrug==1) {save(expr,file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata")
+} else if (SelectedDrug==2) {save(expr,file = "Expr_TG-GATEs_CCl4_in_vitro_human.Rdata")
+} else if (SelectedDrug==3) {save(expr,file = "Expr_TG-GATEs_CYCA_in_vitro_human.Rdata")
+} else if (SelectedDrug==4) {save(expr,file = "Expr_TG-GATEs_DFN_in_vitro_human.Rdata")
+} else if (SelectedDrug==5) {save(expr,file = "Expr_TG-GATEs_PPNL_in_vitro_human.Rdata")
+}
 
 # ============================================= #
 # ===== Step 2: Calculate DoRothEA scores ===== #
 # ============================================= #
 
-load(file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata")
+# Clear variables, screen and figures
+rm(list=ls()); cat('\014'); if (length(dev.list()>0)) {dev.off()}
 
-# Load functions
-source('lib_enrichment_scores.r')
-
-# Load TF regulon genesets
-load('CTFRs_v122016.rdata')
+SelectedDrug <- 5
+AllDrugs <- c("APAP","CCl4","CYCA","DFN","PPNL")
 
 # Load expression matrix
-load('Expr_TG-GATEs_APAP_in_vitro_human.Rdata') # APAP human in vitro (liver)
+if (SelectedDrug==1) {load(file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata")
+} else if (SelectedDrug==2) {load(file = "Expr_TG-GATEs_CCl4_in_vitro_human.Rdata")
+} else if (SelectedDrug==3) {load(file = "Expr_TG-GATEs_CYCA_in_vitro_human.Rdata")
+} else if (SelectedDrug==4) {load(file = "Expr_TG-GATEs_DFN_in_vitro_human.Rdata")
+} else if (SelectedDrug==5) {load(file = "Expr_TG-GATEs_PPNL_in_vitro_human.Rdata")
+}
+
+# Load functions
+source('resources/lib_enrichment_scores.r')
+
+# Load TF regulon genesets
+load('resources/CTFRs_v122016.rdata')
 
 eset <- expr
 expr <- exprs(eset)
@@ -88,31 +113,38 @@ E = expr_z_score
 
 # Estimate TF activities
 TF_activities = SLEA(E = E, genesets = CTFRs_genesets, method = 'VIPER')$NES # Worked -> get positive and negative values (min/max ~ -3/3, z-score?)
-save(TF_activities,file = "TF_activities_VIPER_TG-GATEs_APAP_in_vitro_human.Rdata")
+save(TF_activities,file = paste0("TF_activities_VIPER_TG-GATEs_",AllDrugs[SelectedDrug],"_in_vitro_human.Rdata"))
 
 
 # ============================================ #
 # ===== Step 3: Calculate PROGENy scores ===== #
 # ============================================ #
 
-source('calc_progeny_score.R')
+source('resources/calc_progeny_score.R')
 
 # Assign names for mapping on Figure
-Compound_Names <- c("APAP","CISP","AZA","CCl4","DEM","DFN","ETO","LPS","TNFa","TUNI")
-Compound <- Compound_Names[1]
+Compound <- AllDrugs[1]
 Rat  <- FALSE
 InVivo <- FALSE
 Repeat <- FALSE
 scaling <- TRUE
 
-load('Progeny_model.RData') # Load progeny model as "model"
+load('resources/Progeny_model.RData') # Load progeny model as "model"
 
 if (!InVivo) {
-  Time_Points <- c(2,8,24) # hrs
+  if (SelectedDrug==3 | SelectedDrug==5) {
+    Time_Points <- c(8,24) # hrs
+  } else { 
+    Time_Points <- c(2,8,24) # hrs
+  }
   if (!Rat) {
     PrefixLength <- 16 + nchar(Compound) # DRUG_in_vitro_human_
   } else {
-    PrefixLength <- 14 + nchar(Compound) # DRUG_in_vitro_rat_
+    if (SelectedDrug==4) {
+      PrefixLength <- 13 + nchar(Compound) # DRG_in_vitro_rat_
+    } else {
+      PrefixLength <- 14 + nchar(Compound) # DRUG_in_vitro_rat_
+    }
   }
 } else {
   if (!Repeat) {
@@ -123,8 +155,6 @@ if (!InVivo) {
     PrefixLength <- 20 + nchar(Compound) # DRUG_in_vivo_rat_repeat_
   }
 }
-
-source('calc_progeny_score.R')
 
 All_Progeny_Score <- NULL
 
@@ -151,11 +181,19 @@ for (counter in 1:length(Time_Points)) {
   
   RowNamesCollection <- NULL
   while (i < dim(Progeny_Score)[1]+1) {
-    NameCheck <- substr(rownames(Progeny_Score[i,]),1,nchar(rownames(Progeny_Score[i,]))-5)
+    # if (SelectedDrug==4) {
+    #   NameCheck <- substr(rownames(Progeny_Score[i,]),1,nchar(rownames(Progeny_Score[i,]))-4)
+    # } else {
+      NameCheck <- substr(rownames(Progeny_Score[i,]),1,nchar(rownames(Progeny_Score[i,]))-5)
+    # }
     RepCheck  <- which(grepl(NameCheck,rownames(Progeny_Score),fixed=TRUE))
     MeanScore <- colMeans(Progeny_Score[RepCheck,])
     Mean_Progeny[j,] <- MeanScore
-    NamePrint <- substr(NameCheck,PrefixLength+1,nchar(NameCheck)-4)
+    if (SelectedDrug==4) {
+      NamePrint <- substr(NameCheck,PrefixLength,nchar(NameCheck)-4)
+    } else  {
+      NamePrint <- substr(NameCheck,PrefixLength+1,nchar(NameCheck)-4)
+    }
     RowNamesCollection <- c(RowNamesCollection,NamePrint)
     i <- i+length(RepCheck)
     j <- j+1
@@ -205,8 +243,20 @@ PW_act_ILP_z_score = scale(as.matrix(All_Progeny_Score), center = m, scale=s)
 
 # ===== Select threshold and apply cutoff ===== #
 
+# Condition to extract
+SelectedCondition <- "low_2h"
+# SelectedCondition <- "low_8h"
+# SelectedCondition <- "low_24h"
+# SelectedCondition <- "mid_2h"
+# SelectedCondition <- "mid_8h"
+# SelectedCondition <- "mid_24h"
+# SelectedCondition <- "high_2h"
+# SelectedCondition <- "high_8h"
+# SelectedCondition <- "high_24h"
+
 # Extract TF activities in CR-pipeline ready format
-ILP_z_score_cutoff <- 2 # Choose cut-off value for discretisation
+ILP_z_score_cutoff <- 1.5 # Choose cut-off value for discretisation
+# ILP_z_score_cutoff <- 2 # Choose cut-off value for discretisation
 
 DRT_Discretised <- TF_act_ILP_z_score
 Idx_DRT_UP <- which(DRT_Discretised > ILP_z_score_cutoff,arr.ind = TRUE)
@@ -221,15 +271,11 @@ Idx_PGN_BS <- which((PGN_Discretised <= ILP_z_score_cutoff) & (PGN_Discretised >
 PGN_Discretised[Idx_PGN_UP] <- 1; PGN_Discretised[Idx_PGN_DN] <- -1; PGN_Discretised[Idx_PGN_BS] <- 0; 
 colnames(PGN_Discretised) <- paste0("PRO_",colnames(PGN_Discretised))
 
-# Condition to extract
-SelectedCondition <- "low_2h"
-# SelectedCondition <- "high_24h"
-
 DRT_MeasIdx <- which(rownames(TF_act_ILP_z_score)==SelectedCondition)
 PGN_MeasIdx <- which(rownames(PW_act_ILP_z_score)==SelectedCondition)
 
 # Build progeny catalogue
-ProgenyProtein <- read.table("PROGENy_Protein.csv",header = T,sep = ",",stringsAsFactors = F)
+ProgenyProtein <- read.table("resources/PROGENy_Protein_updated.csv",header = T,sep = ",",stringsAsFactors = F)
 ProgenyProtein <- ProgenyProtein[order(ProgenyProtein[,2],ProgenyProtein[,3]),]
 ProgenyProtein[,2] <- gsub("-",".",ProgenyProtein[,2],fixed=T)
 ProgenyProtein_List <- vector(mode="list",length=length((unique(ProgenyProtein[,2]))))
@@ -254,7 +300,8 @@ if (length(PGN_Meas)>0) {
 }
 
 ILP_combined_meas <- t(as.matrix(c(DRT_Meas,PGN_Meas_ToAdd)))
+print(ILP_combined_meas)
 
-write.table(ILP_combined_meas,file = paste0("ILP_Meas_",SelectedCondition,"_CutOff_",toString(ILP_z_score_cutoff),".tsv"),quote = F,sep = "\t",col.names = T)
+write.table(ILP_combined_meas,file = paste0("ILP_Meas_",AllDrugs[SelectedDrug],"_",SelectedCondition,"_CutOff_",toString(ILP_z_score_cutoff),".tsv"),quote = F,sep = "\t",col.names = T)
 
 # --- End of the script --- #
