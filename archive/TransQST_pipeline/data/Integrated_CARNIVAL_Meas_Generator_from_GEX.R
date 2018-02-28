@@ -15,63 +15,63 @@ rm(list=ls()); cat('\014'); if (length(dev.list()>0)) {dev.off()}
 # ===== Step 1: Process raw array data ===== #
 # ========================================== #
 
-# Requirements: 
-# ebits R-package: https://github.com/mschubert/ebits - see also suggested installation script
-setwd('~/Desktop/RWTH_Aachen/GitHub/ebits/')
-source("https://bioconductor.org/biocLite.R")
-# biocLite("hgu133plus2.db") # for human annotation
-source("ebits_installation_script.R")
-
-# Install necessary packages (if needed)
-# install.packages('modules')
-# biocLite("oligo")
-
-# Load all necessary packages
-library(modules)
-library(oligo)
-library(matrixStats)
-library(io)
-library(hgu133plus2.db)
-library(gplots)
-library(RColorBrewer)
-
-# Import functions from ebits and return working directory in WP5 folder
-b = import('base')
-io = import('io')
-ma = import('process/microarray')
-idmap = import('process/idmap')
-
-setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/TransQST_pipeline/data/")
-
-AllDrugs <- c("APAP","CCl4","CYCA","DFN","PPNL")
-SelectedDrug <- 5
-
-# Assign directory of raw dataset
-# Primary Human Hepatocyte
-
-if (SelectedDrug==1) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/APAP/acetaminophen.Human.in_vitro.Liver/celfiles' # APAP In vitro Human
-} else if (SelectedDrug==2) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/CCl4/carbon_tetrachloride.Human.in_vitro.Liver/celfiles/'  # CCl4 In vitro Human
-} else if (SelectedDrug==3) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/CYCA/cyclosporine_A.Human.in_vitro.Liver/celfiles/' # CYCA In vitro Human
-} else if (SelectedDrug==4) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/Diclofenac/diclofenac.Human.in_vitro.Liver/celfiles/' # DFN In vitro Human
-} else if (SelectedDrug==5) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/PPNL/propranolol.Human.in_vitro.Liver/celfiles/' # PPNL In vitro Human
-}
-
-# List and read all cel files
-celfiles = list.files(dir, pattern= '.CEL', full.names = TRUE)
-rawData = read.celfiles(celfiles)
-
-# Quality control, log2 normalisation, and probeset annotation
-expr = ma$qc(rawData) %>%
-  ma$normalize() %>%
-  ma$annotate(summarize='hgnc_symbol')
-# ma$annotate(summarize='entrezgene')
-
-if (SelectedDrug==1) {save(expr,file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata")
-} else if (SelectedDrug==2) {save(expr,file = "Expr_TG-GATEs_CCl4_in_vitro_human.Rdata")
-} else if (SelectedDrug==3) {save(expr,file = "Expr_TG-GATEs_CYCA_in_vitro_human.Rdata")
-} else if (SelectedDrug==4) {save(expr,file = "Expr_TG-GATEs_DFN_in_vitro_human.Rdata")
-} else if (SelectedDrug==5) {save(expr,file = "Expr_TG-GATEs_PPNL_in_vitro_human.Rdata")
-}
+# # Requirements: 
+# # ebits R-package: https://github.com/mschubert/ebits - see also suggested installation script
+# setwd('~/Desktop/RWTH_Aachen/GitHub/ebits/')
+# source("https://bioconductor.org/biocLite.R")
+# # biocLite("hgu133plus2.db") # for human annotation
+# source("ebits_installation_script.R")
+# 
+# # Install necessary packages (if needed)
+# # install.packages('modules')
+# # biocLite("oligo")
+# 
+# # Load all necessary packages
+# library(modules)
+# library(oligo)
+# library(matrixStats)
+# library(io)
+# library(hgu133plus2.db)
+# library(gplots)
+# library(RColorBrewer)
+# 
+# # Import functions from ebits and return working directory in WP5 folder
+# b = import('base')
+# io = import('io')
+# ma = import('process/microarray')
+# idmap = import('process/idmap')
+# 
+# setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/TransQST_pipeline/data/")
+# 
+# AllDrugs <- c("APAP","CCl4","CYCA","DFN","PPNL")
+# SelectedDrug <- 5
+# 
+# # Assign directory of raw dataset
+# # Primary Human Hepatocyte
+# 
+# if (SelectedDrug==1) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/APAP/acetaminophen.Human.in_vitro.Liver/celfiles' # APAP In vitro Human
+# } else if (SelectedDrug==2) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/CCl4/carbon_tetrachloride.Human.in_vitro.Liver/celfiles/'  # CCl4 In vitro Human
+# } else if (SelectedDrug==3) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/CYCA/cyclosporine_A.Human.in_vitro.Liver/celfiles/' # CYCA In vitro Human
+# } else if (SelectedDrug==4) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/Diclofenac/diclofenac.Human.in_vitro.Liver/celfiles/' # DFN In vitro Human
+# } else if (SelectedDrug==5) {dir = '~/Desktop/RWTH_Aachen/GitHub/Raw_Data/PPNL/propranolol.Human.in_vitro.Liver/celfiles/' # PPNL In vitro Human
+# }
+# 
+# # List and read all cel files
+# celfiles = list.files(dir, pattern= '.CEL', full.names = TRUE)
+# rawData = read.celfiles(celfiles)
+# 
+# # Quality control, log2 normalisation, and probeset annotation
+# expr = ma$qc(rawData) %>%
+#   ma$normalize() %>%
+#   ma$annotate(summarize='hgnc_symbol')
+# # ma$annotate(summarize='entrezgene')
+# 
+# if (SelectedDrug==1) {save(expr,file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata")
+# } else if (SelectedDrug==2) {save(expr,file = "Expr_TG-GATEs_CCl4_in_vitro_human.Rdata")
+# } else if (SelectedDrug==3) {save(expr,file = "Expr_TG-GATEs_CYCA_in_vitro_human.Rdata")
+# } else if (SelectedDrug==4) {save(expr,file = "Expr_TG-GATEs_DFN_in_vitro_human.Rdata")
+# } else if (SelectedDrug==5) {save(expr,file = "Expr_TG-GATEs_PPNL_in_vitro_human.Rdata")
+# }
 
 # ============================================= #
 # ===== Step 2: Calculate DoRothEA scores ===== #
@@ -79,6 +79,8 @@ if (SelectedDrug==1) {save(expr,file = "Expr_TG-GATEs_APAP_in_vitro_human.Rdata"
 
 # Clear variables, screen and figures
 rm(list=ls()); cat('\014'); if (length(dev.list()>0)) {dev.off()}
+
+setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/TransQST_pipeline/data/")
 
 SelectedDrug <- 5
 AllDrugs <- c("APAP","CCl4","CYCA","DFN","PPNL")
@@ -300,8 +302,17 @@ if (length(PGN_Meas)>0) {
 }
 
 ILP_combined_meas <- t(as.matrix(c(DRT_Meas,PGN_Meas_ToAdd)))
+
+if (length(ILP_combined_meas)>0) {
+  for (counter in 1:length(colnames(ILP_combined_meas))) {
+    if (grepl(pattern = "-",x = colnames(ILP_combined_meas)[counter],fixed = T)) {
+      colnames(ILP_combined_meas)[counter] <- gsub(pattern = "-",replacement = "~",x = colnames(ILP_combined_meas)[counter],fixed = T)
+    }
+  }
+} 
+
 print(ILP_combined_meas)
 
-write.table(ILP_combined_meas,file = paste0("ILP_Meas_",AllDrugs[SelectedDrug],"_",SelectedCondition,"_CutOff_",toString(ILP_z_score_cutoff),".tsv"),quote = F,sep = "\t",col.names = T)
+write.table(ILP_combined_meas,file = paste0("ILP_Meas_",AllDrugs[SelectedDrug],"_",SelectedCondition,"_CutOff_",toString(ILP_z_score_cutoff),".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
 
 # --- End of the script --- #

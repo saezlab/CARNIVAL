@@ -128,13 +128,20 @@ for (counter in 1:nrow(DrugBankNameID)) {
   
   print(paste0("Mapping Compound: ",DrugBankNameID[counter,1]," - ",toString(counter),"/",toString(nrow(DrugBankNameID))))
   
+  Main_Targets_DB <- rep(NA,1,ncol(MappedSelectedDBtargets[[counter]]))
+  Main_Targets_DB <- t(as.data.frame(as.numeric(MappedSelectedDBtargets[[counter]][2,])))
+  colnames(Main_Targets_DB) <- MappedSelectedDBtargets[[counter]][1,]; rownames(Main_Targets_DB) <- NULL
+  
+  All_Targets_current <- Main_Targets_DB
+  
+  
   # Extract STITCH entry from the full flat file
   if (!is.na(CPID)) {
     
     # Select entries where compound 1) is a source of interaction, 2) has known effect, 3) score >= accepted score
     STITCH_CP <- STITCH[STITCH$item_id_a==CPID & STITCH$a_is_acting=="t" & nchar(STITCH$action)!=0 & STITCH$score>=AcceptedScore,]
     # STITCH_CP <- STITCH[STITCH$item_id_a==CPID & STITCH$a_is_acting=="t" & nchar(STITCH$action)!=0,] # this variant take also expression entries
-    
+
     if (nrow(STITCH_CP)>0) {
       
       for (counter4 in 1:nrow(STITCH_CP)) {
@@ -192,11 +199,6 @@ for (counter in 1:nrow(DrugBankNameID)) {
       colnames(Input_STITCH) <- STITCH_CP_Merged$hgnc_symbol
       Input_STITCH[1,] <- STITCH_CP_Merged$action
       
-      Main_Targets_DB <- rep(NA,1,ncol(MappedSelectedDBtargets[[counter]]))
-      Main_Targets_DB <- t(as.data.frame(as.numeric(MappedSelectedDBtargets[[counter]][2,])))
-      colnames(Main_Targets_DB) <- MappedSelectedDBtargets[[counter]][1,]; rownames(Main_Targets_DB) <- NULL
-      
-      All_Targets_current <- Main_Targets_DB
       
       CombinedTargets <- cbind(All_Targets_current,Input_STITCH)
       ColNamesCT <- unique(colnames(CombinedTargets))
@@ -224,13 +226,6 @@ for (counter in 1:nrow(DrugBankNameID)) {
   write.table(x = All_Targets_current, 
               file = paste0("Inputs_Main_",DrugBankNameID[counter,1],".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
 }
-
-
-# ============================================ #
-# ===== Step 3: Calculate PROGENy scores ===== #
-# ============================================ #
-
-
 
 
 # --- End of the script --- #
