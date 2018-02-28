@@ -1,4 +1,4 @@
-write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alpha=alpha, beta=beta, scores = scores, nodeWeights = nodeWeights ){
+write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights ){
   
   if(is.null(scores)){
     
@@ -14,17 +14,17 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     measuredVar <- variables$variables[idxMeasured]
     
-    objectiveFunctionVec <- paste0(" + ", alpha, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
     
     objectiveFunction <- substring(text = objectiveFunction[1], first = 4, last = nchar(objectiveFunction))
     
     objectiveFunction <- paste0("", objectiveFunction)
     
-    objectiveFunctionUpVec <- paste0(" + ", beta, " ", variables$variables[variables$idxNodesUp])
+    objectiveFunctionUpVec <- paste0(" + ", betaWeight, " ", variables$variables[variables$idxNodesUp])
     objectiveFunctionUp <- paste(objectiveFunctionUpVec, collapse = "")
     
-    objectiveFunctionDownVec <- paste0(" + ", beta, " ", variables$variables[variables$idxNodesDown])
+    objectiveFunctionDownVec <- paste0(" + ", betaWeight, " ", variables$variables[variables$idxNodesDown])
     objectiveFunctionDown <- paste(objectiveFunctionDownVec, collapse = "")
     
     objectiveFunction <- paste0(objectiveFunction, objectiveFunctionUp)
@@ -46,7 +46,7 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     measuredVar <- variables$variables[idxMeasured]
     
-    objectiveFunctionVec <- paste0(" + ", alpha, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
     
     objectiveFunction <- substring(text = objectiveFunction[1], first = 4, last = nchar(objectiveFunction))
@@ -78,12 +78,12 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
         
         if(sign(ww)==1){
           
-          objectiveFunctionUpVec <- paste0(" + ", beta*ww, " ", variables$variables[variables$idxNodesUp[idx1[i]]])
+          objectiveFunctionUpVec <- paste0(" + ", betaWeight*ww, " ", variables$variables[variables$idxNodesUp[idx1[i]]])
           objectiveFunctionUp1 <- paste(objectiveFunctionUp1, objectiveFunctionUpVec, sep = "")
           
         } else {
           
-          objectiveFunctionUpVec <- paste0(" - ", abs(beta*ww), " ", variables$variables[variables$idxNodesUp[idx1[i]]])
+          objectiveFunctionUpVec <- paste0(" - ", abs(betaWeight*ww), " ", variables$variables[variables$idxNodesUp[idx1[i]]])
           objectiveFunctionUp1 <- paste(objectiveFunctionUp1, objectiveFunctionUpVec, sep = "")
           
         }
@@ -105,12 +105,12 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
         
         if(sign(ww)==1){
           
-          objectiveFunctionDownVec <- paste0(" + ", beta*ww, " ", variables$variables[variables$idxNodesDown[idx2[i]]])
+          objectiveFunctionDownVec <- paste0(" + ", betaWeight*ww, " ", variables$variables[variables$idxNodesDown[idx2[i]]])
           objectiveFunctionDown1 <- paste(objectiveFunctionDown1, objectiveFunctionDownVec, sep = "")
           
         } else {
           
-          objectiveFunctionDownVec <- paste0(" - ", abs(beta*ww), " ", variables$variables[variables$idxNodesDown[idx2[i]]])
+          objectiveFunctionDownVec <- paste0(" - ", abs(betaWeight*ww), " ", variables$variables[variables$idxNodesDown[idx2[i]]])
           objectiveFunctionDown1 <- paste(objectiveFunctionDown1, objectiveFunctionDownVec, sep = "")
           
         }
@@ -121,10 +121,10 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     ##
     
-    objectiveFunctionUpVec <- paste0(" + ", beta, " ", variables$variables[variables$idxNodesUp[setdiff(1:length(variables$idxNodesUp), idx1)]])
+    objectiveFunctionUpVec <- paste0(" + ", betaWeight, " ", variables$variables[variables$idxNodesUp[setdiff(1:length(variables$idxNodesUp), idx1)]])
     objectiveFunctionUp2 <- paste(objectiveFunctionUpVec, collapse = "")
 
-    objectiveFunctionDownVec <- paste0(" + ", beta, " ", variables$variables[variables$idxNodesDown[setdiff(1:length(variables$idxNodesDown), idx2)]])
+    objectiveFunctionDownVec <- paste0(" + ", betaWeight, " ", variables$variables[variables$idxNodesDown[setdiff(1:length(variables$idxNodesDown), idx2)]])
     objectiveFunctionDown2 <- paste(objectiveFunctionDownVec, collapse = "")
     
     objectiveFunction <- paste0(objectiveFunction, paste0(objectiveFunctionUp1, objectiveFunctionUp2))
