@@ -9,11 +9,11 @@ ScaffoldNetAll <- c(1,2,3) # Multiople
 ScaffoldNameAll <- c("omnipath","generic","signor")
   
 # Select stimuli's targets (1=only main, 2=main+STITCH)
-StimuliTarget <- 1 # Single
+StimuliTarget <- 2 # Single
 # StimuliTarget <- c(1,2) # Multiple
 
 # Select SD-Cutoff for input loading (c(1,1.5,2))
-Meas_Cutoff <- 2 # Single
+Meas_Cutoff <- 1 # Single
 # Meas_Cutoff <- c(1,1.5,2) # Multiple
 
 # Select cutoff measure and value for pp-data
@@ -21,6 +21,9 @@ Meas_Cutoff <- 2 # Single
 DiscretPP <- 2 
 # PP_Cutoff <- 2 # Single
 PP_Cutoff <- c(0.1,0.5,1,1.5,2,2.5) # Multiple
+
+NrPermutation <- 100 # Generating random distribution of results
+RunGSEA <- 0 # Run GSEA? (time-consuming)
 
 # Plot advanced figures?
 PlotThresholdCoverage <- T # Combined figure with multiple threshold coverage
@@ -40,6 +43,7 @@ setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL"); source("~/Desktop/RWTH_Aachen/Gi
 setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/") # set working directory (relative)
 
 GlobalROC5m <- list(); GlobalROC25m <- list() # For global ROC curve plot
+SigGlobalROC5m <- list(); SigGlobalROC25m <- list() # For global ROC curve plot (Permutated verison)
 
 for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   
@@ -359,7 +363,79 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
              else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
              ,STITCH_Label,".pdf"),width=11,height=11)
   
+  # =================== #
+  # Shuffle permutation #
+  # =================== #
+  
+  Shuffled5m <- list()
+  Shuffled25m <- list()
+  
+  ExtractedROCorig <- ExtractedROC
+  
+  print(paste0("Running Permutation with n = ",NrPermutation))
+  
+  for (counter_permutation in 1:NrPermutation) {
+    
+    Extracted5mShuffle <- matrix(NA,nrow(ExtractedROC),ncol(ExtractedROC)); colnames(Extracted5m) <- colnames(ValResMatAll)
+    Extracted25mShuffle <- matrix(NA,nrow(ExtractedROC),ncol(ExtractedROC)); colnames(Extracted25m) <- colnames(ValResMatAll)
+    
+    set.seed(counter_permutation)
+    ExtractedROC <- ExtractedROCorig
+    
+    for (counter_PP in 1:(ncol(ValResMatAll)/3)){
+      
+      ExtractedROC[,((counter_PP-1)*3)+2] <- sample(ExtractedROC[,((counter_PP-1)*3)+2])
+      ExtractedROC[,((counter_PP-1)*3)+3] <- sample(ExtractedROC[,((counter_PP-1)*3)+3])
+      
+      # Map to Extracted5mShuffle
+      for (counter_ROC in 1:nrow(Extracted5mShuffle)) {
+        if (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==0 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==0) 
+        {Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 0;Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+2] <- 0} # Zero matched -> change to TN [0,0]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==1) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==-1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==-1)) 
+        {Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 1;Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+2] <- 1} # Perfect matched -> change to TP [1,1]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==0 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==1) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==0 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==-1))
+        {Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 0;Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+2] <- 1} # Mismatched positive -> change to FN [0,1]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==0) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==-1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==0))
+        {Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 1;Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+2] <- 0} # Mismatched negative -> change to FP [1,0]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==-1) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==-1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+2]==1))
+        {Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 1;Extracted5mShuffle[counter_ROC,((counter_PP-1)*3)+2] <- 0} # Inversed matched -> change to FP [1,0]
+      }
+      
+      # Map to Extracted25mShuffle
+      for (counter_ROC in 1:nrow(Extracted25mShuffle)) {
+        if (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==0 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==0) 
+        {Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 0;Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+3] <- 0} # Zero matched -> change to TN [0,0]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==1) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==-1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==-1)) 
+        {Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 1;Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+3] <- 1} # Perfect matched -> change to TP [1,1]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==0 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==1) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==0 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==-1))
+        {Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 0;Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+3] <- 1} # Mismatched positive -> change to FN [0,1]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==0) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==-1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==0))
+        {Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 1;Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+3] <- 0} # Mismatched negative -> change to FP [1,0]
+        else if ((ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==-1) |
+                 (ExtractedROC[counter_ROC,((counter_PP-1)*3)+1]==-1 & ExtractedROC[counter_ROC,((counter_PP-1)*3)+3]==1))
+        {Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+1] <- 1;Extracted25mShuffle[counter_ROC,((counter_PP-1)*3)+3] <- 0} # Inversed matched -> change to FP [1,0]
+      }
+      
+    }
+    
+    Shuffled5m[[counter_permutation]] <- Extracted5mShuffle
+    Shuffled25m[[counter_permutation]] <- Extracted25mShuffle
+    
+  }
+  
+  # =================== #
+  
   par(mfrow=c(5,4))
+  
+  # perc.rank <- function(x, xo)  length(x[x <= xo])/length(x)*100
+  perc.rank.pVal <- function(x, xo)  1-(length(x[x <= xo])/length(x))
   
   for (counter_plot in 1:(ncol(Extracted5m)/3)) {
   
@@ -369,6 +445,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
     TestPred25m <- Extracted25m[,((counter_plot-1)*3)+1]
     TestLabel25m <- Extracted25m[,((counter_plot-1)*3)+3]
     
+    TestLabel5m[which(is.na(TestLabel5m))] <- 0
     TestLabel25m[which(is.na(TestLabel25m))] <- 0
     
     if (length(unique(TestLabel5m))>1 | length(unique(TestLabel25m))>1) {
@@ -379,16 +456,45 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
         roc.perf5m = performance(pred5m, measure = "tpr", x.measure = "fpr")
         auc.perf5m = performance(pred5m, measure = "auc")
         plot(roc.perf5m,col=c("blue"),main=gsub("_Mod","",colnames(Extracted5m)[((counter_plot-1)*3)+1]),xlab="",ylab="")
-
+        
         par(new=TRUE)
         pred25m <- prediction(TestPred25m,TestLabel25m)
         roc.perf25m = performance(pred25m, measure = "tpr", x.measure = "fpr")
         auc.perf25m = performance(pred25m, measure = "auc")
         plot(roc.perf25m,col=c("darkgreen"))
+
+        # Plug in permutated results for p-value of AUC calculation
+        
+        auc.perf5mALL <- NULL; auc.perf25mALL <- NULL
+        
+        for (counterPermAUC in 1:NrPermutation) {
+          TestPred5mSF <- Shuffled5m[[counterPermAUC]][,((counter_plot-1)*3)+1]
+          TestLabel5mSF <- Shuffled5m[[counterPermAUC]][,((counter_plot-1)*3)+2]
+          if (length(unique(TestPred5mSF))>1 & length(unique(TestLabel5mSF))>1) {
+            pred5mSF <- prediction(TestPred5mSF,TestLabel5mSF)
+            auc.perf5mSF = performance(pred5mSF, measure = "auc")
+            auc.perf5mALL <- c(auc.perf5mALL,unlist(auc.perf5mSF@y.values))
+          }
+          
+          TestPred25mSF <- Shuffled25m[[counterPermAUC]][,((counter_plot-1)*3)+1]
+          TestLabel25mSF <- Shuffled25m[[counterPermAUC]][,((counter_plot-1)*3)+3]
+          if (length(unique(TestPred25mSF))>1 & length(unique(TestLabel25mSF))>1) {
+            pred25mSF <- prediction(TestPred25mSF,TestLabel25mSF)
+            auc.perf25mSF = performance(pred25mSF, measure = "auc")
+            auc.perf25mALL <- c(auc.perf25mALL,unlist(auc.perf25mSF@y.values))
+          }
+        }
+        
+        pVal5m <- perc.rank.pVal(auc.perf5mALL,unlist(auc.perf5m@y.values))
+        pVal25m <- perc.rank.pVal(auc.perf25mALL,unlist(auc.perf25m@y.values))
+        
+        pVal5mSymbol <- NULL; pVal25mSymbol <- NULL
+        if (!is.nan(pVal5m)) {if (pVal5m <= 0.1) {pVal5mSymbol = "(+)"}; if (pVal5m <= 0.05) {pVal5mSymbol = "(*)"}; if (pVal5m <= 0.01) {pVal5mSymbol = "(**)"}}
+        if (!is.nan(pVal25m)) {if (pVal25m <= 0.1) {pVal25mSymbol = "(+)"}; if (pVal25m <= 0.05) {pVal25mSymbol = "(*)"}; if (pVal25m <= 0.01) {pVal25mSymbol = "(**)"}}
         
         abline(a=0, b= 1,col="grey")
-        text(0.8,0.3,paste0("5m : ",toString(round(as.numeric(auc.perf5m@y.values),digits=2))),cex=1)
-        text(0.8,0.1,paste0("25m: ",toString(round(as.numeric(auc.perf25m@y.values),digits=2))),cex=1)
+        text(0.8,0.3,paste0("5m : ",toString(round(as.numeric(auc.perf5m@y.values),digits=2)),pVal5mSymbol),cex=1)
+        text(0.8,0.1,paste0("25m: ",toString(round(as.numeric(auc.perf25m@y.values),digits=2)),pVal25mSymbol),cex=1)
         
       } else if (length(unique(TestLabel5m))>1 & length(unique(TestLabel25m))==1) {
         
@@ -397,8 +503,27 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
         auc.perf5m = performance(pred5m, measure = "auc")
         plot(roc.perf5m,col=c("blue"),main=gsub("_Mod","",colnames(Extracted5m)[((counter_plot-1)*3)+1]))
         
+        
+        # Plug in permutated results for p-value of AUC calculation
+        
+        auc.perf5mALL <- NULL
+        
+        for (counterPermAUC in 1:NrPermutation) {
+          TestPred5mSF <- Shuffled5m[[counterPermAUC]][,((counter_plot-1)*3)+1]
+          TestLabel5mSF <- Shuffled5m[[counterPermAUC]][,((counter_plot-1)*3)+2]
+          if (length(unique(TestPred5mSF))>1 & length(unique(TestLabel5mSF))>1) {
+            pred5mSF <- prediction(TestPred5mSF,TestLabel5mSF)
+            auc.perf5mSF = performance(pred5mSF, measure = "auc")
+            auc.perf5mALL <- c(auc.perf5mALL,unlist(auc.perf5mSF@y.values))
+          }
+        }
+        
+        pVal5m <- perc.rank.pVal(auc.perf5mALL,unlist(auc.perf5m@y.values))
+        pVal5mSymbol <- NULL;
+        if (!is.nan(pVal5m)) {if (pVal5m <= 0.1) {pVal5mSymbol = "(+)"}; if (pVal5m <= 0.05) {pVal5mSymbol = "(*)"}; if (pVal5m <= 0.01) {pVal5mSymbol = "(**)"}}
+
         abline(a=0, b= 1,col="grey")
-        text(0.8,0.3,paste0("5m : ",toString(round(as.numeric(auc.perf5m@y.values),digits=2))),cex=1)
+        text(0.8,0.3,paste0("5m : ",toString(round(as.numeric(auc.perf5m@y.values),digits=2)),pVal5mSymbol),cex=1)
         
       } else if (length(unique(TestLabel5m))==1 & length(unique(TestLabel25m))>1) {
         
@@ -407,8 +532,28 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
         auc.perf25m = performance(pred25m, measure = "auc")
         plot(roc.perf25m,col=c("darkgreen"),main=gsub("_Mod","",colnames(Extracted5m)[((counter_plot-1)*3)+1]))
         
+        
+        # Plug in permutated results for p-value of AUC calculation
+        
+        auc.perf25mALL <- NULL
+        
+        for (counterPermAUC in 1:NrPermutation) {
+          TestPred25mSF <- Shuffled25m[[counterPermAUC]][,((counter_plot-1)*3)+1]
+          TestLabel25mSF <- Shuffled25m[[counterPermAUC]][,((counter_plot-1)*3)+3]
+          if (length(unique(TestPred25mSF))>1 & length(unique(TestLabel25mSF))>1) {
+            pred25mSF <- prediction(TestPred25mSF,TestLabel25mSF)
+            auc.perf25mSF = performance(pred25mSF, measure = "auc")
+            auc.perf25mALL <- c(auc.perf25mALL,unlist(auc.perf25mSF@y.values))
+          }  
+        }
+        
+        pVal25m <- perc.rank.pVal(auc.perf25mALL,unlist(auc.perf25m@y.values))
+        
+        pVal25mSymbol <- NULL
+        if (!is.nan(pVal25m)) {if (pVal25m <= 0.1) {pVal25mSymbol = "(+)"}; if (pVal25m <= 0.05) {pVal25mSymbol = "(*)"}; if (pVal25m <= 0.01) {pVal25mSymbol = "(**)"}}
+        
         abline(a=0, b= 1,col="grey")
-        text(0.8,0.1,paste0("25m: ",toString(round(as.numeric(auc.perf25m@y.values),digits=2))),cex=1)
+        text(0.8,0.1,paste0("25m: ",toString(round(as.numeric(auc.perf25m@y.values),digits=2)),pVal25mSymbol),cex=1)
       }
     
     }
@@ -421,8 +566,7 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   
   # Collect LocalROC predictions for GlobalROC plot
   
-  LocalROC5m <- NULL
-  LocalROC25m <- NULL
+  LocalROC5m <- NULL; LocalROC25m <- NULL
   
   for (counter_LocalROC in 1:(ncol(ExtractedROC)/3)) {
     LocalROC5m <- rbind(LocalROC5m,cbind(Extracted5m[,((counter_LocalROC-1)*3)+1],Extracted5m[,((counter_LocalROC-1)*3)+2]))
@@ -431,6 +575,24 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   
   GlobalROC5m[[counter_ppCutOff]] <- prediction(LocalROC5m[,1],LocalROC5m[,2])
   GlobalROC25m[[counter_ppCutOff]] <- prediction(LocalROC25m[,1],LocalROC25m[,2])
+
+  LocalROC5mSF <- NULL; LocalROC25mSF <- NULL
+  auc.perfGlobal5mALL <- NULL; auc.perfGlobal25mALL <- NULL
+  
+  for (counter_GlobalROCSF in 1:NrPermutation) {
+    for (counter_LocalROC in 1:(ncol(ExtractedROCorig)/3)) {
+      LocalROC5mSF <- rbind(LocalROC5m,cbind(Shuffled5m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+1],Shuffled5m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+2]))
+      LocalROC25mSF <- rbind(LocalROC25m,cbind(Shuffled25m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+1],Shuffled25m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+3]))
+    }
+    
+    predGlobal5mSF <- prediction(LocalROC5mSF[,1],LocalROC5mSF[,2])
+    auc.perfGlobal5mSF = performance(predGlobal5mSF, measure = "auc")
+    auc.perfGlobal5mALL <- c(auc.perfGlobal5mALL,unlist(auc.perfGlobal5mSF@y.values))
+    
+    predGlobal25mSF <- prediction(LocalROC25mSF[,1],LocalROC25mSF[,2])
+    auc.perfGlobal25mSF = performance(predGlobal25mSF, measure = "auc")
+    auc.perfGlobal25mALL <- c(auc.perfGlobal25mALL,unlist(auc.perfGlobal25mSF@y.values))
+  }
 
   
   # =================================== #
@@ -494,6 +656,7 @@ ROCcols <- brewer.pal(length(PP_Cutoff), "Spectral")
 
 GlobalROCauc <- NULL
 GlobalROCaupr <- NULL
+GlobalROCsig <- NULL
 
 for (counter_ROCplot in 1:length(PP_Cutoff)) {
     
@@ -517,9 +680,19 @@ for (counter_ROCplot in 1:length(PP_Cutoff)) {
     } else {
       plot(roc.perf25m,col=ROCcols[counter_ROCplot],lty=2,main=paste0("Global ROC-curve - CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label))
     }
+    
+    pVal5m <- perc.rank.pVal(auc.perfGlobal5mALL,unlist(auc.perf5m@y.values))
+    pVal25m <- perc.rank.pVal(auc.perfGlobal25mALL,unlist(auc.perf25m@y.values))
+    
+    pVal5mSymbol <- " "; pVal25mSymbol <- " "
+    if (!is.nan(pVal5m)) {if (pVal5m <= 0.1) {pVal5mSymbol = "(+)"}; if (pVal5m <= 0.05) {pVal5mSymbol = "(*)"}; if (pVal5m <= 0.01) {pVal5mSymbol = "(**)"}}
+    if (!is.nan(pVal25m)) {if (pVal25m <= 0.1) {pVal25mSymbol = "(+)"}; if (pVal25m <= 0.05) {pVal25mSymbol = "(*)"}; if (pVal25m <= 0.01) {pVal25mSymbol = "(**)"}}
+    
+    
     abline(a=0, b= 1,col="grey")
     GlobalROCauc <- c(GlobalROCauc,c(round(as.numeric(auc.perf5m@y.values),digits=2),round(as.numeric(auc.perf25m@y.values),digits=2)))
     # GlobalROCaupr <- c(GlobalROCaupr,c(round(as.numeric(aupr.pref5m),digits=3),round(as.numeric(aupr.pref25m),digits=3)))
+    GlobalROCsig <- c(GlobalROCsig,pVal5mSymbol,pVal25mSymbol)
     
 }
 
@@ -531,7 +704,7 @@ GlobalROCLegendText <- paste0(rep(GlobalROCLegendText,each=2))
 
 GlobalROCLegendTextAll <- paste(rep(c("5m","25m"),times=length(PP_Cutoff)),
                              rep("- SD:",times=length(PP_Cutoff)*2),GlobalROCLegendText,
-                             rep("- AUC:",times=length(PP_Cutoff)*2),GlobalROCauc)
+                             rep("- AUC:",times=length(PP_Cutoff)*2),GlobalROCauc,GlobalROCsig)
                              # rep("- AUPR:",times=length(PP_Cutoff)*2),GlobalROCaupr)
 
 legend("bottomright", legend=GlobalROCLegendTextAll,col=rep(ROCcols,each=2), lty=rep(c(1,2),times=length(PP_Cutoff)), cex=0.7,inset = 0.02)
@@ -597,187 +770,190 @@ dev.off()
 # ===== FIGURE 4: GSEA ANALYSIS ===== #
 # =================================== #
 
-# Need ModAct_All -> Map back combined values (different approach)
-ModAct_All_pool <- ModAct_All_Nets[[1]]
-for (counter_map in 1:length(ModAct_All_pool)) {
-  ModAct_All_pool[[counter_map]] <- rbind(ModAct_All_Nets[[1]][[counter_map]],ModAct_All_Nets[[2]][[counter_map]],ModAct_All_Nets[[3]][[counter_map]])
-}
+if (RunGSEA==1) {
 
-ModAct_All <- list()
-for (counter_map in 1:length(ModAct_All_pool)) {
-  ModAct_All[[counter_map]] <- unique(ModAct_All_pool[[counter_map]])
-}
-
-
-# Implement Aurelien's GSEA with piano
-
-library(piano)
-
-nCores <- 2
-nPerm <- 10000
-
-gsaResAll <- matrix(NA,length(Compounds),8)
-rownames(gsaResAll) <- Compounds
-colnames(gsaResAll) <- c("DistSP-5m","pAdjSP-5m","DistSM-5m","pAdjSM-5m","DistSP-25m","pAdjSP-25m","DistSM-25m","pAdjSM-25m")
-
-geneSetStat <- c("fgsea","median")
-
-# for (counter_compound in 1:length(Compounds)) {
-for (counter_compound in 1:length(ModAct_All)) {
-  # print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(Compounds))))
-  print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(ModAct_All))))
-  Idx_Condition <- which(Compounds[counter_compound]==CompoundsPP_Names)
-  PP5min_current <- PP5min[Idx_Condition,4:ncol(PP5min)]
-  PP25min_current <- PP25min[Idx_Condition,4:ncol(PP5min)]
+  # Need ModAct_All -> Map back combined values (different approach)
+  ModAct_All_pool <- ModAct_All_Nets[[1]]
+  for (counter_map in 1:length(ModAct_All_pool)) {
+    ModAct_All_pool[[counter_map]] <- rbind(ModAct_All_Nets[[1]][[counter_map]],ModAct_All_Nets[[2]][[counter_map]],ModAct_All_Nets[[3]][[counter_map]])
+  }
   
-  if (!is.null(ModAct_All[[counter_compound]])) {
+  ModAct_All <- list()
+  for (counter_map in 1:length(ModAct_All_pool)) {
+    ModAct_All[[counter_map]] <- unique(ModAct_All_pool[[counter_map]])
+  }
+  
+  
+  # Implement Aurelien's GSEA with piano
+  
+  library(piano)
+  
+  nCores <- 2
+  nPerm <- 10000
+  
+  gsaResAll <- matrix(NA,length(Compounds),8)
+  rownames(gsaResAll) <- Compounds
+  colnames(gsaResAll) <- c("DistSP-5m","pAdjSP-5m","DistSM-5m","pAdjSM-5m","DistSP-25m","pAdjSP-25m","DistSM-25m","pAdjSM-25m")
+  
+  geneSetStat <- c("fgsea","median")
+  
+  # for (counter_compound in 1:length(Compounds)) {
+  for (counter_compound in 1:length(ModAct_All)) {
+    # print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(Compounds))))
+    print(paste0("Calculating GSEA for: ",Compounds[[counter_compound]]," - ",toString(counter_compound),"/",toString(length(ModAct_All))))
+    Idx_Condition <- which(Compounds[counter_compound]==CompoundsPP_Names)
+    PP5min_current <- PP5min[Idx_Condition,4:ncol(PP5min)]
+    PP25min_current <- PP25min[Idx_Condition,4:ncol(PP5min)]
     
-    if (nrow(ModAct_All[[counter_compound]])>0) {
-      GS_matrix <- matrix(NA,nrow(ModAct_All[[counter_compound]]),2)
-      if (nrow(ModAct_All[[counter_compound]])>1) {
-        GS_matrix[,1] <- ModAct_All[[counter_compound]][,1]
-        GS_matrix[,2] <- ModAct_All[[counter_compound]][,2]
-        GS_matrix_plusIdx  <- which(as.numeric(GS_matrix[,2])>0)
-        GS_matrix_minusIdx <- which(as.numeric(GS_matrix[,2])<0)
-        # GS_matrix[GS_matrix_plusIdx,2]  <- "Up"; GS_matrix[GS_matrix_minusIdx,2] <- "Dn"
-      } else if (nrow(ModAct_All[[counter_compound]])==1) {
-        GS_matrix[1] <- ModAct_All[[counter_compound]][1]
-        GS_matrix[2] <- ModAct_All[[counter_compound]][2]
-        GS_matrix_plusIdx  <- which(as.numeric(GS_matrix[2])>0)
-        GS_matrix_minusIdx <- which(as.numeric(GS_matrix[2])<0)
-      }
+    if (!is.null(ModAct_All[[counter_compound]])) {
       
-      # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=24) {
-      # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=2) {
-      if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=2  & counter_compound!=24) {
-      # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0)) {
-        geneSet <- loadGSC(GS_matrix)
-        gsaRes5min <- NULL; gsaRes25min <- NULL;
-        gsaRes5min <- runGSA(unlist(PP5min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "fgsea", ncpus = nCores, nPerm = nPerm, gsSizeLim = c(1,Inf))
-        gsaRes25min <- runGSA(unlist(PP25min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "fgsea", ncpus = nCores, nPerm = nPerm)
-        # gsaRes5min <- runGSA(unlist(PP5min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "median", ncpus = nCores, nPerm = nPerm, gsSizeLim = c(1,Inf))
-        # gsaRes25min <- runGSA(unlist(PP25min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "median", ncpus = nCores, nPerm = nPerm)
-        if (length(gsaRes5min$statDistinctDir)==2) {
-          
-          OrderDist <- names(gsaRes5min$gsc)
-          
-          if (OrderDist[1]==1) {
-            
-            # 5 min
-            gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[1]
-            if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
-            else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
-            gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[2]
-            if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[2]}
-            else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[2]}
-            
-            # 25 min
-            gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[1]
-            if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
-            else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
-            gsaResAll[counter_compound,7] <- gsaRes25min$statDistinctDir[2]
-            if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirUp[2]}
-            else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirDn[2]}
-            
-          } else if (OrderDist[1]==-1) {
-            
-            # 5 min
-            gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[1]
-            if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
-            else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
-            gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[2]
-            if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[2]}
-            else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[2]}
-            
-            # 25 min
-            gsaResAll[counter_compound,7] <- gsaRes25min$statDistinctDir[1]
-            if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirUp[1]}
-            else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirDn[1]}
-            gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[2]
-            if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[2]}
-            else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[2]}
-            
-          }
-        } else if (length(gsaRes5min$statDistinctDir)==1) {
-          OrderDist <- names(gsaRes5min$gsc)
-          if (OrderDist[1]==1) {
-            
-            # 5 min
-            gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[1]
-            if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
-            else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
-            
-            # 25 min
-            gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[1]
-            if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
-            else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
-            
-          } else if (OrderDist[1]==-1) {
-            
-            # 5 min
-            gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[1]
-            if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
-            else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
-            
-            # 25 min
-            gsaResAll[counter_compound,7] <- gsaRes5min$statDistinctDir[1]
-            if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,8] <- gsaRes5min$pAdjDistinctDirUp[1]}
-            else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,8] <- gsaRes5min$pAdjDistinctDirDn[1]}
-            
-          }
-          
+      if (nrow(ModAct_All[[counter_compound]])>0) {
+        GS_matrix <- matrix(NA,nrow(ModAct_All[[counter_compound]]),2)
+        if (nrow(ModAct_All[[counter_compound]])>1) {
+          GS_matrix[,1] <- ModAct_All[[counter_compound]][,1]
+          GS_matrix[,2] <- ModAct_All[[counter_compound]][,2]
+          GS_matrix_plusIdx  <- which(as.numeric(GS_matrix[,2])>0)
+          GS_matrix_minusIdx <- which(as.numeric(GS_matrix[,2])<0)
+          # GS_matrix[GS_matrix_plusIdx,2]  <- "Up"; GS_matrix[GS_matrix_minusIdx,2] <- "Dn"
+        } else if (nrow(ModAct_All[[counter_compound]])==1) {
+          GS_matrix[1] <- ModAct_All[[counter_compound]][1]
+          GS_matrix[2] <- ModAct_All[[counter_compound]][2]
+          GS_matrix_plusIdx  <- which(as.numeric(GS_matrix[2])>0)
+          GS_matrix_minusIdx <- which(as.numeric(GS_matrix[2])<0)
         }
-      }    
+        
+        # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=24) {
+        # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=2) {
+        if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0) & counter_compound!=2  & counter_compound!=24) {
+        # if (((length(GS_matrix_plusIdx)>0 & length(GS_matrix_minusIdx))>0)) {
+          geneSet <- loadGSC(GS_matrix)
+          gsaRes5min <- NULL; gsaRes25min <- NULL;
+          gsaRes5min <- runGSA(unlist(PP5min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "fgsea", ncpus = nCores, nPerm = nPerm, gsSizeLim = c(1,Inf))
+          gsaRes25min <- runGSA(unlist(PP25min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "fgsea", ncpus = nCores, nPerm = nPerm)
+          # gsaRes5min <- runGSA(unlist(PP5min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "median", ncpus = nCores, nPerm = nPerm, gsSizeLim = c(1,Inf))
+          # gsaRes25min <- runGSA(unlist(PP25min_current), gsc=geneSet, adjMethod = "fdr", geneSetStat = "median", ncpus = nCores, nPerm = nPerm)
+          if (length(gsaRes5min$statDistinctDir)==2) {
+            
+            OrderDist <- names(gsaRes5min$gsc)
+            
+            if (OrderDist[1]==1) {
+              
+              # 5 min
+              gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[1]
+              if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
+              else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
+              gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[2]
+              if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[2]}
+              else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[2]}
+              
+              # 25 min
+              gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[1]
+              if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
+              else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
+              gsaResAll[counter_compound,7] <- gsaRes25min$statDistinctDir[2]
+              if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirUp[2]}
+              else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirDn[2]}
+              
+            } else if (OrderDist[1]==-1) {
+              
+              # 5 min
+              gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[1]
+              if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
+              else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
+              gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[2]
+              if (gsaRes5min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[2]}
+              else if (gsaRes5min$statDistinctDir[2]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[2]}
+              
+              # 25 min
+              gsaResAll[counter_compound,7] <- gsaRes25min$statDistinctDir[1]
+              if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirUp[1]}
+              else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,8] <- gsaRes25min$pAdjDistinctDirDn[1]}
+              gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[2]
+              if (gsaRes25min$statDistinctDir[2]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[2]}
+              else if (gsaRes25min$statDistinctDir[2]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[2]}
+              
+            }
+          } else if (length(gsaRes5min$statDistinctDir)==1) {
+            OrderDist <- names(gsaRes5min$gsc)
+            if (OrderDist[1]==1) {
+              
+              # 5 min
+              gsaResAll[counter_compound,1] <- gsaRes5min$statDistinctDir[1]
+              if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirUp[1]}
+              else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,2] <- gsaRes5min$pAdjDistinctDirDn[1]}
+              
+              # 25 min
+              gsaResAll[counter_compound,5] <- gsaRes25min$statDistinctDir[1]
+              if (gsaRes25min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirUp[1]}
+              else if (gsaRes25min$statDistinctDir[1]<0) {gsaResAll[counter_compound,6] <- gsaRes25min$pAdjDistinctDirDn[1]}
+              
+            } else if (OrderDist[1]==-1) {
+              
+              # 5 min
+              gsaResAll[counter_compound,3] <- gsaRes5min$statDistinctDir[1]
+              if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirUp[1]}
+              else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,4] <- gsaRes5min$pAdjDistinctDirDn[1]}
+              
+              # 25 min
+              gsaResAll[counter_compound,7] <- gsaRes5min$statDistinctDir[1]
+              if (gsaRes5min$statDistinctDir[1]>=0) {gsaResAll[counter_compound,8] <- gsaRes5min$pAdjDistinctDirUp[1]}
+              else if (gsaRes5min$statDistinctDir[1]<0) {gsaResAll[counter_compound,8] <- gsaRes5min$pAdjDistinctDirDn[1]}
+              
+            }
+            
+          }
+        }    
+      }
     }
   }
-}
-
-gsaResAll_final <- gsaResAll[which(rowSums(!is.na(gsaResAll))>0),]
-
-gsaResAll_plot <- gsaResAll_final
-gsaResAll_plot[,2] <- (-1)*log10(gsaResAll_plot[,2])
-gsaResAll_plot[,4] <- (-1)*log10(gsaResAll_plot[,4])
-gsaResAll_plot[,6] <- (-1)*log10(gsaResAll_plot[,6])
-gsaResAll_plot[,8] <- (-1)*log10(gsaResAll_plot[,8])
-
-pdf(paste0("GSEA_Valcano_Validation_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
-
-plot(gsaResAll_plot[,1],gsaResAll_plot[,2],type = 'p',pch=2,col='blue',cex=1,
-     xlab = "GSEA score",ylab="-log10(Adj-pVal)",
-     ylim = c(0,2),xlim= c(-1,1),
-     main = paste0("GSEA/Adj-pVal CombinedNets MeasC/o:",toString(Meas_Cutoff),STITCH_Label),axes = F)
-axis(1, at=seq(-1,1,by=0.2),labels=seq(-1,1,by=0.2), las = 2,cex.axis=1)
-axis(2, at=seq(0,2,by=0.2),labels=seq(0,2,by=0.2), las = 2)
-points(gsaResAll_plot[,3],gsaResAll_plot[,4],type = 'p',pch=2, col='goldenrod1',cex=1)
-points(gsaResAll_plot[,5],gsaResAll_plot[,6],type = 'p',pch=16, col='darkgreen',cex=1)
-points(gsaResAll_plot[,7],gsaResAll_plot[,8],type = 'p',pch=16, col='firebrick2',cex=1)
-lines(rep(0,length(seq(0,2,by=0.2))),seq(0,2,by=0.2),type = "l",lty=2, col='grey',cex=1)
-lines(seq(-1,1,by=0.2),rep(1.0,length(seq(-1,1,by=0.2))),type = "l",lty=2, col='grey',cex=1)
-
-legend("top", legend=c("SetUp-5m","SetDn-5m","SetUp-25m","SetDn-25m"),col=c("blue", "goldenrod1","darkgreen","firebrick2"),pch = c(2,2,16,16), cex=0.7,inset = 0)
-
-dev.off()
-
-
-# Pool all results in one object per SDcutoff and per inputType (for all combined model)
-
-ModAct_All_BkUp <- ModAct_All
-# ModAct_All <- ModAct_All_BkUp
-
-ModAct_All_Combined <- NULL
-for (counter_map in 1:length(ModAct_All)) {
-  if (!is.null(ModAct_All[[counter_map]])) {
-    if (nrow(ModAct_All[[counter_map]])==1) {
-      ModAct_All[[counter_map]][1] <- paste0(ModAct_All[[counter_map]][1],"_",toString(counter_map),"_",toString(Meas_Cutoff),STITCH_Label)
-    } else {
-      ModAct_All[[counter_map]][,1] <- paste0(ModAct_All[[counter_map]][,1],"_",toString(counter_map),"_",toString(Meas_Cutoff),STITCH_Label)
+  
+  gsaResAll_final <- gsaResAll[which(rowSums(!is.na(gsaResAll))>0),]
+  
+  gsaResAll_plot <- gsaResAll_final
+  gsaResAll_plot[,2] <- (-1)*log10(gsaResAll_plot[,2])
+  gsaResAll_plot[,4] <- (-1)*log10(gsaResAll_plot[,4])
+  gsaResAll_plot[,6] <- (-1)*log10(gsaResAll_plot[,6])
+  gsaResAll_plot[,8] <- (-1)*log10(gsaResAll_plot[,8])
+  
+  pdf(paste0("GSEA_Valcano_Validation_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".pdf"))
+  
+  plot(gsaResAll_plot[,1],gsaResAll_plot[,2],type = 'p',pch=2,col='blue',cex=1,
+       xlab = "GSEA score",ylab="-log10(Adj-pVal)",
+       ylim = c(0,2),xlim= c(-1,1),
+       main = paste0("GSEA/Adj-pVal CombinedNets MeasC/o:",toString(Meas_Cutoff),STITCH_Label),axes = F)
+  axis(1, at=seq(-1,1,by=0.2),labels=seq(-1,1,by=0.2), las = 2,cex.axis=1)
+  axis(2, at=seq(0,2,by=0.2),labels=seq(0,2,by=0.2), las = 2)
+  points(gsaResAll_plot[,3],gsaResAll_plot[,4],type = 'p',pch=2, col='goldenrod1',cex=1)
+  points(gsaResAll_plot[,5],gsaResAll_plot[,6],type = 'p',pch=16, col='darkgreen',cex=1)
+  points(gsaResAll_plot[,7],gsaResAll_plot[,8],type = 'p',pch=16, col='firebrick2',cex=1)
+  lines(rep(0,length(seq(0,2,by=0.2))),seq(0,2,by=0.2),type = "l",lty=2, col='grey',cex=1)
+  lines(seq(-1,1,by=0.2),rep(1.0,length(seq(-1,1,by=0.2))),type = "l",lty=2, col='grey',cex=1)
+  
+  legend("top", legend=c("SetUp-5m","SetDn-5m","SetUp-25m","SetDn-25m"),col=c("blue", "goldenrod1","darkgreen","firebrick2"),pch = c(2,2,16,16), cex=0.7,inset = 0)
+  
+  dev.off()
+  
+  
+  # Pool all results in one object per SDcutoff and per inputType (for all combined model)
+  
+  ModAct_All_BkUp <- ModAct_All
+  # ModAct_All <- ModAct_All_BkUp
+  
+  ModAct_All_Combined <- NULL
+  for (counter_map in 1:length(ModAct_All)) {
+    if (!is.null(ModAct_All[[counter_map]])) {
+      if (nrow(ModAct_All[[counter_map]])==1) {
+        ModAct_All[[counter_map]][1] <- paste0(ModAct_All[[counter_map]][1],"_",toString(counter_map),"_",toString(Meas_Cutoff),STITCH_Label)
+      } else {
+        ModAct_All[[counter_map]][,1] <- paste0(ModAct_All[[counter_map]][,1],"_",toString(counter_map),"_",toString(Meas_Cutoff),STITCH_Label)
+      }
     }
+    ModAct_All_Combined <- rbind(ModAct_All_Combined,ModAct_All[[counter_map]])
   }
-  ModAct_All_Combined <- rbind(ModAct_All_Combined,ModAct_All[[counter_map]])
-}
+  
+  write.table(x = ModAct_All_Combined,file = paste0("Pooled_ModelActivity_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
 
-write.table(x = ModAct_All_Combined,file = paste0("Pooled_ModelActivity_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".tsv"),quote = F,sep = "\t",col.names = T,row.names = F)
-
+} 
 
 # ================================== #
 # ================================== #
