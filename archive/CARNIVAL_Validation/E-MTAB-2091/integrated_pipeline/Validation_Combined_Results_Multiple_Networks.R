@@ -9,11 +9,11 @@ ScaffoldNetAll <- c(1,2,3) # Multiople
 ScaffoldNameAll <- c("omnipath","generic","signor")
   
 # Select stimuli's targets (1=only main, 2=main+STITCH)
-StimuliTarget <- 2 # Single
+StimuliTarget <- 1 # Single
 # StimuliTarget <- c(1,2) # Multiple
 
 # Select SD-Cutoff for input loading (c(1,1.5,2))
-Meas_Cutoff <- 1 # Single
+Meas_Cutoff <- 2 # Single
 # Meas_Cutoff <- c(1,1.5,2) # Multiple
 
 # Select cutoff measure and value for pp-data
@@ -43,7 +43,9 @@ setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL"); source("~/Desktop/RWTH_Aachen/Gi
 setwd("~/Desktop/RWTH_Aachen/GitHub/CARNIVAL/archive/CARNIVAL_Validation/E-MTAB-2091/integrated_pipeline/") # set working directory (relative)
 
 GlobalROC5m <- list(); GlobalROC25m <- list() # For global ROC curve plot
-SigGlobalROC5m <- list(); SigGlobalROC25m <- list() # For global ROC curve plot (Permutated verison)
+BTCGlobalROC5m <- NULL; BTCGlobalROC25m <- NULL # For global BTC calculation
+auc.perfGlobal5mALL <- list(); auc.perfGlobal25mALL <- list()
+BTCGlobal5mALL <- list(); BTCGlobal25mALL <- list()
 
 for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   
@@ -233,7 +235,6 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
     ModelCombined[,counter_combine] <- sign(rowSums(ModelResults[,(((counter_combine-1)*3)+1) : (((counter_combine-1)*3)+3)]))
     
   }
-  
   
   
   # =============================================== #
@@ -532,7 +533,6 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
         auc.perf25m = performance(pred25m, measure = "auc")
         plot(roc.perf25m,col=c("darkgreen"),main=gsub("_Mod","",colnames(Extracted5m)[((counter_plot-1)*3)+1]))
         
-        
         # Plug in permutated results for p-value of AUC calculation
         
         auc.perf25mALL <- NULL
@@ -576,10 +576,35 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
   GlobalROC5m[[counter_ppCutOff]] <- prediction(LocalROC5m[,1],LocalROC5m[,2])
   GlobalROC25m[[counter_ppCutOff]] <- prediction(LocalROC25m[,1],LocalROC25m[,2])
 
-  LocalROC5mSF <- NULL; LocalROC25mSF <- NULL
-  auc.perfGlobal5mALL <- NULL; auc.perfGlobal25mALL <- NULL
+  TP_5m=0;FP_5m=0;FN_5m=0;TN_5m=0
+  for (counter_CM5m in 1:nrow(LocalROC5m)) {
+    if (!is.na(LocalROC5m[counter_CM5m,1]) & !is.na(LocalROC5m[counter_CM5m,2])) {
+      if (LocalROC5m[counter_CM5m,1]==1 & LocalROC5m[counter_CM5m,2]==1) {TP_5m=TP_5m+1}
+      if (LocalROC5m[counter_CM5m,1]==1 & LocalROC5m[counter_CM5m,2]==0) {FP_5m=FP_5m+1}
+      if (LocalROC5m[counter_CM5m,1]==0 & LocalROC5m[counter_CM5m,2]==1) {FN_5m=FN_5m+1}
+      if (LocalROC5m[counter_CM5m,1]==0 & LocalROC5m[counter_CM5m,2]==0) {TN_5m=TN_5m+1}
+    }
+  }
+  TP_25m=0;FP_25m=0;FN_25m=0;TN_25m=0
+  for (counter_CM25m in 1:nrow(LocalROC25m)) {
+    if (!is.na(LocalROC25m[counter_CM25m,1]) & !is.na(LocalROC25m[counter_CM25m,2])) {
+      if (LocalROC25m[counter_CM25m,1]==1 & LocalROC25m[counter_CM25m,2]==1) {TP_25m=TP_25m+1}
+      if (LocalROC25m[counter_CM25m,1]==1 & LocalROC25m[counter_CM25m,2]==0) {FP_25m=FP_25m+1}
+      if (LocalROC25m[counter_CM25m,1]==0 & LocalROC25m[counter_CM25m,2]==1) {FN_25m=FN_25m+1}
+      if (LocalROC25m[counter_CM25m,1]==0 & LocalROC25m[counter_CM25m,2]==0) {TN_25m=TN_25m+1}
+    }
+  }
+  
+  BTCGlobalROC5m <- c(BTCGlobalROC5m,0.5*( (TP_5m/(TP_5m+FP_5m)) + (TN_5m/(TN_5m+FN_5m)) ))
+  BTCGlobalROC25m <- c(BTCGlobalROC25m,0.5*( (TP_25m/(TP_25m+FP_25m)) + (TN_25m/(TN_25m+FN_25m)) ))
+  
+  auc.perfGlobal5mVector <- NULL; auc.perfGlobal25mVector <- NULL
+  BTCGlobal5mVector <- NULL; BTCGlobal25mVector <- NULL
   
   for (counter_GlobalROCSF in 1:NrPermutation) {
+    
+    LocalROC5mSF <- NULL; LocalROC25mSF <- NULL
+    
     for (counter_LocalROC in 1:(ncol(ExtractedROCorig)/3)) {
       LocalROC5mSF <- rbind(LocalROC5m,cbind(Shuffled5m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+1],Shuffled5m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+2]))
       LocalROC25mSF <- rbind(LocalROC25m,cbind(Shuffled25m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+1],Shuffled25m[[counter_GlobalROCSF]][,((counter_LocalROC-1)*3)+3]))
@@ -587,13 +612,43 @@ for (counter_ppCutOff in 1:length(PP_Cutoff)) {
     
     predGlobal5mSF <- prediction(LocalROC5mSF[,1],LocalROC5mSF[,2])
     auc.perfGlobal5mSF = performance(predGlobal5mSF, measure = "auc")
-    auc.perfGlobal5mALL <- c(auc.perfGlobal5mALL,unlist(auc.perfGlobal5mSF@y.values))
+    auc.perfGlobal5mVector <- c(auc.perfGlobal5mVector,unlist(auc.perfGlobal5mSF@y.values))
     
     predGlobal25mSF <- prediction(LocalROC25mSF[,1],LocalROC25mSF[,2])
     auc.perfGlobal25mSF = performance(predGlobal25mSF, measure = "auc")
-    auc.perfGlobal25mALL <- c(auc.perfGlobal25mALL,unlist(auc.perfGlobal25mSF@y.values))
+    auc.perfGlobal25mVector <- c(auc.perfGlobal25mVector,unlist(auc.perfGlobal25mSF@y.values))
+    
+    # Confusion matrix
+    TP_5m=0;FP_5m=0;FN_5m=0;TN_5m=0
+    for (counter_CM5m in 1:nrow(LocalROC5mSF)) {
+      if (!is.na(LocalROC5mSF[counter_CM5m,1]) & !is.na(LocalROC5mSF[counter_CM5m,2])) {
+        if (LocalROC5mSF[counter_CM5m,1]==1 & LocalROC5mSF[counter_CM5m,2]==1) {TP_5m=TP_5m+1}
+        if (LocalROC5mSF[counter_CM5m,1]==1 & LocalROC5mSF[counter_CM5m,2]==0) {FP_5m=FP_5m+1}
+        if (LocalROC5mSF[counter_CM5m,1]==0 & LocalROC5mSF[counter_CM5m,2]==1) {FN_5m=FN_5m+1}
+        if (LocalROC5mSF[counter_CM5m,1]==0 & LocalROC5mSF[counter_CM5m,2]==0) {TN_5m=TN_5m+1}
+      }
+    }
+    TP_25m=0;FP_25m=0;FN_25m=0;TN_25m=0
+    for (counter_CM25m in 1:nrow(LocalROC25mSF)) {
+      if (!is.na(LocalROC25mSF[counter_CM25m,1]) & !is.na(LocalROC25mSF[counter_CM25m,2])) {
+        if (LocalROC25mSF[counter_CM25m,1]==1 & LocalROC25mSF[counter_CM25m,2]==1) {TP_25m=TP_25m+1}
+        if (LocalROC25mSF[counter_CM25m,1]==1 & LocalROC25mSF[counter_CM25m,2]==0) {FP_25m=FP_25m+1}
+        if (LocalROC25mSF[counter_CM25m,1]==0 & LocalROC25mSF[counter_CM25m,2]==1) {FN_25m=FN_25m+1}
+        if (LocalROC25mSF[counter_CM25m,1]==0 & LocalROC25mSF[counter_CM25m,2]==0) {TN_25m=TN_25m+1}
+      }
+    }
+    
+    # Formula for Balanced Accuracy: 0.5*(TP/P + TN/N)
+    BTCGlobal5mVector <- c(BTCGlobal5mVector,0.5*( (TP_5m/(TP_5m+FP_5m)) + (TN_5m/(TN_5m+FN_5m)) ))
+    BTCGlobal25mVector <- c(BTCGlobal25mVector,0.5*( (TP_25m/(TP_25m+FP_25m)) + (TN_25m/(TN_25m+FN_25m)) ))
+    
   }
 
+  auc.perfGlobal5mALL[[counter_ppCutOff]] <- auc.perfGlobal5mVector
+  auc.perfGlobal25mALL[[counter_ppCutOff]] <- auc.perfGlobal25mVector
+  BTCGlobal5mALL[[counter_ppCutOff]] <- BTCGlobal5mVector 
+  BTCGlobal25mALL[[counter_ppCutOff]] <- BTCGlobal25mVector
+  
   
   # =================================== #
   # ===== FIGURE 2: DIFF ANALYSIS ===== #
@@ -681,13 +736,12 @@ for (counter_ROCplot in 1:length(PP_Cutoff)) {
       plot(roc.perf25m,col=ROCcols[counter_ROCplot],lty=2,main=paste0("Global ROC-curve - CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label))
     }
     
-    pVal5m <- perc.rank.pVal(auc.perfGlobal5mALL,unlist(auc.perf5m@y.values))
-    pVal25m <- perc.rank.pVal(auc.perfGlobal25mALL,unlist(auc.perf25m@y.values))
+    pVal5m <- perc.rank.pVal(auc.perfGlobal5mALL[[counter_ROCplot]],unlist(auc.perf5m@y.values))
+    pVal25m <- perc.rank.pVal(auc.perfGlobal25mALL[[counter_ROCplot]],unlist(auc.perf25m@y.values))
     
     pVal5mSymbol <- " "; pVal25mSymbol <- " "
     if (!is.nan(pVal5m)) {if (pVal5m <= 0.1) {pVal5mSymbol = "(+)"}; if (pVal5m <= 0.05) {pVal5mSymbol = "(*)"}; if (pVal5m <= 0.01) {pVal5mSymbol = "(**)"}}
     if (!is.nan(pVal25m)) {if (pVal25m <= 0.1) {pVal25mSymbol = "(+)"}; if (pVal25m <= 0.05) {pVal25mSymbol = "(*)"}; if (pVal25m <= 0.01) {pVal25mSymbol = "(**)"}}
-    
     
     abline(a=0, b= 1,col="grey")
     GlobalROCauc <- c(GlobalROCauc,c(round(as.numeric(auc.perf5m@y.values),digits=2),round(as.numeric(auc.perf25m@y.values),digits=2)))
@@ -710,6 +764,26 @@ GlobalROCLegendTextAll <- paste(rep(c("5m","25m"),times=length(PP_Cutoff)),
 legend("bottomright", legend=GlobalROCLegendTextAll,col=rep(ROCcols,each=2), lty=rep(c(1,2),times=length(PP_Cutoff)), cex=0.7,inset = 0.02)
 
 dev.off()
+
+# BTC export
+
+BTCsummary <- matrix(NA,4,length(PP_Cutoff))
+colnames(BTCsummary) <- paste0("SDcutoff=",PP_Cutoff)
+rownames(BTCsummary) <- c("BTC5m","pVal5m","BTC25m","pVal25m")
+
+
+BTC5mRank <- NULL; BTC25mRank <- NULL
+for (counter_BTC in 1:length(PP_Cutoff)) {
+  BTC5mRank <- c(BTC5mRank,perc.rank.pVal(BTCGlobal5mALL[[counter_BTC]],BTCGlobalROC5m[counter_BTC]))
+  BTC25mRank <- c(BTC25mRank,perc.rank.pVal(BTCGlobal25mALL[[counter_BTC]],BTCGlobalROC25m[counter_BTC]))
+}
+
+BTCsummary[1,] <- round(BTCGlobalROC5m,digits = 3)
+BTCsummary[2,] <- BTC5mRank
+BTCsummary[3,] <- round(BTCGlobalROC25m,digits = 3)
+BTCsummary[4,] <- BTC25mRank
+
+write.table(x = BTCsummary, file = paste0("BTC_CombinedNets_MeasCutOff_",toString(Meas_Cutoff),STITCH_Label,".tsv"),sep = "\t",quote = F,row.names = T,col.names = T)
 
 
 # =========================================== #
@@ -1179,52 +1253,6 @@ dev.off()
   
 }
 
-
-# ================================== #
-# ================================== #
-# ================================== #
-
-# # === Optional : Save results as files === #
-
-# write.table(x = ValResMat,file = paste0("Summary_Validation_Results_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
-# write.table(x = ValResMatSign,file = paste0("Summary_Validation_Sign_Results_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
-# write.table(x = ValResMatSignCutOff,file = paste0("Summary_Validation_SignCutOff_Results_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),
-#                                                   if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
-#                                                   else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
-#                                                   else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
-#                                                   ,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
-# write.table(x = DiffMat,file = paste0("Summary_Validation_AverageDistance_",ScaffoldName,"_MeasCutOff_",toString(Meas_Cutoff),
-#                                       if (DiscretPP==1) {paste0("_AbsCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
-#                                       else if (DiscretPP==2) {paste0("_MeanSDCutOff_",toString(PP_Cutoff[counter_ppCutOff]))} 
-#                                       else if (DiscretPP==3) {paste0("_MedianMADCutOff_",toString(PP_Cutoff[counter_ppCutOff]))}
-#                                       ,".tsv"),quote = F,sep = "\t",col.names = T,row.names = T)
-
-# # === Optional : Analysis of individual result === #
-# 
-# # NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol.txt",header=T,sep="\t",stringsAsFactors = F)
-# # NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy.txt",header=T,sep="\t",stringsAsFactors = F)
-# # NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy_Update_Net1.txt",header=T,sep="\t",stringsAsFactors = F)
-# # NodeAct_Betaxolol <- read.delim("nodesActivity_Betaxolol_PROGENy_Update_Net4.txt",header=T,sep="\t",stringsAsFactors = F)
-# NodeAct_Betaxolol <- read.delim("formaldehyde/nodesActivity_formaldehyde_Net1.txt",header=T,sep="\t",stringsAsFactors = F)
-# Overlapped_Proteins <- intersect(MeasuredPP_HGNC,NodeAct_Betaxolol[,1])
-# 
-# # Writing results for the overlapped proteins
-# Result_Matrix <- matrix(NA,length(Overlapped_Proteins),4)
-# colnames(Result_Matrix) <- c("Protein","CARNIVAL","PP5min","PP25min")
-# Idx_Condition <- which("betaxolol"==PP5min[,1])
-# for (counter in 1:length(Overlapped_Proteins)) {
-#   Current_Overlapped_Protein <- Overlapped_Proteins[counter]
-#   Current_CARNIVAL_output <- NodeAct_Betaxolol$Activity[NodeAct_Betaxolol$Nodes==Current_Overlapped_Protein]
-#   Current_PP5min_meas <- PP5min[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)+3]
-#   Current_PP25min_meas <- PP25min[Idx_Condition,which(Current_Overlapped_Protein==MeasuredPP_HGNC)+3]
-#   Result_Matrix[counter,] <- c(Current_Overlapped_Protein,Current_CARNIVAL_output,Current_PP5min_meas,Current_PP25min_meas)
-# }
-# 
-# # write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
-# # write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol_Net1.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
-# # write.table(x = Result_Matrix,file = "Validation_Results_Betaxolol_Net4.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
-# write.table(x = Result_Matrix,file = "formaldehyde/Validation_Results_formaldehyde_Net1.tsv",quote = F,sep = "\t",col.names = T,row.names = F)
-# 
 print("Done!")
 
 # --- End of script --- #
