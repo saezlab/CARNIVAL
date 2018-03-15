@@ -241,10 +241,15 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
     RemainingNodeName <- activityNodes[RemainingNodeIdx,1]
     
     RestOfNodeIdx <- NULL
-    for (counter in 1:length(RemainingNodeName)) {
-      if (sum(RemainingNodeName[counter]==AllNodeSIF)>0) {
-        RestOfNodeIdx <- c(RestOfNodeIdx,which(RemainingNodeName[counter]==activityNodes[,1]))
+    
+    if (length(RemainingNodeIdx)>0) {
+      for (counter in 1:length(RemainingNodeName)) {
+        if (sum(RemainingNodeName[counter]==AllNodeSIF)>0) {
+          RestOfNodeIdx <- c(RestOfNodeIdx,which(RemainingNodeName[counter]==activityNodes[,1]))
+        }
       }
+    } else {
+      RestOfNodeIdx <- NULL
     }
     if (length(RestOfNodeIdx)>0) {
       for (counter in 1:length(RestOfNodeIdx)) {

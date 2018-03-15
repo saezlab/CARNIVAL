@@ -1,7 +1,0 @@
-variable	exp	value
-xb7_2	SpeciesUP P1	0
-xb8_2	SpeciesUP TF1	0
-xb9_2	SpeciesUP P2	0
-xb10_2	SpeciesUP TF2	0
-xb11_2	SpeciesUP G1	0
-xb12_2	SpeciesUP G2	0
