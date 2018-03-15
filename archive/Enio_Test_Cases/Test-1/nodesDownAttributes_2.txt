@@ -1,3 +1,0 @@
-variable	exp	value
-xb5_2	SpeciesDown P	0
-xb6_2	SpeciesDown TF	0

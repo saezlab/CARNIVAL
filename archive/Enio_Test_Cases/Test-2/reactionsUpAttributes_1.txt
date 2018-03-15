@@ -1,3 +1,0 @@
-variable	exp	value
-xb10_1	ReactionUp P=TF	1
-xb11_1	ReactionUp TF=G	0
