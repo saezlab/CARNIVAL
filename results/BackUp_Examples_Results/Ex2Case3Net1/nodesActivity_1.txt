@@ -1,4 +1,0 @@
-Nodes	Activity
-G	0
-P	1
-TF	0

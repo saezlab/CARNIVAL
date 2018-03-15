@@ -1,2 +1,0 @@
-variable	exp	value
-xb8_1	ReactionDown P=TF	0
