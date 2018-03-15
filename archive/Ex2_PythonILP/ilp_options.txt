@@ -1,6 +1,0 @@
-mipgap	0.1
-timelimit	14400.000000
-number_solutions	1
-measurements_file	measurements_Case1.txt
-inputs_file	inputs_Case1.txt
-network_file	network_Ex2_PosPos.sif

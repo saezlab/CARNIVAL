@@ -1,3 +1,0 @@
-WriteConstraints: 308.801999999996
-CplexSolving: 70.2779999999984
-ExportResults: 85.5059999999939
