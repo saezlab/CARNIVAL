@@ -11,6 +11,12 @@ if (length(dev.list())>0){dev.off()} # clear figure (if any)
 Example     <- 1 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7; ToyWeight
 Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
+
+# Set CPLEX stopping criteria
+mipGAP      <- 0.1 # in proportion to the best estimated solution
+timelimit   <- 1800 # in seconds
+
+# Choose results exporting options
 Result_dir  <- paste0("Ex",toString(Example),"Case",toString(Case_study),"Net",toString(Network)) # specify a name for result directory; if NULL, then date and time will be used by default
 Export_all  <- 0 # c(0,1) export all ILP variables or not; if 0, only predicted node values, sif and dot files will be written
 
@@ -68,12 +74,12 @@ if (Example == 1) {
     network      <- read.delim("examples/Ex6/SignorSIF_NoHyphenNoSlashNoColonNoSpace.tsv", sep = "\t", header = FALSE,stringsAsFactors = F)
   }
   if (Case_study == 1) {
-    inputs       <- read.table("examples/Ex6/Propanolol_inputs_only_ADRB1.txt", sep="\t", header = TRUE)
+    inputs       <- read.table("examples/Ex6/Inputs_Main_ACETAMINOPHEN.tsv", sep="\t", header = TRUE)
   } else if (Case_study == 2) {
-    inputs       <- read.table("examples/Ex6/Propanolol_inputs.txt", sep="\t", header = TRUE)
+    inputs       <- read.table("examples/Ex6/Inputs_Main_STITCH_ACETAMINOPHEN_CutOff_800.tsv", sep="\t", header = TRUE)
   }
-  measurements <- read_delim("examples/Ex6/TFActs_TGG_PPNL_Human_ivt_24h_high_UpDown.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
-  # measurements <- read_delim("examples/Ex6/TFActs_TGG_PPNL_Human_ivt_8h_low_UpDown.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+  measurements <- read_delim("examples/Ex6/ILP_Meas_APAP_high_24h_CutOff_1.5.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+  # measurements <- read_delim("examples/Ex6/ILP_Meas_APAP_low_2h_CutOff_1.5.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
 } else if (Example == 7) {
   network      <- read.table("examples/Ex7/Network_ToyWeight.txt", sep = "\t", header = FALSE)
   inputs       <- read.table("examples/Ex7/Input_ToyWeight.txt", sep="\t", header = TRUE)
@@ -126,12 +132,12 @@ if (length(CloneFiles)>0) {
 if (file.exists("testFile.lp")) {file.remove("testFile.lp")}
 if (file.exists("results_cplex.txt")) {file.remove("results_cplex.txt")}
 if (file.exists("cplex.log")) {file.remove("cplex.log")}
-
+if (file.exists("cplexCommand.txt")) {file.remove("cplexCommand.txt")}
 
 # Write constraints as ILP inputs
 ptm <- proc.time()
 print("Writing constraints...")
-variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,nodeWeights=nodeWeights)
+variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,mipGAP=mipGAP,timelimit=timelimit,nodeWeights=nodeWeights)
 Elapsed_1 <- proc.time() - ptm
 
 # Solve ILP problem with cplex, remove temp files, and return to the main directory
@@ -143,6 +149,7 @@ Elapsed_2 <- proc.time() - ptm
 if (file.exists("testFile.lp")) {file.remove("testFile.lp")} # might be useful for debugging 
 if (file.exists("results_cplex.txt")) {file.copy(from = "results_cplex.txt",to = paste(current_dir,"/results/",dir_name,"/results_cplex.txt",sep="")); file.remove("results_cplex.txt")}
 if (file.exists("cplex.log")) {file.copy(from = "cplex.log",to = paste(current_dir,"/results/",dir_name,"/cplex.log",sep="")); file.remove("cplex.log")}
+if (file.exists("cplexCommand.txt")) {file.remove("cplexCommand.txt")}
 setwd(current_dir)
 
 # Write result files
