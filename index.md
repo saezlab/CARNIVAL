@@ -4,46 +4,35 @@ title: Home
 ---
 
 
-# PHONEMeS
+# CARNIVAL
 
 ## Overview
 
-PHONEMeS (**PHO**sphorylation **NE**tworks for **M**ass **S**pectrometry) is a method to model signaling networks based on untargeted phosphoproteomics mass spectrometry data and kinase/phosphatase-substrate interactions.
+CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of drug-specific activated pathways form Gene Expression (GEX) Data, or inferred Transcription Factor (TF) Activities.
 
-This package contains the R package and accompanying scripts that implement the method as well as several examples of how to run a PHONEMeS analysis.
+This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented [Causal Reasoning](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) method.
 
-The input for PHONEMeS consists of phosphoproteomic data after treatment with kinase inhibitors. Gaussian mixture modeling is then used to find phosphosites that exhibit a naturally Boolean behaviour with two populations, representing a control and a perturbed state. The data are mapped unto a kinase/phosphatase-substrate network taken from several dedicated databases. PHONEMeS then optimizes the network and extracts possible paths connecting inhibited kinases and perturbed phosphosites by iteratively sampling edges from the background network, simulating the logic model, and finally evaluating the network by comparison to the data. In each iteration, sampling weights are corrected based on the edge frequencies in the best models.
+The input for CARNIVAL consists of:
 
-<img src="/PHONEMeS/public/network.png" alt="Example network">
+ * Discretized TF activities which can be inferred from GEX data through the [DoRothEA](https://github.com/saezlab/DoRothEA) method.
+ 
+ * A list of perturbation targets for a specific drug/drug combination and their effects on each of them.
+ 
+ * A Functional Interaction Network (as a SIF file) containing a complete and comprehensive list of signed and directed interactions between proteins.
+ 
+ * [PROGENy](https://github.com/saezlab/progeny) scores representing magnitudes of inferred pathway activities from GEX data.
+ 
+<img src="/CARNIVAL/public/workflow.png" alt="CARNIVAL workflow">
 
-<center><i>Example output of PHONEMeS analysis after MTOR inhibition</i></center>
+<center><i>Inputs and Outputs of CARNIVAL</i></center>
+
+The main idea behind CARNIVAL consist on identifying a subset of interactions from the Functional Interaction Network and which are representing possible regulated pathways linking drug perturbation targets to active Transcription Factors. An Integer Linear Programming (ILP) approach (cased on a formulation from [*Melas et al.*] (http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003204))is being implemented to model the rules of signal trunsducion from one element of the network to the other. The final goal would be to identify possible drug's modes of action by confirming alterations of main signalling pathways and off-tagets effect. Also, such a method can help us identify alternative drug targets and treatments so to increase therapy effectiveness.
 
 ## References
 
-Please use this reference to cite PHONEMeS:
+> Melas I.N. et al. [Identification of drug-specific pathways based on gene expression data: application to drug induced lung injury](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) _Integrative Biology, 2015,
+7, 904_.
 
-> Terfve, C. D. A., Wilkes, E. H., Casado, P., Cutillas, P. R., and Saez-Rodriguez, J. (2015). [Large-scale models of signal propagation in human cells derived from discovery phosphoproteomic data.](http://www.nature.com/articles/ncomms9033) _Nature Communications_, **6**:8033.
+> Garcia-Alonso L. et al. [Transcription Factor Activities Enhance Markers of Drug Sensitivity in Cancer.](https://www.ncbi.nlm.nih.gov/pubmed/29229604) _Cancer Res. 2018 Feb 1;78(3):769-780. doi: 10.1158/0008-5472.CAN-17-1679. Epub 2017 Dec 11._
 
-```
-@article{Terfve2015,
-         author = {Terfve, Camille D A and Wilkes, Edmund H and 
-                   Casado, Pedro and Cutillas, Pedro R and 
-                   Saez-Rodriguez, Julio},
-         doi = {10.1038/ncomms9033},
-         issn = {2041-1723},
-         journal = {Nature communications},
-         month = {jan},
-         pages = {8033},
-         pmid = {26354681},
-         title = {{Large-scale models of signal propagation in human cells derived from discovery phosphoproteomic data.}},
-         url = {http://www.ncbi.nlm.nih.gov/pubmed/26354681},
-         volume = {6},
-         year = {2015}
-         }
-```
-
-### Other References
-
-+ Description of parts of the data:
-
-  > Wilkes, E. H., Terfve, C., Gribben, J. G., Saez-Rodriguez, J., and Cutillas, P. R. (2015). [Empirical inference of circuitry and plasticity in a kinase signaling network.](http://www.pnas.org/content/112/25/7719.abstract) _Proceedings of the National Academy of Sciences of the United States of America_, **112**(25):7719–24.
+> Schubert M. et al. [Perturbation-response genes reveal signaling footprints in cancer gene expression](https://www.nature.com/articles/s41467-017-02391-6) _Nature Communicationsvolume 9, Article number: 20 (2018) doi:10.1038/s41467-017-02391-6_
