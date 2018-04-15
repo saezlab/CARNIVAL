@@ -26,6 +26,7 @@ The input for CARNIVAL consists of:
 
 <center><i>Inputs and Outputs of CARNIVAL</i></center>
 
+
 The main idea behind CARNIVAL consist on identifying a subset of interactions from the Functional Interaction Network and which are representing possible regulated pathways linking drug perturbation targets to active Transcription Factors. An Integer Linear Programming (ILP) approach (cased on a formulation from [*Melas et al.*] (http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003204))is being implemented to model the rules of signal trunsducion from one element of the network to the other. The final goal would be to identify possible drug's modes of action by confirming alterations of main signalling pathways and off-tagets effect. Also, such a method can help us identify alternative drug targets and treatments so to increase therapy effectiveness.
 
 ## References
