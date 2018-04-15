@@ -8,7 +8,7 @@ title: Home
 
 ## Overview
 
-CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of drug-specific activated pathways form Gene Expression (GEX) Data, or inferred Transcription Factor (TF) Activities.
+CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of drug-specific activated pathways form Gene Expression (GEX) Data or inferred Transcription Factor (TF) Activities.
 
 This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented [Causal Reasoning](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) method.
 
@@ -27,7 +27,7 @@ The input for CARNIVAL consists of:
 <center><i>Inputs and Outputs of CARNIVAL</i></center>
 
 
-The main idea behind CARNIVAL consist on identifying a subset of interactions from the Functional Interaction Network and which are representing possible regulated pathways linking drug perturbation targets to active Transcription Factors. An Integer Linear Programming (ILP) approach (cased on a formulation from [*Melas et al.*] (http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003204))is being implemented to model the rules of signal trunsducion from one element of the network to the other. The final goal would be to identify possible drug's modes of action by confirming alterations of main signalling pathways and off-tagets effect. Also, such a method can help us identify alternative drug targets and treatments so to increase therapy effectiveness.
+The main idea behind CARNIVAL consist on identifying a subset of interactions from a Prior Knowledge Network that represent possible regulated pathways linking drug perturbation targets to active Transcription Factors. An Integer Linear Programming (ILP) approach ( based on a formulation from [*Melas et al.*] (http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003204) )is being implemented to model the rules of signal trunsduction from one element of the network to the other. Applications include the identification of drug’s modes of actions and deregulated processes in a disease by confirming alterations of main signalling pathways and off-tagets effect.
 
 ## References
 
