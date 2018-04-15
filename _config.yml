@@ -26,7 +26,7 @@ author:
 paginate:         5
 
 # Custom vars
-version:          2
+version:          0.1.b
 
 github:
   repo:           https://github.com/saezlab/CARNIVAL
