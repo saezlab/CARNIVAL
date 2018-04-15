@@ -27,7 +27,7 @@ The input for CARNIVAL consists of:
 <center><i>Inputs and Outputs of CARNIVAL</i></center>
 
 
-The main idea behind CARNIVAL consist on identifying a subset of interactions from a Prior Knowledge Network that represent possible regulated pathways linking drug perturbation targets to active Transcription Factors. An Integer Linear Programming (ILP) approach ( based on a formulation from [*Melas et al.*] (http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003204) )is being implemented to model the rules of signal trunsduction from one element of the network to the other. Applications include the identification of drug’s modes of actions and deregulated processes in a disease by confirming alterations of main signalling pathways and off-tagets effect.
+The main idea behind CARNIVAL consist on identifying a subset of interactions from a Prior Knowledge Network that represent possible regulated pathways linking drug perturbation targets to active Transcription Factors. An Integer Linear Programming (ILP) approach (based on a formulation from [*Melas et al.*](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003204)), is being implemented to model the rules of signal trunsduction from one element of the network to the other. Applications include the identification of drug’s modes of actions and deregulated processes in a disease by confirming alterations of main signalling pathways and off-tagets effect.
 
 ## References
 
