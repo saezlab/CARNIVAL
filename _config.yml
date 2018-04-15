@@ -14,8 +14,8 @@ permalink:        pretty
 # Setup
 
 title:            CARNIVAL
-tagline:          Phosphorylation Networks for Mass Spectrometry
-description:      "Method to model signaling networks based on untargeted phosphoproteomics data"
+tagline:          Regulated Pathways for GEX
+description:      "Method to model drug specific regulated signalling pathways from inferred Transcription Factor activities"
 #url:              https://github.com/saezlab/CARNIVAL
 baseurl:          /CARNIVAL/
 toollogo:         /CARNIVAL/public/logo.jpg
