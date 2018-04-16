@@ -22,7 +22,7 @@ The input for CARNIVAL consists of:
  
  * [PROGENy](https://github.com/saezlab/progeny) scores representing magnitudes of inferred pathway activities from GEX data.
  
-<img src="/CARNIVAL/public/workflow.png" alt="CARNIVAL workflow">
+<img src="/CARNIVAL/public/workflow2.png" alt="CARNIVAL workflow">
 
 <center><i>Inputs and Outputs of CARNIVAL</i></center>
 
