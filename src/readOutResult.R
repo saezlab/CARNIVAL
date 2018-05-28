@@ -3,7 +3,15 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   cplexSolutionData <- xmlParse(cplexSolutionFileName)
   cplexSolution <- xmlToList(cplexSolutionData)
   
-  x1 = lapply(cplexSolution[[4]], "[[", 1)
+  counter_sol = 0
+  
+  for (counter_xml in 2:(length(cplexSolution)-1)) {
+    
+    
+    counter_sol = counter_sol+1
+  
+  
+  x1 = lapply(cplexSolution[[counter_xml]][[4]], "[[", 1)
   vars <- unlist(x1)
   
   idxNodes <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodes])
@@ -12,7 +20,7 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   idxEdgesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesUp])
   idxEdgesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesDown])
   
-  x2 = lapply(cplexSolution[[4]], "[[", 3)
+  x2 = lapply(cplexSolution[[counter_xml]][[4]], "[[", 3)
   values <- unlist(x2)
   
   valNodes <- values[idxNodes]
@@ -175,15 +183,15 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
   # Write SIF, DOT and Nodes' activities files
   
   if (!is.null(sif)) {
-    write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_",counter_sol,".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   } else {
-    write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+    write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_",counter_sol,".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
   }
   
   if (length(idx)!=0) {
-    write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   } else {
-    write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+    write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
   }
 
   # Map DOT figure (only when SIF network is present)
@@ -264,19 +272,22 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
     Dot_text <- c(Dot_text,"")
     Dot_text <- c(Dot_text,"}")
     
-    fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, ".dot"))
+    fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, "_",counter_sol,".dot"))
     writeLines(Dot_text,fileConn)
     close(fileConn)
   } 
   
   if (Export_all) {
-    write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-    write.table(x = nodesUp, file = paste0("results/",dir_name,"/nodesUpAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-    write.table(x = nodesDown, file = paste0("results/",dir_name,"/nodesDownAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-    write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-    write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = nodesUp, file = paste0("results/",dir_name,"/nodesUpAttributes_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = nodesDown, file = paste0("results/",dir_name,"/nodesDownAttributes_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, "_",counter_sol,".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   }
   
+  
+  }
+
   return(sif)
   
 }
