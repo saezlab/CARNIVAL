@@ -1,4 +1,4 @@
-writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, timelimit=1800, nodeWeights=nodeWeights) {
+writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, timelimit=1800, nodeWeights=nodeWeights) {
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1)
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
   # distVariables <- write_dist_variables(pknList = pknList)
@@ -38,10 +38,12 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff 
   cplexCommand <- "cplexCommand.txt"
   write("read testFile.lp", cplexCommand, append = TRUE)
   write(paste0("set mip tolerances mipgap ",mipGAP), cplexCommand, append = TRUE)
+  write(paste0("set mip pool relgap ",poolrelGAP), cplexCommand, append = TRUE)
   write(paste0("set timelimit ",timelimit), cplexCommand, append = TRUE)
-  
   write("optimize", cplexCommand, append = TRUE)
-  write(paste0("write results_cplex.txt sol"), cplexCommand, append = TRUE)
+  write("populate", cplexCommand, append = TRUE)
+  # write(paste0("write results_cplex.txt sol"), cplexCommand, append = TRUE)
+  write(paste0("write results_cplex.txt sol all"), cplexCommand, append = TRUE)
   write("quit", cplexCommand, append = TRUE)
   
   # for(i in 1:length(variables)){
