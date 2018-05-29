@@ -8,15 +8,16 @@ if (length(dev.list())>0){dev.off()} # clear figure (if any)
 
 # Select a causal reasoning pipeline and examples
 InvCRmethod <- 1 # c(1,2) # 1 = inverse CARNIVAL, 2 = simplified inverse causal reasoning
-Example     <- 1 # c(1,2) # 1 = WGCNA/surgical experiments, 2 = Toy Model
+Example     <- 1 # c(1,2) # 1 = WGCNA/surgical experiments, 2 = Extract WGCNA Model, 3 = simple Toy model
 
 # Additional option for inverse CARNIVAL method (InvCRmethod==1)
 AddPertubationNode <- 1 # Add perturbation node (inverse causal reasoning pipeline)
 
-# Set CPLEX stopping criteria
-mipGAP      <- 0.001 # in proportion to the best estimated solution
-poolrelGAP  <- 0 # populate more solutions in relative to the best solution
-timelimit   <- 30 # in seconds
+# Set CPLEX stopping criteria for inverse CARNIVAL method (InvCRmethod==1)
+# mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
+poolrelGAP  <- 0.001 # (for populating) in relative to the best solution 
+limitPop    <- 10 # (for populating) limit the number of populated solutions
+timelimit   <- 3600 # in seconds
 
 # Choose results exporting options
 Result_dir  <- paste0("Ex",toString(Example),"_InvCRmethod_",InvCRmethod) # specify a name for result directory; if NULL, then date and time will be used by default
@@ -41,20 +42,29 @@ if (is.null(Result_dir)) {
 }
 dir.create(dir_name); setwd(current_dir)
 
-# Load inputs
-if (Example == 1) {
-  network      <- read.table("examples/Ex8/pkn_reduced_omnipath.sif", sep = "\t", header = TRUE,stringsAsFactors = F)
-  inputs       <- read.table("examples/Ex8/inputs_for_pkn_reduced_omnipath.sif", sep="\t", header = TRUE)
-  measurements <- read_delim("examples/Ex8/meas_for_pkn_reduced_omnipath.sif","\t", escape_double = FALSE, trim_ws = TRUE)
-} else if (Example == 2) {
-  network      <- read.table("Toy_Network_SIF.csv", sep = "\t", header = TRUE,stringsAsFactors = F)
-  inputs       <- read.table("Toy_Input.txt", sep="\t", header = TRUE,stringsAsFactors = F)
-  measurements <- read_delim("Toy_Measurement.txt","\t", escape_double = FALSE, trim_ws = TRUE)
+# Assign names for result files
+if (Example==1) {
+  sif <- "examples/InvCR_Ex1/WGCNA_Full_network.sif"
+  meas <- "examples/InvCR_Ex1/WGCNA_Full_meas.tsv"
+  ips <- "examples/InvCR_Ex1/WGCNA_Full_inputs.txt"
+} else if (Example==2) {
+  sif <- "examples/InvCR_Ex2/WGCNA_Extracted_network.sif"
+  meas <- "examples/InvCR_Ex2/WGCNA_Extracted_meas.csv"
+  ips <- "examples/InvCR_Ex2/WGCNA_Extracted_inputs.txt"
+} else if (Example==3) {
+  sif <- "examples/InvCR_Ex3/Toy_network.sif"
+  meas <- "examples/InvCR_Ex3/Toy_meas.csv"
+  ips <- "examples/InvCR_Ex3/Toy_inputs.txt"
 } else {
   stop("Please select the provided examples or add your own example to the list")
 }
 
 if (InvCRmethod==1) {
+  
+  # Load inputs
+  network      <- read.table(sif, sep = "\t", header = TRUE,stringsAsFactors = F)
+  inputs       <- read.table(ips, sep="\t", header = TRUE)
+  measurements <- read_delim(meas,"\t", escape_double = FALSE, trim_ws = TRUE)
 
   # Adding perturbation node?
   if (AddPertubationNode==1) {
@@ -114,7 +124,7 @@ if (InvCRmethod==1) {
   # Write constraints as ILP inputs
   ptm <- proc.time()
   print("Writing constraints...")
-  variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,timelimit=timelimit,nodeWeights=nodeWeights)
+  variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,timelimit=timelimit,nodeWeights=nodeWeights)
   Elapsed_1 <- proc.time() - ptm
   
   # Solve ILP problem with cplex, remove temp files, and return to the main directory
@@ -152,10 +162,7 @@ if (InvCRmethod==1) {
   
   
 } else if (InvCRmethod==2) {
-  
-  # Assign names for result files
-  sif <- "examples/Ex8/pkn_reduced_omnipath.sif"
-  meas <- "examples/Ex8/meas_for_pkn_reduced_omnipath.sif"
+
   network <- read.csv(sif,header=TRUE,sep="\t",stringsAsFactors = F)
   measurement <- read.table(meas,header = T,sep="\t",stringsAsFactors = F)
   actMat <- matrix(NA,length(measurement),2)
@@ -167,14 +174,9 @@ if (InvCRmethod==1) {
   act <- paste0("results/",dir_name,"/CARNIVAL_ML_Inferred_NodeAct_Case",Example,".tsv")
   ReduceNet <- paste0("results/",dir_name,"/CARNIVAL_ML_Inferred_Network_Case",Example,".sif")
   
-  # network <- read.csv(sif,header=TRUE,sep="\t",stringsAsFactors = F)
-  # measurement <- read.table(meas,header = T,sep="\t",stringsAsFactors = F)
-  
-  
   # Load DOT writing script and write starting network condition  
   # source("SIF2DOT_v2.R")
   SIF2DOT_v2(sif=sif,meas=meas,DOTfilename = paste0("results/",dir_name,"/Starting_Network_Case",Example,".dot"))
-  
   
   # === Multi-level causal reasoning === #
   # 0) Initialise nodes' activities with NA and map the known activities for measured nodes
@@ -256,7 +258,6 @@ if (InvCRmethod==1) {
   # Remove interactions where nodes do not have any activity or inferred activities are zero from the network to generate a reduced network
   
   # First get the indices to remove the nodes which were not inferred activities
-  
   AllInferredNodes <- AllNodesAct[,1]
   AllNonInferredNodes <- setdiff(sort(unique(c(network[,1],network[,3]))),AllInferredNodes)
   IntActNonInferredIDX <- NULL
