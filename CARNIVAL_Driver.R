@@ -11,12 +11,13 @@ if (length(dev.list())>0){dev.off()} # clear figure (if any)
 Example     <- 1 # c(1,2,3,4,5,6,7,8) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight; Ex8: Inverse Causal reasoning of WGCNA modules
 Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
-AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
+AddPertubationNode <- 0 # Add an additional perturbation node to connect to all inputs
 
 # Set CPLEX stopping criteria
-mipGAP      <- 0.10 # in proportion to the best estimated solution
-poolrelGAP  <- 0.01 # populate more solutions in relative to the best solution
-timelimit   <- 1800 # in seconds
+# mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
+poolrelGAP  <- 0.001 # (for populating) in relative to the best solution 
+limitPop    <- 10 # (for populating) limit the number of populated solutions
+timelimit   <- 3600 # in seconds
 
 # Choose results exporting options
 Result_dir  <- paste0("Ex",toString(Example),"Case",toString(Case_study),"Net",toString(Network)) # specify a name for result directory; if NULL, then date and time will be used by default
@@ -54,8 +55,7 @@ if (Example == 1) {
   measurements <- read_delim(paste("examples/Ex2/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
 } else if (Example == 3) {
   if (Network == 1) { Net <- "SameSign" } else if (Network == 2) { Net <- "InverseSign" }
-  # network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,".sif",sep=""), sep = "\t", header = FALSE)
-  network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,"_ReOrder.sif",sep=""), sep = "\t", header = FALSE)
+  network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,".sif",sep=""), sep = "\t", header = FALSE)
   inputs       <- read.table(paste("examples/Ex3/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
   measurements <- read_delim(paste("examples/Ex3/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
 } else if (Example == 4) {
@@ -90,10 +90,6 @@ if (Example == 1) {
   if (Case_study==2) {
     pathwayscore <- read.table("examples/Ex7/PathwayScore_ToyWeight.txt", sep = "\t", header = TRUE)
   }
-} else if (Example == 8) {
-  network      <- read.table("examples/Ex8/pkn_reduced_omnipath.sif", sep = "\t", header = TRUE,stringsAsFactors = F)
-  inputs       <- read.table("examples/Ex8/inputs_for_pkn_reduced_omnipath.sif", sep="\t", header = TRUE)
-  measurements <- read_delim("examples/Ex8/meas_for_pkn_reduced_omnipath.sif","\t", escape_double = FALSE, trim_ws = TRUE)
 } else {
   stop("Please select the provided examples or add your own example to the list")
 }
@@ -156,7 +152,7 @@ if (file.exists("cplexCommand.txt")) {file.remove("cplexCommand.txt")}
 # Write constraints as ILP inputs
 ptm <- proc.time()
 print("Writing constraints...")
-variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,timelimit=timelimit,nodeWeights=nodeWeights)
+variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,timelimit=timelimit,nodeWeights=nodeWeights)
 Elapsed_1 <- proc.time() - ptm
 
 # Solve ILP problem with cplex, remove temp files, and return to the main directory
