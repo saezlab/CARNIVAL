@@ -308,7 +308,9 @@ readOutResults <- function(cplexSolutionFileName, variables = variables, pknList
   
   colnames(weightedSIF) <- c("Node1", "Sign", "Node2", "Weight")
   
-  write.table(x = weightedSIF, file = "weightedModel.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  # write.table(x = weightedSIF, file = "weightedModel.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  fileConn2 <- file(paste0("results/",dir_name,"/weightedModel_", conditionIDX, ".txt"))
+  write.table(x = weightedSIF, file = fileConn2, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   
   ##
   nodesVar <- c()
@@ -387,7 +389,9 @@ readOutResults <- function(cplexSolutionFileName, variables = variables, pknList
   
   colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesP")
   
-  write.table(x = nodesAttributes, file = "nodesAttributes.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  # write.table(x = nodesAttributes, file = "nodesAttributes.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+  fileConn3 <- file(paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"))
+  write.table(x = nodesAttributes, file = fileConn3, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
   
   RES <- list()
   RES[[length(RES)+1]] <- weightedSIF
