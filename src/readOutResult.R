@@ -1,4 +1,4 @@
-readOutResults <- function(cplexSolutionFileName, variables = variables, pknList=pknList, conditionIDX = conditionIDX, dir_name = dir_name, Export_all = Export_all,inputs = inputs, measurements = measurements){
+readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=pknList, conditionIDX = conditionIDX, dir_name = dir_name, Export_all = Export_all,inputs = inputs, measurements = measurements){
   
   cplexSolutionData <- xmlParse(cplexSolutionFileName)
   cplexSolution <- xmlToList(cplexSolutionData)
