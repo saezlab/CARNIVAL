@@ -1,4 +1,4 @@
-writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, timelimit=1800, nodeWeights=nodeWeights) {
+writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, timelimit=1800, nodeWeights=nodeWeights, repIndex) {
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1)
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
   # distVariables <- write_dist_variables(pknList = pknList)
@@ -19,7 +19,7 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff 
   allC <- all_constraints_wLoop(c0 = c0, c1 = c1, c2 = c2, c3 = c3, c4 = c4, c5 = c5, c6 = c6, c7 = c7, c8 = c8, c9 = c9)
   
   # write the .lp file
-  data = "testFile.lp"
+  data = paste0("testFile_",repIndex,".lp")
   write("enter Problem", data)
   write("", data, append = TRUE)
   write("Minimize", data, append = TRUE)
@@ -36,7 +36,7 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff 
   
   # write cplexCommand file
   cplexCommand <- "cplexCommand.txt"
-  write("read testFile.lp", cplexCommand, append = TRUE)
+  write(paste0("read testFile_",repIndex,".lp"), cplexCommand, append = TRUE)
   # write(paste0("set mip tolerances mipgap ",mipGAP), cplexCommand, append = TRUE)
   write(paste0("set mip pool relgap ",poolrelGAP), cplexCommand, append = TRUE)
   write(paste0("set mip limits populate ",limitPop), cplexCommand, append = TRUE)

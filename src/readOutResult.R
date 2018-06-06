@@ -153,7 +153,7 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
     if (!is.null(sif)) {
       write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_model", ii, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     } else {
-      write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", "_model", ii, conditionIDX, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX,"_model", ii, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
     }
     
     if (length(idx)!=0) {
