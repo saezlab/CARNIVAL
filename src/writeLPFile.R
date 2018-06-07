@@ -44,7 +44,7 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff 
   # write("optimize", cplexCommand, append = TRUE)
   write("populate", cplexCommand, append = TRUE)
   # write(paste0("write results_cplex.txt sol"), cplexCommand, append = TRUE)
-  write(paste0("write results_cplex.txt sol all"), cplexCommand, append = TRUE)
+  write(paste0("write results_cplex_",repIndex,".txt sol all"), cplexCommand, append = TRUE)
   write("quit", cplexCommand, append = TRUE)
   
   # for(i in 1:length(variables)){
