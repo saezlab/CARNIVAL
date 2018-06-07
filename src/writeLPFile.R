@@ -39,6 +39,7 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff 
   write(paste0("read testFile_",repIndex,".lp"), cplexCommand, append = TRUE)
   # write(paste0("set mip tolerances mipgap ",mipGAP), cplexCommand, append = TRUE)
   write(paste0("set mip pool relgap ",poolrelGAP), cplexCommand, append = TRUE)
+  write("set mip pool replace 1", cplexCommand, append = TRUE)
   write(paste0("set mip limits populate ",limitPop), cplexCommand, append = TRUE)
   write(paste0("set timelimit ",timelimit), cplexCommand, append = TRUE)
   # write("optimize", cplexCommand, append = TRUE)
