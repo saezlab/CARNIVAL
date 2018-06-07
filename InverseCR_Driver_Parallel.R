@@ -128,8 +128,8 @@ if (InvCRmethod==1) {
       file.remove(AllFiles[CloneFiles[counter]])
     }
   }
-  if (file.exists("testFile.lp")) {file.remove("testFile.lp")}
-  if (file.exists("results_cplex.txt")) {file.remove("results_cplex.txt")}
+  if (file.exists(paste0("testFile_",repIndex,".lp"))) {file.remove(paste0("testFile_",repIndex,".lp"))}
+  if (file.exists(paste0("results_cplex_",repIndex,".txt"))) {file.remove(paste0("results_cplex_",repIndex,".txt"))}
   if (file.exists("cplex.log")) {file.remove("cplex.log")}
   if (file.exists("cplexCommand.txt")) {file.remove("cplexCommand.txt")}
   
@@ -153,8 +153,8 @@ if (InvCRmethod==1) {
   })
   Elapsed_2 <- proc.time() - ptm
   
-  if (file.exists("testFile.lp")) {file.remove("testFile.lp")} # might be useful for debugging 
-  if (file.exists("results_cplex.txt")) {file.copy(from = "results_cplex.txt",to = paste(current_dir,"/results/",dir_name,"/results_cplex.txt",sep="")); file.remove("results_cplex.txt")}
+  if (file.exists(paste0("testFile_",repIndex,".lp"))) {file.remove(paste0("testFile_",repIndex,".lp"))} # might be useful for debugging 
+  if (file.exists(paste0("results_cplex_",repIndex,".txt"))) {file.copy(from = paste0("results_cplex_",repIndex,".txt"),to = paste(current_dir,"/results/",dir_name,"/results_cplex.txt",sep="")); file.remove(paste0("results_cplex_",repIndex,".txt"))}
   if (file.exists("cplex.log")) {file.copy(from = "cplex.log",to = paste(current_dir,"/results/",dir_name,"/cplex.log",sep="")); file.remove("cplex.log")}
   if (file.exists("cplexCommand.txt")) {file.remove("cplexCommand.txt")}
   setwd(current_dir)
