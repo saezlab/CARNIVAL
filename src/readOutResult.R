@@ -151,15 +151,15 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
     # Write SIF, DOT and Nodes' activities files
     
     if (!is.null(sif)) {
-      write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_model", ii, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_model", ii-1, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     } else {
-      write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX,"_model", ii, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX,"_model", ii-1, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
     }
     
     if (length(idx)!=0) {
-      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     } else {
-      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
     }
     
     # Map DOT figure (only when SIF network is present)
@@ -242,17 +242,17 @@ readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=
       Dot_text <- c(Dot_text,"")
       Dot_text <- c(Dot_text,"}")
       
-      fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, "_model", ii, ".dot"))
+      fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, "_model", ii-1, ".dot"))
       writeLines(Dot_text,fileConn)
       close(fileConn)
     } 
     
     if (Export_all) {
-      write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = nodesUp, file = paste0("results/",dir_name,"/nodesUpAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = nodesDown, file = paste0("results/",dir_name,"/nodesDownAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = nodesUp, file = paste0("results/",dir_name,"/nodesUpAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = nodesDown, file = paste0("results/",dir_name,"/nodesDownAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     }
     
     sifAll[[length(sifAll)+1]] <- sif
