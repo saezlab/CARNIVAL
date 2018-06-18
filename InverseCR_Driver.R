@@ -15,9 +15,14 @@ AddPertubationNode <- 1 # Add perturbation node (inverse causal reasoning pipeli
 
 # Set CPLEX stopping criteria for inverse CARNIVAL method (InvCRmethod==1)
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
-poolrelGAP  <- 0.001 # (for populating) in relative to the best solution 
-limitPop    <- 10 # (for populating) limit the number of populated solutions
-timelimit   <- 3600 # in seconds
+poolrelGAP    <- 0.001 # (for populating) in relative to the best solution 
+limitPop      <- 1000 # (for populating) limit the number of populated solutions
+poolCap       <- 1000 # (for populating) limit the pool size to store populated solution
+poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
+alphaWeight   <- 100 # [default 100] coefficient of fitting error in objective function
+betaWeight    <- 20 # [default 20] coefficient of model size in objective function
+gammaWeight   <- 1 # [default 1] coefficient of weights (from PROGENy) in objective function
+timelimit     <- 3600 # set time limit for cplex optimisation
 
 # Choose results exporting options
 Result_dir  <- paste0("Ex",toString(Example),"_InvCRmethod_",InvCRmethod) # specify a name for result directory; if NULL, then date and time will be used by default
@@ -29,7 +34,7 @@ Export_all  <- 0 # c(0,1) export all ILP variables or not; if 0, only predicted 
 library(readr)
 library(tidyr)
 library(XML)
-source("src/CRILPR_Functions.R")
+source("src/CARNIVAL_Functions.R")
 
 # Create a directory to store results
 current_dir <- getwd()
@@ -124,7 +129,7 @@ if (InvCRmethod==1) {
   # Write constraints as ILP inputs
   ptm <- proc.time()
   print("Writing constraints...")
-  variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=100,betaWeight=20,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,timelimit=timelimit,nodeWeights=nodeWeights)
+  variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=alphaWeight,betaWeight=betaWeight,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,poolCap=poolCap,poolIntensity=poolIntensity,timelimit=timelimit,nodeWeights=nodeWeights)
   Elapsed_1 <- proc.time() - ptm
   
   # Solve ILP problem with cplex, remove temp files, and return to the main directory
