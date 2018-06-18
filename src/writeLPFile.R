@@ -1,4 +1,4 @@
-writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, timelimit=1800, nodeWeights=nodeWeights) {
+writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, poolCap=100, poolIntensity=0, timelimit=1800, nodeWeights=nodeWeights) {
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1)
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
   # distVariables <- write_dist_variables(pknList = pknList)
@@ -41,6 +41,8 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff 
   write(paste0("set mip pool relgap ",poolrelGAP), cplexCommand, append = TRUE)
   write("set mip pool replace 1", cplexCommand, append = TRUE)
   write(paste0("set mip limits populate ",limitPop), cplexCommand, append = TRUE)
+  write(paste0("set mip pool capacity ",poolCap), cplexCommand, append = TRUE)
+  write(paste0("set mip pool intensity ",poolIntensity), cplexCommand, append = TRUE)
   write(paste0("set timelimit ",timelimit), cplexCommand, append = TRUE)
   # write("optimize", cplexCommand, append = TRUE)
   write("populate", cplexCommand, append = TRUE)
