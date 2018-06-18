@@ -34,7 +34,7 @@ Export_all  <- 0 # c(0,1) export all ILP variables or not; if 0, only predicted 
 library(readr)
 library(tidyr)
 library(XML)
-source("src/CRILPR_Functions.R")
+source("src/CARNIVAL_Functions.R")
 
 # Create a directory to store results
 current_dir <- getwd()
