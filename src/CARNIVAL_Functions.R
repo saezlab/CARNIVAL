@@ -1,4 +1,4 @@
-# CRILPR compilation of R-functions
+# CARNIVAL compilation of R-functions
 
 source("src/all_constraints.R")
 source("src/all_constraints_wLoop.R")
@@ -30,5 +30,6 @@ source("src/write_loop_constraints.R")
 source("src/write_objective_function.R")
 source("src/write_objective_function_all.R")
 source("src/writeLPFile.R")
+source("src/writeLPFile_BS.R")
 source("src/Discretize_CARNIVAL.R")
 source("src/InvNormWeight_CARNIVAL.R")
