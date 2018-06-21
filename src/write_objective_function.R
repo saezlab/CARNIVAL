@@ -1,4 +1,4 @@
-write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights ){
+write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measuremetntsWeights = measuremetntsWeights ){
   
   if(is.null(scores)){
     
@@ -14,7 +14,21 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     measuredVar <- variables$variables[idxMeasured]
     
-    objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    allWeights <- rep(x = 1, length(measuredVar))
+    
+    if(!is.null(measuremetntsWeights)){
+      
+      weightedSpecies <- colnames(measuremetntsWeights)
+      
+      for(i in 1:length(weightedSpecies)){
+        
+        allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measuremetntsWeights[1, i]
+        
+      }
+      
+    }
+    
+    objectiveFunctionVec <- paste0(" + ", alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
     
     objectiveFunction <- substring(text = objectiveFunction[1], first = 4, last = nchar(objectiveFunction))
