@@ -1,0 +1,8 @@
+8:    objectiveValue="1780"
+178135:    objectiveValue="1780"
+356260:    objectiveValue="1940"
+534385:    objectiveValue="1840"
+712510:    objectiveValue="1840"
+890635:    objectiveValue="1820"
+1068760:    objectiveValue="1800"
+1246885:    objectiveValue="1900"
