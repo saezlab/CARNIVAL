@@ -9,12 +9,13 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     for(i in 1:length(measured)){
       
       idxMeasured <- c(idxMeasured, which(variables$expNodesReduced==paste0("Species ", measured[i])))
-      
+      # print(idxMeasured)
     }
     
     measuredVar <- variables$variables[idxMeasured]
     
-    allWeights <- rep(x = 1, length(measuredVar))
+    # allWeights <- rep(x = 1, length(measuredVar))
+    allWeights <- rep(x = 0, length(measuredVar))
     
     if(!is.null(measurementsWeights)){
       
@@ -25,13 +26,17 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
       for(i in 1:length(weightedSpecies)){
         
         # allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[1, i]
-        allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[i]
+        # allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[i]
+        allWeights[which(which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))==idxMeasured)] <- measurementsWeights[i]
         
       }
       
     }
     
-    objectiveFunctionVec <- paste0(" + ", alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    # objectiveFunctionVec <- paste0(" + ", alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    # objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
     
     objectiveFunction <- substring(text = objectiveFunction[1], first = 4, last = nchar(objectiveFunction))
