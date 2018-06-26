@@ -1,4 +1,4 @@
-write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measuremetntsWeights = measuremetntsWeights ){
+write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measurementsWeights = measurementsWeights ){
   
   if(is.null(scores)){
     
@@ -16,13 +16,16 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     allWeights <- rep(x = 1, length(measuredVar))
     
-    if(!is.null(measuremetntsWeights)){
+    if(!is.null(measurementsWeights)){
       
-      weightedSpecies <- colnames(measuremetntsWeights)
+      # weightedSpecies <- colnames(measurementsWeights)
+      weightedSpecies <- rownames(measurementsWeights)
+      # print(weightedSpecies)
       
       for(i in 1:length(weightedSpecies)){
         
-        allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measuremetntsWeights[1, i]
+        # allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[1, i]
+        allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[i]
         
       }
       
