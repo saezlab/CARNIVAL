@@ -8,16 +8,16 @@ cat("\014") # clear screen
 if (length(dev.list())>0){dev.off()} # clear figure (if any)
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example     <- 5 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
+Example     <- 3 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
 Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
 AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
-measWeights <- FALSE
+measWeights <- TRUE
 measurementsWeights <- NULL
 
 # Set CPLEX stopping criteria
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
-poolrelGAP    <- 0.15 # (for populating) in relative to the best solution 
+poolrelGAP    <- 0.001 # (for populating) in relative to the best solution 
 limitPop      <- 1000 # (for populating) limit the number of populated solutions
 poolCap       <- 1000 # (for populating) limit the pool size to store populated solution
 poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
@@ -66,6 +66,10 @@ if (Example == 1) {
   network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,".sif",sep=""), sep = "\t", header = FALSE)
   inputs       <- read.table(paste("examples/Ex3/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
   measurements <- read_delim(paste("examples/Ex3/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
+  if(measWeights){
+    measurementsWeights <- read_delim("examples/Ex3/measurementsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+    measurementsWeights <- as.matrix(measurementsWeights)
+  }
 } else if (Example == 4) {
   if (Network == 1) { Net <- "PosFB" } else if (Network == 2) { Net <- "PosFB_plusOne" }
   network      <- read.table(paste("examples/Ex4/network_Ex4_",Net,".sif",sep=""), sep = "\t", header = FALSE)
