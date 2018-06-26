@@ -1,10 +1,10 @@
-write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables,alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores,nodeWeights=nodeWeights, measuremetntsWeights=measuremetntsWeights ) {
+write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables,alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores,nodeWeights=nodeWeights, measurementsWeights=measurementsWeights ) {
   
   OF <- "Obj:\t"
   
-  if(!is.null(measuremetntsWeights)){
+  if(!is.null(measurementsWeights)){
     
-    if(nrow(measuremetntsWeights)!=nrow(dataMatrix$dataMatrix)){
+    if(nrow(measurementsWeights)!=nrow(dataMatrix$dataMatrix)){
       
       stop("Number of rows of the Measurements-Weights table should be the same as the number of conditions considered..")
       
@@ -18,22 +18,22 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
     dM$dataMatrix <- as.matrix(t(dataMatrix$dataMatrix[i, ]))
     dM$dataMatrixSign <- as.matrix(t(dataMatrix$dataMatrixSign[i, ]))
     
-    if(!is.null(measuremetntsWeights)){
+    if(!is.null(measurementsWeights)){
       
-      mm <- as.matrix(measuremetntsWeights[i, ])
+      mm <- as.matrix(measurementsWeights[i, ])
       
     } else {
       
       mm <- NULL
       
     }
+    # print(mm)
     
     var <- variables[[i]]
-    
     if (i==1) {
-      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var,alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measuremetntsWeights = mm))
+      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var,alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measurementsWeights = mm))
     } else {
-      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measuremetntsWeights = mm))
+      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measurementsWeights = mm))
     }
     
   }

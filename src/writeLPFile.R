@@ -1,8 +1,8 @@
-writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, poolCap=100, poolIntensity=0, timelimit=1800, nodeWeights=nodeWeights) {
+writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1, alphaWeight=100, betaWeight=20, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, poolCap=100, poolIntensity=0, timelimit=1800, nodeWeights=nodeWeights, measurementsWeights=measurementsWeights) {
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs, cutoff = 0.1)
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
   # distVariables <- write_dist_variables(pknList = pknList)
-  oF <- write_objective_function_all(dataMatrix = dataMatrix, variables = variables, alphaWeight = alphaWeight, betaWeight = betaWeight, scores=scores, nodeWeights=nodeWeights)
+  oF <- write_objective_function_all(dataMatrix = dataMatrix, variables = variables, alphaWeight = alphaWeight, betaWeight = betaWeight, scores=scores, nodeWeights=nodeWeights, measurementsWeights=measurementsWeights)
   bounds <- write_boundaries(variables = variables, oF=oF)
   binaries <- write_binaries(variables = variables)
   generals <- write_generals(variables = variables, oF = oF)
