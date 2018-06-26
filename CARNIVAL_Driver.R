@@ -8,23 +8,23 @@ cat("\014") # clear screen
 if (length(dev.list())>0){dev.off()} # clear figure (if any)
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example     <- 6 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
+Example     <- 5 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
 Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
 AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
 measWeights <- FALSE
-measuremetntsWeights <- NULL
+measurementsWeights <- NULL
 
 # Set CPLEX stopping criteria
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
-poolrelGAP    <- 0.5 # (for populating) in relative to the best solution 
+poolrelGAP    <- 0.15 # (for populating) in relative to the best solution 
 limitPop      <- 1000 # (for populating) limit the number of populated solutions
 poolCap       <- 1000 # (for populating) limit the pool size to store populated solution
 poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
 alphaWeight   <- 100 # [default 100] coefficient of fitting error in objective function
 betaWeight    <- 20 # [default 20] coefficient of model size in objective function
 gammaWeight   <- 1 # [default 1] coefficient of weights (from PROGENy) in objective function
-timelimit     <- 500 # set time limit for cplex optimisation
+timelimit     <- 3600 # set time limit for cplex optimisation
 
 # Choose results exporting options
 Result_dir  <- paste0("Ex",toString(Example),"Case",toString(Case_study),"Net",toString(Network)) # specify a name for result directory; if NULL, then date and time will be used by default
@@ -77,8 +77,8 @@ if (Example == 1) {
   inputs       <- read.table(paste("examples/Ex5/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
   measurements <- read_delim(paste("examples/Ex5/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
   if(measWeights){
-    measuremetntsWeights <- read_delim("examples/Ex5/measuremetntsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
-    measuremetntsWeights <- as.matrix(measuremetntsWeights)
+    measurementsWeights <- read_delim("examples/Ex5/measurementsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+    measurementsWeights <- as.matrix(measurementsWeights)
   }
 } else if (Example == 6) {
   if (Network == 1) {
@@ -95,8 +95,8 @@ if (Example == 1) {
   }
   measurements <- read_delim("examples/Ex6/ILP_Meas_APAP_high_24h_CutOff_1.5.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
   if(measWeights){
-    measuremetntsWeights <- read_delim("examples/Ex6/measuremetntsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
-    measuremetntsWeights <- as.matrix(measuremetntsWeights)
+    measurementsWeights <- read_delim("examples/Ex6/measurementsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+    measurementsWeights <- as.matrix(measurementsWeights)
   }
 } else if (Example == 7) {
   network      <- read.table("examples/Ex7/Network_ToyWeight.txt", sep = "\t", header = FALSE)
@@ -167,7 +167,8 @@ if (file.exists("cplexCommand.txt")) {file.remove("cplexCommand.txt")}
 # Write constraints as ILP inputs
 ptm <- proc.time()
 print("Writing constraints...")
-variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=alphaWeight,betaWeight=betaWeight,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,poolCap=poolCap,poolIntensity=poolIntensity,timelimit=timelimit,nodeWeights=nodeWeights,measuremetntsWeights=measuremetntsWeights)
+
+variables <- writeLPFile(data,pknList,inputs,0.1,alphaWeight=alphaWeight,betaWeight=betaWeight,scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,poolCap=poolCap,poolIntensity=poolIntensity,timelimit=timelimit,nodeWeights=nodeWeights,measurementsWeights=measurementsWeights)
 
 Elapsed_1 <- proc.time() - ptm
 
