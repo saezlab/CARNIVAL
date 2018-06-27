@@ -35,7 +35,8 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     # objectiveFunctionVec <- paste0(" + ", alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
     # objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
-    objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    # objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    objectiveFunctionVec <- paste0(" + ", allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
     
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
     
