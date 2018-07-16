@@ -1,71 +1,30 @@
-readOutResult <- function(cplexSolutionFileName = cplexSolutionFileName, variables = variables, conditionIDX = conditionIDX,
-                              pknList = pknList, dir_name = dir_name, Export_all = Export_all, inputs=inputs, measurements=measurements){
+readOutResult <- function(cplexSolutionFileName, variables = variables, pknList=pknList, conditionIDX = conditionIDX, dir_name = dir_name, Export_all = Export_all,inputs = inputs, measurements = measurements){
   
-  solution <- read.delim(file = cplexSolutionFileName)
-  solution[, 1] <- as.character(solution[, 1])
-  
-  idxVarStart <- which(grepl(pattern = "<variables>", x = solution[, 1]))[-1]
-  idxVarEnd <- which(grepl(pattern = "</variables>", x = solution[, 1]))[-1]
-  
-  solMatrix <- matrix(data = , nrow = idxVarEnd[1]-idxVarStart[1]-1, ncol = length(idxVarStart))
-  colnames(solMatrix) <- paste0("Solution-", 1:ncol(solMatrix))
-  ss1 <- sapply(strsplit(solution[(idxVarStart[1]+1):(idxVarEnd[1]-1), 1], split = " "), "[", 5)
-  rownames(solMatrix) <- sapply((strsplit(ss1, split = "=")), "[", 2)
-  
-  for(ii in 1:ncol(solMatrix)){
-    
-    ss1 <- sapply(strsplit(solution[(idxVarStart[ii]+1):(idxVarEnd[ii]-1), 1], split = " "), "[", 7)
-    solMatrix[, ii] <- gsub(pattern = "/>", replacement = "", x = sapply(strsplit(ss1, split = "="), "[", 2))
-    
-  }
+  cplexSolutionData <- xmlParse(cplexSolutionFileName)
+  cplexSolution <- xmlToList(cplexSolutionData)
   
   sifAll <- list()
   nodesAll <- list()
-  vars <- rownames(solMatrix)
   
-  idxNodes <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodes])
-  idxNodesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodesUp])
-  idxNodesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodesDown])
-  idxEdgesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesUp])
-  idxEdgesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesDown])
-  
-  indeces <- c(idxNodes, idxNodesUp, idxNodesDown, idxEdgesUp, idxEdgesDown)
-  
-  # solMatrix <- solMatrix[indeces, ]
-  
-  for(ii in 1:ncol(solMatrix)){
+  for(ii in 2:(length(cplexSolution)-1)){
     
-    values <- solMatrix[, ii]
+    x1 = lapply(cplexSolution[[ii]][[4]], "[[", 1)
+    vars <- unlist(x1)
+    
+    idxNodes <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodes])
+    idxNodesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodesUp])
+    idxNodesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxNodesDown])
+    idxEdgesUp <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesUp])
+    idxEdgesDown <- which(vars%in%variables[[conditionIDX]]$variables[variables[[conditionIDX]]$idxEdgesDown])
+    
+    x2 = lapply(cplexSolution[[ii]][[4]], "[[", 3)
+    values <- unlist(x2)
     
     valNodes <- values[idxNodes]
     valNodesDown <- values[idxNodesDown]
     valNodesUp <- values[idxNodesUp]
     valEdgesUp <- values[idxEdgesUp]
     valEdgesDown <- values[idxEdgesDown]
-    
-    nodes <- matrix(data = "", nrow = length(idxNodes), ncol = 2)
-    nodesUp <- matrix(data = "", nrow = length(idxNodesUp), ncol = 2)
-    nodesDown <- matrix(data = "", nrow = length(idxNodesDown), ncol = 2)
-    edgesUp <- matrix(data = "", nrow = length(idxEdgesUp), ncol = 2)
-    edgesDown <- matrix(data = "", nrow = length(idxEdgesDown), ncol = 2)
-    ctrl <- 0
-    
-    colnames(nodes) <- c("variable", "value")
-    colnames(nodesUp) <- c("variable", "value")
-    colnames(nodesDown) <- c("variable", "value")
-    colnames(edgesUp) <- c("variable", "value")
-    colnames(edgesDown) <- c("variable", "value")
-    
-    nodes[, 1] <- vars[idxNodes]
-    nodes[, 2] <- values[idxNodes]
-    nodesUp[, 1] <- vars[idxNodesUp]
-    nodesUp[, 2] <- values[idxNodesUp]
-    nodesDown[, 1] <- vars[idxNodesDown]
-    nodesDown[, 2] <- values[idxNodesDown]
-    edgesUp[, 1] <- vars[idxEdgesUp]
-    edgesUp[, 2] <- values[idxEdgesUp]
-    edgesDown[, 1] <- vars[idxEdgesDown]
-    edgesDown[, 2] <- values[idxEdgesDown]
     
     nodes <- matrix(data = "", nrow = length(idxNodes), ncol = 2)
     nodesUp <- matrix(data = "", nrow = length(idxNodesUp), ncol = 2)
@@ -192,15 +151,15 @@ readOutResult <- function(cplexSolutionFileName = cplexSolutionFileName, variabl
     # Write SIF, DOT and Nodes' activities files
     
     if (!is.null(sif)) {
-      write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_model", ii, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = sif, file = paste0("results/",dir_name,"/interactions_", conditionIDX, "_model", ii-1, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     } else {
-      write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX,"_model", ii, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = "Empty network returned", file = paste0("results/",dir_name,"/interactions_", conditionIDX,"_model", ii-1, ".tsv"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
     }
     
     if (length(idx)!=0) {
-      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     } else {
-      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
     }
     
     # Map DOT figure (only when SIF network is present)
@@ -283,17 +242,17 @@ readOutResult <- function(cplexSolutionFileName = cplexSolutionFileName, variabl
       Dot_text <- c(Dot_text,"")
       Dot_text <- c(Dot_text,"}")
       
-      fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, "_model", ii, ".dot"))
+      fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_", conditionIDX, "_model", ii-1, ".dot"))
       writeLines(Dot_text,fileConn)
       close(fileConn)
     } 
     
     if (Export_all) {
-      write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = nodesUp, file = paste0("results/",dir_name,"/nodesUpAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = nodesDown, file = paste0("results/",dir_name,"/nodesDownAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-      write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = nodes, file = paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = nodesUp, file = paste0("results/",dir_name,"/nodesUpAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = nodesDown, file = paste0("results/",dir_name,"/nodesDownAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = edgesUp, file = paste0("results/",dir_name,"/reactionsUpAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+      write.table(x = edgesDown, file = paste0("results/",dir_name,"/reactionsDownAttributes_", conditionIDX, "_model", ii-1, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     }
     
     sifAll[[length(sifAll)+1]] <- sif
