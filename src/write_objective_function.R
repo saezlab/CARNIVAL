@@ -1,32 +1,27 @@
-write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measurementsWeights = measurementsWeights ){
+write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measurementsWeights = measurementsWeights, conditionIDX = conditionIDX ){
   
   if(is.null(scores)){
     
     measured <- gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dsID], pattern = "DS:", replacement = "")
-    measured <- c(measured, gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dnID], pattern = "DN:", replacement = ""))
+    # measured <- c(measured, gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dnID], pattern = "DN:", replacement = ""))
     
     idxMeasured <- c()
     for(i in 1:length(measured)){
       
       idxMeasured <- c(idxMeasured, which(variables$expNodesReduced==paste0("Species ", measured[i])))
-      # print(idxMeasured)
+      
     }
     
     measuredVar <- variables$variables[idxMeasured]
     
-    # allWeights <- rep(x = 1, length(measuredVar))
     allWeights <- rep(x = 0, length(measuredVar))
     
     if(!is.null(measurementsWeights)){
       
-      # weightedSpecies <- colnames(measurementsWeights)
       weightedSpecies <- rownames(measurementsWeights)
-      # print(weightedSpecies)
       
       for(i in 1:length(weightedSpecies)){
         
-        # allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[1, i]
-        # allWeights[which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))] <- measurementsWeights[i]
         allWeights[which(which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))==idxMeasured)] <- measurementsWeights[i]
         
       }
@@ -34,13 +29,9 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
       objectiveFunctionVec <- paste0(" + ", allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
       
     } else {
-    
-      # objectiveFunctionVec <- paste0(" + ", alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
-      # objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
-      # objectiveFunctionVec <- paste0(" + ", alphaWeight + 0.0001*alphaWeight*allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
-      # objectiveFunctionVec <- paste0(" + ", allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+  
       objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
-    
+      
     }
     
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
@@ -63,7 +54,7 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
   } else {
     
     measured <- gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dsID], pattern = "DS:", replacement = "")
-    measured <- c(measured, gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dnID], pattern = "DN:", replacement = ""))
+    # measured <- c(measured, gsub(colnames(dataMatrix$dataMatrix)[dataMatrix$dnID], pattern = "DN:", replacement = ""))
     
     idxMeasured <- c()
     for(i in 1:length(measured)){
@@ -74,91 +65,83 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     
     measuredVar <- variables$variables[idxMeasured]
     
-    objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+    allWeights <- rep(x = 0, length(measuredVar))
+    
+    if(!is.null(measurementsWeights)){
+      
+      weightedSpecies <- rownames(measurementsWeights)
+      
+      for(i in 1:length(weightedSpecies)){
+        
+        allWeights[which(which(variables$expNodesReduced==paste0("Species ", weightedSpecies[i]))==idxMeasured)] <- measurementsWeights[i]
+        
+      }
+      
+      objectiveFunctionVec <- paste0(" + ", allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+      
+    } else {
+      
+      objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+      
+    }
+    
     objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
     
     objectiveFunction <- substring(text = objectiveFunction[1], first = 4, last = nchar(objectiveFunction))
     
     objectiveFunction <- paste0("", objectiveFunction)
     
-    # nodeWeights <- scores
-    # absolutenodeWeights <- abs(nodeWeights)
-    # for(i in 1:length(nodeWeights)){
-    #   
-    #   # nodeWeights[i] <- sign(scores[i])*(1-(absolutenodeWeights[i] - min(absolutenodeWeights, na.rm = TRUE))/(max(absolutenodeWeights, na.rm = TRUE) - min(absolutenodeWeights, na.rm = TRUE)))
-    #   nodeWeights[i] <- 1 - 2*(absolutenodeWeights[i] - min(absolutenodeWeights, na.rm = TRUE))/(max(absolutenodeWeights, na.rm = TRUE) - min(absolutenodeWeights, na.rm = TRUE))
-    #   
-    # }
-    # absolutenodeWeights <- abs(nodeWeights)
+    betaValPos <- rep(betaWeight, length(variables$idxNodesUp))
+    betaValNeg <- rep(betaWeight, length(variables$idxNodesDown))
     
-    weightedSpecies <- paste0("Species ", names(nodeWeights))
-    
-    ##
-    idx1 <- which(variables$expNodesReduced%in%weightedSpecies[which(scores > 0)])
-
-    objectiveFunctionUp1 <- ""
-    
-    if(length(idx1) > 0){
+    #
+    idxPos <- which(scores[1, ] >= 0)
+    if(length(idxPos) > 0){
       
-      for(i in 1:length(idx1)){
+      speciesPos <- colnames(scores)[idxPos]
+      
+      for(ii in 1:length(speciesPos)){
         
-        ww <- nodeWeights[which(weightedSpecies==variables$expNodesReduced[idx1[i]])]
+        currPos <- speciesPos[ii]
         
-        if(sign(ww)==1){
-          
-          objectiveFunctionUpVec <- paste0(" + ", betaWeight*ww, " ", variables$variables[variables$idxNodesUp[idx1[i]]])
-          objectiveFunctionUp1 <- paste(objectiveFunctionUp1, objectiveFunctionUpVec, sep = "")
-          
-        } else {
-          
-          objectiveFunctionUpVec <- paste0(" - ", abs(betaWeight*ww), " ", variables$variables[variables$idxNodesUp[idx1[i]]])
-          objectiveFunctionUp1 <- paste(objectiveFunctionUp1, objectiveFunctionUpVec, sep = "")
-          
-        }
+        idx <- which(variables$exp[variables$idxNodesUp]==paste0("SpeciesUP ", currPos, " in experiment ", conditionIDX))
+        betaValPos[idx] <- betaWeight*(1-scores[1, idxPos[ii]])
+        
+        idx <- which(variables$exp[variables$idxNodesDown]==paste0("SpeciesDown ", currPos, " in experiment ", conditionIDX))
+        betaValNeg[idx] <- betaWeight*(1+scores[1, idxPos[ii]])
         
       }
       
     }
     
-    ##
-    idx2 <- which(variables$expNodesReduced%in%weightedSpecies[which(scores < 0)])
-    
-    objectiveFunctionDown1 <- ""
-    
-    if(length(idx2) > 0){
+    #
+    idxNeg <- which(scores[1, ] < 0)
+    if(length(idxNeg) > 0){
       
-      for(i in 1:length(idx2)){
+      speciesNeg <- colnames(scores)[idxNeg]
+      
+      for(ii in 1:length(speciesNeg)){
         
-        ww <- nodeWeights[which(weightedSpecies==variables$expNodesReduced[idx2[i]])]
+        currNeg <- speciesNeg[ii]
         
-        if(sign(ww)==1){
-          
-          objectiveFunctionDownVec <- paste0(" + ", betaWeight*ww, " ", variables$variables[variables$idxNodesDown[idx2[i]]])
-          objectiveFunctionDown1 <- paste(objectiveFunctionDown1, objectiveFunctionDownVec, sep = "")
-          
-        } else {
-          
-          objectiveFunctionDownVec <- paste0(" - ", abs(betaWeight*ww), " ", variables$variables[variables$idxNodesDown[idx2[i]]])
-          objectiveFunctionDown1 <- paste(objectiveFunctionDown1, objectiveFunctionDownVec, sep = "")
-          
-        }
+        idx <- which(variables$exp[variables$idxNodesUp]==paste0("SpeciesUP ", currNeg, " in experiment ", conditionIDX))
+        betaValPos[idx] <- betaWeight*(1-scores[1, idxNeg[ii]])
+        
+        idx <- which(variables$exp[variables$idxNodesDown]==paste0("SpeciesDown ", currNeg, " in experiment ", conditionIDX))
+        betaValNeg[idx] <- betaWeight*(1+scores[1, idxNeg[ii]])
         
       }
       
     }
     
-    ##
-    
-    objectiveFunctionUpVec <- paste0(" + ", betaWeight, " ", variables$variables[variables$idxNodesUp[setdiff(1:length(variables$idxNodesUp), idx1)]])
-    objectiveFunctionUp2 <- paste(objectiveFunctionUpVec, collapse = "")
-
-    objectiveFunctionDownVec <- paste0(" + ", betaWeight, " ", variables$variables[variables$idxNodesDown[setdiff(1:length(variables$idxNodesDown), idx2)]])
-    objectiveFunctionDown2 <- paste(objectiveFunctionDownVec, collapse = "")
-    
-    objectiveFunction <- paste0(objectiveFunction, paste0(objectiveFunctionUp1, objectiveFunctionUp2))
-    objectiveFunction <- paste0(objectiveFunction, paste0(objectiveFunctionDown1, objectiveFunctionDown2))
-    
-    write(objectiveFunction, file = "objFun.txt")
+    objectiveFunctionUpVec <- paste0(" + ", betaValPos, " ", variables$variables[variables$idxNodesUp])
+    objectiveFunctionUp <- paste(objectiveFunctionUpVec, collapse = "")
+     
+    objectiveFunctionDownVec <- paste0(" + ", betaValNeg, " ", variables$variables[variables$idxNodesDown])
+    objectiveFunctionDown <- paste(objectiveFunctionDownVec, collapse = "")
+     
+    objectiveFunction <- paste0(objectiveFunction, objectiveFunctionUp)
+    objectiveFunction <- paste0(objectiveFunction, objectiveFunctionDown)
     
     return(objectiveFunction)
     
