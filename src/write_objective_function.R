@@ -144,7 +144,7 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
     objectiveFunction <- paste0(objectiveFunction, objectiveFunctionDown)
     
     return(objectiveFunction)
-    
+ 
   }
   
 }
