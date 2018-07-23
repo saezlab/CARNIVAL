@@ -8,8 +8,8 @@ cat("\014") # clear screen
 if (length(dev.list())>0){dev.off()} # clear figure (if any)
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example     <- 3 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
-Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
+Example     <- 10 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
+Case_study  <- 2 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
 AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
 measWeights <- TRUE
@@ -17,12 +17,12 @@ measurementsWeights <- NULL
 
 # Set CPLEX stopping criteria
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
-poolrelGAP    <- 0.001 # (for populating) in relative to the best solution 
+poolrelGAP    <- 0 # (for populating) in relative to the best solution 
 limitPop      <- 1000 # (for populating) limit the number of populated solutions
 poolCap       <- 1000 # (for populating) limit the pool size to store populated solution
 poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
-alphaWeight   <- 100 # [default 100] coefficient of fitting error in objective function
-betaWeight    <- 20 # [default 20] coefficient of model size in objective function
+alphaWeight   <- 1 # [default 100] coefficient of fitting error in objective function
+betaWeight    <- 0.2 # [default 20] coefficient of model size in objective function
 gammaWeight   <- 1 # [default 1] coefficient of weights (from PROGENy) in objective function
 timelimit     <- 3600 # set time limit for cplex optimisation
 
@@ -66,6 +66,7 @@ if (Example == 1) {
   network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,".sif",sep=""), sep = "\t", header = FALSE)
   inputs       <- read.table(paste("examples/Ex3/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
   measurements <- read_delim(paste("examples/Ex3/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
+  scores <- read.table(file = "examples/EX3/scores.txt", sep = "\t", header = TRUE)
   if(measWeights){
     measurementsWeights <- read_delim("examples/Ex3/measurementsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
     measurementsWeights <- as.matrix(measurementsWeights)
@@ -109,6 +110,32 @@ if (Example == 1) {
   if (Case_study==2) {
     pathwayscore <- read.table("examples/Ex7/PathwayScore_ToyWeight.txt", sep = "\t", header = TRUE)
   }
+} else if (Example == 9) {
+  
+  network <- read.table(file = paste0("examples/Ex9/Net", Network, ".sif"), header = FALSE)[-1, ]
+  colnames(network) <- c("Source", "Interaction", "Target")
+  
+  inputs <- read.table(paste0("examples/Ex9/Drug_Target_Case",Case_study,".tsv"), sep="\t", header = TRUE)
+  
+  measurements <- read.table(paste0("examples/Ex9/DRT_Cont_Case", Case_study, ".tsv"), sep = "\t", header = TRUE)
+  
+  scores <- read.table(paste0("examples/Ex9/PGN_Case", Case_study, ".tsv"), sep = "\t", header = TRUE)
+  
+} else if (Example == 10) {
+  
+  network <- read.table(file = "examples/Ex10/Omnipath_signed_Uniprot_0615.txt", header = TRUE)
+  inputs <- read.table(file = "examples/Ex10/EGF.txt", header = TRUE)
+  measurements <- read_delim(file = "examples/Ex10/class_EGF.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+  measurementsWeights <- read_delim(file = "examples/Ex10/weight_EGF.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+  measurementsWeights <- as.matrix(measurementsWeights)
+  EGF_PROGENy <- read_delim("examples/Ex10/EGF_PROGENy.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
+  
+  load(file = "examples/Ex10/progenyMembers.RData")
+  
+  id <- "uniprot"     # alternative: id <- "gene"
+  
+  scores <- assignPROGENyScores(progeny = EGF_PROGENy, progenyMembers = progenyMembers, id = id)
+  
 } else {
   stop("Please select the provided examples or add your own example to the list")
 }
@@ -151,7 +178,7 @@ if (exists("pathwayscore")) {
     scores <- as.numeric(pathwayscore_current); names(scores) <- names(nodeWeights)
   }
 } else {
-  scores <- NULL
+  # scores <- NULL
   nodeWeights <- NULL
 }
 
