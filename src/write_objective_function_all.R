@@ -31,12 +31,16 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
     
     var <- variables[[i]]
     if (i==1) {
-      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var,alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measurementsWeights = mm))
+      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var,alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measurementsWeights = mm,conditionIDX=i))
     } else {
-      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measurementsWeights = mm))
+      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, alphaWeight = alphaWeight, betaWeight = betaWeight,scores=scores,nodeWeights=nodeWeights,measurementsWeights = mm,conditionIDX=i))
     }
     
   }
+  
+  return(OF)
+  
+}
   
   return(OF)
   
