@@ -41,7 +41,3 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
   return(OF)
   
 }
-  
-  return(OF)
-  
-}
