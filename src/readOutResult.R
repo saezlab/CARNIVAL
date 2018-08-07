@@ -301,41 +301,136 @@ readOutResult <- function(cplexSolutionFileName = cplexSolutionFileName, variabl
     
   }
   
-  for(ii in 1:length(sifAll)){
+  if(length(sifAll)==0){
     
-    if(ii ==1){
+    print("No network was generated for this setting..")
+    
+    RES <- list()
+    
+    return(RES)
+    
+  } else {
+    
+    for(ii in 1:length(sifAll)){
       
-      SIF <- sifAll[[ii]]
-      
-    } else {
-      
-      SIF <- unique(rbind(SIF, sifAll[[ii]]))
+      if(ii ==1){
+        
+        SIF <- sifAll[[ii]]
+        
+      } else {
+        
+        SIF <- unique(rbind(SIF, sifAll[[ii]]))
+        
+      }
       
     }
     
-  }
-  
-  ##
-  weightedSIF <- matrix(data = , nrow = nrow(SIF), ncol = 4)
-  weightedSIF[, 1:3] <- SIF
-  for(i in 1:nrow(SIF)){
-    
-    cnt <- 0
-    
-    for(j in 1:length(sifAll)){
+    ##
+    weightedSIF <- matrix(data = , nrow = nrow(SIF), ncol = 4)
+    weightedSIF[, 1:3] <- SIF
+    for(i in 1:nrow(SIF)){
       
-      idxNode1 <- which(sifAll[[j]][, 1]==SIF[i, 1])
-      idxSign <- which(sifAll[[j]][, 2]==SIF[i, 2])
-      idxNode2 <- which(sifAll[[j]][, 3]==SIF[i, 3])
+      cnt <- 0
       
-      idx1 <- intersect(idxNode1, idxNode2)
-      if(length(idx1) > 0){
+      for(j in 1:length(sifAll)){
         
-        idx2 <- intersect(idxSign, idx1)
+        idxNode1 <- which(sifAll[[j]][, 1]==SIF[i, 1])
+        idxSign <- which(sifAll[[j]][, 2]==SIF[i, 2])
+        idxNode2 <- which(sifAll[[j]][, 3]==SIF[i, 3])
         
-        if(length(idx2) > 0){
+        idx1 <- intersect(idxNode1, idxNode2)
+        if(length(idx1) > 0){
           
-          cnt <- cnt + 1
+          idx2 <- intersect(idxSign, idx1)
+          
+          if(length(idx2) > 0){
+            
+            cnt <- cnt + 1
+            
+          }
+          
+        }
+        
+      }
+      
+      weightedSIF[i, 4] <- as.character(cnt*100/length(sifAll))
+      
+    }
+    
+    colnames(weightedSIF) <- c("Node1", "Sign", "Node2", "Weight")
+    
+    # write.table(x = weightedSIF, file = "weightedModel.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    fileConn2 <- file(paste0("results/",dir_name,"/weightedModel_", conditionIDX, ".txt"))
+    write.table(x = weightedSIF, file = fileConn2, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    
+    ##
+    nodesVar <- c()
+    for(ii in 1:length(nodesAll)){
+      
+      nodesVar <- unique(c(nodesVar, unique(nodesAll[[ii]][, 1])))
+      
+    }
+    
+    nodesNames <- c()
+    var <- variables[[conditionIDX]]
+    for(ii in 1:length(nodesVar)){
+      
+      nodesNames <- c(nodesNames, strsplit(x = var$exp[which(var$variables==nodesVar[ii])], split = " ")[[1]][2])
+      
+    }
+    
+    nodesAttributes <- matrix(data = , nrow = length(nodesNames), ncol = 6)
+    nodesAttributes[, 1] <- nodesNames
+    for(i in 1:nrow(nodesAttributes)){
+      
+      zeroCnt <- 0
+      upCnt <- 0
+      downCnt <- 0
+      
+      for(j in 1:length(nodesAll)){
+        
+        currVar <- nodesVar[i]
+        
+        idx <- which(nodesAll[[j]][, 1]==currVar)
+        
+        if(nodesAll[[j]][idx, 2]=="0"){
+          
+          zeroCnt <- zeroCnt + 1
+          
+        }
+        
+        if(nodesAll[[j]][idx, 2]=="1"){
+          
+          upCnt <- upCnt + 1
+          
+        }
+        
+        if(nodesAll[[j]][idx, 2]=="-1"){
+          
+          downCnt <- downCnt + 1
+          
+        }
+        
+      }
+      
+      nodesAttributes[i, 2] <- as.character(zeroCnt*100/length(nodesAll))
+      nodesAttributes[i, 3] <- as.character(upCnt*100/length(nodesAll))
+      nodesAttributes[i, 4] <- as.character(downCnt*100/length(nodesAll))
+      nodesAttributes[i, 5] <- as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
+      
+      if(nodesAttributes[i, 1]%in%colnames(measurements)){
+        
+        nodesAttributes[i, 6] <- "P"
+        
+      } else {
+        
+        if(nodesAttributes[i, 1]%in%colnames(inputs)){
+          
+          nodesAttributes[i, 6] <- "D"
+          
+        } else {
+          
+          nodesAttributes[i, 6] <- ""
           
         }
         
@@ -343,103 +438,20 @@ readOutResult <- function(cplexSolutionFileName = cplexSolutionFileName, variabl
       
     }
     
-    weightedSIF[i, 4] <- as.character(cnt*100/length(sifAll))
+    colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesP")
+    
+    # write.table(x = nodesAttributes, file = "nodesAttributes.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    fileConn3 <- file(paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"))
+    write.table(x = nodesAttributes, file = fileConn3, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+    
+    RES <- list()
+    RES[[length(RES)+1]] <- weightedSIF
+    RES[[length(RES)+1]] <- nodesAttributes
+    
+    names(RES) <- c("weightedSIF", "nodesAttributes")
+    
+    return(RES)
     
   }
-  
-  colnames(weightedSIF) <- c("Node1", "Sign", "Node2", "Weight")
-  
-  # write.table(x = weightedSIF, file = "weightedModel.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  fileConn2 <- file(paste0("results/",dir_name,"/weightedModel_", conditionIDX, ".txt"))
-  write.table(x = weightedSIF, file = fileConn2, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  
-  ##
-  nodesVar <- c()
-  for(ii in 1:length(nodesAll)){
-    
-    nodesVar <- unique(c(nodesVar, unique(nodesAll[[ii]][, 1])))
-    
-  }
-  
-  nodesNames <- c()
-  var <- variables[[conditionIDX]]
-  for(ii in 1:length(nodesVar)){
-    
-    nodesNames <- c(nodesNames, strsplit(x = var$exp[which(var$variables==nodesVar[ii])], split = " ")[[1]][2])
-    
-  }
-  
-  nodesAttributes <- matrix(data = , nrow = length(nodesNames), ncol = 6)
-  nodesAttributes[, 1] <- nodesNames
-  for(i in 1:nrow(nodesAttributes)){
-    
-    zeroCnt <- 0
-    upCnt <- 0
-    downCnt <- 0
-    
-    for(j in 1:length(nodesAll)){
-      
-      currVar <- nodesVar[i]
-      
-      idx <- which(nodesAll[[j]][, 1]==currVar)
-      
-      if(nodesAll[[j]][idx, 2]=="0"){
-        
-        zeroCnt <- zeroCnt + 1
-        
-      }
-      
-      if(nodesAll[[j]][idx, 2]=="1"){
-        
-        upCnt <- upCnt + 1
-        
-      }
-      
-      if(nodesAll[[j]][idx, 2]=="-1"){
-        
-        downCnt <- downCnt + 1
-        
-      }
-      
-    }
-    
-    nodesAttributes[i, 2] <- as.character(zeroCnt*100/length(nodesAll))
-    nodesAttributes[i, 3] <- as.character(upCnt*100/length(nodesAll))
-    nodesAttributes[i, 4] <- as.character(downCnt*100/length(nodesAll))
-    nodesAttributes[i, 5] <- as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
-    
-    if(nodesAttributes[i, 1]%in%colnames(measurements)){
-      
-      nodesAttributes[i, 6] <- "P"
-      
-    } else {
-      
-      if(nodesAttributes[i, 1]%in%colnames(inputs)){
-        
-        nodesAttributes[i, 6] <- "D"
-        
-      } else {
-        
-        nodesAttributes[i, 6] <- ""
-        
-      }
-      
-    }
-    
-  }
-  
-  colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesP")
-  
-  # write.table(x = nodesAttributes, file = "nodesAttributes.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  fileConn3 <- file(paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"))
-  write.table(x = nodesAttributes, file = fileConn3, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
-  
-  RES <- list()
-  RES[[length(RES)+1]] <- weightedSIF
-  RES[[length(RES)+1]] <- nodesAttributes
-  
-  names(RES) <- c("weightedSIF", "nodesAttributes")
-  
-  return(RES)
   
 }
