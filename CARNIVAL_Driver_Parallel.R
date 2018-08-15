@@ -11,14 +11,17 @@ library(doParallel)
 argsJob=commandArgs(trailingOnly = TRUE)
 repIndex <- as.numeric(argsJob[1])
 condition <- as.character(argsJob[2]) #Can additionally be used to loop over conditions of interest
+# repIndex=1;condition=1
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example     <- 2 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
+Example     <- 10 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
 Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
 AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
 measWeights <- TRUE
 measurementsWeights <- NULL
+UP2GS <- F # Convert UniProtID to Gene Symbol?
+DOTfig <- T # Write dot figure?
 
 # Set CPLEX stopping criteria
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
@@ -32,7 +35,7 @@ gammaWeight   <- 1 # [default 1] coefficient of weights (from PROGENy) in object
 timelimit     <- 3600 # set time limit for cplex optimisation
 
 # Choose results exporting options
-Result_dir  <- paste0("Ex",toString(Example),"Case",toString(Case_study),"Net",toString(Network),"_", condition,"_", repIndex)) # specify a name for result directory; if NULL, then date and time will be used by default
+Result_dir  <- paste0("Ex",toString(Example),"Case",toString(Case_study),"Net",toString(Network),"_", condition,"_", repIndex) # specify a name for result directory; if NULL, then date and time will be used by default
 Export_all  <- 0 # c(0,1) export all ILP variables or not; if 0, only predicted node values, sif and dot files will be written
 
 # ============================== #
@@ -53,6 +56,8 @@ if (is.null(Result_dir)) {
   dir_name <- Result_dir
 }
 dir.create(dir_name); setwd(current_dir)
+
+scores <- NULL
 
 # Load ILP inputs
 if (Example == 1) {
@@ -156,7 +161,7 @@ if (exists("pathwayscore")) {
     scores <- as.numeric(pathwayscore_current); names(scores) <- names(nodeWeights)
   }
 } else {
-  scores <- NULL
+  # scores <- NULL
   nodeWeights <- NULL
 }
 
@@ -198,8 +203,18 @@ ptm <- proc.time()
 print("Writing result files...")
 if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
   for(i in 1:length(variables)){
-    sif <- readOutResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
+    # sif <- readOutResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements,UP2GS=UP2GS)
+    res <- exportResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), 
+                        variables = variables, pknList = pknList, conditionIDX = i,
+                        dir_name = dir_name, inputs=inputs,measurements=measurements,
+                        Export_all = Export_all,writeIndividualResults = T)
+    # res <- files2res(dir_name) # retrieve results from previously generated result files
   }
+  if (UP2GS) {res <- Uniprot2GeneSymbol(res)}
+  if (DOTfig) {WriteDOTfig(res=res,dir_name=dir_name,
+                           inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
+  # if (DOTfig) {WriteDOTfig(res=res,idxModel=c(1,2),dir_name=dir_name,
+  #                            inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
 } else {
   print("No result to be written")
 }
