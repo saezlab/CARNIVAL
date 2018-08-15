@@ -8,20 +8,20 @@ cat("\014") # clear screen
 if (length(dev.list())>0){dev.off()} # clear figure (if any)
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
-Example     <- 10 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
+Example     <- 3 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
 Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
 AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
-measWeights <- TRUE
+measWeights <- F
 measurementsWeights <- NULL
-UP2GS <- T # Convert UniProtID to Gene Symbol?
+UP2GS <- F # Convert UniProtID to Gene Symbol?
 DOTfig <- T # Write dot figure?
 
 # Set CPLEX stopping criteria
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
 poolrelGAP    <- 0 # (for populating) in relative to the best solution 
 limitPop      <- 1000 # (for populating) limit the number of populated solutions
-poolCap       <- 1000 # (for populating) limit the pool size to store populated solution
+poolCap       <- 100 # (for populating) limit the pool size to store populated solution
 poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
 alphaWeight   <- 1 # [default 100] coefficient of fitting error in objective function
 betaWeight    <- 0.2 # [default 20] coefficient of model size in objective function
@@ -51,6 +51,8 @@ if (is.null(Result_dir)) {
 }
 dir.create(dir_name); setwd(current_dir)
 
+scores <- NULL
+
 # Load ILP inputs
 if (Example == 1) {
   if (Network == 1) { Net <- "positive" } else if (Network == 2) { Net <- "negative" }
@@ -68,7 +70,7 @@ if (Example == 1) {
   network      <- read.table(paste("examples/Ex3/network_Ex3_",Net,".sif",sep=""), sep = "\t", header = FALSE)
   inputs       <- read.table(paste("examples/Ex3/inputs_Case", toString(Case_study), ".txt",sep=""), sep="\t", header = TRUE)
   measurements <- read_delim(paste("examples/Ex3/measurements_Case", toString(Case_study), ".txt",sep=""), "\t", escape_double = FALSE, trim_ws = TRUE)
-  scores <- read.table(file = "examples/EX3/scores.txt", sep = "\t", header = TRUE)
+  # scores <- read.table(file = "examples/Ex3/scores.txt", sep = "\t", header = TRUE)
   if(measWeights){
     measurementsWeights <- read_delim("examples/Ex3/measurementsWeights.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
     measurementsWeights <- as.matrix(measurementsWeights)
@@ -141,6 +143,7 @@ if (Example == 1) {
 } else {
   stop("Please select the provided examples or add your own example to the list")
 }
+
 
 # Adding perturbation node?
 if (AddPertubationNode==1) {
@@ -226,8 +229,8 @@ if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
     res <- exportResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), 
                         variables = variables, pknList = pknList, conditionIDX = i,
                         dir_name = dir_name, inputs=inputs,measurements=measurements,
-                        Export_all = Export_all,writeIndividualResults = F)
-    # res <- files2res() # retrieve results from previously generated result files
+                        Export_all = Export_all,writeIndividualResults = T)
+    # res <- files2res(dir_name) # retrieve results from previously generated result files
   }
   if (UP2GS) {res <- Uniprot2GeneSymbol(res)}
   if (DOTfig) {WriteDOTfig(res=res,dir_name=dir_name,
