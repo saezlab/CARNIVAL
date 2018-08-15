@@ -9,11 +9,13 @@ if (length(dev.list())>0){dev.off()} # clear figure (if any)
 
 # Select a case study [Note: please add your another Example and paths to inputs files for your own study below]
 Example     <- 10 # c(1,2,3,4,5,6,7) # Ex1-3: Simplified motifs; Ex4: Feedback/Cycle motif; Ex5: Mike's example; Ex6: Propanolol example; Ex7: ToyWeight
-Case_study  <- 2 # c(1,2,3,4) # see corresponding experimental setting
+Case_study  <- 1 # c(1,2,3,4) # see corresponding experimental setting
 Network     <- 1 # c(1,2) # see corresponding choices of networks
 AddPertubationNode <- 0 # Add perturbation node (inverse causal reasoning pipeline)
 measWeights <- TRUE
 measurementsWeights <- NULL
+UP2GS <- T # Convert UniProtID to Gene Symbol?
+DOTfig <- T # Write dot figure?
 
 # Set CPLEX stopping criteria
 # mipGAP      <- 0.001 # (for optimising) in proportion to the best estimated solution
@@ -220,8 +222,18 @@ ptm <- proc.time()
 print("Writing result files...")
 if (file.exists(paste("results/",dir_name,"/results_cplex.txt",sep=""))) {
   for(i in 1:length(variables)){
-    sif <- readOutResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements)
+    # sif <- readOutResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), variables = variables, pknList = pknList, conditionIDX = i,dir_name = dir_name, Export_all = Export_all,inputs=inputs,measurements=measurements,UP2GS=UP2GS)
+    res <- exportResult(cplexSolutionFileName = paste0("results/",dir_name,"/results_cplex.txt"), 
+                        variables = variables, pknList = pknList, conditionIDX = i,
+                        dir_name = dir_name, inputs=inputs,measurements=measurements,
+                        Export_all = Export_all,writeIndividualResults = F)
+    # res <- files2res() # retrieve results from previously generated result files
   }
+  if (UP2GS) {res <- Uniprot2GeneSymbol(res)}
+  if (DOTfig) {WriteDOTfig(res=res,dir_name=dir_name,
+                                 inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
+  # if (DOTfig) {WriteDOTfig(res=res,idxModel=c(1,2),dir_name=dir_name,
+  #                            inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
 } else {
   print("No result to be written")
 }
