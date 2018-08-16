@@ -3,7 +3,7 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
   sif_input=NULL;act_input=NULL
   if (sum(idxModel==0)>0) {
     sif_input <- res$weightedSIF
-    act_input <- res$nodesAttributes
+    act_input <- res$nodeAttributes
   } else {
     if (length(res$sifAll)==1) { # only one model identified
       sif_input <- res$sifAll
@@ -108,6 +108,11 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
     IdxAllNodeSIF <- NULL
     for (counter in 1:length(AllNodeSIF)) {
       IdxAllNodeSIF <- c(IdxAllNodeSIF,which(AllNodeSIF[counter]==act[,1])[1])
+    }
+    
+    # Remove NA for the nodes where activities couldn't be mapped
+    if (sum(is.na(IdxAllNodeSIF))>0) {
+      IdxAllNodeSIF <- IdxAllNodeSIF[-which(is.na(IdxAllNodeSIF))]
     }
     
     RemainingNodeIdx <- NULL
