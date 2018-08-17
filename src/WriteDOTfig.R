@@ -1,5 +1,7 @@
 WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
   
+  UP2GStag <- ifelse (UP2GS,"GeneSymbol","Uniprot")
+  
   sif_input=NULL;act_input=NULL
   if (sum(idxModel==0)>0) {
     sif_input <- res$weightedSIF
@@ -16,7 +18,6 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
     }
   }
   
-  # for (counter_mod in ifelse(!is.list(sif_input),1,1:length(sif_input))) {
   for (counter_mod in if (!is.list(sif_input)){1}else{1:length(sif_input)}) {
       
     if (!is.list(sif_input)) {
@@ -42,16 +43,8 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
       # if (as.numeric(sif[counter,2])==1) {
       ArrowColor <- ifelse(as.numeric(sif[counter,2])*
                              as.numeric(act[which(sif[counter,1]==act[,1]),2])==1,'black','red')
-      # } else {
-      #   ArrowColor <- ifelse(as.numeric(sif[counter,2])*
-      #                          as.numeric(act[which(sif[counter,3]==act[,1]),2])==1,'black','red')
-      # }
       Dot_text <- c(Dot_text,paste0(sif[counter,1],"->",sif[counter,3]," [penwidth=1",
                                     ", color=",ArrowColor[1],", arrowhead=",ArrowType[1],"]"))
-      # Dot_text <- c(Dot_text,paste0(sif[counter,1],"->",sif[counter,3]," [penwidth=",toString(1),
-      #                             ", color=black, arrowhead=",ifelse(as.numeric(pknList[kk1[i], 2])==1,'"vee"','"tee"'),"]"))
-      # Dot_text <- c(Dot_text,paste0(ss,"->",tt," [penwidth=",toString(1),
-      #                             ", color=red, arrowhead=",ifelse(as.numeric(pknList[kk1[i], 2])==-1,'"tee"','"vee"'),"]"))
     }
     
     # Map input(s)' activities
@@ -117,30 +110,9 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
     
     RemainingNodeIdx <- NULL
     if(length(IdxMapped) > 0){
-      # RemainingNodeIdx <- (1:nrow(activityNodes))[-IdxMapped]
       RemainingNodeIdx <- setdiff(IdxAllNodeSIF,IdxMapped)
     }
     RemainingNodeName <- act[RemainingNodeIdx,1]
-    
-    # RestOfNodeIdx <- NULL
-    
-    # if (length(RemainingNodeIdx)>0) {
-    #   for (counter in 1:length(RemainingNodeName)) {
-    #     if (sum(RemainingNodeName[counter]==AllNodeSIF)>0) {
-    #       RestOfNodeIdx <- c(RestOfNodeIdx,which(RemainingNodeName[counter]==activityNodes[,1]))
-    #     }
-    #   }
-    # } else {
-    #   RestOfNodeIdx <- NULL
-    # }
-    
-    # if (length(RestOfNodeIdx)>0) {
-    #   for (counter in 1:length(RestOfNodeIdx)) {
-    #     Dot_text <- c(Dot_text,paste0(activityNodes[RestOfNodeIdx[counter],1]," [style=filled, fillcolor=",
-    #                                   if (activityNodes[RestOfNodeIdx[counter],2]>0) {ColorNodeAll[1]}
-    #                                   else if (activityNodes[RestOfNodeIdx[counter],2]<0) {ColorNodeAll[2]},"];"))
-    #   }
-    # }
     
     if (length(RemainingNodeIdx)>0) {
       for (counter in 1:length(RemainingNodeIdx)) {
@@ -155,7 +127,7 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
     Dot_text <- c(Dot_text,"")
     Dot_text <- c(Dot_text,"}")
     
-    fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_model_Nr",idxModel[counter_mod],".dot"))
+    fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_model_Nr",idxModel[counter_mod],"_",UP2GStag,".dot"))
     writeLines(Dot_text,fileConn)
     close(fileConn)
     
