@@ -5,7 +5,7 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
   sif_input=NULL;act_input=NULL
   if (sum(idxModel==0)>0) {
     sif_input <- res$weightedSIF
-    act_input <- res$nodeAttributes
+    act_input <- res$nodesAttributes
   } else {
     if (length(res$sifAll)==1) { # only one model identified
       sif_input <- res$sifAll
@@ -54,6 +54,16 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
       for (counter in 1:length(inputsName)) {
         inputsName[counter] <- IDmap[which(IDmap[,1] == inputsName[counter]),3][1]
       }
+    }
+    
+    # select only the inputs in the measured file
+    NoInputName <- setdiff(inputsName, act[,1])
+    if (length(NoInputName)>0) {
+      NoInputIdx <- NULL
+      for (counter_input in 1:length(NoInputName)) {
+        NoInputIdx <- c(NoInputIdx,which(NoInputName[counter_input]==inputsName))
+      }
+      inputsName <- inputsName[-NoInputIdx]
     }
     
     ColorNode <- c("black","red")
