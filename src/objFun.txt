@@ -1,1 +1,0 @@
-100 absDiff5_1 + 100 absDiff6_1 + 100 absDiff1_1 + 100 absDiff2_1 + 100 absDiff3_1 + 100 absDiff4_1 + 20 xb8_1 - 20 xb10_1 + 20 xb7_1 + 20 xb9_1 + 20 xb11_1 + 20 xb12_1 + 20 xb13_1 + 20 xb14_1 + 20 xb15_1 + 20 xb16_1 + 20 xb17_1 + 20 xb18_1
