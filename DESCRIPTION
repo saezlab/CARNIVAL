@@ -1,0 +1,21 @@
+Package: CARNIVAL
+Type: Package
+Title: A causal reasoning analytical tool with integer linear programming formulation
+Version: 0.9.0
+Author: Panuwat Trairatphisan, Enio Gjerga, Anika Liu
+Maintainer: Panuwat Trairatphisan <panuwat.trairatphisan@outlook.com>
+Description: An updated version of the Python causal reasoning tool from Melas et al. in R with updated assignments of weights from PROGENy scores
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    readr,
+    tidyr,
+    doParallel,
+    igraph,
+    readr,
+    tidyr
+Suggests: knitr,
+    rmarkdown,
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
