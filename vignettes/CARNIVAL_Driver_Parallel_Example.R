@@ -23,10 +23,12 @@ weightFile <-  "your_node_weight_file.txt" # optional; if not, set to 'NULL'
 Sys.setenv(TZ="Europe/Berlin") # optional; set time zone to as default results' foldername
 parallelCR <- T # running parallelised version?
 inverseCR <- F # running inverse causal reasoning version?
-nodeID <- "uniprot" # choose between 'uniprot' or 'gene'
-UP2GS <- T # Convert UniProtIDs to Gene Symbols?
-DOTfig <- T #  write DOT figure?
-Export_all<- F #  export all ILP variables or not; if 0, only predicted node values and sif file will be written
+nodeID <- "uniprot" # specify whether the nodes are in 'uniprot' or 'gene' ID format
+
+# Plotting-related setting (doesn't affect the optimisation process)
+UP2GS <- T # convert UniProtIDs to Gene Symbols in the plotting step?
+DOTfig <- T #  write DOT figure? (can be visualised by e.g. GraphViz)
+Export_all <- F #  export all ILP variables or not; if F, only predicted node values and sif file will be written
 
 # Set CPLEX stopping criteria
 mipGAP        <- 0.05 # in proportion to the best estimated integer solution
@@ -35,8 +37,9 @@ limitPop      <- 500 # limit the number of populated solutions after identified 
 poolCap       <- 100 # limit the pool size to store populated solution
 poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
 poolReplace   <- 2 # select replacement strategy of the pool solution [0 default/ 1 to 2]
+alphaWeight   <- 1 # constant coefficient for fitting error in the objective function in case TF activities are not assigned [default 1]
 betaWeight    <- 0.2 # relative coefficient of model size to fitting error in the objective function [default 0.2]
-timelimit     <- 600 # set time limit for cplex optimisation (in seconds)
+timelimit     <- 300 # set time limit for cplex optimisation (in seconds)
 
 # --- NOTE: PLEASE MODIFY YOUR CLUSTER PARAMETERS HERE --- #
 
@@ -93,7 +96,8 @@ if (is.na(repIndex)) {
   # Input processing
   network <- read.table(file = netFile, sep = "\t", header = TRUE)
   measWeights <- as.matrix(read_delim(file = measFile, delim = "\t", escape_double = FALSE, trim_ws = TRUE))
-  measurements <- sign(measWeights)
+  measWeights <- abs(measWeights) # Weights are all positives
+  measurements <- sign(measWeights) # Extracted sign of measurement for ILP fitting
   if (!is.null(inputFile)) {
     inputs <- read.table(file = inputFile, sep = "\t", header = TRUE)
   }
@@ -163,7 +167,7 @@ if (is.na(repIndex)) {
                           variables = variables, pknList = pknList, conditionIDX = i,
                           dir_name = dir_name, inputs=inputs,measurements=measurements,
                           Export_all = Export_all,writeIndividualResults = T)
-      # res <- files2res(dir_name) # retrieve results from previously generated result files
+      # res <- files2res(counterlist) # retrieve results from previously generated result files
     }
     if (!is.null(res)) {
       if (UP2GS) {res <- Uniprot2GeneSymbol(res)}

@@ -1,4 +1,4 @@
-write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measWeights = measWeights, conditionIDX = conditionIDX ){
+write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measWeights = measWeights, conditionIDX = conditionIDX ){
 
   if(is.null(scores)){
 
@@ -26,11 +26,11 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
 
       }
 
-      objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+      objectiveFunctionVec <- paste0(" + ", allWeights, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
     } else {
 
-      objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+      objectiveFunctionVec <- paste0(" + ", alphaWeight, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
     }
 
@@ -77,11 +77,11 @@ write_objective_function <- function(dataMatrix = dataMatrix, variables = variab
 
       }
 
-      objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+      objectiveFunctionVec <- paste0(" + ", allWeights, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
     } else {
 
-      objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+      objectiveFunctionVec <- paste0(" + ", alphaWeight, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
     }
 
