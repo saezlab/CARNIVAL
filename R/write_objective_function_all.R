@@ -1,4 +1,4 @@
-write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables, betaWeight=betaWeight,scores=scores, measWeights=measWeights ) {
+write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores, measWeights=measWeights ) {
 
   # ======================================= #
   # === Load write_objective_function.R === #
