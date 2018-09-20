@@ -77,8 +77,7 @@ The results from the optimisation and subsequent analyses will be saved in the s
 
 Panuwat Trairatphisan (panuwat.trairatphisan -at- gmail.com)
 Enio Gjerga (enio.gjerga -at- gmail.com)
-Anika Liu (anikaliu -at- yahoo.de)
-
+Anika Liu (anikaliu94 -at- gmail.com)
 
 See also the list of [contributors](https://github.com/saezlab/CARNIVAL/contributors) who participated in this project.
 
