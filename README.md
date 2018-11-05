@@ -30,12 +30,12 @@ load_all()
 
 Several examples are available as the test case for CARNIVAL. Users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use your own model inputs. Current examples include: 
 1) Toy Model of two crosstalk pathways 
-2) TG-GATEs dataset with paracetamol (APAP) as the perturbator
-3) SBVimprover species translational dataset with EGF as the perturbator
+2) SBVimprover species translational dataset with EGF as the perturbator
+3) TG-GATEs dataset with paracetamol (APAP) as the perturbator
 
 ```R
 # Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = SBVimprover-EGF; Ex3 = TG-GATEs-APAP)
-CARNIVAL_example <- 3 # c(1,2,3); if not, set to 'NULL'
+CARNIVAL_example <- 2 # c(1,2,3); if not, set to 'NULL'
 
 # Or assign your input files here
 netFile <-  "your_network_file.sif" # required
