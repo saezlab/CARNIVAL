@@ -30,12 +30,12 @@ load_all()
 
 Several examples are available as the test case for CARNIVAL. Users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use your own model inputs. Current examples include: 
 1) Toy Model of two crosstalk pathways 
-2) TG-GATEs dataset with paracetamol (APAP) as the perturbator
-3) SBVimprover species translational dataset with EGF as the perturbator
+2) SBVimprover species translational dataset with EGF as the perturbator
+3) TG-GATEs dataset with paracetamol (APAP) as the perturbator
 
 ```R
-# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = TG-GATEs-APAP; Ex3 = SBVimprover-EGF)
-CARNIVAL_example <- 3 # c(1,2,3); if not, set to 'NULL'
+# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = SBVimprover-EGF; Ex3 = TG-GATEs-APAP)
+CARNIVAL_example <- 2 # c(1,2,3); if not, set to 'NULL'
 
 # Or assign your input files here
 netFile <-  "your_network_file.sif" # required
@@ -55,10 +55,12 @@ Result_dir <- NULL # specify a name for result directory; if NULL, then date and
 Sys.setenv(TZ="Europe/Berlin") # optional; set time zone to as default results' foldername
 parallelCR <- F # running parallelised version?
 inverseCR <- F # running inverse causal reasoning version?
-nodeID <- "uniprot" # choose between 'uniprot' or 'gene'
-UP2GS <- T # Convert UniProtIDs to Gene Symbols?
-DOTfig <- T #  write DOT figure?
-Export_all<- F #  export all ILP variables or not; if 0, only predicted node values and sif file will be written
+nodeID <- "uniprot" # choose between 'uniprot' or 'gene' ID format
+
+# Plotting-related setting (doesn't affect the optimisation process)
+UP2GS <- T # convert UniProtIDs to Gene Symbols in the plotting step?
+DOTfig <- T #  write DOT figure? (can be visualised by e.g. GraphViz)
+Export_all <- F #  export all ILP variables or not; if F, only predicted node values and sif file will be written
 
 # Set CPLEX stopping criteria
 mipGAP        <- 0.05 # in proportion to the best estimated integer solution
@@ -67,8 +69,9 @@ limitPop      <- 500 # limit the number of populated solutions after identified 
 poolCap       <- 100 # limit the pool size to store populated solution
 poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
 poolReplace   <- 2 # select replacement strategy of the pool solution [0 default/ 1 to 2]
+alphaWeight   <- 1 # constant coefficient for fitting error in the objective function in case TF activities are not assigned [default 1]
 betaWeight    <- 0.2 # relative coefficient of model size to fitting error in the objective function [default 0.2]
-timelimit     <- 120 # set time limit for cplex optimisation (in seconds)
+timelimit     <- 180 # set time limit for cplex optimisation (in seconds)
 ```
 
 The results from the optimisation and subsequent analyses will be saved in the sub-folder "Results".
