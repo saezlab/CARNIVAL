@@ -9,8 +9,8 @@ rm(list=ls());cat("\014");if(length(dev.list())>0){dev.off()}
 library(devtools)
 load_all() # load CARNIVAL package
 
-# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = TG-GATEs-APAP; Ex3 = SBVimprover-EGF)
-CARNIVAL_example <- 3 # c(1,2,3); if not, set to 'NULL'
+# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = SBVimprover-EGF; Ex3 = TG-GATEs-APAP)
+CARNIVAL_example <- 2 # c(1,2,3); if not, set to 'NULL'
 
 # Or assign your input files here
 netFile <-  "your_network_file.sif" # required

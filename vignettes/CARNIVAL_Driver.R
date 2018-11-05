@@ -9,8 +9,8 @@ rm(list=ls());cat("\014");if(length(dev.list())>0){dev.off()}
 library(devtools)
 load_all() # load CARNIVAL package
 
-# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = TG-GATEs-APAP; Ex3 = SBVimprover-EGF)
-CARNIVAL_example <- 3 # c(1,2,3); if not, set to 'NULL'
+# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = SBVimprover-EGF; Ex3 = TG-GATEs-APAP)
+CARNIVAL_example <- 2 # c(1,2,3); if not, set to 'NULL'
 
 # Or assign your input files here
 netFile <-  "your_network_file.sif" # required
@@ -39,7 +39,7 @@ poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4
 poolReplace   <- 2 # select replacement strategy of the pool solution [0 default/ 1 to 2]
 alphaWeight   <- 1 # constant coefficient for fitting error in the objective function in case TF activities are not assigned [default 1]
 betaWeight    <- 0.2 # relative coefficient of model size to fitting error in the objective function [default 0.2]
-timelimit     <- 120 # set time limit for cplex optimisation (in seconds)
+timelimit     <- 180 # set time limit for cplex optimisation (in seconds)
 
 # ================================================= #
 # ===== Press Run to perform the optimisation ===== #

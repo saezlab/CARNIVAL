@@ -6,15 +6,15 @@ load_CARNIVAL_examples <- function(CARNIVAL_example) {
     inputFile <- system.file("Ex1_inputs_Toy.txt",package="CARNIVAL") # optional; if not, set to 'NULL'
     weightFile <- NULL # optional; if not, set to 'NULL'
   } else if (CARNIVAL_example==2) {
-    netFile <- system.file("Ex2_network_TGG_IMIM_Human_Liver.sif",package="CARNIVAL")
-    measFile <- system.file("Ex2_measurements_TGG_APAP.txt",package="CARNIVAL")
-    inputFile <- system.file("Ex2_inputs_TGG_APAP.txt",package="CARNIVAL")
-    weightFile <- NULL # optional; if not, set to 'NULL'
+    netFile <- system.file("Ex2_network_SBV_Omnipath.sif",package="CARNIVAL")
+    measFile <- system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL")
+    inputFile <- system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL")
+    weightFile <- system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL")
   } else if (CARNIVAL_example==3) {
-    netFile <- system.file("Ex3_network_SBV_Omnipath.sif",package="CARNIVAL")
-    measFile <- system.file("Ex3_measurements_SBV_EGF.txt",package="CARNIVAL")
-    inputFile <- system.file("Ex3_inputs_SBV_EGF.txt",package="CARNIVAL")
-    weightFile <- system.file("Ex3_weights_SBV_EGF.txt",package="CARNIVAL")
+    netFile <- system.file("Ex3_network_TGG_IMIM_Human_Liver.sif",package="CARNIVAL")
+    measFile <- system.file("Ex3_measurements_TGG_APAP.txt",package="CARNIVAL")
+    inputFile <- system.file("Ex3_inputs_TGG_APAP.txt",package="CARNIVAL")
+    weightFile <- NULL # optional; if not, set to 'NULL'
   } else {
     stop("Please select the provided examples or add your own example to the list")
   }
