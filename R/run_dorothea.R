@@ -29,7 +29,7 @@ run_dorothea<-function(df, regulon, confidence_level=c('A','B','C'), write2file 
       list(tfmode =targets, likelihood = likelihood)})
   
   TF_activities = as.data.frame(viper::viper(eset = df, regulon = filtered_regulon, nes = T, method = 'none', minsize = 4, eset.filter = F))
-  if(write2file!=NULL){write.csv2(TF_activities, file = write2file)}
+  if(!is.null(write2file)){write.csv2(TF_activities, file = write2file)}
   
     return(TF_activities)
 }
