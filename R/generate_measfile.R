@@ -12,7 +12,8 @@ generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measur
   if(dir.exists(write2folder)==F){dir.create(write2folder)}  
   drugs<-colnames(TF_activities)
   for (i in 1:ncol(measurements)){
-    df_drugall<-data.frame('drug'=TF_activities[,i])
+    df_drugall<-data.frame('measname'=rownames(TF_activities),'drug'=TF_activities[,i])
+
     df_drugall<-df_drugall[order((abs(df_drugall[,2])), decreasing = T),]
     drug<-drugs[i]
     if(is.null(topnumber)){
@@ -20,7 +21,7 @@ generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measur
       filepath=paste0( folderpath,"/meas_",drug ,"_all.txt")
     }else{
       df_drug<-t(df_drugall[1:topnumber,])
-      filepath=paste0( folderpath,"/meas_",drug ,"_", topnumber,".txt")
+      filepath=paste0( write2folder,"/meas_",drug ,"_", topnumber,".txt")
     }
     write.table(df_drug, filepath, sep="\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
   }
