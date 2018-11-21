@@ -3,7 +3,7 @@
 # ---------------------- #
 
 # set working directory and clear working environment
- setwd("~/Documents/GitHub/CARNIVAL/")
+
 rm(list=ls());cat("\014");if(length(dev.list())>0){dev.off()}
 
 library(devtools)

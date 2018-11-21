@@ -8,6 +8,7 @@
 #' @param df A n*m dataframe describing the contrast t-statistics, where n is the number of genes and m the number of conditions.
 #' @param write2file Path to outputfile for all TF_activities if desired
 #' @import tidyverse
+#' @import viper
 #' @return A n*m dataframe describing the inferred TF activities, where n is the number of Tfs and m the number of conditions.
 
 run_dorothea<-function(df, regulon, confidence_level=c('A','B','C'), write2file = NULL){
