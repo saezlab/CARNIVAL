@@ -26,5 +26,5 @@ pathway_scores<-runPROGENy(df_genenames,weight_matrix, z_scores = F)
 
 for (cond in colnames(pathway_scores)){
   scores<-rbind(rownames(pathway_scores),pathway_scores[,cond])
-  write.table(scores, paste0("inst/measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F)
+  write.table(scores, paste0("inst/measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F, sep = '\t')
 }
