@@ -10,9 +10,9 @@
 
 generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measurements"){
   if(dir.exists(write2folder)==F){dir.create(write2folder)}  
-  drugs<-colnames(TF_activities)
+  drugs<-colnames(measurements)
   for (i in 1:ncol(measurements)){
-    df_drugall<-data.frame('measname'=rownames(TF_activities),'drug'=TF_activities[,i])
+    df_drugall<-data.frame('measname'=rownames(measurements),'drug'=measurements[,i])
 
     df_drugall<-df_drugall[order((abs(df_drugall[,2])), decreasing = T),]
     drug<-drugs[i]
