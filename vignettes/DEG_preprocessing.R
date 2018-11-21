@@ -11,7 +11,7 @@ load_all() # load CARNIVAL package
 
 #Generate TF input files
 df<-read.csv2("inst/SBV_EGF_tvalues.csv", row.names = 'GeneName')  
-load("~/DoRothEA/data/TFregulons/Robjects_VIPERformat/consensus/BEST_viperRegulon.rdata")
+load("inst/BEST_viperRegulon.rdata")
 map<-read.csv("inst/dorothea_TF_mapping.csv")
 
 TF_genesymbol<-run_dorothea(df, regulon=viper_regulon, confidence_level=c('A','B','C'))
@@ -26,5 +26,5 @@ pathway_scores<-runPROGENy(df_genenames,weight_matrix, z_scores = F)
 
 for (cond in colnames(pathway_scores)){
   scores<-rbind(rownames(pathway_scores),pathway_scores[,cond])
-  write.table(scores, paste0("../data/measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F)
+  write.table(scores, paste0("./measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F)
 }
