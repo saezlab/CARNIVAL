@@ -6,7 +6,7 @@
 #'@param weight_matrix A progeny coeficient matrix. the first column should be the identifiers of the omic features, and should be coherent with the identifiers provided in df.
 #'@param k The number of permutations to be preformed to generate the null-distribution used to estimate significance of progeny scores. Default value is 10000.
 #'@param z_scores If true, provides z-scores. If false, provides significance scores (1-pval).
-#'@param get_nulldist Ask Aurelien!
+#'@param get_nulldist If get_nulldist is true, then the function will return the null model dataframe that was used. 
 #'@return This function returns a list of two elements. The first element is a dataframe of p*m+1 dimensions, where p is the number of progeny pathways, and m is the number of samples/contrasts.
 #'Each cell represent the significance of a progeny pathway score for one sample/contrast. The signifcance ranges between -1 and 1. The significance is equal to x*2-1, x being the quantile of the progeny pathway score with respect to the null distribution.
 #'Thus, this significance can be interpreted as the equivalent of 1-p.value (two sided test over an empirical distribution) with the sign indicating the direction of the regulation.
