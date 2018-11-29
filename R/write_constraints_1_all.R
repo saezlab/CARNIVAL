@@ -1,3 +1,8 @@
+#'\code{write_constraints_1_all}
+#'
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@return This code writes the list of constraints (1) of the ILP problem for all the conditions.
+
 write_constraints_1_all <- function(variables=variables){
 
   # ======================================= #

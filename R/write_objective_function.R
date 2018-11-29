@@ -1,3 +1,14 @@
+#'\code{write_objective_function}
+#'
+#'@param dataMatrix Contains the matrix which stores the information for each node in the PKN, i.e. acivity of the nodes which are measured,at each condition.
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@param alphaWeight The weightning factor of the measurement.
+#'@param betaWeight The weightning factor of the network size.
+#'@param scores The provided PROGENy scores.
+#'@param measWeights A weightning factor for the measurements.
+#'@param conditionIDX The index of the current condition being considered.
+#'@return This code writes the objective function of the ILP problem for one specific condition.
+
 write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, nodeWeights = nodeWeights, measWeights = measWeights, conditionIDX = conditionIDX ){
 
   if(is.null(scores)){
