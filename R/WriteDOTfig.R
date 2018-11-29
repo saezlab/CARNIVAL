@@ -1,19 +1,31 @@
+#'\code{WriteDOTfig}
+#'
+#' This function takes results from ILP optimisation and write out a figure in DOT format
+#'
+#' @param res A list containing optimised network structures and node activities from ILP optimisation
+#' @param idxModel (optional) The index or indices of optimised model to be plotted (Default idxModel=0; plot the combined and average network)
+#' @param dir_name The directory name that stores CARNIVAL results (as a subfolder of the main "results" folder)
+#' @param inputs A named vector of inputs and their node states
+#' @param measurements A named vector of measurements and their state values
+#' @param UP2GS [T/F] A parameter defining whether to convert the input format UniprotID to Gene Symbol
+#' @return DOT figures stored in the directory "results/dir_name" with the prefix "ActivityNetwork_model"
+
 WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
 
   UP2GStag <- ifelse (UP2GS,"GeneSymbol","Uniprot")
 
   sif_input=NULL;act_input=NULL
-  if (sum(idxModel==0)>0) {
+  if (sum(idxModel==0)>0) { # default case; if idxModel is not provided, plot the combined and average network
     sif_input <- res$weightedSIF
     act_input <- res$nodesAttributes
-  } else {
-    if (length(res$sifAll)==1) { # only one model identified
-      sif_input <- res$sifAll
-      act_input <- res$attributesAll
-    } else {
+  } else { # if the number/index of network is specified
+    if (length(res$sifAll)==1) { # if only one model was specified
+      sif_input <- res$sifAll[[idxModel]]
+      act_input <- res$attributesAll[[idxModel]]
+    } else { # if multiple models were specified
       for (counter in 1:length(idxModel)) {
-        sif_input[[counter]] <- res$sifAll[[counter]]
-        act_input[[counter]] <- res$attributesAll[[counter]]
+        sif_input[[counter]] <- res$sifAll[[idxModel[counter]]]
+        act_input[[counter]] <- res$attributesAll[[idxModel[counter]]]
       }
     }
   }
