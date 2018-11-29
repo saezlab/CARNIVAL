@@ -7,9 +7,9 @@ load_CARNIVAL_examples <- function(CARNIVAL_example) {
     weightFile <- NULL # optional; if not, set to 'NULL'
   } else if (CARNIVAL_example==2) {
     netFile <- system.file("Ex2_network_SBV_Omnipath.sif",package="CARNIVAL")
-    measFile <- system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL")
+    measFile <- system.file("measurements/meas_EGF_50.txt",package="CARNIVAL")
     inputFile <- system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL")
-    weightFile <- system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL")
+    weightFile <- system.file("measurements/scores_EGF.txt",package="CARNIVAL")
   } else if (CARNIVAL_example==3) {
     netFile <- system.file("Ex3_network_TGG_IMIM_Human_Liver.sif",package="CARNIVAL")
     measFile <- system.file("Ex3_measurements_TGG_APAP.txt",package="CARNIVAL")
