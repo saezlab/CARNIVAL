@@ -1,3 +1,10 @@
+#'\code{write_loop_constraints}
+#'
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@param pknList Contains the background network which serves as a prior knowledge and which we train.
+#'@param inputs Contains the list of targets as inputs.
+#'@return This function writes the constraints preventing self-activation of nodes in the network due to positive feedback loops.
+
 write_loop_constraints <- function(variables=variables, pknList=pknList, inputs=inputs) {
   
   M <- 101
