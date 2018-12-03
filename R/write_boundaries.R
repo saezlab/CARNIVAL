@@ -1,3 +1,9 @@
+#'\code{write_boundaries}
+#'
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@param oF Is the objective function of the formulation.
+#'@return This code writes the boundaries of each variable.
+
 write_boundaries <- function(variables=variables, oF=oF){
   
   M <- 100
