@@ -1,3 +1,8 @@
+#'\code{write_binaries}
+#'
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@return This code writes the list of binary variables (xp, xm, up & um).
+
 write_binaries <- function(variables=variables){
   
   binaries <- c()
