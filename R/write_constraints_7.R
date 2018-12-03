@@ -1,3 +1,10 @@
+#'\code{write_constraints_7}
+#'
+#'@param pknList Contains the background network which serves as a prior knowledge and which we train.
+#'@param dataMatrix Contains the matrix which stores the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
+#'@param inputs Contains the list of targets as inputs.
+#'@return This code writes the list of constraints (7) of the ILP problem for all the conditions.
+
 write_constraints_7 <- function(variables=variables, dataMatrix=dataMatrix, inputs = inputs) {
   
   library(igraph)
