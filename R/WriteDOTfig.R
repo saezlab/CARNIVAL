@@ -8,7 +8,7 @@
 #' @param inputs A named vector of inputs and their node states
 #' @param measurements A named vector of measurements and their state values
 #' @param UP2GS [T/F] A parameter defining whether to convert the input format UniprotID to Gene Symbol
-#' @return DOT figures stored in the directory "results/dir_name" with the prefix "ActivityNetwork_model"
+#' @return DOT figures stored in the directory "dir_name" with the prefix "ActivityNetwork_model"
 
 WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
 
@@ -169,7 +169,8 @@ WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
     Dot_text <- c(Dot_text,"")
     Dot_text <- c(Dot_text,"}")
 
-    fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_model_Nr",idxModel[counter_mod],"_",UP2GStag,".dot"))
+    # fileConn <- file(paste0("results/",dir_name,"/ActivityNetwork_model_Nr",idxModel[counter_mod],"_",UP2GStag,".dot"))
+    fileConn <- file(paste0(dir_name,"/ActivityNetwork_model_Nr",idxModel[counter_mod],"_",UP2GStag,".dot"))
     writeLines(Dot_text,fileConn)
     close(fileConn)
 
