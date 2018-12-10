@@ -1,3 +1,13 @@
+#'\code{AddPerturbationNode}
+#'
+#' This function introduces a perturbation node connecting nodes without a traget in the prior knowledge network
+#' 
+#' @param network The prioir knowledge network
+#' 
+#' @return MappedPertNode
+#'
+#' @export
+
 AddPerturbationNode <- function(network) {
   
   sourceList <- sort(unique(network[,1]))
