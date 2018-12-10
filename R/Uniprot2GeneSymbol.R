@@ -1,3 +1,13 @@
+#'\code{Uniprot2GeneSymbol}
+#'
+#' This function introduces a perturbation node connecting nodes without a traget in the prior knowledge network
+#' 
+#' @param res
+#' 
+#' @return res
+#'
+#' @export
+
 Uniprot2GeneSymbol <- function(res){
 
   # Select mapping file
