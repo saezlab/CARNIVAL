@@ -1,3 +1,18 @@
+#'\code{Uniprot2GeneSymbol}
+#'
+#' This function introduces a perturbation node connecting nodes without a traget in the prior knowledge network
+#' 
+#' @param res
+#' @param idxModel
+#' @param dir_name
+#' @param inputs
+#' @param measurments
+#' @param UP2GS
+#' 
+#' @return Dot_text
+#'
+#' @export
+
 WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
 
   UP2GStag <- ifelse (UP2GS,"GeneSymbol","Uniprot")
