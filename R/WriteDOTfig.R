@@ -1,6 +1,6 @@
-#'\code{Uniprot2GeneSymbol}
+#'\code{WriteDOTfig}
 #'
-#' This function introduces a perturbation node connecting nodes without a traget in the prior knowledge network
+#' This function...
 #' 
 #' @param res
 #' @param idxModel
