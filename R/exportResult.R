@@ -1,3 +1,19 @@
+#'\code{exportResult}
+#'
+#' Extract and export the optimisation results from the cplex solution file (XML) as files and variables for further plotting functions
+#' 
+#' @param cplexSolutionFileName Path to the cplex solution file (XML)
+#' @param variables The list of mapping indices of LP variables
+#' @param conditionIDX The number of experimental condition to be processed
+#' @param pknList The provided prior knowledge network
+#' @param dir_name The name of directory to store results
+#' @param inputs The list of known or potential target of perturbation 
+#' @param Export_all An option to define whether all detailed mapppd LP variables will be written as individual files
+#' @param writeIndividualResults An option to define whether the results of individual solutions will be written; if FALSE, only the global combined solution will be written
+#' @return Output files of ILP solutions and a list of networks and node activities to be written into figures
+#'
+#' @export
+
 exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variables = variables, conditionIDX = conditionIDX,
                               pknList = pknList, dir_name = dir_name, inputs=inputs, measurements=measurements, Export_all = Export_all, writeIndividualResults=F){
 
