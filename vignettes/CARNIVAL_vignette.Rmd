@@ -17,15 +17,17 @@ vignette: >
 rm(list=ls());cat("\014") # clean screen and variables 
 if(length(dev.list())>0){dev.off()} # clean figure
 
-# # Install CNORprob from Github (or load library for development version)
+# # Install CARNIVAL from Github (or load library for development version)
 # require(devtools)
 # install_github('saezlab/CARNIVAL')
 # # --- OR --- #
-library(devtools)
+# require(devtools)
 # devtools::install()
-load_all()
+# load_all()
 
+# ================= #
 # !!! IMPORTANT !!! #
+# ================= #
 # Please set the path for executable cplex file
 CplexPath <- "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx"
 
@@ -66,9 +68,8 @@ timelimit     <- 180 # set time limit for cplex optimisation (in seconds)
 # ================================================= #
 
 # Load necessary packages and functions
+library(CARNIVAL)
 library(readr)
-library(tidyr)
-library(igraph)
 load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
 
 # Assign parallelisation parameters
@@ -83,14 +84,12 @@ if (parallelCR) {
 
 # Create a directory to store results
 current_dir <- getwd()
-# dir.create("results",showWarnings = FALSE)
-# setwd(paste0(current_dir,"/results"))
 if (is.null(Result_dir)) {
   dir_name <- paste("results_",Sys.time(),sep="")
 } else {
   dir_name <- Result_dir
 }
-dir.create(dir_name); setwd(current_dir)
+dir.create(dir_name)
 
 # Load CARNIVAL example files (if defined)
 if (!is.null(CARNIVAL_example)) {
@@ -126,7 +125,6 @@ if (inverseCR) {
 data <- measurements
 pknList <- as.data.frame(network)
 colnames(pknList) <- c("Node1", "Sign", "Node2")
-# setwd(paste0(current_dir,"/R/")) # temporary shift to src directory
 
 # Remove intermediate cplex files (if any)
 AllFiles <- list.files()
@@ -163,24 +161,19 @@ Elapsed_2 <- proc.time() - ptm
 # Move result files to result folder and remove redundant files after the optimisation
 if (file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))) {file.remove(paste0("testFile_",condition,"_",repIndex,".lp"))} # might be useful for debugging
 
-# if (file.exists(paste0("results_cplex_",condition, "_",repIndex,".txt"))) {file.copy(from = paste0("results_cplex_",condition,"_",repIndex,".txt"),to = paste(current_dir,"/results/",dir_name,"/results_cplex.txt",sep="")); file.remove(paste0("results_cplex_",condition,"_",repIndex,".txt"))}
-
 if (file.exists(paste0("results_cplex_",condition, "_",repIndex,".txt"))) {file.copy(from = paste0("results_cplex_",condition,"_",repIndex,".txt"),to = paste0(current_dir,"/",dir_name,"/results_cplex_",condition,"_",repIndex,".txt")); file.remove(paste0("results_cplex_",condition,"_",repIndex,".txt"))}
-
-# if (file.exists("cplex.log")) {file.copy(from = "cplex.log",to = paste0(current_dir,"/results/",dir_name,"/cplex_",condition,"_",repIndex,".log")); file.remove("cplex.log")}
 
 if (file.exists("cplex.log")) {file.copy(from = "cplex.log",to = paste0(current_dir,"/",dir_name,"/cplex_",condition,"_",repIndex,".log")); file.remove("cplex.log")}
 
-
 if (file.exists(paste0("cplexCommand_", condition,"_",repIndex,".txt"))) {file.remove(paste0("cplexCommand_", condition,"_",repIndex,".txt"))}
 AllFiles <- list.files()
+
 CloneFiles <- which(grepl(pattern = "clone",x = AllFiles,fixed = T))
 if (length(CloneFiles)>0) {
   for (counter in 1:length(CloneFiles)) {
     file.remove(AllFiles[CloneFiles[counter]])
   }
 }
-# setwd(current_dir)
 
 # Write result files in the results folder
 ptm <- proc.time()
@@ -188,8 +181,7 @@ print("Writing result files...")
 # if (file.exists(paste0("results/",dir_name,"/results_cplex.txt"))) {
 if (file.exists(paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"))) {
   for(i in 1:length(variables)){
-    res <- exportResult(cplexSolutionFileName =  # paste0("results/",dir_name,"/results_cplex.txt"),
-paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"),
+    res <- exportResult(cplexSolutionFileName = paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"),
                         variables = variables, pknList = pknList, conditionIDX = i,
                         dir_name = dir_name, inputs=inputs,measurements=measurements,
                         Export_all = Export_all,writeIndividualResults = T)
@@ -200,8 +192,7 @@ paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"),
     if (DOTfig) {WriteDOTfig(res=res,dir_name=dir_name,
                                    inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
     # if (DOTfig) {WriteDOTfig(res=res,idxModel=c(1,2),dir_name=dir_name,
-    #                             inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
-    # save(res,file = paste0("results/",dir_name,"/results_CARNIVAL.Rdata"))
+    #                             inputs=inputs,measurements=measurements,UP2GS=UP2GS)} # Write figures for individual results
     save(res,file = paste0(dir_name,"/results_CARNIVAL.Rdata"))
   }
 } else {
@@ -209,17 +200,13 @@ paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"),
 }
 Elapsed_3 <- proc.time() - ptm
 
-# file.remove(paste0("results/",dir_name,"/results_cplex.txt")) # optional; remove cplex results (to save space)
 file.remove(paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt")) # optional; remove cplex results (to save space)
 
 # Logged computational time
 ElapsedAll <- as.data.frame(matrix(t(c(Elapsed_1[3],Elapsed_2[3],Elapsed_3[3])),3,1))
 rownames(ElapsedAll) <- c("WriteConstraints:","CplexSolving:","ExportResults:")
-# write.table(x = ElapsedAll,file = paste0("results/",dir_name,"/elapsed_time.txt"),col.names = F,row.names = T,quote = F)
 write.table(x = ElapsedAll,file = paste0(dir_name,"/elapsed_time.txt"),col.names = F,row.names = T,quote = F)
 
 # --- End of script --- #
 
 ```
-
-

@@ -1,7 +1,8 @@
 #'\code{write_generals}
 #'
-#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indices.
 #'@param oF Is the objective function of the formulation.
+#'
 #'@return This code writes all the variables.
 
 write_generals <- function(variables=variables, oF=oF){
