@@ -1,3 +1,13 @@
+#'\code{files2res}
+#'
+#' Read in a list of exported/written network and node activities files into a variable for plotting
+#' 
+#' @param counterlist Undices of models to be read-in
+#'
+#' @return A list of variables for plotting functions
+#'
+#' @export
+
 files2res <- function(counterlist) {
 
   res <- list()
