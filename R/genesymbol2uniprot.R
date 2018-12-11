@@ -2,11 +2,13 @@
 #'
 #' This function converts the gene symbol rownames of a dataframe to uniprot rownames. In case one gene symbol maps to two uniprot IDs, the row will be duplicated.
 #' 
-#' @param names A vector of genes.
+#' @param df A vector of genes.
 #' @param map A dataframe with a uniprot ID column and a genesymbol column.
 #' @param geneID Column index of the gene symbol column in map.
 #' @param uniprotID Column index of the uniprot column in map.
+#' 
 #' @import tidyverse
+#' 
 #' @return A vector of genes or uniprot IDs.
 
 

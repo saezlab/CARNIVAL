@@ -21,8 +21,8 @@ The first column should be the identifiers of the omic features. These identifie
 \item{get_nulldist}{If get_nulldist is true, then the function will return the null model dataframe that was used.}
 }
 \value{
-This function returns a list of two elements. The first element is a dataframe of p\emph{m+1 dimensions, where p is the number of progeny pathways, and m is the number of samples/contrasts.
-Each cell represent the significance of a progeny pathway score for one sample/contrast. The signifcance ranges between -1 and 1. The significance is equal to x}2-1, x being the quantile of the progeny pathway score with respect to the null distribution.
+This function returns a list of two elements. The first element is a dataframe of p*m+1 dimensions, where p is the number of progeny pathways, and m is the number of samples/contrasts.
+Each cell represent the significance of a progeny pathway score for one sample/contrast. The signifcance ranges between -1 and 1. The significance is equal to x*2-1, x being the quantile of the progeny pathway score with respect to the null distribution.
 Thus, this significance can be interpreted as the equivalent of 1-p.value (two sided test over an empirical distribution) with the sign indicating the direction of the regulation.
 The sceond element is the null distribution list (a null distribution is generated for each sample/contrast).
 }

@@ -1,8 +1,9 @@
 #'\code{write_constraints_8}
 #'
-#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
+#'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indices.
 #'@param inputs Contains the list of targets as inputs.
 #'@param pknList Contains the background network which serves as a prior knowledge and which we train.
+#'
 #'@return This code writes the list of constraints (8) of the ILP problem for all the conditions.
 
 write_constraints_8 <- function(variables=variables, inputs=inputs, pknList=pknList){

@@ -1,3 +1,12 @@
+#'\code{load_CARNIVAL_examples}
+#'
+#'@param CARNIVAL_example The number of CARNIVAL example to be loaded; 1 = Toy model, 2 = EGF-SBVimprover,3 = APAP-TGGs
+#'
+#'@return The input variables for CARNIVAL including network, measurement, input target +/- pathways scores
+#'
+#'@export
+
+
 load_CARNIVAL_examples <- function(CARNIVAL_example) {
 
   if (CARNIVAL_example==1) {
