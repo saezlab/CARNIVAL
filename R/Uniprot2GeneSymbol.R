@@ -1,10 +1,10 @@
 #'\code{Uniprot2GeneSymbol}
 #'
-#' This function introduces a perturbation node connecting nodes without a traget in the prior knowledge network
+#' Conversion of Uniprot ID (e.g. from Omnipath) to official gene symbol in the plotting step
 #' 
-#' @param res
+#' @param res A list of variables in Uniprot ID (network and node activities)
 #' 
-#' @return res
+#' @return A list of mapped variables from Uniprot to official gene symbol for a better readibility
 #'
 #' @export
 
