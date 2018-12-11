@@ -1,10 +1,9 @@
 #'\code{AddPerturbationNode}
 #'
-#' This function introduces a perturbation node connecting nodes without a traget in the prior knowledge network
+#' Introduces a perturbation node connecting periphery nodes without a target in the prior knowledge network.
 #' 
-#' @param network The prioir knowledge network
-#' 
-#' @return MappedPertNode
+#' @param network The original prior knowledge network
+#' @return A list of updated network with perturbation nodes and re-assigned list of input to include only the interactions from the perturbation node.
 #'
 #' @export
 
