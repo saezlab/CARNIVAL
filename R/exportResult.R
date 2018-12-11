@@ -8,8 +8,10 @@
 #' @param pknList The provided prior knowledge network
 #' @param dir_name The name of directory to store results
 #' @param inputs The list of known or potential target of perturbation 
+#' @param measurements The discretised observations (here transcription factor activities) of values [-1,0,1]
 #' @param Export_all An option to define whether all detailed mapppd LP variables will be written as individual files
 #' @param writeIndividualResults An option to define whether the results of individual solutions will be written; if FALSE, only the global combined solution will be written
+#' 
 #' @return Output files of ILP solutions and a list of networks and node activities to be written into figures
 #'
 #' @export

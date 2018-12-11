@@ -5,7 +5,9 @@
 #' @param measurements A dataframe describing the measurements (e.g. inferred TF activities). Columns/colnames should correspond to perturbations, row/rownames to measurements.
 #' @param topnumber If given, only the top number of measurements will be written out.
 #' @param write2folder Path to outputfolder
+#' 
 #' @import tidyverse
+#' 
 #' @return A n*m dataframe describing the inferred TF activities, where n is the number of Tfs and m the number of conditions.
 
 generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measurements"){

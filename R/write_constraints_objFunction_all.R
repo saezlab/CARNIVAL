@@ -2,6 +2,7 @@
 #'
 #'@param variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indeces.
 #'@param dataMatrix Contains the matrix which stores the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
+#'
 #'@return This function returns the list of constraints associated with the 'Absolute Difference' variables and which measure the mis-fit between inferred and measured data.
 
 write_constraints_objFunction_all <- function(variables=variables, dataMatrix=dataMatrix) {

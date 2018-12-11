@@ -10,13 +10,13 @@
 #'
 #'@return This code writes the objective function of the ILP problem for all the conditions.
 
-write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores, measWeights=measWeights ) {
+write_objective_function_all <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores, measWeights=measWeights, conditionIDX = conditionIDX ) {
 
   # ======================================= #
   # === Load write_objective_function.R === #
   # ======================================= #
 
-  write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, betaWeight=betaWeight, scores = scores, measWeights = measWeights, conditionIDX = conditionIDX ){
+  write_objective_function <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight, scores = scores, measWeights = measWeights, conditionIDX = conditionIDX ){
 
     if(is.null(scores)){
 
@@ -44,11 +44,11 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
 
         }
 
-        objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+        objectiveFunctionVec <- paste0(" + ", allWeights, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
       } else {
 
-        objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+        objectiveFunctionVec <- paste0(" + ", alphaWeight, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
       }
 
@@ -99,7 +99,7 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
 
       } else {
 
-        objectiveFunctionVec <- paste0(" + ", "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+        objectiveFunctionVec <- paste0(" + ", alphaWeight, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
       }
       objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
@@ -201,9 +201,9 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
 
     var <- variables[[i]]
     if (i==1) {
-      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var, betaWeight = betaWeight,scores=scores,measWeights = mm,conditionIDX=i))
+      OF <- paste0(OF, write_objective_function(dataMatrix = dM, variables = var, alphaWeight=alphaWeight, betaWeight = betaWeight,scores=scores,measWeights = mm,conditionIDX=i))
     } else {
-      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, betaWeight = betaWeight,scores=scores,measWeights = mm,conditionIDX=i))
+      OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, variables = var, alphaWeight=alphaWeight, betaWeight = betaWeight,scores=scores,measWeights = mm,conditionIDX=i))
     }
 
   }

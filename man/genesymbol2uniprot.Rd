@@ -4,16 +4,16 @@
 \alias{genesymbol2uniprot}
 \title{\code{genesymbol2uniprot}}
 \usage{
-genesymbol2uniprot(df, map, geneID, uniprotID)
+genesymbol2uniprot(df, map, geneID = 1, uniprotID = 2)
 }
 \arguments{
+\item{df}{A vector of genes.}
+
 \item{map}{A dataframe with a uniprot ID column and a genesymbol column.}
 
 \item{geneID}{Column index of the gene symbol column in map.}
 
 \item{uniprotID}{Column index of the uniprot column in map.}
-
-\item{names}{A vector of genes.}
 }
 \value{
 A vector of genes or uniprot IDs.

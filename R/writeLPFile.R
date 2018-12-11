@@ -18,11 +18,10 @@
 #' @param measWeights The countinous weight of observations (here transcription factor activities) - to replace the default alphaWeight if assigned; Note: take only positive values!
 #' @param repIndex The indexing of optimisation - useful in case more than one experiment is performed
 #' @param condition The free variable which could be assigned for additional study e.g. to vary the efect of betaWeight in a loop
+#' 
 #' @return An integer programming file containing the description of ILP optimisation problem and a cplex command file to communicate with the interactive version of cplex solver
 #'
 #' @export
-
-
 
 writeLPFile <- function(data = data, pknList = pknList, inputs = inputs, alphaWeight=1, betaWeight=0.2, scores=scores, mipGAP=0.1, poolrelGAP=0.01, limitPop=100, poolCap=100, poolIntensity=0, poolReplace=2,timelimit=1800,measWeights=NULL, repIndex, condition="") {
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs)
