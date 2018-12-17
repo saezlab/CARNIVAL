@@ -12,14 +12,14 @@
 
 <meta name="author" content="Panuwat Trairatphisan" />
 
-<meta name="date" content="2018-12-14" />
+<meta name="date" content="2018-12-17" />
 
 <title>CARNIVAL</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">CARNIVAL</h1>
 <h4 class="author"><em>Panuwat Trairatphisan</em></h4>
-<h4 class="date"><em>2018-12-14</em></h4>
+<h4 class="date"><em>2018-12-17</em></h4>
 
 
 
@@ -80,46 +102,97 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Pre-requisite</h2>
 <ul>
 <li>CARNIVAL requires IBM ILOG CPLEX to be pre-installed</li>
-<li>The path to Cplex needs to be specified in “InputFile_CARNIVAL.txt”</li>
+<li>The path to the interactive version of CPLEX needs to be specified in runCARNIVAL script</li>
 <li>For Mac OS: the path is usually “~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx” where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly</li>
-<li>For Windows: — to be tested —-</li>
+<li>For Windows: — to be tested —</li>
 <li>For Linux: — to be tested —</li>
 </ul>
 </div>
-<div id="preparation" class="section level2">
-<h2>Preparation</h2>
+<div id="running-carnival" class="section level2">
+<h2>Running CARNIVAL</h2>
 <ul>
-<li>Details regarding the path to input files for CARNIVAL and CARNIVAL optimisation/plotting optins needs to be specified in the file “InputFile_CARNIVAL.txt” in the working directory</li>
-<li>The provided template of “InputFile_CARNIVAL.txt” can be retrieved by the following command:</li>
+<li>The minimal set of input elements for CARNIVAL in the “runCARNIVAL” function includes:</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rm(list=ls());cat(&quot;\014&quot;)</span>
-<span class="kw">library</span>(CARNIVAL)
-<span class="co"># library(devtools);load_all()</span>
-<span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;InputFile_CARNIVAL.txt&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
-</div>
-<div id="the-carnival-pipeline-consists-of-3-main-steps" class="section level2">
-<h2>The CARNIVAL pipeline consists of 3 main steps</h2>
 <ol style="list-style-type: decimal">
-<li>Read-in information from the file “InputFile_CARNIVAL.txt” and write linear programming (LP) constraints to a file (testFile.lp)</li>
+<li>The filepath to the interactive version of CPLEX and either 2.1) The required set of filenames for user-defined prior knowledge network (netFile) and user-defined measurement (measFile - here refers to TF normalised enrichment scores) or 2.2) A chosen number of built-in CARNIVAL examples includes 1=Toy-Model 2=SBVimprover-EGF, 3=TG-GATEs-APAP</li>
+</ol>
+<ul>
+<li><p>Note that users have to either set all required user-defined inputs (netFile and measFile) as NULL or set the CARNIVAL_example variable to NULL to execute the CARNIVAL pipeline</p></li>
+<li>The CARNIVAL pipeline in the wrapper function “runCARNIVAL” consists of 3 main steps:</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Read-in information from the provided information on the runCARNIVAL script and write linear programming (LP) constraints to a file (testFile.lp)</li>
 <li>CPLEX optimisation</li>
 <li>Read-in XML result file from CPLEX and generate a summary of results and figures</li>
 </ol>
 <ul>
-<li><p>All 3 steps were wrapped into a single function called “runCARNIVAL.R” and can directly be run once the input file (default: “InputFile_CARNIVAL.txt”) is in the working directory</p></li>
-<li><p>Note: Multiple temporary files will be generated during the optimisation but they will be automatically clean-up after the optimisation. Please do not remove these intermediate files manually.</p></li>
+<li>Note: Multiple temporary files will be generated during the optimisation but they will be automatically clean-up after the optimisation. Please do not remove these intermediate files manually.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">runCARNIVAL</span>(<span class="dt">InputFile=</span><span class="st">&quot;InputFile_CARNIVAL.txt&quot;</span>)</code></pre></div>
+</div>
+<div id="running-carnival-built-in-example" class="section level2">
+<h2>Running CARNIVAL built-in example</h2>
+<ul>
+<li>To run a CARNIVAL built-in example e.g. the Toy-Model (Example 1), users just need to provide a path to interactive CPLEX on CplexPath, set netFile and measFile variables (+/- inputFile/weightFile) to NULL and select the corresponding number of CARNIVAL example. Note that the name of the result folder for CARNIVAL can also be specified on the variable “Result_dir”.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rm(list=ls());cat(&quot;\014&quot;);if(length(dev.list())&gt;0){dev.off()} # clean workspace</span>
+<span class="kw">library</span>(CARNIVAL) <span class="co"># load CARNIVAL library</span>
+
+<span class="kw">runCARNIVAL</span>(<span class="dt">CplexPath=</span><span class="st">&quot;~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/&quot;</span>,
+            <span class="dt">netFile=</span><span class="ot">NULL</span>,<span class="dt">measFile=</span><span class="ot">NULL</span>,
+            <span class="dt">inputFile=</span><span class="ot">NULL</span>,<span class="dt">weightFile=</span><span class="ot">NULL</span>,
+            <span class="dt">Result_dir=</span><span class="st">&quot;Results_CARNIVAL_Ex1&quot;</span>,
+            <span class="dt">CARNIVAL_example=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## [1] &quot;Writing constraints...&quot;
 ## [1] &quot;Solving LP problem...&quot;
 ## [1] &quot;Writing result files...&quot;
-## [1] &quot;The Uniprot ID: J7MDF2 couldn't be mapped&quot;
-## [1] &quot;The Uniprot ID: Q99931 couldn't be mapped&quot;
-## [1] &quot;The Uniprot ID: B4DG79 couldn't be mapped&quot;
-## [1] &quot;The Uniprot ID: Q13748 couldn't be mapped&quot;
-## [1] &quot;The Uniprot ID: Q59FG4 couldn't be mapped&quot;</code></pre>
+## [1] &quot;The following node couldn't be mapped to gene symbol: P1 TF1 G1 G2 TF2 P2&quot;
+## [1] &quot; &quot;
+## [1] &quot;--- End of the CARNIVAL pipeline ---&quot;
+## [1] &quot; &quot;</code></pre>
+</div>
+<div id="running-carnival-with-user-defined-inputs" class="section level2">
+<h2>Running CARNIVAL with user-defined inputs</h2>
 <ul>
-<li>The results are saved in the result folder on the working directory</li>
+<li><p>To run CARNIVAL with user-defined inputs, users have to prepare at least 1) user-defined prior knowledge network (netFile) and 2) user-defined measurement (measFile - here refers to TF normalised enrichment scores) while additional information i.e. target of perturbation and additional weight e.g. pathway weights from PROGENy can additionally be provided as the variable inputFile and weightFile, respectively.</p></li>
+<li><p>To give an example, we’ll manually plug in the input files from CARNIVAL’s built-in example number 2 (SBVimprover-EGF). The input files could be directly retrieve from the CARNIVAL package. Once the input files are copied into the working directory, the input variables have to be assigned according to the filename. Also, the variable CARNIVAL_example has to be set to NULL in this case to execute the pipeline.</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rm(list=ls());cat(&quot;\014&quot;);if(length(dev.list())&gt;0){dev.off()} # clean workspace</span>
+<span class="kw">library</span>(CARNIVAL) <span class="co"># load CARNIVAL library</span>
+
+<span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;Ex2_network_SBV_Omnipath.sif&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;Ex2_measurements_SBV_EGF.txt&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;Ex2_inputs_SBV_EGF.txt&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;Ex2_weights_SBV_EGF.txt&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">runCARNIVAL</span>(<span class="dt">CplexPath=</span><span class="st">&quot;~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/&quot;</span>,
+            <span class="dt">netFile=</span><span class="st">&quot;Ex2_network_SBV_Omnipath.sif&quot;</span>,
+            <span class="dt">measFile=</span><span class="st">&quot;Ex2_measurements_SBV_EGF.txt&quot;</span>,
+            <span class="dt">inputFile=</span><span class="st">&quot;Ex2_inputs_SBV_EGF.txt&quot;</span>,
+            <span class="dt">weightFile=</span><span class="st">&quot;Ex2_weights_SBV_EGF.txt&quot;</span>,
+            <span class="dt">Result_dir=</span><span class="st">&quot;Results_CARNIVAL_Ex2&quot;</span>,
+            <span class="dt">CARNIVAL_example=</span><span class="ot">NULL</span>)</code></pre></div>
+<pre><code>## [1] &quot;Writing constraints...&quot;
+## [1] &quot;Solving LP problem...&quot;
+## [1] &quot;Writing result files...&quot;
+## [1] &quot;The following node couldn't be mapped to gene symbol: J7MDF2 Q99931 B4DG79 Q13748 Q59FG4&quot;
+## [1] &quot; &quot;
+## [1] &quot;--- End of the CARNIVAL pipeline ---&quot;
+## [1] &quot; &quot;</code></pre>
+<ul>
+<li>After the optimisation, the results are saved in the result folder on the working directory for further analyses.</li>
+</ul>
+</div>
+<div id="additional-settings-on-the-runcarnival-function" class="section level2">
+<h2>Additional settings on the runCARNIVAL function</h2>
+<p>Note that the pipeline as presented is the Standard CARNIVAL pipeline with known perturbation targets (listed in the variable inputFile). Additional CARNIVAL settings can be directly assigned onto the runCARNIVAL function e.g.</p>
+<ul>
+<li>To run the Inverse CARNIVAL pipeline: set the inverseCR variable to TRUE (inverseCR=T)</li>
+<li>To the optimisation time in CPLEX: set the timelimit variable to a desired value (e.g. timelimit=600 [in seconds])</li>
+<li>To export and write all CPLEX variables into files: set the Export_all variable to TRUE (Export_all=T; recommended for debugging)</li>
+<li>In addition, additional CPLEX parameters and alpha and beta weights in the objective function can also be manually assigned. More details can be obtained in the help section: ?runCARNIVAL</li>
 </ul>
 </div>
 </div>
