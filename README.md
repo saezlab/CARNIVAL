@@ -7,7 +7,7 @@ An ILP solver (CPLEX) is subsequently applied to identify the sub-network topolo
 
 ## Getting Started
 
-A tutorial for running CARNIVAL is provided as a vignette in R-Markdown and HTML formats. The wrapper script "runCARNIVAL" was introduced to take input arguments, pre-process input descriptions, run optimisation and export results as network files and figures. Three built-in CARNIVAL examples are also supplied as case studies for users.
+A tutorial for preparing CARNIVAL input files starting from differentially gene expression (DEG) and for running the CARNIVAL pipeline are provided as vignettes in R-Markdown, R-script and HTML formats. The wrapper script "runCARNIVAL" was introduced to take input arguments, pre-process input descriptions, run optimisation and export results as network files and figures. Three built-in CARNIVAL examples are also supplied as case studies for users.
 
 ### Prerequisites
 
@@ -18,27 +18,73 @@ CARNIVAL requires the interactive version of IBM Cplex solver as the network opt
 CARNIVAL is currently available for the installation as an R-package from our GitHub page
 
 ```R
-# Install CARNIVAL from Github using devtools
+# Install CARNIVAL from Github using devtools (now only available with GitHub credential for private repository)
 # install.packages('devtools') # in case devtools hasn't been installed
 library(devtools)
-install_github('saezlab/CARNIVAL', build_vignettes = TRUE)
-# Or download the source file from GitHub and install from source
-install.packages(path_to_file, repos = NULL, type="source")
+install_github('saezlab/CARNIVAL')
+# or download the source file from GitHub and install from source
+install.packages('path_to_extracted_CARNIVAL_directory', repos = NULL, type="source")
 ```
 
-## Running the tests
+## Running CARNIVAL
 
-First, user has to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
-- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
-- For Windows: --- to be tested ---
-- For Linux: --- to be tested ---
+To obtain the list of tutorials/vignettes of the CARNIVAL package, user can start with typing the following commmand on R-console:
 
-Three examples are available as the test cases for CARNIVAL. Users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use user-defined own model inputs. Current examples include: 
+```R
+browseVignettes(package='CARNIVAL')
+```
+
+In the CARNIVAL package, 3 built-in examples are available as the test cases as follows:
 1) Toy Model of two crosstalk pathways 
 2) SBVimprover species translational dataset with EGF as the perturbator
 3) TG-GATEs dataset with paracetamol (APAP) as the perturbator
 
-To run the built-in CARNIVAL examples, users could run the following code:
+### DEG Pre-processing
+
+Users can generate the measurement file which contains calculated transcription factor (TF) normalised enrichment scores by applying the function runDoRothEA. An example of the pipeline to generate a measurement file for Example 2 (SBVimprover-EGF) is shown as follows:
+
+```R
+library(CARNIVAL) # load CARNIVAL library
+
+file.copy(from=system.file("SBV_EGF_tvalues.csv",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+file.copy(from=system.file("dorothea_TF_mapping.csv",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+load(file = system.file("BEST_viperRegulon.rdata",package="CARNIVAL"))
+
+df<-read.csv2("SBV_EGF_tvalues.csv", row.names = 'GeneName')  
+map<-read.csv("dorothea_TF_mapping.csv")
+
+TF_genesymbol<-runDoRothEA(df, regulon=viper_regulon, confidence_level=c('A','B','C'))
+TF_uniprot<-GeneSymbol2Uniprot(TF_genesymbol, map, 1, 2)
+generate_measfile(measurements=TF_uniprot, topnumber=50, write2folder="measurements")
+```
+
+Also, users can generate the additional weight input file which contains calculated pathway scores by applying the function runPROGENy. An example of the pipeline to generate a measurement file for Example 2 (SBVimprover-EGF) is shown as follows:
+
+```R
+library(CARNIVAL) # load CARNIVAL library
+
+file.copy(from=system.file("model_NatComm+14_human.csv",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+
+weight_matrix<-read.csv("model_NatComm+14_human.csv")
+df_genenames<-data.frame('gene'=rownames(df),df)
+
+pathway_scores<-runPROGENy(df_genenames,weight_matrix, z_scores = F)
+
+for (cond in colnames(pathway_scores)){
+  scores<-rbind(rownames(pathway_scores),pathway_scores[,cond])
+  write.table(scores, paste0("measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F, sep = '\t'
+```
+
+The results from DEG-preprocessing pipeline are saved in the directory "measurements" in the current working directory.
+
+### CARNIVAL pipeline
+
+To run the CARNIVAL pipeline, users fist have to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
+- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
+- For Windows: --- to be tested ---
+- For Linux: --- to be tested ---
+
+Next, users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use user-defined own model inputs. To run the built-in CARNIVAL examples, users could run the following code:
 
 ```R
 library(CARNIVAL) # load CARNIVAL library
