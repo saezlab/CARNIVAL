@@ -1,8 +1,30 @@
 #'\code{runCARNIVAL}
 #'
-#'Run CARNIVAL pipeline using to the provided list of inputs (including CARNIVAL built-in examples)
+#'Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL built-in examples
+#'Note: The pipeline requires either all required user-defined input variables (netFile and measFile) are set to NULL or CARNIVAL_example is set to NULL to execute
 #'
-#'@param InputFile The filename of input file for CARNIVAL with a fixed structure (default see: InputFile_CARNIVAL.txt)
+#'@param CplexPath Path to executable cplex file - always required
+#'@param netFile Filename of the prior knowledge network - always required or set as NULL to run CARNIVAL built-in example
+#'@param measFile Filename of the measurement file (here DoRothEA normalised enrichment scores) - always required or set as NULL to run CARNIVAL built-in example
+#'@param inputFile Filename of the list for target of perturbation - optional or set as NULL to run CARNIVAL built-in example
+#'@param weightFile Filename of the additional weight (here PROGENy pathway score) - optional or set as NULL to run CARNIVAL built-in example
+#'@param CARNIVAL_example Number of built-in CARNIVAL example (1=Toy Model,2=SBVimprove-EGF,3=TG-GATEs-APAP) or set as NULL to use user-defined input files
+#'@param Result_dir Specify directory name to store results
+#'@param inverseCR Execute the inverse CARNIVAL pipeline (logical T/F)
+#'@param parallelCR Execute the parallelised version of CARNIVAL pipeline (logical T/F)
+#'@param nodeID Define the input format of nodes in the network (either 'uniprot' or 'gene' symbol)
+#'@param UP2GS For plotting: define if Uniprot ID will be converted to gene symbols for better readability (logical T/F)
+#'@param DOTfig For plotting: define if DOT figure will be exported in the result folder (logical T/F)
+#'@param Export_all Define if all CPLEX variables results will be exported into files (logical T/F) - only recommended for debugging
+#'@param timelimit CPLEX parameter: Time limit of CPLEX optimisation (in seconds)
+#'@param mipGAP CPLEX parameter: Allowed gap of accepted solution comparing to the best solution (fraction; default: 0.05 = 5 percents)
+#'@param poolrelGAP CPLEX parameter: Allowed relative gap of accepted solution comparing within the pool of accepted solution (fraction; default: 0.0001)
+#'@param limitPop CPLEX parameter: Allowed number of solutions to be generated (default: 500)
+#'@param poolCap CPLEX parameter: Allowed number of solution to be kept in the pool of solution (default: 100)
+#'@param poolIntensity CPLEX parameter: Intensity of solution searching (0,1,2,3,4 - default: 4)
+#'@param poolReplace CPLEX parameter: Replacement strategy of solutions in the pool (0,1,2 - default: 2 = most diversified solutions)
+#'@param alphaWeight Objective function: weight for mismatch penalty (default: 1 - will only be applied once measurement file only contains discrete values)
+#'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
 #'
 #'@return The networks and predicted node activities from the CARNIVAL pipeline in the destined result folder
 #'
@@ -12,44 +34,60 @@
 #'
 #'@export
 
-runCARNIVAL <- function(InputFile="InputFile_CARNIVAL.txt")
+runCARNIVAL <- function(CplexPath=NULL,
+                        netFile=NULL,
+                        measFile=NULL,
+                        inputFile=NULL,
+                        weightFile=NULL,
+                        CARNIVAL_example=2,
+                        Result_dir="Results_CARNIVAL",
+                        inverseCR=F,
+                        parallelCR=F,
+                        nodeID="uniprot",
+                        UP2GS=T,
+                        DOTfig=T,
+                        Export_all=F,
+                        timelimit=180,
+                        mipGAP=0.05,
+                        poolrelGAP=0.0001,
+                        limitPop=500,
+                        poolCap=100,
+                        poolIntensity=4,
+                        poolReplace=2,
+                        alphaWeight=1,
+                        betaWeight=0.2)
 {
+
   # Clean working environment
   # rm(list=ls());cat("\014") # clean screen and variables
   # if(length(dev.list())>0){dev.off()} # clean figure
 
   # library(devtools);load_all()
 
-  # Read-in the InputFile
-  if (file.exists(InputFile)) {
-    ReadInputs <- readLines(InputFile)
-    CplexPath <- strsplit(x = ReadInputs[which(grepl(pattern = "CplexPath",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    netFile <- strsplit(x = ReadInputs[which(grepl(pattern = "netFile",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    measFile <- strsplit(x = ReadInputs[which(grepl(pattern = "measFile",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    inputFile <- strsplit(x = ReadInputs[which(grepl(pattern = "inputFile",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    weightFile <- strsplit(x = ReadInputs[which(grepl(pattern = "weightFile",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    CARNIVAL_example <- strsplit(x = ReadInputs[which(grepl(pattern = "CARNIVAL_example",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    if(!CARNIVAL_example=="NULL"){CARNIVAL_example=as.numeric(CARNIVAL_example)}else{CARNIVAL_example=NULL}
-    Result_dir <- strsplit(x = ReadInputs[which(grepl(pattern = "Result_dir",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    if(Result_dir=="NULL"){Result_dir=NULL}
-    inverseCR <- as.logical(strsplit(x = ReadInputs[which(grepl(pattern = "inverseCR",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    parallelCR <- as.logical(strsplit(x = ReadInputs[which(grepl(pattern = "parallelCR",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    nodeID <- strsplit(x = ReadInputs[which(grepl(pattern = "nodeID",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2]
-    UP2GS <- as.logical(strsplit(x = ReadInputs[which(grepl(pattern = "UP2GS",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    DOTfig <- as.logical(strsplit(x = ReadInputs[which(grepl(pattern = "DOTfig",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    Export_all <- as.logical(strsplit(x = ReadInputs[which(grepl(pattern = "Export_all",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    timelimit <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "timelimit",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    mipGAP <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "mipGAP",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    poolrelGAP <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "poolrelGAP",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    limitPop <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "limitPop",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    poolCap <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "poolCap",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    poolIntensity <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "poolIntensity",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    poolReplace <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "poolReplace",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    alphaWeight <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "alphaWeight",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-    betaWeight <- as.numeric(strsplit(x = ReadInputs[which(grepl(pattern = "betaWeight",x = ReadInputs,fixed = T,ignore.case = F))],split = " = ",fixed = T)[[1]][2])
-  } else {
-    stop("The input file 'InputFile_CARNIVAL.txt' is missing. Please check the file and your working directory")
-  }
+  # QC step of provided inputs
+  if (!file.exists(paste0(CplexPath,"cplex"))) {stop("Please provide a valid path to interactive cplex.")}
+  if (!is.null(netFile)) {if (!file.exists(netFile)) {stop("Please provide a valid network filename or leave it as NULL to run CARNIVAL examples.")}}
+  if (!is.null(measFile)) {if (!file.exists(measFile)) {stop("Please provide a valid measurement filename or leave it as NULL to run CARNIVAL examples.")}}
+  if (!is.null(inputFile)) {if (!file.exists(inputFile)) {stop("Please provide a valid target-input filename or leave it as NULL to run CARNIVAL examples.")}}
+  if (!is.null(weightFile)) {if (!file.exists(weightFile)) {stop("Please provide a valid pathway-weight filename or leave it as NULL to run CARNIVAL examples.")}}
+  if (!is.null(CARNIVAL_example)) {if (!is.numeric(CARNIVAL_example)) {stop("Please choose a valid CARNIVAL example or provide user-defined CARNIVAL inputs")}}
+  if ((!is.null(netFile) | !is.null(measFile)) & is.numeric(CARNIVAL_example)) {stop("Required users-defined input files were provided & a CARNIVAL example was selected: Please either set all required user-defined input filenames to NULL or set CARNIVAL_example to NULL")}
+  if (!is.character(Result_dir) & !is.null(Result_dir)) {stop("Please assign a directory name or leave it as NULL to use default name")}
+  if (!is.logical(inverseCR)) {stop("Please choose the pipeline (Standard vs Inverse CARNIVAL) with a logical value T/F")}
+  if (!is.logical(parallelCR)) {stop("Please choose whether to apply a parallelised pipeline with a logical value T/F")}
+  if (!(nodeID %in% c('uniprot','gene'))) {stop("Please define the input format of node either 'uniprot' or 'gene' symbol")}
+  if (!is.logical(UP2GS)) {stop("For plotting: please choose whether UniprotID to be converted to gene symbol for a better readability with a logical value T/F")}
+  if (!is.logical(DOTfig)) {stop("For plotting: please choose whether to plot DOT figure as an output with a logical value T/F")}
+  if (!is.logical(Export_all)) {stop("Please choose whether to export all variables names with a logical value T/F (only recommended for debugging)")}
+  if (!is.numeric(timelimit)) {stop("CPLEX parameter: Please set a time limit for CPLEX optimisation in seconds")}
+  if (!is.null(mipGAP)) {if (!is.numeric(mipGAP)) {stop("CPLEX parameter: Please set the allowed mipGAP parameter or leave it as NULL for CPLEX default value (1e-04)")}}; if (is.null(mipGAP)) {mipGAP=1e-04}
+  if (!is.null(poolrelGAP)) {if (!is.numeric(poolrelGAP)) {stop("CPLEX parameter: Please set the allowed pool relative GAP parameter or leave it as NULL for CPLEX default value (1e75)")}}; if (is.null(poolrelGAP)) {poolrelGAP=1e75}
+  if (!is.null(limitPop)) {if (!is.numeric(limitPop)) {stop("CPLEX parameter: Please set the allowed population limit of solution to be generated or leave it as NULL for CPLEX default value (20)")}}; if (is.null(limitPop)) {limitPop=20}
+  if (!is.null(poolCap)) {if (!is.numeric(poolCap)) {stop("CPLEX parameter: Please set the allowed number of solutions to be kept or leave it as NULL for CPLEX default value (2.1e9)")}}; if (is.null(poolCap)) {poolCap=2.1e9}
+  if (!is.null(poolIntensity)) {if (!(poolIntensity %in% c(0,1,2,3,4))) {stop("CPLEX parameter: Please set the level of intensity for solution searching [0,1,2,3,4] or leave it as NULL for CPLEX default value (0) - to be decided by CPLEX")}}; if (is.null(poolIntensity)) {poolIntensity=0}
+  if (!is.null(poolReplace)) {if (!(poolReplace %in% c(0,1,2))) {stop("CPLEX parameter: Please set the replacement strategy of solution [0,1,2] or leave it as NULL for CPLEX default value (0) - First In First Out")}}; if (is.null(poolReplace)) {poolReplace=0}
+  if (!is.numeric(alphaWeight)) {stop("Objective Function: Please set a weight for mismatch penalty (will be applied only when the weight of measurement is not defined)")}
+  if (!is.numeric(betaWeight)) {stop("Objective Function: Please set a weight for node penalty")}
 
   # Load necessary packages and functions
   library(CARNIVAL)
@@ -194,5 +232,9 @@ runCARNIVAL <- function(InputFile="InputFile_CARNIVAL.txt")
   ElapsedAll <- as.data.frame(matrix(t(c(Elapsed_1[3],Elapsed_2[3],Elapsed_3[3])),3,1))
   rownames(ElapsedAll) <- c("WriteConstraints:","CplexSolving:","ExportResults:")
   write.table(x = ElapsedAll,file = paste0(dir_name,"/elapsed_time.txt"),col.names = F,row.names = T,quote = F)
+
+  print(" ")
+  print("--- End of the CARNIVAL pipeline ---")
+  print(" ")
 
 }
