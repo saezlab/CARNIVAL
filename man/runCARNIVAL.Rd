@@ -4,14 +4,63 @@
 \alias{runCARNIVAL}
 \title{\code{runCARNIVAL}}
 \usage{
-runCARNIVAL(InputFile = "InputFile_CARNIVAL.txt")
+runCARNIVAL(CplexPath = NULL, netFile = NULL, measFile = NULL,
+  inputFile = NULL, weightFile = NULL, CARNIVAL_example = 2,
+  Result_dir = "Results_CARNIVAL", inverseCR = F, parallelCR = F,
+  nodeID = "uniprot", UP2GS = T, DOTfig = T, Export_all = F,
+  timelimit = 180, mipGAP = 0.05, poolrelGAP = 1e-04,
+  limitPop = 500, poolCap = 100, poolIntensity = 4,
+  poolReplace = 2, alphaWeight = 1, betaWeight = 0.2)
 }
 \arguments{
-\item{InputFile}{The filename of input file for CARNIVAL with a fixed structure (default see: InputFile_CARNIVAL.txt)}
+\item{CplexPath}{Path to executable cplex file - always required}
+
+\item{netFile}{Filename of the prior knowledge network - always required or set as NULL to run CARNIVAL built-in example}
+
+\item{measFile}{Filename of the measurement file (here DoRothEA normalised enrichment scores) - always required or set as NULL to run CARNIVAL built-in example}
+
+\item{inputFile}{Filename of the list for target of perturbation - optional or set as NULL to run CARNIVAL built-in example}
+
+\item{weightFile}{Filename of the additional weight (here PROGENy pathway score) - optional or set as NULL to run CARNIVAL built-in example}
+
+\item{CARNIVAL_example}{Number of built-in CARNIVAL example (1=Toy Model,2=SBVimprove-EGF,3=TG-GATEs-APAP) or set as NULL to use user-defined input files}
+
+\item{Result_dir}{Specify directory name to store results}
+
+\item{inverseCR}{Execute the inverse CARNIVAL pipeline (logical T/F)}
+
+\item{parallelCR}{Execute the parallelised version of CARNIVAL pipeline (logical T/F)}
+
+\item{nodeID}{Define the input format of nodes in the network (either 'uniprot' or 'gene' symbol)}
+
+\item{UP2GS}{For plotting: define if Uniprot ID will be converted to gene symbols for better readability (logical T/F)}
+
+\item{DOTfig}{For plotting: define if DOT figure will be exported in the result folder (logical T/F)}
+
+\item{Export_all}{Define if all CPLEX variables results will be exported into files (logical T/F) - only recommended for debugging}
+
+\item{timelimit}{CPLEX parameter: Time limit of CPLEX optimisation (in seconds)}
+
+\item{mipGAP}{CPLEX parameter: Allowed gap of accepted solution comparing to the best solution (fraction; default: 0.05 = 5 percents)}
+
+\item{poolrelGAP}{CPLEX parameter: Allowed relative gap of accepted solution comparing within the pool of accepted solution (fraction; default: 0.0001)}
+
+\item{limitPop}{CPLEX parameter: Allowed number of solutions to be generated (default: 500)}
+
+\item{poolCap}{CPLEX parameter: Allowed number of solution to be kept in the pool of solution (default: 100)}
+
+\item{poolIntensity}{CPLEX parameter: Intensity of solution searching (0,1,2,3,4 - default: 4)}
+
+\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the pool (0,1,2 - default: 2 = most diversified solutions)}
+
+\item{alphaWeight}{Objective function: weight for mismatch penalty (default: 1 - will only be applied once measurement file only contains discrete values)}
+
+\item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
 }
 \value{
 The networks and predicted node activities from the CARNIVAL pipeline in the destined result folder
 }
 \description{
-Run CARNIVAL pipeline using to the provided list of inputs (including CARNIVAL built-in examples)
+Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL built-in examples
+Note: The pipeline requires either all required user-defined input variables (netFile and measFile) are set to NULL or CARNIVAL_example is set to NULL to execute
 }
