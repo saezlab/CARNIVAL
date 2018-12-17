@@ -1,80 +1,76 @@
 # CARNIVAL
 
-CARNIVAL is an R-based tool based on [Melas et al.](https://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) which performs causal reasoning to infer a subset of signalling network from transcriptomics data.
-Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools [DoRothEA](https://github.com/saezlab/DoRothEA) & [PROGENy](https://github.com/saezlab/progeny).
+CARNIVAL is an R-package providing a framework to perform causal reasoning to infer a subset of signalling network from transcriptomics data. This work was originally based on [Melas et al.](https://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) with a number improved functionalities comparing to the original version.
+Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools [DoRothEA](https://github.com/saezlab/DoRothEA) & [PROGENy](https://github.com/saezlab/progeny), respectively.
 TFs’ activities and signed directed protein-protein interaction networks +/- drug targets and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. 
 An ILP solver (CPLEX) is subsequently applied to identify the sub-network topology with minimised discrepancies on fitting error and model size.
 
 ## Getting Started
 
-A driver script of CARNIVAL is provided in the 'vignette' folder which could either be used as a Driver script to run the pipeline step-by-step. A condensed set of optmisation settings are listed at the beginning of the driver script for users' convenience. The template script of ther cluster-based variant was also supplied.
+A tutorial for running CARNIVAL is provided as a vignette in R-Markdown and HTML formats. The wrapper script "runCARNIVAL" was introduced to take input arguments, pre-process input descriptions, run optimisation and export results as network files and figures. Three built-in CARNIVAL examples are also supplied as case studies for users.
 
 ### Prerequisites
 
-CARNIVAL requires the interactive version of IBM Cplex solver as the optimisation algorithm. The academic version of IBM Cplex is available [here](https://www.ibm.com/developerworks/community/blogs/jfp/entry/CPLEX_Is_Free_For_Students?lang=en) 
+CARNIVAL requires the interactive version of IBM Cplex solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative [here](https://www.ibm.com/products/ilog-cplex-optimization-studio?S_PKG=CoG&cm_mmc=Search_Google-_-Data+Science_Data+Science-_-WW_IDA-_-+IBM++CPLEX_Broad_CoG&cm_mmca1=000000RE&cm_mmca2=10000668&cm_mmca7=9041989&cm_mmca8=kwd-412296208719&cm_mmca9=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_&cm_mmca10=267798126431&cm_mmca11=b&mkwid=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_|470|135655&cvosrc=ppc.google.%2Bibm%20%2Bcplex&cvo_campaign=000000RE&cvo_crid=267798126431&Matchtype=b&gclid=Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB) 
 
 ### Installing
 
 CARNIVAL is currently available for the installation as an R-package from our GitHub page
 
 ```R
-# Install CNORprob from Github (or load library for development version)
+# Install CARNIVAL from Github using devtools
+# install.packages('devtools') # in case devtools hasn't been installed
 library(devtools)
-install_github('saezlab/CARNIVAL', force=TRUE)
-# --- OR --- #
-library(devtools)
-load_all()
+install_github('saezlab/CARNIVAL', build_vignettes = TRUE)
+# Or download the source file from GitHub and install from source
+install.packages(path_to_file, repos = NULL, type="source")
 ```
 
 ## Running the tests
 
-Several examples are available as the test case for CARNIVAL. Users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use your own model inputs. Current examples include: 
+First, user has to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
+- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
+- For Windows: --- to be tested ---
+- For Linux: --- to be tested ---
+
+Three examples are available as the test cases for CARNIVAL. Users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use user-defined own model inputs. Current examples include: 
 1) Toy Model of two crosstalk pathways 
 2) SBVimprover species translational dataset with EGF as the perturbator
 3) TG-GATEs dataset with paracetamol (APAP) as the perturbator
 
-```R
-# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = SBVimprover-EGF; Ex3 = TG-GATEs-APAP)
-CARNIVAL_example <- 2 # c(1,2,3); if not, set to 'NULL'
-
-# Or assign your input files here
-netFile <-  "your_network_file.sif" # required
-measFile <- "your_measurement_file.txt" # required
-inputFile <- "your_input_target_file.txt" # optional; if not, set to 'NULL'
-weightFile <-  "your_node_weight_file.txt" # optional; if not, set to 'NULL'
-
-```
-
-### Setting and options for optimisation and subsequent analyses 
-
-A set of optimisation parameters and settings can be assigned at the beginning of the driver script.
+To run the built-in CARNIVAL examples, users could run the following code:
 
 ```R
-# Choose CARNIVAL settings
-Result_dir <- NULL # specify a name for result directory; if NULL, then date and time will be used by default
-Sys.setenv(TZ="Europe/Berlin") # optional; set time zone to as default results' foldername
-parallelCR <- F # running parallelised version?
-inverseCR <- F # running inverse causal reasoning version?
-nodeID <- "uniprot" # choose between 'uniprot' or 'gene' ID format
+library(CARNIVAL) # load CARNIVAL library
 
-# Plotting-related setting (doesn't affect the optimisation process)
-UP2GS <- T # convert UniProtIDs to Gene Symbols in the plotting step?
-DOTfig <- T #  write DOT figure? (can be visualised by e.g. GraphViz)
-Export_all <- F #  export all ILP variables or not; if F, only predicted node values and sif file will be written
-
-# Set CPLEX stopping criteria
-mipGAP        <- 0.05 # in proportion to the best estimated integer solution
-poolrelGAP    <- 0.0001 # in relative to the pool of best solution
-limitPop      <- 500 # limit the number of populated solutions after identified best solution
-poolCap       <- 100 # limit the pool size to store populated solution
-poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
-poolReplace   <- 2 # select replacement strategy of the pool solution [0 default/ 1 to 2]
-alphaWeight   <- 1 # constant coefficient for fitting error in the objective function in case TF activities are not assigned [default 1]
-betaWeight    <- 0.2 # relative coefficient of model size to fitting error in the objective function [default 0.2]
-timelimit     <- 180 # set time limit for cplex optimisation (in seconds)
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/",
+            netFile=NULL,measFile=NULL,
+            inputFile=NULL,weightFile=NULL,
+            Result_dir="Results_CARNIVAL_Ex1",
+            CARNIVAL_example=1)
 ```
 
-The results from the optimisation and subsequent analyses will be saved in the sub-folder "Results".
+To run the user defined optimisation problem, users should have already prepared the network file and the measurement input (here TF's enrichment scores from DoRothEA) +/- additional information i.e. target of perturbation and additional node penalty weight (here pathway scores from PROGENy).
+Once the input files are prepared in the correct format, the user could run the following code: (Note: we present here the input files for Example 2 as a case study. We advise users to check the format of input files from the ones for Example 2 to ensure the compatibility with the CARNIVAL pipeline.)
+
+```R
+library(CARNIVAL) # load CARNIVAL library
+
+file.copy(from=system.file("Ex2_network_SBV_Omnipath.sif",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve network file
+file.copy(from=system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve measurement file
+file.copy(from=system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve target of perturbation file
+file.copy(from=system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve additional/pathway weight file
+
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/",
+            netFile="Ex2_network_SBV_Omnipath.sif",
+            measFile="Ex2_measurements_SBV_EGF.txt",
+            inputFile="Ex2_inputs_SBV_EGF.txt",
+            weightFile="Ex2_weights_SBV_EGF.txt",
+            Result_dir="Results_CARNIVAL_Ex2",
+            CARNIVAL_example=NULL)
+```
+
+The results from the optimisation i.e. optimised network description and figures will be saved in the result folder.
 
 ## Authors
 
@@ -94,8 +90,17 @@ Distributed under the GNU GPLv3 License. See accompanying file [LICENSE.txt](htt
 
 > Melas IN, Sakellaropoulos T, Iorio F, Alexopoulos L, Loh WY, Lauffenburger DA, Saez-Rodriguez J, Bai JPF. (2015). Identification of drug-specific pathways based on gene expression data: application to drug induced lung injury. *Integrative Biology*, Issue 7, Pages 904-920, https://doi.org/10.1039/C4IB00294F.
 
+[DoRothEA v2 - Garcia-Alonso et al.](https://www.biorxiv.org/content/early/2018/06/03/337915):
+
+> Garcia-Alonso L, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. *bioRXiv*, https://doi.org/10.1101/337915.
+
+[PROGENy - Schubert et al.](https://www.nature.com/articles/s41467-017-02391-6):
+
+> Schubert M, Klinger B, Klünemann M, Sieber A, Uhlitz F, Sauer S, Garnett MJ, Blüthgen N, Saez-Rodriguez J. (2018). Perturbation-response genes reveal signaling footprints in cancer gene expression. *Nature Communication*, Issue 9, Nr. 20. https://doi.org/10.1038/s41467-017-02391-6.
+
+
 ## Acknowledgement
 
-CARNIVAL have been developed for the modelling projects within the [TransQST Consortium](https://transqst.org)
+CARNIVAL has been developed as a computational tool to analyse -omics data within the [TransQST Consortium](https://transqst.org)
 
 "This project has received funding from the Innovative Medicines Initiative 2 Joint Undertaking under grant agreement No 116030. The Joint Undertaking receives support from the European Union's Horizon 2020 research and innovation programme and EFPIA."
