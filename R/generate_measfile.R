@@ -29,5 +29,7 @@ generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measur
     }
     write.table(df_drug, filepath, sep="\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
   }
+
+  print(paste0("Measurement files have been written to ", normalizePath(write2folder)))
 }
 
