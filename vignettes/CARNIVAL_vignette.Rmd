@@ -71,7 +71,8 @@ runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64
             inputFile="Ex2_inputs_SBV_EGF.txt",
             weightFile="Ex2_weights_SBV_EGF.txt",
             Result_dir="Results_CARNIVAL_Ex2",
-            CARNIVAL_example=NULL)
+            CARNIVAL_example=NULL,
+            timelimit=10)
 ```
 
 - After the optimisation, the results are saved in the result folder on the working directory for further analyses.
