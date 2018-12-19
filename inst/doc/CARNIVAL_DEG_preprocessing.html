@@ -12,7 +12,7 @@
 
 <meta name="author" content="Anika Liu" />
 
-<meta name="date" content="2018-12-17" />
+<meta name="date" content="2018-12-19" />
 
 <title>CARNIVAL DEG-preprocessing</title>
 
@@ -92,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">CARNIVAL DEG-preprocessing</h1>
 <h4 class="author"><em>Anika Liu</em></h4>
-<h4 class="date"><em>2018-12-17</em></h4>
+<h4 class="date"><em>2018-12-19</em></h4>
 
 
 
@@ -102,6 +102,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Generate TF input files</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(CARNIVAL) <span class="co"># load CARNIVAL library</span>
 
+<span class="co">#Load files</span>
 <span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;SBV_EGF_tvalues.csv&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;dorothea_TF_mapping.csv&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
@@ -111,6 +112,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 df&lt;-<span class="kw">read.csv2</span>(<span class="st">&quot;SBV_EGF_tvalues.csv&quot;</span>, <span class="dt">row.names =</span> <span class="st">'GeneName'</span>)  
 map&lt;-<span class="kw">read.csv</span>(<span class="st">&quot;dorothea_TF_mapping.csv&quot;</span>)
 
+<span class="co">#Run DoRothEA and convert from gene symbol to uniprot ID</span>
 TF_genesymbol&lt;-<span class="kw">runDoRothEA</span>(df, <span class="dt">regulon=</span>viper_regulon, <span class="dt">confidence_level=</span><span class="kw">c</span>(<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span>))</code></pre></div>
 <pre><code>## 
   |                                                                       
@@ -402,19 +404,25 @@ TF_genesymbol&lt;-<span class="kw">runDoRothEA</span>(df, <span class="dt">regul
   |                                                                       
   |=================================================================| 100%</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">TF_uniprot&lt;-<span class="kw">GeneSymbol2Uniprot</span>(TF_genesymbol, map, <span class="dv">1</span>, <span class="dv">2</span>)
+
+<span class="co">#Generate measurement files in CARNIVAL input format</span>
 <span class="kw">generate_measfile</span>(<span class="dt">measurements=</span>TF_uniprot, <span class="dt">topnumber=</span><span class="dv">50</span>, <span class="dt">write2folder=</span><span class="st">&quot;measurements&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;Measurement files have been written to /Users/Anika/Documents/GitHub/CARNIVAL/vignettes/measurements&quot;</code></pre>
 </div>
 <div id="generate-progeny-input-files" class="section level2">
 <h2>Generate PROGENy input files</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(CARNIVAL) <span class="co"># load CARNIVAL library</span>
 
+<span class="co">#Load files</span>
 <span class="kw">file.copy</span>(<span class="dt">from=</span><span class="kw">system.file</span>(<span class="st">&quot;model_NatComm+14_human.csv&quot;</span>,<span class="dt">package=</span><span class="st">&quot;CARNIVAL&quot;</span>),<span class="dt">to=</span><span class="kw">getwd</span>(),<span class="dt">overwrite=</span><span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">weight_matrix&lt;-<span class="kw">read.csv</span>(<span class="st">&quot;model_NatComm+14_human.csv&quot;</span>)
 df_genenames&lt;-<span class="kw">data.frame</span>(<span class="st">'gene'</span>=<span class="kw">rownames</span>(df),df)
 
+<span class="co">#Run PROGENy</span>
 pathway_scores&lt;-<span class="kw">runPROGENy</span>(df_genenames,weight_matrix, <span class="dt">z_scores =</span> F)
 
+<span class="co">#Generate CARNIVAL input files</span>
 <span class="cf">for</span> (cond <span class="cf">in</span> <span class="kw">colnames</span>(pathway_scores)){
   scores&lt;-<span class="kw">rbind</span>(<span class="kw">rownames</span>(pathway_scores),pathway_scores[,cond])
   <span class="kw">write.table</span>(scores, <span class="kw">paste0</span>(<span class="st">&quot;measurements/scores_&quot;</span>,cond,<span class="st">&quot;.txt&quot;</span>),<span class="dt">col.names =</span> F, <span class="dt">row.names =</span> F, <span class="dt">quote =</span> F, <span class="dt">sep =</span> <span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)

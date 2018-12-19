@@ -12,9 +12,6 @@ LazyData: true
 Imports: 
     doParallel,
     igraph,
-    tidyr,
-    dplyr,
-    readr,
     tidyverse,
     viper
 Suggests: knitr,

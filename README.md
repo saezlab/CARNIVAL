@@ -46,6 +46,7 @@ Users can generate the measurement file which contains calculated transcription 
 ```R
 library(CARNIVAL) # load CARNIVAL library
 
+#Load files
 file.copy(from=system.file("SBV_EGF_tvalues.csv",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
 file.copy(from=system.file("dorothea_TF_mapping.csv",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
 load(file = system.file("BEST_viperRegulon.rdata",package="CARNIVAL"))
@@ -53,9 +54,13 @@ load(file = system.file("BEST_viperRegulon.rdata",package="CARNIVAL"))
 df<-read.csv2("SBV_EGF_tvalues.csv", row.names = 'GeneName')  
 map<-read.csv("dorothea_TF_mapping.csv")
 
+#Run DoRothEA and convert from gene symbol to uniprot ID
 TF_genesymbol<-runDoRothEA(df, regulon=viper_regulon, confidence_level=c('A','B','C'))
 TF_uniprot<-GeneSymbol2Uniprot(TF_genesymbol, map, 1, 2)
+
+#Generate measurement files in CARNIVAL input format
 generate_measfile(measurements=TF_uniprot, topnumber=50, write2folder="measurements")
+
 ```
 
 Also, users can generate the additional weight input file which contains calculated pathway scores by applying the function runPROGENy. An example of the pipeline to generate a measurement file for Example 2 (SBVimprover-EGF) is shown as follows:
@@ -63,16 +68,20 @@ Also, users can generate the additional weight input file which contains calcula
 ```R
 library(CARNIVAL) # load CARNIVAL library
 
+#Load files
 file.copy(from=system.file("model_NatComm+14_human.csv",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
 
 weight_matrix<-read.csv("model_NatComm+14_human.csv")
 df_genenames<-data.frame('gene'=rownames(df),df)
 
+#Run PROGENy
 pathway_scores<-runPROGENy(df_genenames,weight_matrix, z_scores = F)
 
+#Generate CARNIVAL input files
 for (cond in colnames(pathway_scores)){
   scores<-rbind(rownames(pathway_scores),pathway_scores[,cond])
-  write.table(scores, paste0("measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F, sep = '\t'
+  write.table(scores, paste0("measurements/scores_",cond,".txt"),col.names = F, row.names = F, quote = F, sep = '\t')
+}
 ```
 
 The results from DEG-preprocessing pipeline are saved in the directory "measurements" in the current working directory.
@@ -80,7 +89,7 @@ The results from DEG-preprocessing pipeline are saved in the directory "measurem
 ### CARNIVAL pipeline
 
 To run the CARNIVAL pipeline, users fist have to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
-- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
+- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
 - For Windows: --- to be tested ---
 - For Linux: --- to be tested ---
 
@@ -89,11 +98,12 @@ Next, users can select the examples by assigning the example number to the "CARN
 ```R
 library(CARNIVAL) # load CARNIVAL library
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/",
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
             netFile=NULL,measFile=NULL,
             inputFile=NULL,weightFile=NULL,
             Result_dir="Results_CARNIVAL_Ex1",
-            CARNIVAL_example=1)
+            CARNIVAL_example=1,
+            UP2GS=F)
 ```
 
 To run the user defined optimisation problem, users should have already prepared the network file and the measurement input (here TF's enrichment scores from DoRothEA) +/- additional information i.e. target of perturbation and additional node penalty weight (here pathway scores from PROGENy).
@@ -107,7 +117,7 @@ file.copy(from=system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL"),to
 file.copy(from=system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve target of perturbation file
 file.copy(from=system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve additional/pathway weight file
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/",
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
             netFile="Ex2_network_SBV_Omnipath.sif",
             measFile="Ex2_measurements_SBV_EGF.txt",
             inputFile="Ex2_inputs_SBV_EGF.txt",
