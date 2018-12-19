@@ -1,3 +1,13 @@
+#'\code{write_constraints_6}
+#'
+#'@param variables The list of mapping indices of LP variables.variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indices.
+#'@param dataMatrix Contains the matrix which stores the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
+#'@param inputs Contains the list of targets as inputs.
+#'
+#'@import igraph
+#'
+#'@return This code writes the list of constraints (6) of the ILP problem for all the conditions.
+
 write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix, inputs = inputs) {
   
   library(igraph)

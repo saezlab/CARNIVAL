@@ -1,10 +1,11 @@
 Package: CARNIVAL
 Type: Package
-Title: A causal reasoning analytical tool with integer linear programming formulation
-Version: 0.9.0
-Author: Panuwat Trairatphisan, Enio Gjerga, Anika Liu
+Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
+Version: 0.9.2
+Author: Anika Liu, Enio Gjerga, Panuwat Trairatphisan
 Maintainer: Panuwat Trairatphisan <panuwat.trairatphisan@outlook.com>
-Description: An updated version of the Python causal reasoning tool from Melas et al. in R with updated assignments of weights from PROGENy scores
+Description: An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores. 
+             Cplex parameters can be freely adjusted and multiple solutions from cplex can be obtained and aggregated.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -16,5 +17,5 @@ Imports:
 Suggests: knitr,
     rmarkdown,
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 BiocViews:

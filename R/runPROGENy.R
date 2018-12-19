@@ -6,55 +6,60 @@
 #'@param weight_matrix A progeny coeficient matrix. the first column should be the identifiers of the omic features, and should be coherent with the identifiers provided in df.
 #'@param k The number of permutations to be preformed to generate the null-distribution used to estimate significance of progeny scores. Default value is 10000.
 #'@param z_scores If true, provides z-scores. If false, provides significance scores (1-pval).
-#'@param get_nulldist If get_nulldist is true, then the function will return the null model dataframe that was used. 
+#'@param get_nulldist If get_nulldist is true, then the function will return the null model dataframe that was used.
+#'
 #'@return This function returns a list of two elements. The first element is a dataframe of p*m+1 dimensions, where p is the number of progeny pathways, and m is the number of samples/contrasts.
+#'
 #'Each cell represent the significance of a progeny pathway score for one sample/contrast. The signifcance ranges between -1 and 1. The significance is equal to x*2-1, x being the quantile of the progeny pathway score with respect to the null distribution.
 #'Thus, this significance can be interpreted as the equivalent of 1-p.value (two sided test over an empirical distribution) with the sign indicating the direction of the regulation.
 #'The sceond element is the null distribution list (a null distribution is generated for each sample/contrast).
+#'
+#'@export
 
 runPROGENy <- function(df,weight_matrix,k = 10000, z_scores = T, get_nulldist = F)
 {
+  library(tidyverse)
   resList <- list()
   if(get_nulldist)
   {
     nullDist_list <- list()
   }
-  
+
   for(i in 2:length(df[1,]))
   {
     current_df <- df[,c(1,i)]
     current_df <- current_df[complete.cases(current_df),]
     t_values <- current_df[,2]
-    
+
     current_weights <- weight_matrix
-    
+
     names(current_df)[1] <- "ID"
     names(current_weights)[1] <- "ID"
-    
+
     common_ids <- merge(current_df, current_weights, by = "ID")
     common_ids <- common_ids$ID
     common_ids <- as.character(common_ids)
-    
+
     row.names(current_df) <- current_df$ID
     current_df <- as.data.frame(current_df[common_ids,-1])
-    
+
     row.names(current_weights) <- current_weights$ID
     current_weights <- as.data.frame(current_weights[common_ids,-1])
-    
+
     current_mat <- as.matrix(current_df)
     current_weights <- t(current_weights)
-    
+
     scores <- as.data.frame(current_weights %*% current_mat)
-    
+
     null_dist_t <- replicate(k, sample(t_values,length(current_mat[,1]), replace = F))
-    
+
     null_dist_scores <- current_weights %*% null_dist_t
-    
+
     if(get_nulldist)
     {
       nullDist_list[[i-1]] <- null_dist_scores
     }
-    
+
     if(z_scores)
     {
       scores$mean <- apply(null_dist_scores,1,mean)
@@ -71,7 +76,7 @@ runPROGENy <- function(df,weight_matrix,k = 10000, z_scores = T, get_nulldist = 
         scores[j,1] <- ecdf_function(scores[j,1])
       }
       score_probas <- scores*2-1
-      
+
       resListCurrent <- score_probas[,1]
       names(resListCurrent) <- names(weight_matrix[,-1])
       resList[[i-1]] <- resListCurrent
@@ -89,5 +94,5 @@ runPROGENy <- function(df,weight_matrix,k = 10000, z_scores = T, get_nulldist = 
   {
     return(resDf)
   }
-  
+
 }
