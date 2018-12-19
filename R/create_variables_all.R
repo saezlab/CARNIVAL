@@ -1,3 +1,10 @@
+#'\code{create_variables_all}
+#'
+#'@param pknList Contains the background network which serves as a prior knowledge and which we train.
+#'@param dataMatrix Contains the matrix which stores the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
+#'
+#'@return This function returns the identifiers of all the variables used in the ILP formulation together with an explanation about the meaning of each of them. Also it returns a list of useful identifiers.
+
 create_variables_all <- function(pknList=pknList, dataMatrix=dataMatrix){
 
   # ======================================= #

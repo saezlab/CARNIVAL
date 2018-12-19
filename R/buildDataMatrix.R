@@ -1,3 +1,11 @@
+#'\code{buildDataMatrix}
+#'
+#'@param data Contains the measured data.
+#'@param pknList Contains the background network which serves as a prior knowledge and which we train.
+#'@param inputs Contains the list of targets as inputs.
+#'
+#'@return This function returns the data matrix containing the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
+
 buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
 
   colnames(pknList) <- c("X1", "X2", "X3")
