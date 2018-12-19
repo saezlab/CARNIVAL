@@ -181,7 +181,7 @@ runCARNIVAL <- function(CplexPath=NULL,
   ptm <- proc.time()
   print("Solving LP problem...")
   # system(paste0(getwd(), "/cplex -f cplexCommand_", condition,"_",repIndex,".txt"))
-  system(paste0(CplexPath, "/cplex -f cplexCommand_", condition,"_",repIndex,".txt"))
+  system(paste0(CplexPath, " -f cplexCommand_", condition,"_",repIndex,".txt"))
   Elapsed_2 <- proc.time() - ptm
 
   # Move result files to result folder and remove redundant files after the optimisation
