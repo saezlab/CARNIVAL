@@ -7,8 +7,10 @@
 #' @param dir_name The directory name that stores CARNIVAL results (as a subfolder of the main "results" folder)
 #' @param inputs A named vector of inputs and their node states
 #' @param measurements A named vector of measurements and their state values
-#' @param UP2GS [T/F] A parameter defining whether to convert the input format UniprotID to Gene Symbol
-#' @return DOT figures stored in the directory "dir_name" with the prefix "ActivityNetwork_model"
+#' @param UP2GS (T/F) A parameter defining whether to convert the input format UniprotID to Gene Symbol
+#' @return DOT figures stored in the directory "results/dir_name" with the prefix "ActivityNetwork_model"
+#
+#' @export
 
 WriteDOTfig <- function(res,idxModel=0,dir_name,inputs,measurements,UP2GS=F){
 
