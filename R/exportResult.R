@@ -21,7 +21,7 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variable
 
   solution <- read.delim(file = cplexSolutionFileName)
   solution[, 1] <- as.character(solution[, 1])
-
+  print('UPTODATE')
   idxVarStart <- which(grepl(pattern = "<variables>", x = solution[, 1]))[-1]
   idxVarEnd <- which(grepl(pattern = "</variables>", x = solution[, 1]))[-1]
 
@@ -217,7 +217,9 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variable
         if (!is.null(sif)){
         # write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
         write.table(x = activityNodes, file = paste0(dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
+        }
       } else {
+        if (!is.null(sif)){
         # write.table(x = activityNodes, file = paste0("results/",dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
          write.table(x = activityNodes, file = paste0(dir_name,"/nodesActivity_", conditionIDX, "_model", ii, ".txt"), quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
         }
