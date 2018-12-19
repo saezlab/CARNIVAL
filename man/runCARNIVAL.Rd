@@ -8,7 +8,7 @@ runCARNIVAL(CplexPath = NULL, netFile = NULL, measFile = NULL,
   inputFile = NULL, weightFile = NULL, CARNIVAL_example = 2,
   Result_dir = "Results_CARNIVAL", inverseCR = F, parallelCR = F,
   nodeID = "uniprot", UP2GS = T, DOTfig = T, Export_all = F,
-  timelimit = 180, mipGAP = 0.05, poolrelGAP = 1e-04,
+  timelimit = 600, mipGAP = 0.05, poolrelGAP = 1e-04,
   limitPop = 500, poolCap = 100, poolIntensity = 4,
   poolReplace = 2, alphaWeight = 1, betaWeight = 0.2)
 }

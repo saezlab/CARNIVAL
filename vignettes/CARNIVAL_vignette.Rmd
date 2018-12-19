@@ -16,7 +16,7 @@ vignette: >
 
 - CARNIVAL requires IBM ILOG CPLEX to be pre-installed
 - The path to the interactive version of CPLEX needs to be specified in runCARNIVAL script
-- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
+- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
 - For Windows: --- to be tested ---
 - For Linux: --- to be tested ---
 
