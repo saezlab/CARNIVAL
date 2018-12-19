@@ -111,7 +111,8 @@ runCARNIVAL <- function(CplexPath=NULL,
   }
   if(dir.exists(dir_name)){
     print(paste0(dir_name," already exists and will be replaced."))
-    unlink(dir_name)}
+    unlink(dir_name, recursive = T)
+    }
   dir.create(dir_name)
 
   # Load CARNIVAL example files (if defined)
