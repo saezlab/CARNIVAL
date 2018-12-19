@@ -29,7 +29,6 @@
 #'@return The networks and predicted node activities from the CARNIVAL pipeline in the destined result folder
 #'
 #'@import doParallel
-#'@import readr
 #'@import igraph
 #'
 #'@export
@@ -65,7 +64,7 @@ runCARNIVAL <- function(CplexPath=NULL,
   # library(devtools);load_all()
 
   # QC step of provided inputs
-  if (!file.exists(paste0(CplexPath,"cplex"))) {stop("Please provide a valid path to interactive cplex.")}
+  if (!file.exists(CplexPath)) {stop("Please provide a valid path to interactive cplex.")}
   if (!is.null(netFile)) {if (!file.exists(netFile)) {stop("Please provide a valid network filename or leave it as NULL to run CARNIVAL examples.")}}
   if (!is.null(measFile)) {if (!file.exists(measFile)) {stop("Please provide a valid measurement filename or leave it as NULL to run CARNIVAL examples.")}}
   if (!is.null(inputFile)) {if (!file.exists(inputFile)) {stop("Please provide a valid target-input filename or leave it as NULL to run CARNIVAL examples.")}}
@@ -91,7 +90,6 @@ runCARNIVAL <- function(CplexPath=NULL,
 
   # Load necessary packages and functions
   library(CARNIVAL)
-  library(readr)
   load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
 
   # Assign parallelisation parameters
@@ -111,6 +109,9 @@ runCARNIVAL <- function(CplexPath=NULL,
   } else {
     dir_name <- Result_dir
   }
+  if(dir.exists(dir_name)){
+    print(paste0(dir_name," already exists and will be replaced."))
+    unlink(dir_name)}
   dir.create(dir_name)
 
   # Load CARNIVAL example files (if defined)
@@ -124,14 +125,14 @@ runCARNIVAL <- function(CplexPath=NULL,
 
   # Input processing
   network <- read.table(file = netFile, sep = "\t", header = TRUE)
-  measWeights <- as.matrix(read_delim(file = measFile, delim = "\t", escape_double = FALSE, trim_ws = TRUE))
+  measWeights <- as.matrix(read.delim(file = measFile, sep = "\t"))
   measurements <- sign(measWeights) # Extracted sign of measurement for ILP fitting
   measWeights <- abs(measWeights) # Weights are all positives
   if (!is.null(inputFile)) {
     inputs <- read.table(file = inputFile, sep = "\t", header = TRUE)
   }
   if (!is.null(weightFile)) {
-    edgeWeights <- read_delim(file = weightFile, delim = "\t", escape_double = FALSE, trim_ws = TRUE)
+    edgeWeights <- read.delim(file = weightFile, sep = "\t")
     scores <- assignPROGENyScores(progeny = edgeWeights, progenyMembers = progenyMembers, id = nodeID)
   } else {
     scores <- NULL
