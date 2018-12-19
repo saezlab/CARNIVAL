@@ -4,222 +4,85 @@ author: "Panuwat Trairatphisan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{CARNIVAL tutorial/vignette:}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
 ---
 
-# CARNIVAL package's driver script
+# CARNIVAL pipeline
 
+## Pre-requisite
+
+- CARNIVAL requires IBM ILOG CPLEX to be pre-installed
+- The path to the interactive version of CPLEX needs to be specified in runCARNIVAL script
+- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
+- For Windows: --- to be tested ---
+- For Linux: --- to be tested ---
+
+## Running CARNIVAL
+
+- The minimal set of input elements for CARNIVAL in the "runCARNIVAL" function includes:
+1) The filepath to the interactive version of CPLEX and either
+2.1) The required set of filenames for user-defined prior knowledge network (netFile) and user-defined measurement (measFile - here refers to TF normalised enrichment scores) or
+2.2) A chosen number of built-in CARNIVAL examples includes 1=Toy-Model 2=SBVimprover-EGF, 3=TG-GATEs-APAP
+- Note that users have to either set all required user-defined inputs (netFile and measFile) as NULL or set the CARNIVAL_example variable to NULL to execute the CARNIVAL pipeline
+
+- The CARNIVAL pipeline in the wrapper function "runCARNIVAL" consists of 3 main steps:
+1. Read-in information from the provided information on the runCARNIVAL script and write linear programming (LP) constraints to a file (testFile.lp)
+2. CPLEX optimisation
+3. Read-in XML result file from CPLEX and generate a summary of results and figures
+
+- Note: Multiple temporary files will be generated during the optimisation but they will be automatically clean-up after the optimisation. Please do not remove these intermediate files manually.
+
+## Running CARNIVAL built-in example
+
+- To run a CARNIVAL built-in example e.g. the Toy-Model (Example 1), users just need to provide a path to interactive CPLEX on CplexPath, set netFile and measFile variables (+/- inputFile/weightFile) to NULL and select the corresponding number of CARNIVAL example. Note that the name of the result folder for CARNIVAL can also be specified on the variable "Result_dir".
 
 ```{r, message=FALSE, warning=FALSE}
+# rm(list=ls());cat("\014");if(length(dev.list())>0){dev.off()} # clean workspace
+library(CARNIVAL) # load CARNIVAL library
 
-rm(list=ls());cat("\014") # clean screen and variables 
-if(length(dev.list())>0){dev.off()} # clean figure
-
-# # Install CNORprob from Github (or load library for development version)
-# require(devtools)
-# install_github('saezlab/CARNIVAL')
-# # --- OR --- #
-library(devtools)
-# devtools::install()
-load_all()
-
-# !!! IMPORTANT !!! #
-# Please set the path for executable cplex file
-CplexPath <- "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx"
-
-# Choose from our CARNIVAL examples (Ex1 = Toy model; Ex2 = SBVimprover-EGF; Ex3 = TG-GATEs-APAP)
-CARNIVAL_example <- 2 # c(1,2,3); if not, set to 'NULL'
-
-# Or assign your input files here
-netFile <-  "your_network_file.sif" # required
-measFile <- "your_measurement_file.txt" # required
-inputFile <- "your_input_target_file.txt" # optional; if not, set to 'NULL'
-weightFile <-  "your_node_weight_file.txt" # optional; if not, set to 'NULL'
-
-# Choose CARNIVAL settings
-Result_dir <- NULL # specify a name for result directory; if NULL, then date and time will be used by default
-Sys.setenv(TZ="Europe/Berlin") # optional; set time zone to as default results' foldername
-parallelCR <- F # running parallelised version?
-inverseCR <- F # running inverse causal reasoning version?
-nodeID <- "uniprot" # specify whether the nodes are in 'uniprot' or 'gene' ID format
-
-# Plotting-related setting (doesn't affect the optimisation process)
-UP2GS <- T # convert UniProtIDs to Gene Symbols in the plotting step?
-DOTfig <- T #  write DOT figure? (can be visualised by e.g. GraphViz)
-Export_all <- F #  export all ILP variables or not; if F, only predicted node values and sif file will be written
-
-# Set CPLEX stopping criteria
-mipGAP        <- 0.05 # in proportion to the best estimated integer solution
-poolrelGAP    <- 0.0001 # in relative to the pool of best solution
-limitPop      <- 500 # limit the number of populated solutions after identified best solution
-poolCap       <- 100 # limit the pool size to store populated solution
-poolIntensity <- 4 # (for populating) select search intensity [0 default/ 1 to 4]
-poolReplace   <- 2 # select replacement strategy of the pool solution [0 default/ 1 to 2]
-alphaWeight   <- 1 # constant coefficient for fitting error in the objective function in case TF activities are not assigned [default 1]
-betaWeight    <- 0.2 # relative coefficient of model size to fitting error in the objective function [default 0.2]
-timelimit     <- 180 # set time limit for cplex optimisation (in seconds)
-
-# ================================================= #
-# ===== Press Run to perform the optimisation ===== #
-# ================================================= #
-
-# Load necessary packages and functions
-library(readr)
-library(tidyr)
-library(igraph)
-load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
-
-# Assign parallelisation parameters
-if (parallelCR) {
-  library(doParallel)
-  argsJob=commandArgs(trailingOnly = TRUE)
-  repIndex <- as.numeric(argsJob[1])
-  condition <- as.character(argsJob[2]) #Can additionally be used to loop over conditions of interest
-} else {
-  repIndex=1;condition=1
-}
-
-# Create a directory to store results
-current_dir <- getwd()
-# dir.create("results",showWarnings = FALSE)
-# setwd(paste0(current_dir,"/results"))
-if (is.null(Result_dir)) {
-  dir_name <- paste("results_",Sys.time(),sep="")
-} else {
-  dir_name <- Result_dir
-}
-dir.create(dir_name); setwd(current_dir)
-
-# Load CARNIVAL example files (if defined)
-if (!is.null(CARNIVAL_example)) {
-  loaded_CARNIVAL <- load_CARNIVAL_examples(CARNIVAL_example)
-  netFile <- loaded_CARNIVAL$netFile
-  measFile <- loaded_CARNIVAL$measFile
-  inputFile <- loaded_CARNIVAL$inputFile
-  weightFile <- loaded_CARNIVAL$weightFile
-}
-
-# Input processing
-network <- read.table(file = netFile, sep = "\t", header = TRUE)
-measWeights <- as.matrix(read_delim(file = measFile, delim = "\t", escape_double = FALSE, trim_ws = TRUE))
-measurements <- sign(measWeights) # Extracted sign of measurement for ILP fitting
-measWeights <- abs(measWeights) # Weights are all positives
-if (!is.null(inputFile)) {
-  inputs <- read.table(file = inputFile, sep = "\t", header = TRUE)
-}
-if (!is.null(weightFile)) {
-  edgeWeights <- read_delim(file = weightFile, delim = "\t", escape_double = FALSE, trim_ws = TRUE)
-  scores <- assignPROGENyScores(progeny = edgeWeights, progenyMembers = progenyMembers, id = nodeID)
-} else {
-  scores <- NULL
-}
-
-# Adding perturbation node for the case of inverse causal reasoning
-if (inverseCR) {
-  MappedPertNode <- AddPerturbationNode(network)
-  inputs <- MappedPertNode$inputs
-  network <- MappedPertNode$network
-}
-
-data <- measurements
-pknList <- as.data.frame(network)
-colnames(pknList) <- c("Node1", "Sign", "Node2")
-# setwd(paste0(current_dir,"/R/")) # temporary shift to src directory
-
-# Remove intermediate cplex files (if any)
-AllFiles <- list.files()
-CloneFiles <- which(grepl(pattern = "clone",x = AllFiles,fixed = T))
-if (length(CloneFiles)>0) {
-  for (counter in 1:length(CloneFiles)) {
-    file.remove(AllFiles[CloneFiles[counter]])
-  }
-}
-
-# Remove redundant files prior to optimisation
-if (file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))) {file.remove(paste0("testFile_",condition,"_",repIndex,".lp"))} # might be useful for debugging
-if (file.exists(paste0("results_cplex_",condition, "_",repIndex,".txt"))) {file.remove(paste0("results_cplex_",condition,"_",repIndex,".txt"))}
-if (file.exists("cplex.log")) {file.remove("cplex.log")}
-if (file.exists(paste0("cplexCommand_", condition,"_",repIndex,".txt"))) {file.remove(paste0("cplexCommand_", condition,"_",repIndex,".txt"))}
-
-# Write constraints as ILP inputs
-ptm <- proc.time()
-print("Writing constraints...")
-variables <- writeLPFile(data=measurements,pknList=pknList,inputs=inputs,betaWeight=betaWeight,
-                         scores=scores,mipGAP=mipGAP,poolrelGAP=poolrelGAP,limitPop=limitPop,
-                         poolCap=poolCap,poolIntensity=poolIntensity,poolReplace=poolReplace,
-                         timelimit=timelimit,measWeights=measWeights,
-                         repIndex=repIndex,condition = condition)
-Elapsed_1 <- proc.time() - ptm
-
-# Solve ILP problem with cplex, remove temp files, and return to the main directory
-ptm <- proc.time()
-print("Solving LP problem...")
-# system(paste0(getwd(), "/cplex -f cplexCommand_", condition,"_",repIndex,".txt"))
-system(paste0(CplexPath, "/cplex -f cplexCommand_", condition,"_",repIndex,".txt"))
-Elapsed_2 <- proc.time() - ptm
-
-# Move result files to result folder and remove redundant files after the optimisation
-if (file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))) {file.remove(paste0("testFile_",condition,"_",repIndex,".lp"))} # might be useful for debugging
-
-# if (file.exists(paste0("results_cplex_",condition, "_",repIndex,".txt"))) {file.copy(from = paste0("results_cplex_",condition,"_",repIndex,".txt"),to = paste(current_dir,"/results/",dir_name,"/results_cplex.txt",sep="")); file.remove(paste0("results_cplex_",condition,"_",repIndex,".txt"))}
-
-if (file.exists(paste0("results_cplex_",condition, "_",repIndex,".txt"))) {file.copy(from = paste0("results_cplex_",condition,"_",repIndex,".txt"),to = paste0(current_dir,"/",dir_name,"/results_cplex_",condition,"_",repIndex,".txt")); file.remove(paste0("results_cplex_",condition,"_",repIndex,".txt"))}
-
-# if (file.exists("cplex.log")) {file.copy(from = "cplex.log",to = paste0(current_dir,"/results/",dir_name,"/cplex_",condition,"_",repIndex,".log")); file.remove("cplex.log")}
-
-if (file.exists("cplex.log")) {file.copy(from = "cplex.log",to = paste0(current_dir,"/",dir_name,"/cplex_",condition,"_",repIndex,".log")); file.remove("cplex.log")}
-
-
-if (file.exists(paste0("cplexCommand_", condition,"_",repIndex,".txt"))) {file.remove(paste0("cplexCommand_", condition,"_",repIndex,".txt"))}
-AllFiles <- list.files()
-CloneFiles <- which(grepl(pattern = "clone",x = AllFiles,fixed = T))
-if (length(CloneFiles)>0) {
-  for (counter in 1:length(CloneFiles)) {
-    file.remove(AllFiles[CloneFiles[counter]])
-  }
-}
-# setwd(current_dir)
-
-# Write result files in the results folder
-ptm <- proc.time()
-print("Writing result files...")
-# if (file.exists(paste0("results/",dir_name,"/results_cplex.txt"))) {
-if (file.exists(paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"))) {
-  for(i in 1:length(variables)){
-    res <- exportResult(cplexSolutionFileName =  # paste0("results/",dir_name,"/results_cplex.txt"),
-paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"),
-                        variables = variables, pknList = pknList, conditionIDX = i,
-                        dir_name = dir_name, inputs=inputs,measurements=measurements,
-                        Export_all = Export_all,writeIndividualResults = T)
-    # res <- files2res(counterlist) # retrieve results from previously generated result files
-  }
-  if (!is.null(res)) {
-    if (UP2GS) {res <- Uniprot2GeneSymbol(res)}
-    if (DOTfig) {WriteDOTfig(res=res,dir_name=dir_name,
-                                   inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
-    # if (DOTfig) {WriteDOTfig(res=res,idxModel=c(1,2),dir_name=dir_name,
-    #                             inputs=inputs,measurements=measurements,UP2GS=UP2GS)}
-    # save(res,file = paste0("results/",dir_name,"/results_CARNIVAL.Rdata"))
-    save(res,file = paste0(dir_name,"/results_CARNIVAL.Rdata"))
-  }
-} else {
-  print("No result to be written")
-}
-Elapsed_3 <- proc.time() - ptm
-
-# file.remove(paste0("results/",dir_name,"/results_cplex.txt")) # optional; remove cplex results (to save space)
-file.remove(paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt")) # optional; remove cplex results (to save space)
-
-# Logged computational time
-ElapsedAll <- as.data.frame(matrix(t(c(Elapsed_1[3],Elapsed_2[3],Elapsed_3[3])),3,1))
-rownames(ElapsedAll) <- c("WriteConstraints:","CplexSolving:","ExportResults:")
-# write.table(x = ElapsedAll,file = paste0("results/",dir_name,"/elapsed_time.txt"),col.names = F,row.names = T,quote = F)
-write.table(x = ElapsedAll,file = paste0(dir_name,"/elapsed_time.txt"),col.names = F,row.names = T,quote = F)
-
-# --- End of script --- #
-
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
+            netFile=NULL,measFile=NULL,
+            inputFile=NULL,weightFile=NULL,
+            Result_dir="Results_CARNIVAL_Ex1",
+            CARNIVAL_example=1,
+            UP2GS=F)
 ```
 
+## Running CARNIVAL with user-defined inputs
+- To run CARNIVAL with user-defined inputs, users have to prepare at least 1) user-defined prior knowledge network (netFile) and 2) user-defined measurement (measFile - here refers to TF normalised enrichment scores) while additional information i.e. target of perturbation  and additional weight e.g. pathway weights from PROGENy can additionally be provided as the variable inputFile and weightFile, respectively. 
+
+- To give an example, we'll manually plug in the input files from CARNIVAL's built-in example number 2 (SBVimprover-EGF). The input files could be directly retrieve from the CARNIVAL package. Once the input files are copied into the working directory, the input variables have to be assigned according to the filename. Also, the variable CARNIVAL_example has to be set to NULL in this case to execute the pipeline.
+
+```{r, message=FALSE, warning=FALSE}
+# rm(list=ls());cat("\014");if(length(dev.list())>0){dev.off()} # clean workspace
+library(CARNIVAL) # load CARNIVAL library
+
+file.copy(from=system.file("Ex2_network_SBV_Omnipath.sif",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+file.copy(from=system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+file.copy(from=system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+file.copy(from=system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
+
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
+            netFile="Ex2_network_SBV_Omnipath.sif",
+            measFile="Ex2_measurements_SBV_EGF.txt",
+            inputFile="Ex2_inputs_SBV_EGF.txt",
+            weightFile="Ex2_weights_SBV_EGF.txt",
+            Result_dir="Results_CARNIVAL_Ex2",
+            CARNIVAL_example=NULL
+            )
+```
+
+- After the optimisation, the results are saved in the result folder on the working directory for further analyses.
+
+## Additional settings on the runCARNIVAL function
+
+Note that the pipeline as presented is the Standard CARNIVAL pipeline with known perturbation targets (listed in the variable inputFile). Additional CARNIVAL settings can be directly assigned onto the runCARNIVAL function e.g.
+
+- To run the Inverse CARNIVAL pipeline: set the inverseCR variable to TRUE (inverseCR=T)
+- To the optimisation time in CPLEX: set the timelimit variable to a desired value (e.g. timelimit=600 [in seconds])
+- To export and write all CPLEX variables into files: set the Export_all variable to TRUE (Export_all=T; recommended for debugging)
+- In addition, additional CPLEX parameters and alpha and beta weights in the objective function can also be manually assigned. More details can be obtained in the help section: ?runCARNIVAL
 
