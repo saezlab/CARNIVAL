@@ -14,11 +14,11 @@ permalink:        pretty
 # Setup
 
 title:            CARNIVAL
-tagline:          Regulated Pathways for GEX
-description:      "Method to model drug specific regulated signalling pathways from inferred Transcription Factor activities"
+tagline:          Regulatory signalling pathways inference from gene expression data
+description:      "A workflow to infer regulatory signalling networks from gene expression data with ILP formulation"
 #url:              https://github.com/saezlab/CARNIVAL
 baseurl:          /CARNIVAL/
-toollogo:         /CARNIVAL/public/logo.jpg
+toollogo:         /CARNIVAL/public/logo.png
 
 author:
   name:           'Enio Gjerga'
