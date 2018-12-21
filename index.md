@@ -10,9 +10,15 @@ title: Home
 
 CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
 
-This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. 
+This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. 
 
-The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version: Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools DoRothEA & PROGENy, respectively. TFs’ activities and signed directed protein-protein interaction networks with or without the provided target of perturbations and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. An ILP solver (IBM ILOG CPLEX) is subsequently applied to identify the sub-network topology with minimised fitting error and model size.
+The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes: 
+
+1) Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools DoRothEA & PROGENy, respectively. 
+
+2) TFs’ activities and signed directed protein-protein interaction networks with or without the provided target of perturbations and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. 
+
+3) An ILP solver (IBM ILOG CPLEX) is subsequently applied to identify the sub-network topology with minimised fitting error and model size.
 
 Applications of CARNIVAL include the identification of drug’s modes of action and of deregulated processes in diseases (even if the molecular targets remain unknown) by deciphering the alterations of main signalling pathways as well as alternative pathways and off-target effects.
 
