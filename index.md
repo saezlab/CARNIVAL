@@ -35,7 +35,7 @@ The input for CARNIVAL consists of:
  
  * A list of target of perturbations (drugs, diseases, etc.) with or without their effects on signalling proteins. (Optional) 
  
- * Inferred pathway scores representing signalling pathway activities from GEX data using[PROGENy](https://github.com/saezlab/progeny)  (Optional)
+ * Inferred pathway scores representing signalling pathway activities from GEX data using [PROGENy](https://github.com/saezlab/progeny) (Optional)
 
 The outcome of CARNIVAL includes the list of identified networks that fitted to the provided experimental data as well as the predicted activities of signalling proteins in the networks whether they are up- or down-regulated.
 
