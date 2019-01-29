@@ -98,7 +98,7 @@ Next, users can select the examples by assigning the example number to the "CARN
 ```R
 library(CARNIVAL) # load CARNIVAL library
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
             netFile=NULL,measFile=NULL,
             inputFile=NULL,weightFile=NULL,
             Result_dir="Results_CARNIVAL_Ex1",
@@ -117,7 +117,7 @@ file.copy(from=system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL"),to
 file.copy(from=system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve target of perturbation file
 file.copy(from=system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve additional/pathway weight file
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
+runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
             netFile="Ex2_network_SBV_Omnipath.sif",
             measFile="Ex2_measurements_SBV_EGF.txt",
             inputFile="Ex2_inputs_SBV_EGF.txt",
