@@ -126,7 +126,20 @@ runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64
             CARNIVAL_example=NULL)
 ```
 
-The results from the optimisation i.e. the optimised network description and figures will be saved in the result folder. In case multiple solutions were found, individual model structures and nodes activities will be written to the file "interactions_(i)_model(j).tsv" and "nodesActivity_(i)_model(j).txt", respectively, where (i) refers to the experimental condition and (j) refers to the numbering of solutions. The aggregation of the results from multiple solutions (as well as from a single solution) are exported as into the file "weightedModel_(i).txt" and "nodeAttributes_(i).txt" for network structure and nodes' attributes, respectively. The exported DOT figure combines the results from multiple (and single) solutions can be open with e.g. GraphViz[https://graphviz.gitlab.io/download/] and the results are also stored as an RData file for further analyses together with a log file. 
+### Additional settings on 'runCARNIVAL'
+
+Note that the pipeline as presented is the Standard CARNIVAL pipeline with known perturbation targets (as listed in the variable inputFile). Additional CARNIVAL settings can be directly assigned onto the runCARNIVAL function e.g.
+
+- To run the Inverse CARNIVAL pipeline: set the 'inverseCR' variable to TRUE (inverseCR=T)
+- To the optimisation time in CPLEX: set the 'timelimit' variable to a desired value (e.g. timelimit=600 [in seconds])
+- To export and write all CPLEX variables into files: set the 'Export_all' variable to TRUE (Export_all=T; recommended for debugging)
+- In addition, additional CPLEX parameters and alpha and beta weights in the objective function can also be manually assigned. More details can be obtained in the help section: ?runCARNIVAL
+
+### Exported CARNIVAL results
+
+The results from the optimisation i.e. the optimised network description and figures will be saved in the result folder. In case multiple solutions were found, individual model structures and nodes activities will be written to the file "interactions_(i)_ model(j).tsv" and "nodesActivity_(i)_ model(j).txt", respectively, where (i) refers to the experimental condition and (j) refers to the numbering of solutions.
+
+The aggregation of the results from multiple solutions (as well as from a single solution) are exported as into the file "weightedModel_(i).txt" and "nodeAttributes_(i).txt" for network structure and nodes' attributes, respectively. The exported DOT figure combines the results from multiple (and single) solutions can be open with e.g. GraphViz[https://graphviz.gitlab.io/download/] and the results are also stored as an RData file for further analyses together with a log file. 
 
 ## Authors
 
