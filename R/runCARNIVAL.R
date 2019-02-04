@@ -206,7 +206,6 @@ runCARNIVAL <- function(CplexPath=NULL,
   # Write result files in the results folder
   ptm <- proc.time()
   print("Writing result files...")
-  resList <- list()
   # if (file.exists(paste0("results/",dir_name,"/results_cplex.txt"))) {
   if (file.exists(paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"))) {
     for(i in 1:length(variables)){
@@ -214,8 +213,6 @@ runCARNIVAL <- function(CplexPath=NULL,
                           variables = variables, pknList = pknList, conditionIDX = i,
                           dir_name = dir_name, inputs=inputs,measurements=measurements,
                           Export_all = Export_all,writeIndividualResults = T)
-      
-      resList[[length(resList+1)]] <- res
       # res <- files2res(counterlist) # retrieve results from previously generated result files
     }
     if (!is.null(res)) {
@@ -241,7 +238,5 @@ runCARNIVAL <- function(CplexPath=NULL,
   print(" ")
   print("--- End of the CARNIVAL pipeline ---")
   print(" ")
-  
-  return(resList)
 
 }
