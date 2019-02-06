@@ -14,11 +14,10 @@ vignette: >
 
 ## Pre-requisite
 
-- CARNIVAL requires IBM ILOG CPLEX to be pre-installed
-- The path to the interactive version of CPLEX needs to be specified in runCARNIVAL script
-- For Mac OS: the path is usually "~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex" where the version of CPLEX (CPLEX_Studio1271) has to be changed accordingly
-- For Windows: --- to be tested ---
+To run the CARNIVAL pipeline, users fist have to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
+- For Mac OS: "~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex" where the version of CPLEX has to be changed accordingly (the latest version is "CPLEX_Studio1281")
 - For Linux: --- to be tested ---
+- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio128/cplex/bin/x64_win64/cplex.exe"
 
 ## Running CARNIVAL
 
@@ -37,15 +36,13 @@ vignette: >
 
 ## Running CARNIVAL built-in example
 
-- To run a CARNIVAL built-in example e.g. the Toy-Model (Example 1), users just need to provide a path to interactive CPLEX on CplexPath, set netFile and measFile variables (+/- inputFile/weightFile) to NULL and select the corresponding number of CARNIVAL example. Note that the name of the result folder for CARNIVAL can also be specified on the variable "Result_dir".
+- To run a CARNIVAL built-in example e.g. the Toy-Model (Example 1), users just need to provide a path to interactive CPLEX on CplexPath, set netFile and select the corresponding number of CARNIVAL example. Note that the name of the result folder for CARNIVAL can also be specified on the variable "Result_dir". The variable 'UP2GS' is for the conversion of UniprotID to gene symbols upon plotting and is not applicable to the Toy-Model.
 
 ```{r, message=FALSE, warning=FALSE}
 # rm(list=ls());cat("\014");if(length(dev.list())>0){dev.off()} # clean workspace
 library(CARNIVAL) # load CARNIVAL library
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
-            netFile=NULL,measFile=NULL,
-            inputFile=NULL,weightFile=NULL,
+CARNIVAL_Results <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
             Result_dir="Results_CARNIVAL_Ex1",
             CARNIVAL_example=1,
             UP2GS=F)
@@ -65,16 +62,17 @@ file.copy(from=system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL"),to
 file.copy(from=system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
 file.copy(from=system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE)
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1271/cplex/bin/x86-64_osx/cplex",
+CARNIVAL_Results <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
             netFile="Ex2_network_SBV_Omnipath.sif",
             measFile="Ex2_measurements_SBV_EGF.txt",
             inputFile="Ex2_inputs_SBV_EGF.txt",
             weightFile="Ex2_weights_SBV_EGF.txt",
             Result_dir="Results_CARNIVAL_Ex2",
-            CARNIVAL_example=NULL)
+            CARNIVAL_example=NULL
+            )
 ```
 
-- After the optimisation, the results are saved in the result folder on the working directory for further analyses.
+- After the optimisation, the results can be stored as a variable and are also saved in the result folder on the working directory for further analyses.
 
 ## Additional settings on the runCARNIVAL function
 
