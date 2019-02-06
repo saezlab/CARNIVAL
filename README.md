@@ -5,6 +5,11 @@ Transcription factors’ (TFs) activities and pathway scores from gene expressio
 TFs’ activities and signed directed protein-protein interaction networks +/- drug targets and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. 
 An ILP solver (CPLEX) is subsequently applied to identify the sub-network topology with minimised discrepancies on fitting error and model size.
 
+More detailed descriptions of CARNIVAL, benchmarking and applicational studies can be found in [Liu, Trairatphisan, Gjerga et al.](https://www.biorxiv.org/content/10.1101/541888v1):
+
+> Liu A*, Trairatphisan P*, Gjerga E*, Didangelos A, Barratt J, Saez-Rodriguez J. (2019). From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL. *bioRxiv*, https://doi.org/10.1101/541888 (*equal contributions).
+
+
 ## Getting Started
 
 A tutorial for preparing CARNIVAL input files starting from differentially gene expression (DEG) and for running the CARNIVAL pipeline are provided as vignettes in R-Markdown, R-script and HTML formats. The wrapper script "runCARNIVAL" was introduced to take input arguments, pre-process input descriptions, run optimisation and export results as network files and figures. Three built-in CARNIVAL examples are also supplied as case studies for users.
@@ -91,16 +96,14 @@ The results from DEG-preprocessing pipeline are saved in the directory "measurem
 To run the CARNIVAL pipeline, users fist have to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
 - For Mac OS: "~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex" where the version of CPLEX has to be changed accordingly (the latest version is "CPLEX_Studio1281")
 - For Linux: --- to be tested ---
-- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio128/cplex/bin/x64_win64/cplex.exe" - Note: the current CARNIVAL implementation still doesn't support the running of system command in Windows (https://stat.ethz.ch/R-manual/R-devel/library/base/html/system.html)
+- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio128/cplex/bin/x64_win64/cplex.exe"
 
 Next, users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use user-defined own model inputs. To run the built-in CARNIVAL examples, users could run the following code:
 
 ```R
 library(CARNIVAL) # load CARNIVAL library
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
-            netFile=NULL,measFile=NULL,
-            inputFile=NULL,weightFile=NULL,
+CARNIVAL_Result <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
             Result_dir="Results_CARNIVAL_Ex1",
             CARNIVAL_example=1,
             UP2GS=F)
@@ -117,7 +120,7 @@ file.copy(from=system.file("Ex2_measurements_SBV_EGF.txt",package="CARNIVAL"),to
 file.copy(from=system.file("Ex2_inputs_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve target of perturbation file
 file.copy(from=system.file("Ex2_weights_SBV_EGF.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve additional/pathway weight file
 
-runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
+CARNIVAL_Result <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
             netFile="Ex2_network_SBV_Omnipath.sif",
             measFile="Ex2_measurements_SBV_EGF.txt",
             inputFile="Ex2_inputs_SBV_EGF.txt",
@@ -137,7 +140,7 @@ Note that the pipeline as presented is the Standard CARNIVAL pipeline with known
 
 ### Exported CARNIVAL results
 
-The results from the optimisation i.e. the optimised network description and figures will be saved in the result folder. In case multiple solutions were found, individual model structures and nodes activities will be written to the file "interactions_(i)_ model(j).tsv" and "nodesActivity_(i)_ model(j).txt", respectively, where (i) refers to the experimental condition and (j) refers to the numbering of solutions.
+The results from the runCARNIVAL function i.e. the optimised network descriptions can be saved as a variable as they together with figures will be saved in the result folder. In case multiple solutions were found, individual model structures and nodes activities will be written to the file "interactions_(i)_ model(j).tsv" and "nodesActivity_(i)_ model(j).txt", respectively, where (i) refers to the experimental condition and (j) refers to the numbering of solutions.
 
 The aggregation of the results from multiple solutions (as well as from a single solution) are exported as into the file "weightedModel_(i).txt" and "nodeAttributes_(i).txt" for network structure and nodes' attributes, respectively. The exported DOT figure combines the results from multiple (and single) solutions can be open with e.g. [GraphViz](https://graphviz.gitlab.io/download) (an executable package on Mac OS is also available [here](https://download.cnet.com/Graphviz/3000-2054_4-50791.html)) and the results are also stored as an RData file for further analyses together with a log file. 
 
