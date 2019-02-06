@@ -182,9 +182,15 @@ runCARNIVAL <- function(CplexPath=NULL,
   # Solve ILP problem with cplex, remove temp files, and return to the main directory
   ptm <- proc.time()
   print("Solving LP problem...")
-  # system(paste0(getwd(), "/cplex -f cplexCommand_", condition,"_",repIndex,".txt"))
-  system(paste0(CplexPath, " -f cplexCommand_", condition,"_",repIndex,".txt"))
-  Elapsed_2 <- proc.time() - ptm
+  
+  if (SysInfo[1]=="Windows") {
+    file.copy(from = CplexPath,to = getwd())
+    system(paste0("cplex.exe -f cplexCommand_", condition,"_",repIndex,".txt"))
+    file.remove("cplex.exe")
+  } else {
+    system(paste0(CplexPath, " -f cplexCommand_", condition,"_",repIndex,".txt"))
+    Elapsed_2 <- proc.time() - ptm
+  }
 
   # Move result files to result folder and remove redundant files after the optimisation
   if (file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))) {file.remove(paste0("testFile_",condition,"_",repIndex,".lp"))} # might be useful for debugging
