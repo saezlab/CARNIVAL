@@ -58,7 +58,7 @@ runCARNIVAL(CplexPath = NULL, netFile = NULL, measFile = NULL,
 \item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
 }
 \value{
-The networks and predicted node activities from the CARNIVAL pipeline in the destined result folder
+The networks and predicted node activities from the CARNIVAL pipeline as a variable which are also saved in the destined result folder
 }
 \description{
 Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL built-in examples
