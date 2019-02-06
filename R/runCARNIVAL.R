@@ -26,7 +26,7 @@
 #'@param alphaWeight Objective function: weight for mismatch penalty (default: 1 - will only be applied once measurement file only contains discrete values)
 #'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
 #'
-#'@return The networks and predicted node activities from the CARNIVAL pipeline in the destined result folder
+#'@return The networks and predicted node activities from the CARNIVAL pipeline as a variable which are also saved in the destined result folder
 #'
 #'@import doParallel
 #'@import igraph
@@ -182,9 +182,16 @@ runCARNIVAL <- function(CplexPath=NULL,
   # Solve ILP problem with cplex, remove temp files, and return to the main directory
   ptm <- proc.time()
   print("Solving LP problem...")
-  # system(paste0(getwd(), "/cplex -f cplexCommand_", condition,"_",repIndex,".txt"))
-  system(paste0(CplexPath, " -f cplexCommand_", condition,"_",repIndex,".txt"))
-  Elapsed_2 <- proc.time() - ptm
+  
+  if (Sys.info()[1]=="Windows") {
+    file.copy(from = CplexPath,to = getwd())
+    system(paste0("cplex.exe -f cplexCommand_", condition,"_",repIndex,".txt"))
+    file.remove("cplex.exe")
+    Elapsed_2 <- proc.time() - ptm
+  } else {
+    system(paste0(CplexPath, " -f cplexCommand_", condition,"_",repIndex,".txt"))
+    Elapsed_2 <- proc.time() - ptm
+  }
 
   # Move result files to result folder and remove redundant files after the optimisation
   if (file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))) {file.remove(paste0("testFile_",condition,"_",repIndex,".lp"))} # might be useful for debugging
@@ -206,6 +213,7 @@ runCARNIVAL <- function(CplexPath=NULL,
   # Write result files in the results folder
   ptm <- proc.time()
   print("Writing result files...")
+  resList <- list()
   # if (file.exists(paste0("results/",dir_name,"/results_cplex.txt"))) {
   if (file.exists(paste0(dir_name,"/results_cplex_",condition,"_",repIndex,".txt"))) {
     for(i in 1:length(variables)){
@@ -213,6 +221,7 @@ runCARNIVAL <- function(CplexPath=NULL,
                           variables = variables, pknList = pknList, conditionIDX = i,
                           dir_name = dir_name, inputs=inputs,measurements=measurements,
                           Export_all = Export_all,writeIndividualResults = T)
+      resList[[length(resList)+1]] <- res
       # res <- files2res(counterlist) # retrieve results from previously generated result files
     }
     if (!is.null(res)) {
@@ -234,9 +243,14 @@ runCARNIVAL <- function(CplexPath=NULL,
   ElapsedAll <- as.data.frame(matrix(t(c(Elapsed_1[3],Elapsed_2[3],Elapsed_3[3])),3,1))
   rownames(ElapsedAll) <- c("WriteConstraints:","CplexSolving:","ExportResults:")
   write.table(x = ElapsedAll,file = paste0(dir_name,"/elapsed_time.txt"),col.names = F,row.names = T,quote = F)
-
+  
+  # Remove global variable 
+  objs <- ls(pos = ".GlobalEnv")
+  rm(list = objs[grep("pknList", objs)], pos = ".GlobalEnv") # remove pknList
+  
   print(" ")
   print("--- End of the CARNIVAL pipeline ---")
   print(" ")
 
+  return(resList)
 }
