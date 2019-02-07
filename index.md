@@ -10,9 +10,9 @@ title: Home
 
 CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
 
-This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on BioRxiv:
+This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on BioRxiv.
 
-> Liu A.* Trairatphisan P.* Gjerga E.* et al. [From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL] (https://www.biorxiv.org/content/10.1101/541888v1) _BioRxiv, 2019, doi: 10.1101/541888 (*equal contributions)_.
+> Liu A., Trairatphisan P., Gjerga E. et al. [From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL] (https://www.biorxiv.org/content/10.1101/541888v1) _BioRxiv, 2019, doi: 10.1101/541888 (equal contributions)_.
 
 The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes: 
 
