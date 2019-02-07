@@ -10,7 +10,9 @@ title: Home
 
 CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
 
-This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. 
+This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on BioRxiv:
+
+> Liu A.* Trairatphisan P.* Gjerga E.* et al. [From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL] (https://www.biorxiv.org/content/10.1101/541888v1) _BioRxiv, 2019, doi: 10.1101/541888 (*equal contributions)_.
 
 The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes: 
 
@@ -43,6 +45,6 @@ The outcome of CARNIVAL includes the list of identified networks that fitted to 
 
 > Melas I.N. et al. [Identification of drug-specific pathways based on gene expression data: application to drug induced lung injury](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) _Integrative Biology, 2015, 7, 904_.
 
-> Garcia-Alonso L. et al. [Transcription Factor Activities Enhance Markers of Drug Sensitivity in Cancer.](http://cancerres.aacrjournals.org/content/78/3/769.full) _Cancer Res. 2018 Feb 1;78(3):769-780. doi: 10.1158/0008-5472.CAN-17-1679. Epub 2017 Dec 11._
+> Garcia-Alonso L. et al. [Transcription Factor Activities Enhance Markers of Drug Sensitivity in Cancer.](http://cancerres.aacrjournals.org/content/78/3/769.full) _Cancer Res. 2018 Feb 1;78(3):769-780. doi: 10.1158/0008-5472.CAN-17-1679. Epub 2017 Dec 11_.
 
-> Schubert M. et al. [Perturbation-response genes reveal signaling footprints in cancer gene expression](https://www.nature.com/articles/s41467-017-02391-6) _Nature Communicationsvolume 9, Article number: 20 (2018) doi:10.1038/s41467-017-02391-6_
+> Schubert M. et al. [Perturbation-response genes reveal signaling footprints in cancer gene expression](https://www.nature.com/articles/s41467-017-02391-6) _Nature Communicationsvolume 9, Article number: 20 (2018) doi: 10.1038/s41467-017-02391-6_.
