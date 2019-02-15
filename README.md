@@ -23,7 +23,7 @@ CARNIVAL requires the interactive version of IBM Cplex solver as the network opt
 CARNIVAL is currently available for the installation as an R-package from our GitHub page
 
 ```R
-# Install CARNIVAL from Github using devtools (now only available with GitHub credential for private repository)
+# Install CARNIVAL from Github using devtools
 # install.packages('devtools') # in case devtools hasn't been installed
 library(devtools)
 install_github('saezlab/CARNIVAL')
@@ -144,7 +144,7 @@ The results from the runCARNIVAL function i.e. the optimised network description
 
 The aggregation of the results from multiple solutions (as well as from a single solution) are exported as into the file "weightedModel_(i).txt" and "nodeAttributes_(i).txt" for network structure and nodes' attributes, respectively. The exported DOT figure combines the results from multiple (and single) solutions can be open with e.g. [GraphViz](https://graphviz.gitlab.io/download) (an executable package on Mac OS is also available [here](https://download.cnet.com/Graphviz/3000-2054_4-50791.html)) and the results are also stored as an RData file for further analyses together with a log file. 
 
-Additonal details on CARNIVAL results and troubleshooting sections can be found on the Wiki page (coming soon).
+Additonal details on CARNIVAL results and troubleshooting sections can be found on the [Wiki page](https://github.com/saezlab/CARNIVAL/wiki).
 
 ## Authors
 
