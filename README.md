@@ -129,11 +129,31 @@ CARNIVAL_Result <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio12
             CARNIVAL_example=NULL)
 ```
 
+In case the target(s) of perturbation is unknown (e.g. in the case of multi-factorial diseases or broad-spectrum drugs), users can choose the Inverse CARNIVAL pipeline to exclusively build a sub-network without input's target(s) information (i.e. inputFile = NULL, inverseCR=T). Note that the pathway scores from PROGENy is highly recommended to be included once running the Inverse CARNIVAL pipeline.
+Here we present Example 3 as a case study for the Inverse CARNIVAL pipeline (to investigate downstream toxicity effects of paracetamol/APAP on cellular processes). An example of R-code is provided below:
+
+
+```R
+library(CARNIVAL) # load CARNIVAL library
+
+file.copy(from=system.file("Ex3_network_APAP_TGG_Omnipath.sif",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve network file
+file.copy(from=system.file("Ex3_measurement_APAP_TGG_24hrHighDose.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve measurement file
+file.copy(from=system.file("Ex3_weights_APAP_TGG_24hrHighDose.txt",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve additional/pathway weight file
+
+CARNIVAL_Result <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
+            netFile="Ex3_network_APAP_TGG_Omnipath.sif",
+            measFile="Ex3_measurement_APAP_TGG_24hrHighDose.txt",
+            weightFile="Ex3_weights_APAP_TGG_24hrHighDose.txt",
+            Result_dir="Results_CARNIVAL_Ex3",
+            CARNIVAL_example=NULL,
+            inverseCR=T)
+```
+
+
 ### Additional settings on 'runCARNIVAL'
 
 Note that the pipeline as presented is the Standard CARNIVAL pipeline with known perturbation targets (as listed in the variable inputFile). Additional CARNIVAL settings can be directly assigned onto the runCARNIVAL function e.g.
 
-- To run the Inverse CARNIVAL pipeline: set the 'inverseCR' variable to TRUE (inverseCR=T)
 - To the optimisation time in CPLEX: set the 'timelimit' variable to a desired value (e.g. timelimit=600 [in seconds])
 - To export and write all CPLEX variables into files: set the 'Export_all' variable to TRUE (Export_all=T; recommended for debugging)
 - In addition, additional CPLEX parameters and alpha and beta weights in the objective function can also be manually assigned. More details can be obtained in the help section: ?runCARNIVAL
