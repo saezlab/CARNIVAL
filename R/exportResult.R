@@ -339,22 +339,40 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variable
 
         idx <- which(nodesAll[[j]][, 1]==currVar)
 
-        if(nodesAll[[j]][idx, 2]=="0"){
-
+        # if(nodesAll[[j]][idx, 2]=="0" | nodesAll[[j]][idx, 2]=="-0"){
+        # 
+        #   zeroCnt <- zeroCnt + 1
+        # 
+        # }
+        # 
+        # if(nodesAll[[j]][idx, 2]=="1"){
+        # 
+        #   upCnt <- upCnt + 1
+        # 
+        # }
+        # 
+        # if(nodesAll[[j]][idx, 2]=="-1"){
+        # 
+        #   downCnt <- downCnt + 1
+        # 
+        # }
+        
+        if(round(as.numeric(nodesAll[[j]][idx, 2]))==0){
+          
           zeroCnt <- zeroCnt + 1
-
+          
         }
-
-        if(nodesAll[[j]][idx, 2]=="1"){
-
+        
+        if(round(as.numeric(nodesAll[[j]][idx, 2]))==1){
+          
           upCnt <- upCnt + 1
-
+          
         }
-
-        if(nodesAll[[j]][idx, 2]=="-1"){
-
+        
+        if(round(as.numeric(nodesAll[[j]][idx, 2]))==-1){
+          
           downCnt <- downCnt + 1
-
+          
         }
 
       }
@@ -366,13 +384,13 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variable
 
       if(nodesAttributes[i, 1]%in%colnames(measurements)){
 
-        nodesAttributes[i, 6] <- "P"
+        nodesAttributes[i, 6] <- "T"
 
       } else {
 
         if(nodesAttributes[i, 1]%in%colnames(inputs)){
 
-          nodesAttributes[i, 6] <- "D"
+          nodesAttributes[i, 6] <- "S"
 
         } else {
 
@@ -384,7 +402,7 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variable
 
     }
 
-    colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesP")
+    colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", "DownAct", "AvgAct", "NodeType")
 
     # write.table(x = nodesAttributes, file = "nodesAttributes.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
     # fileConn3 <- file(paste0("results/",dir_name,"/nodesAttributes_", conditionIDX, ".txt"))
