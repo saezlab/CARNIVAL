@@ -357,19 +357,19 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, variable
         # 
         # }
         
-        if(round(as.numeric(nodesActAll[[j]][idx, 2]))==0){
+        if(round(as.numeric(nodesAll[[j]][idx, 2]))==0){
           
           zeroCnt <- zeroCnt + 1
           
         }
         
-        if(round(as.numeric(nodesActAll[[j]][idx, 2]))==1){
+        if(round(as.numeric(nodesAll[[j]][idx, 2]))==1){
           
           upCnt <- upCnt + 1
           
         }
         
-        if(round(as.numeric(nodesActAll[[j]][idx, 2]))==-1){
+        if(round(as.numeric(nodesAll[[j]][idx, 2]))==-1){
           
           downCnt <- downCnt + 1
           
