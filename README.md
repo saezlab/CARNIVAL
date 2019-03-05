@@ -166,6 +166,29 @@ The aggregation of the results from multiple solutions (as well as from a single
 
 Additonal details on CARNIVAL results and troubleshooting sections can be found on the [Wiki page](https://github.com/saezlab/CARNIVAL/wiki).
 
+### Enrichment analyses
+
+CARNIVAL offers a pipeline to run a quick enrichment (over-representatino) analysis using the curated gene set from MSigDB (C2) branch as presented in the article. The results from the CARNIVAL example 3 can be performed using the following code:
+
+```R
+library(CARNIVAL) # load CARNIVAL library
+
+file.copy(from=system.file("Ex3_network_APAP_TGG_Omnipath.sif",package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve network file
+
+# In case the network is in UniprotID format (e.g. from Omnipath), the node names need to be converted into gene symbol first for enrichment
+universe <- mapUniprotPKN(netFile = "Ex3_network_APAP_TGG_Omnipath.sif",organism = 'human')
+
+# Note: The mapped node names are also saved into the file nodes_PKN_uniprot_genesymbol.tsv. This file can be used as the 'universe' for over-representation analyses
+enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
+				universeFile = "nodes_PKN_uniprot_genesymbol.tsv",
+				datasource = 'kegg',
+				pathwayfilter = T,
+				pValSig = 0.05)
+
+```
+
+The enrichment results will be saved in the designated 'Result_dir' folder. All pathways with p-value < 0.5 will be included in a csv file and enrichment figures, both combined up- and down-regulated as well as the separated version will also be plotted.
+
 ## Authors
 
 Panuwat Trairatphisan (panuwat.trairatphisan -at- gmail.com)
