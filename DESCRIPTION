@@ -14,7 +14,7 @@ Imports:
     igraph,
     tidyverse,
     viper,
-    GSEAbase,
+    GSEABase,
     Category,
     dplyr,
     ggplot2,
