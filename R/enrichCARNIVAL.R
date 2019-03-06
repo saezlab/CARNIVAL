@@ -86,7 +86,7 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL,datasou
     pval<-data.frame('pval'=kOver@pvalues)
     pval$annot<-rownames(pval)
     res <- pval
-    write.csv2(res,paste0(Result_dir,"/CARNIVAL_enrichment_",Result_dir,"_",datasource,".csv"),row.names = F)
+    write.csv2(res,paste0(Result_dir,"/CARNIVAL_enrichment_",datasource,".csv"),row.names = F)
 
     if (pathwayfilter==T) {
     disease<-res[grepl('CANCER',res$annot)|grepl('LEUKEMIA',res$annot)|grepl('OMA',res$annot)|grepl('INFECTION', res$annot)|grepl('DIABETES', res$annot)|grepl('DISEASES', res$annot),]
@@ -114,7 +114,7 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL,datasou
             legend.position="none") +
       geom_hline(yintercept = -log10(pValSig), linetype='dotted')
     
-    ggsave(filename = paste0(Result_dir,"/CARNIVAL_enrichment_",Result_dir,"_PW_All_",datasource,".pdf"),plot = g_bar, width=10, height=10)
+    ggsave(filename = paste0(Result_dir,"/CARNIVAL_enrichment_PW_All_",datasource,".pdf"),plot = g_bar, width=10, height=10)
 
     
     # Separate directional
@@ -204,7 +204,7 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL,datasou
       guides(color=FALSE)+
       xlab("") +
       ylab(paste0("-log10(pval) : significant pval=",pValSig))
-    ggsave(g3, filename = paste0(Result_dir,"/CARNIVAL_enrichment_",Result_dir,"_PW_UpDn_",datasource,".pdf"), width=(max(nchar(as.character(poi$annot)))/10)+2, height=(length(unique(poi$annot))/10)+1)
+    ggsave(g3, filename = paste0(Result_dir,"/CARNIVAL_enrichment_PW_UpDn_",datasource,".pdf"), width=(max(nchar(as.character(poi$annot)))/10)+2, height=(length(unique(poi$annot))/10)+1)
     
     print("Enrichment analysis completed: Please check enrichment results in the result folder")
 }
