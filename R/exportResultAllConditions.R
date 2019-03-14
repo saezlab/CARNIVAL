@@ -57,32 +57,42 @@ exportResultAllConditions <- function(cplexSolutionFileName = cplexSolutionFileN
         ss <- strsplit(x = strsplit(x = variables$`Reaction Variables`$Explanation[which(variables$`Reaction Variables`$Variables==edgesVar[jj])], split = " ", fixed = TRUE)[[1]][2], split = "=", fixed = TRUE)[[1]][1]
         tt <- strsplit(x = strsplit(x = variables$`Reaction Variables`$Explanation[which(variables$`Reaction Variables`$Variables==edgesVar[jj])], split = " ", fixed = TRUE)[[1]][2], split = "=", fixed = TRUE)[[1]][2]
         for(kk in 1:(length(variables)-1)){
-          
+
           ssVar <- variables[[kk]]$variables[which(variables[[kk]]$exp==paste0("Species ", ss, " in experiment ", kk))]
           ttVar <- variables[[kk]]$variables[which(variables[[kk]]$exp==paste0("Species ", tt, " in experiment ", kk))]
-          
+
           if((solMatrix[which(rownames(solMatrix)==ssVar), ii]!=0) && solMatrix[which(rownames(solMatrix)==ttVar), ii]!=0){
-            
+
             cnt <- cnt + 1
-            
+
           }
-          
+
         }
-        
+
         if(cnt==(length(variables)-1)){
-          
+
           idx1 <- which(pknList$Node1==ss)
           idx2 <- which(pknList$Node2==tt)
           idx <- intersect(x = idx1, y = idx2)
-          
+
           sif <- unique(rbind(sif, t(as.matrix(c(ss, pknList$Sign[idx], tt)))))
-          
+
         }
+        # if(cnt>0){
+        #
+        #   idx1 <- which(pknList$Node1==ss)
+        #   idx2 <- which(pknList$Node2==tt)
+        #   idx <- intersect(x = idx1, y = idx2)
+        #
+        #   sif <- unique(rbind(sif, t(as.matrix(c(ss, pknList$Sign[idx], tt)))))
+        #
+        # }
+        
+        # sif <- unique(rbind(sif, t(as.matrix(c(ss, pknList$Sign[idx], tt)))))
         
       }
       
     }
-    
     
     sifAll[[length(sifAll)+1]] <- sif[-1, ]
     

@@ -28,13 +28,16 @@ writeLPFileMulti <- function(data = data, pknList = pknList, inputs = inputs, al
   dataMatrix$dataMatrix <- dataMatrix$dataMatrix[experimental_conditions, ]
   dataMatrix$dataMatrixSign <- dataMatrix$dataMatrixSign[experimental_conditions, ]
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
-  variables <- variables[experimental_conditions]
+  # variables <- variables[experimental_conditions]
   variables <- append_general_variables(variables = variables)
   # distVariables <- write_dist_variables(pknList = pknList)
   oF <- write_objective_function_all(dataMatrix = dataMatrix, variables = variables[1:(length(variables)-1)], alphaWeight = alphaWeight, betaWeight = betaWeight, scores=scores, measWeights=measWeights)
+  # oF <- append_objective_function(oF = oF, variables = variables, deltaWeight = 0.001)
   bounds <- write_boundaries_all_conditions(variables = variables, oF=oF)
+  bounds <- append_bounds(bounds = bounds, variables = variables)
   # bounds <- write_boundaries(variables = variables[1:(length(variables)-1)], oF = oF)
   binaries <- write_binaries_all_conditions(variables = variables)
+  binaries <- append_binaries(binaries = binaries, variables = variables)
   generals <- write_generals_all_conditions(variables = variables, oF = oF)
   c0 <- write_constraints_objFunction_all(variables = variables[1:(length(variables)-1)], dataMatrix = dataMatrix)
   c1 <- write_constraints_1_all(variables = variables[1:(length(variables)-1)])

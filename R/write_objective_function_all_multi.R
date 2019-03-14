@@ -10,7 +10,7 @@
 #'
 #'@return This code writes the objective function of the ILP problem for all the conditions.
 
-write_objective_function_all_multi <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores, measWeights=measWeights, conditionIDX = conditionIDX, deltaWeight = deltaWeight ) {
+write_objective_function_all_multi <- function(dataMatrix = dataMatrix, variables = variables, alphaWeight=alphaWeight, betaWeight=betaWeight,scores=scores, measWeights=measWeights, conditionIDX = conditionIDX, deltaWeight = 0.0001 ) {
   
   # ======================================= #
   # === Load write_objective_function.R === #
