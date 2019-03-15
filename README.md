@@ -182,6 +182,9 @@ universe <- mapUniprotPKN(netFile = "Ex3_network_APAP_TGG_Omnipath.sif",organism
 enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
 				universeFile = "nodes_PKN_uniprot_genesymbol.tsv",
 				datasource = 'kegg',
+				directionalORA =T,
+				undirectionalORA=T,
+				plot=T,
 				pathwayfilter = T,
 				pValSig = 0.05)
 
