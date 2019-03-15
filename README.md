@@ -177,7 +177,7 @@ file.copy(from=system.file("Ex3_network_APAP_TGG_Omnipath.sif",package="CARNIVAL
 
 # In case the network is in UniprotID format (e.g. from Omnipath), the node names need to be converted into gene symbol first for enrichment
 universe <- mapUniprotPKN(netFile = "Ex3_network_APAP_TGG_Omnipath.sif",organism = 'human')
-write.table(universe, 'nodes_PKN_uniprot_genesymbol.tsv')
+
 # Note: The mapped node names are also saved into the file nodes_PKN_uniprot_genesymbol.tsv. This file can be used as the 'universe' for over-representation analyses
 enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
 				universeFile = "nodes_PKN_uniprot_genesymbol.tsv",
