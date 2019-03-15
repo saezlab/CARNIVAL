@@ -38,26 +38,28 @@
   if (is.null(universeFile)) {stop("Please provide a set of genes to be used as the universe for enrichment analyses")}
   map<-read.table(universeFile, header = T,stringsAsFactors = F)
   universe<-map[, universeID]
-  
+  datasourcefile<-NULL
   if(is.null(universe)){stop("Please provide the set of genes to be used as universe for enrichment analyses with 'genesymbol' as the header")}
   if (sum(is.na(universe))>0) {universe <- universe[-which(is.na(universe),arr.ind = T)]}
   
-  if (datasource!=NULL){
+  if (!is.null(datasource)){
     if (datasource %in% c("biocarta","reactome", "kegg")){
       datasourcefile<-paste0("c2.cp.",datasource,".v6.2.symbols.gmt")
-    }else if (datasource="allc2"){
+    }else if (datasource=="allc2"){
       datasourcefile<-"source_enrichment/c2.cp.v6.2.symbols.gmt"
     }else {
       stop("Please provide a valid datasource, or leave it as NULL and provide a datapath instead.")
     } 
-  }else if(filepath!=NULL){
-    datasourcefile<-datapath
-  }else{
-    stop("Please provide a datasource or datapath.")
   }
   
-  file.copy(from=system.file(datasourcefile),package="CARNIVAL"),to=getwd(),overwrite=TRUE) # retrieve network file
-test<-getGmt(datasourcefile),
+  if(is.null(datasourcefile)){
+    if(!is.null(datapath)){
+      datasourcefile<-datapath
+    }else{stop("Please provide a datasource or datapath.")}
+ }
+  
+  file.copy(from=system.file(datasourcefile,package="CARNIVAL"), to=getwd() ,overwrite=TRUE) # retrieve network file
+test<-getGmt(datasourcefile,
 collectionType=BroadCollection(category="c2"),
 geneIdType=SymbolIdentifier())
 file.remove(datasourcefile)
@@ -115,7 +117,7 @@ if (undirectionalORA ==T){
   
   res_top$annot <- factor(res_top$annot,levels=res_top$annot) 
   
-  if (plot=T){
+  if (plot==T){
     g_bar<-ggplot(res_top, aes(x = reorder(annot,-log10(pval)),y=-log10(pval)))+
       # geom_bar(stat="identity",aes(fill=annot)) + 
       geom_point(aes(color=annot,size=1)) + 
@@ -153,7 +155,8 @@ if (directionalORA==T){
       filter(NodeType!='S')  #Comment this out
     genesdn<-setdn$gene
     
-  } else {
+  
+    } else {
     
     setup<-set_init %>%
       filter(AvgAct>0)%>%
