@@ -197,19 +197,25 @@ if (directionalORA==T){
   kOver_dn <- hyperGTest(kparams_dn)
   
   #Extract results
+  up_all<-NULL
   pval_up<-data.frame('pval'=kOver_up@pvalues)
-  pval_up$annot<-rownames(pval_up)
-  up_all<-pval_up
+  if(nrow(pval_up)>0){
+    pval_up$annot<-rownames(pval_up)
+    up_all<-pval_up
+    up_all$direct<-'up-regulated'
+  }
   
+  dn_all<-NULL
   pval_dn<-data.frame('pval'=kOver_dn@pvalues)
-  pval_dn$annot<-rownames(pval_dn)
-  dn_all<-pval_dn
-  
-  up_all$direct<-'up-regulated'
-  dn_all$direct<-'down-regulated'
+  if(nrow(pval_dn)>0){
+    pval_dn$annot<-rownames(pval_dn)
+    dn_all<-pval_dn
+    dn_all$direct<-'down-regulated'
+  }
+ 
   df<-bind_rows(up_all,dn_all)
   
-  if (plot==T){
+  if (plot==T & nrow(df)>0){
     if (pathwayfilter==T) {
       sig<-df%>%group_by(annot, direct)%>%summarise('med'=median(pval))%>%filter(med<0.05)
       disease<-sig[grepl('CANCER',sig$annot)|grepl('LEUKEMIA',sig$annot)|grepl('OMA',sig$annot)|grepl('INFECTION', sig$annot)|grepl('DIABETES', sig$annot)|grepl('DISEASES', sig$annot),]
