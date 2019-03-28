@@ -168,7 +168,7 @@ Additonal details on CARNIVAL results and troubleshooting sections can be found 
 
 ### Enrichment analyses
 
-CARNIVAL offers a pipeline to run a quick enrichment (over-representatino) analysis using the curated gene set from MSigDB (C2) branch as presented in the article. The results from the CARNIVAL example 3 can be performed using the following code:
+CARNIVAL offers a pipeline to run a quick enrichment (over-representation) analysis using the curated gene set from MSigDB (C2) branch as presented in the article  (the GMT file from the other branches can also be used). The results from the CARNIVAL example 3 can be performed using the following code:
 
 ```R
 library(CARNIVAL) # load CARNIVAL library
@@ -180,9 +180,9 @@ universe <- mapUniprotPKN(netFile = "Ex3_network_APAP_TGG_Omnipath.sif",organism
 
 # Note: The mapped node names are also saved into the file nodes_PKN_uniprot_genesymbol.tsv. This file can be used as the 'universe' for over-representation analyses
 enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
-				universeFile = "nodes_PKN_uniprot_genesymbol.tsv",
-				datasource = 'kegg',
-				directionalORA =T,
+				universeFile="nodes_PKN_uniprot_genesymbol.tsv",
+				datasource='kegg',
+				directionalORA=T,
 				undirectionalORA=T,
 				plot=T,
 				pathwayfilter = T,
@@ -190,7 +190,7 @@ enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
 
 ```
 
-The enrichment results will be saved in the designated 'Result_dir' folder. All pathways with p-value < 0.5 will be included in a csv file and enrichment figures, both combined up- and down-regulated as well as the separated version will also be plotted.
+The enrichment results will be saved in the designated 'Result_dir' folder. All pathways with p-value < 0.5 will be included in a csv file and enrichment figures, both combined up- and down-regulated as well as the separated version can be selected for plotting (see options in the enrichCARNIVAL function).
 
 ## Authors
 
