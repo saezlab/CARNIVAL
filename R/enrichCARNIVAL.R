@@ -213,6 +213,9 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL, networ
     
     df<-bind_rows(up_all,dn_all)
     
+    write.csv2(df,paste0(Result_dir,"/CARNIVAL_enrichment_",datasource,"_UpDn.csv"),row.names = F)
+    
+    
     if (plot==T & nrow(df)>0){
       if (pathwayfilter==T) {
         sig<-df%>%group_by(annot, direct)%>%summarise('med'=median(pval))%>%filter(med<0.05)
