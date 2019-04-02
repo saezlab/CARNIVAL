@@ -94,9 +94,9 @@ The results from DEG-preprocessing pipeline are saved in the directory "measurem
 ### CARNIVAL pipeline
 
 To run the CARNIVAL pipeline, users fist have to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
-- For Mac OS: "~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex" where the version of CPLEX has to be changed accordingly (the latest version is "CPLEX_Studio1281")
-- For Linux: --- to be tested ---
-- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio128/cplex/bin/x64_win64/cplex.exe"
+- For Mac OS: "~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex" -- Note that the version of CPLEX has to be changed accordingly (the latest version is "CPLEX_Studio129")
+- For Linux: "/opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex"
+- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe"
 
 Next, users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use user-defined own model inputs. To run the built-in CARNIVAL examples, users could run the following code:
 
