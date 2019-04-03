@@ -214,7 +214,7 @@ if (directionalORA==T){
   }
  
   df<-bind_rows(up_all,dn_all)
-  write.csv2(df,paste0(Result_dir,"/CARNIVAL_enrichment_directional_",Result_dir,"_",datasource,".csv"),row.names = F)
+  write.csv2(res,paste0(Result_dir,"/CARNIVAL_enrichment_",Result_dir,"_",datasource,".csv"),row.names = F)
   
   if (plot==T & nrow(df)>0){
     if (pathwayfilter==T) {
