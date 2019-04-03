@@ -5,19 +5,15 @@
 #' @param netFile Prior knowledge network file in Uniprot format
 #' @param organism organism that the Uniprot IDs refer to ('human','mouse','rat'; default='human')
 #'
-#' @import UniProt.ws
-#' @import dplyr
-#' @import tidyr
-#'
 #' @return An object containing all PKN nodes (universe) in Gene Symbol format written to a file for enrichment analyses
 #'
 #' @export
 
 mapUniprotPKN<-function(netFile=NULL, organism='human'){
   
-  require(UniProt.ws)
-  require(dplyr)
-  require(tidyr)
+  library(UniProt.ws)
+  library(dplyr)
+  library(tidyr)
 
   if (is.null(netFile)) {stop("Please provide the prior knowledge network file in the Uniprot ID format")}
   if (organism=="human") {taxId <- 9606
