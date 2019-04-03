@@ -5,15 +5,28 @@
 \title{\code{enrichCARNIVAL}}
 \usage{
 enrichCARNIVAL(Result_dir = "Results_CARNIVAL", universeFile = NULL,
-  datasource = "kegg", topEnrichAll = 40, pathwayfilter = T,
-  pValSig = 0.05)
+  networkID = 1, universeID = 2, datapath = NULL,
+  datasource = NULL, directionalORA = T, undirectionalORA = T,
+  plot = F, topEnrichAll = 40, pathwayfilter = T, pValSig = 0.05)
 }
 \arguments{
 \item{Result_dir}{The Result CARNIVAL folder to perform enrichment analyses}
 
 \item{universeFile}{The file containing the list of nodes/genes (with the header(s) 'genesymbol' +/- 'uniprot') to be considered as universe in enrichment analyses}
 
+\item{networkID}{Index of the column with identifiers used in the network in the universeFile}
+
+\item{universeID}{Index of the column with the genesymbol identifiers in the universeFile}
+
+\item{datapath}{Path to GMT file if not specified by datasource}
+
 \item{datasource}{The data source on MSigDB C2 branch: c("kegg":default,"biocarta","reactome","allc2")}
+
+\item{directionalORA}{If TRUE directional over-representation analysis is performed}
+
+\item{undirectionalORA}{If TRUE undirectional over-representation analysis is performed}
+
+\item{plot}{If TRUE plots are generated}
 
 \item{topEnrichAll}{Number of top enrichmed pathways to be plotted (default: 40)}
 

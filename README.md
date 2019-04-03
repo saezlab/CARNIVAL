@@ -94,9 +94,9 @@ The results from DEG-preprocessing pipeline are saved in the directory "measurem
 ### CARNIVAL pipeline
 
 To run the CARNIVAL pipeline, users fist have to define the path to interactive CPLEX on the variable 'CplexPath' in the runCARNIVAL function. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:
-- For Mac OS: "~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex" where the version of CPLEX has to be changed accordingly (the latest version is "CPLEX_Studio1281")
-- For Linux: --- to be tested ---
-- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio128/cplex/bin/x64_win64/cplex.exe"
+- For Mac OS: "~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex" -- Note that the version of CPLEX has to be changed accordingly (the latest version is "CPLEX_Studio129")
+- For Linux: "/opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex"
+- For Windows: "C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe"
 
 Next, users can select the examples by assigning the example number to the "CARNIVAL_example" variable or use user-defined own model inputs. To run the built-in CARNIVAL examples, users could run the following code:
 
@@ -168,7 +168,7 @@ Additonal details on CARNIVAL results and troubleshooting sections can be found 
 
 ### Enrichment analyses
 
-CARNIVAL offers a pipeline to run a quick enrichment (over-representatino) analysis using the curated gene set from MSigDB (C2) branch as presented in the article. The results from the CARNIVAL example 3 can be performed using the following code:
+CARNIVAL offers a pipeline to run a quick enrichment (over-representation) analysis using the curated gene set from MSigDB (C2) branch as presented in the article  (the GMT file from the other branches can also be used). The results from the CARNIVAL example 3 can be performed using the following code:
 
 ```R
 library(CARNIVAL) # load CARNIVAL library
@@ -180,9 +180,9 @@ universe <- mapUniprotPKN(netFile = "Ex3_network_APAP_TGG_Omnipath.sif",organism
 
 # Note: The mapped node names are also saved into the file nodes_PKN_uniprot_genesymbol.tsv. This file can be used as the 'universe' for over-representation analyses
 enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
-				universeFile = "nodes_PKN_uniprot_genesymbol.tsv",
-				datasource = 'kegg',
-				directionalORA =T,
+				universeFile="nodes_PKN_uniprot_genesymbol.tsv",
+				datasource='kegg',
+				directionalORA=T,
 				undirectionalORA=T,
 				plot=T,
 				pathwayfilter = T,
@@ -190,7 +190,7 @@ enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
 
 ```
 
-The enrichment results will be saved in the designated 'Result_dir' folder. All pathways with p-value < 0.5 will be included in a csv file and enrichment figures, both combined up- and down-regulated as well as the separated version will also be plotted.
+The enrichment results will be saved in the designated 'Result_dir' folder. All pathways with p-value < 0.5 will be included in a csv file and enrichment figures, both combined up- and down-regulated as well as the separated version can be selected for plotting (see options in the enrichCARNIVAL function).
 
 ## Authors
 
