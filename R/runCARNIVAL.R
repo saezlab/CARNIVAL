@@ -122,6 +122,7 @@ runCARNIVAL <- function(CplexPath=NULL,
     measFile <- loaded_CARNIVAL$measFile
     inputFile <- loaded_CARNIVAL$inputFile
     weightFile <- loaded_CARNIVAL$weightFile
+    if(CARNIVAL_example==3) {inverseCR=T} # Constraint Ex3 to be inverse CARNIVAL pipeline by default
   }
 
   # Input processing
