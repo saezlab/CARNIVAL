@@ -4,9 +4,9 @@
 #' The enrichment can be performed using the KEGG, Biocarta or Reactome subsets or using the whole curated C2 geneset.
 #' Note: The universe of the geneset should be all the nodes in the prior knowledge network. Here the nodes from Omnipath are used by default.
 #'
-#' @param Result_dir The Result CARNIVAL folder to perform enrichment analyses
-#' @param universeFile The file containing the list of nodes/genes (with the header(s) 'genesymbol' +/- 'uniprot') to be considered as universe in enrichment analyses
-#' @param networkID Index of the column with identifiers used in the network in the universeFile
+#' @param Result_dir The Result CARNIVAL folder to perform enrichment analyses on
+#' @param universeFile The file containing the list of nodes/genes (with the header(s) 'genesymbol' +/- 'uniprot') to be considered as universe in the enrichment analyses
+#' @param networkID Index of the column with the network identifiers used in the universeFile
 #' @param universeID Index of the column with the genesymbol identifiers in the universeFile
 #' @param datasource The data source on MSigDB C2 branch: c("kegg":default,"biocarta","reactome","allc2")
 #' @param datapath Path to GMT file if not specified by datasource 
@@ -14,7 +14,7 @@
 #' @param undirectionalORA If TRUE undirectional over-representation analysis is performed
 #' @param plot If TRUE plots are generated
 #' @param topEnrichAll Number of top enrichmed pathways to be plotted (default: 40)
-#' @param pathwayfilter Filtering pathways which are related to cancers, infections and diseases to highlight cellular processes
+#' @param pathwayfilter Filtering out pathways which are related to cancers, infections and diseases to highlight cellular processes
 #' @param pValSig Significant p-value to be labelled on the plotted figures
 #'
 #' @return Enriched pathways with p-value written into files and figures showing top enriched pathways for combined Up/Down direction and separated
