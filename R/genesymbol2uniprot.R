@@ -7,15 +7,12 @@
 #' @param geneID Column index of the gene symbol column in map.
 #' @param uniprotID Column index of the uniprot column in map.
 #'
-#' @import tidyverse
-#'
 #' @return A vector of genes or uniprot IDs.
 #'
 #' @export
 
-
 GeneSymbol2Uniprot=function(df, map, geneID=1, uniprotID=2){
-  library(tidyverse)
+  library(dplyr)
   df$genesymbols_for_mapping<-rownames(df)
   colnames(map)[geneID]<-'genesymbols_for_mapping'
   colnames(map)[uniprotID]<-'uniprotids_for_mapping'
