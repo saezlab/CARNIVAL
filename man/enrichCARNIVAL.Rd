@@ -10,11 +10,11 @@ enrichCARNIVAL(Result_dir = "Results_CARNIVAL", universeFile = NULL,
   plot = F, topEnrichAll = 40, pathwayfilter = T, pValSig = 0.05)
 }
 \arguments{
-\item{Result_dir}{The Result CARNIVAL folder to perform enrichment analyses}
+\item{Result_dir}{The Result CARNIVAL folder to perform enrichment analyses on}
 
-\item{universeFile}{The file containing the list of nodes/genes (with the header(s) 'genesymbol' +/- 'uniprot') to be considered as universe in enrichment analyses}
+\item{universeFile}{The file containing the list of nodes/genes (with the header(s) 'genesymbol' +/- 'uniprot') to be considered as universe in the enrichment analyses}
 
-\item{networkID}{Index of the column with identifiers used in the network in the universeFile}
+\item{networkID}{Index of the column with the network identifiers used in the universeFile}
 
 \item{universeID}{Index of the column with the genesymbol identifiers in the universeFile}
 
@@ -30,7 +30,7 @@ enrichCARNIVAL(Result_dir = "Results_CARNIVAL", universeFile = NULL,
 
 \item{topEnrichAll}{Number of top enrichmed pathways to be plotted (default: 40)}
 
-\item{pathwayfilter}{Filtering pathways which are related to cancers, infections and diseases to highlight cellular processes}
+\item{pathwayfilter}{Filtering out pathways which are related to cancers, infections and diseases to highlight cellular processes}
 
 \item{pValSig}{Significant p-value to be labelled on the plotted figures}
 }
