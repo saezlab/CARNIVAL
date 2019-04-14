@@ -11,7 +11,8 @@
 #'@param CARNIVAL_example Number of built-in CARNIVAL example (1=Toy Model,2=SBVimprove-EGF,3=TG-GATEs-APAP) or set as NULL to use user-defined input files
 #'@param Result_dir Specify directory name to store results
 #'@param inverseCR Execute the inverse CARNIVAL pipeline (logical T/F)
-#'@param parallelCR Execute the parallelised version of CARNIVAL pipeline (logical T/F)
+#'@param parallelIdx1 First index number suitable for parallelisation (numeric - set to 1 by default)
+#'@param parallelIdx2 Second index number suitable for parallelisation (numeric - set to 1 by default)
 #'@param nodeID Define the input format of nodes in the network (either 'uniprot' or 'gene' symbol)
 #'@param UP2GS For plotting: define if Uniprot ID will be converted to gene symbols for better readability (logical T/F)
 #'@param DOTfig For plotting: define if DOT figure will be exported in the result folder (logical T/F)
@@ -41,7 +42,9 @@ runCARNIVAL <- function(CplexPath=NULL,
                         CARNIVAL_example=2,
                         Result_dir="Results_CARNIVAL",
                         inverseCR=F,
-                        parallelCR=F,
+                        # parallelCR=F,
+                        parallelIdx1=1,
+                        parallelIdx2=1,
                         nodeID="uniprot",
                         UP2GS=T,
                         DOTfig=T,
@@ -57,12 +60,20 @@ runCARNIVAL <- function(CplexPath=NULL,
                         betaWeight=0.2)
 {
 
+  # @param parallelCR Execute the parallelised version of CARNIVAL pipeline (logical T/F)
+  
   # Clean working environment
   # rm(list=ls());cat("\014") # clean screen and variables
   # if(length(dev.list())>0){dev.off()} # clean figure
 
   # library(devtools);load_all()
 
+  # print("-----------")
+  # print(parallelIdx1)
+  # print("-----------")
+  # print(parallelIdx2)
+  # print("-----------")
+  
   # QC step of provided inputs
   if (!file.exists(CplexPath)) {stop("Please provide a valid path to interactive cplex.")}
   if (!is.null(netFile)) {if (!file.exists(netFile)) {stop("Please provide a valid network filename or leave it as NULL to run CARNIVAL examples.")}}
@@ -73,7 +84,8 @@ runCARNIVAL <- function(CplexPath=NULL,
   if ((!is.null(netFile) | !is.null(measFile)) & is.numeric(CARNIVAL_example)) {stop("Required users-defined input files were provided & a CARNIVAL example was selected: Please either set all required user-defined input filenames to NULL or set CARNIVAL_example to NULL")}
   if (!is.character(Result_dir) & !is.null(Result_dir)) {stop("Please assign a directory name or leave it as NULL to use default name")}
   if (!is.logical(inverseCR)) {stop("Please choose the pipeline (Standard vs Inverse CARNIVAL) with a logical value T/F")}
-  if (!is.logical(parallelCR)) {stop("Please choose whether to apply a parallelised pipeline with a logical value T/F")}
+  # if (!is.logical(parallelCR)) {stop("Please choose whether to apply a parallelised pipeline with a logical value T/F")}
+  if (!is.numeric(parallelIdx1) | !is.numeric(parallelIdx2)) {stop("Please set numbers on the parameters 'parallelIdx1' and 'parallelIdx2' for running CARNIVAL in parallelisation ")}
   if (!(nodeID %in% c('uniprot','gene'))) {stop("Please define the input format of node either 'uniprot' or 'gene' symbol")}
   if (!is.logical(UP2GS)) {stop("For plotting: please choose whether UniprotID to be converted to gene symbol for a better readability with a logical value T/F")}
   if (!is.logical(DOTfig)) {stop("For plotting: please choose whether to plot DOT figure as an output with a logical value T/F")}
@@ -93,13 +105,19 @@ runCARNIVAL <- function(CplexPath=NULL,
   load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
 
   # Assign parallelisation parameters
-  if (parallelCR) {
-    library(doParallel)
-    argsJob=commandArgs(trailingOnly = TRUE)
-    repIndex <- as.numeric(argsJob[1])
-    condition <- as.character(argsJob[2]) #Can additionally be used to loop over conditions of interest
-  } else {
+  # if (parallelCR) {
+  #   library(doParallel)
+  #   argsJob=commandArgs(trailingOnly = TRUE)
+  #   repIndex <- as.numeric(argsJob[1])
+  #   condition <- as.character(argsJob[2]) #Can additionally be used to loop over conditions of interest
+  # } else {
+  #   repIndex=1;condition=1
+  # }
+  
+  if (parallelIdx1==1 & parallelIdx2==1) { # default case
     repIndex=1;condition=1
+  } else {
+    repIndex=parallelIdx1;condition=parallelIdx2
   }
 
   # Create a directory to store results
