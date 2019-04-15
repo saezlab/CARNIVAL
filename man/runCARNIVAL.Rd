@@ -6,11 +6,12 @@
 \usage{
 runCARNIVAL(CplexPath = NULL, netFile = NULL, measFile = NULL,
   inputFile = NULL, weightFile = NULL, CARNIVAL_example = 2,
-  Result_dir = "Results_CARNIVAL", inverseCR = F, parallelCR = F,
-  nodeID = "uniprot", UP2GS = T, DOTfig = T, Export_all = F,
-  timelimit = 600, mipGAP = 0.05, poolrelGAP = 1e-04,
-  limitPop = 500, poolCap = 100, poolIntensity = 4,
-  poolReplace = 2, alphaWeight = 1, betaWeight = 0.2)
+  Result_dir = "Results_CARNIVAL", inverseCR = F, parallelIdx1 = 1,
+  parallelIdx2 = 1, nodeID = "uniprot", UP2GS = T, DOTfig = T,
+  Export_all = F, timelimit = 600, mipGAP = 0.05,
+  poolrelGAP = 1e-04, limitPop = 500, poolCap = 100,
+  poolIntensity = 4, poolReplace = 2, alphaWeight = 1,
+  betaWeight = 0.2)
 }
 \arguments{
 \item{CplexPath}{Path to executable cplex file - always required}
@@ -29,7 +30,9 @@ runCARNIVAL(CplexPath = NULL, netFile = NULL, measFile = NULL,
 
 \item{inverseCR}{Execute the inverse CARNIVAL pipeline (logical T/F)}
 
-\item{parallelCR}{Execute the parallelised version of CARNIVAL pipeline (logical T/F)}
+\item{parallelIdx1}{First index number suitable for parallelisation (numeric - set to 1 by default)}
+
+\item{parallelIdx2}{Second index number suitable for parallelisation (numeric - set to 1 by default)}
 
 \item{nodeID}{Define the input format of nodes in the network (either 'uniprot' or 'gene' symbol)}
 
