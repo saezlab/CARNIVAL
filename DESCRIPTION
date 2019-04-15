@@ -12,14 +12,18 @@ LazyData: true
 Imports: 
     doParallel,
     igraph,
-    tidyverse,
     viper,
-    GSEABase,
+    IRanges,
+    AnnotationDbi,
+    GSEABase, 
+    genefilter,   
     Category,
     dplyr,
+    purrr,
+    tibble,
+    tidyr,    
     ggplot2,
-    UniProt.ws,
-    tidyr
+    UniProt.ws
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

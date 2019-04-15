@@ -8,7 +8,6 @@
 #' @param df A n*m dataframe describing the contrast t-statistics, where n is the number of genes and m the number of conditions.
 #' @param write2file Path to outputfile for all TF_activities if desired
 #'
-#' @import tidyverse
 #' @import viper
 #'
 #' @return A n*m dataframe describing the inferred TF activities, where n is the number of Tfs and m the number of conditions.
@@ -16,7 +15,12 @@
 #' @export
 
 runDoRothEA<-function(df, regulon, confidence_level=c('A','B','C'), write2file = NULL){
-  library(tidyverse)
+  # library(tidyverse)
+  library(dplyr)
+  library(purrr)
+  library(viper)
+  library(tibble)
+  library(tidyr)
   names(regulon) <- sapply(strsplit(names(viper_regulon), split = ' - '), head, 1)
   filtered_regulon <- regulon %>%
     map_df(.f = function(i) {

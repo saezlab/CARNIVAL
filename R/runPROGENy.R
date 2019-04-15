@@ -18,7 +18,8 @@
 
 runPROGENy <- function(df,weight_matrix,k = 10000, z_scores = T, get_nulldist = F)
 {
-  library(tidyverse)
+  # library(tidyverse)
+  library(dplyr)
   resList <- list()
   if(get_nulldist)
   {
