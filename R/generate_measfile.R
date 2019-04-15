@@ -6,13 +6,12 @@
 #' @param topnumber If given, only the top number of measurements will be written out.
 #' @param write2folder Path to outputfolder
 #'
-#' @import tidyverse
-#'
 #' @return A n*m dataframe describing the inferred TF activities, where n is the number of Tfs and m the number of conditions.
 #'
 #' @export
 
 generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measurements"){
+  library(dplyr)
   if(dir.exists(write2folder)==F){dir.create(write2folder)}
   drugs<-colnames(measurements)
   for (i in 1:ncol(measurements)){
