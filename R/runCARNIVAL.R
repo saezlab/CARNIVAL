@@ -117,7 +117,7 @@ runCARNIVAL <- function(CplexPath=NULL,
   if (parallelIdx1==1 & parallelIdx2==1) { # default case
     repIndex=1;condition=1
   } else {
-    repIndex=parallelIdx1;condition=parallelIdx2
+    condition=parallelIdx1;repIndex=parallelIdx2
   }
 
   # Create a directory to store results
