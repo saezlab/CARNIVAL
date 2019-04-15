@@ -192,6 +192,30 @@ enrichCARNIVAL(Result_dir="Results_CARNIVAL_Ex3",
 
 The enrichment results will be saved in the designated 'Result_dir' folder. All pathways with p-value < 0.5 will be included in a csv file and enrichment figures, both combined up- and down-regulated as well as the separated version can be selected for plotting (see options in the enrichCARNIVAL function).
 
+### Running CARNIVAL on a parallelised cluster
+
+To facilitate the running of parallelised jobs on a clustered computer, CARNIVAL also offers an option to set the tag-number for each individual run (currently up to two numbers, onto the variables "parallelIdx1" and "parallelIdx2" - set to 1 and 1 by default). This assighment prevents the overwriting of the linear integer (LP) constraints file as well as of the exported result file from CPLEX with the same filename. In this case, users has to prepare a separated (driver) R-script to load necessary libraries and assign inputs of the runCARNIVAL function which can then be called from bash/shell/command prompt. An example for setting up the pipeline using CARNIVAL Ex2 as an example is provided below.
+
+```R
+# --- Save the code below into an R-script e.g. runParallelCARNIVAL.R --- #
+
+library(CARNIVAL) # load CARNIVAL library
+library(doParallel) # load parallel job library
+argsJob=commandArgs(trailingOnly = TRUE)
+CARNIVAL_Result <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio1281/cplex/bin/x86-64_osx/cplex",
+            Result_dir="Results_CARNIVAL_Ex2_Parallel",
+            CARNIVAL_example=2,
+	    parallelIdx1 = as.numeric(argsJob[1]),
+            parallelIdx2 = as.numeric(argsJob[2])
+	    )
+```
+
+After saving the code into an R-script, users can launch the pipeline with the command 'Rscript' on batch/shell/command prompt followed by the filename of the R-script and the two tag-numbers (here e.g. '2' and '3'). These numbers should be changed accordingly upon running the jobs in parallel on a cluster. Please refer to the documentation on how to run a parallelised job on the cluster that you are working with as each cluster has their own command/argument to submit and initiate the job.
+
+```Console
+>>> Rscript runParallelCARNIVAL.R 2 3
+```
+
 ## Authors
 
 Panuwat Trairatphisan (panuwat.trairatphisan -at- gmail.com)
