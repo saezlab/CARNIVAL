@@ -109,7 +109,9 @@ CARNIVAL_Result <- runCARNIVAL(CplexPath="~/Applications/IBM/ILOG/CPLEX_Studio12
             UP2GS=F)
 ```
 
-To run the user defined optimisation problem, users should have already prepared the network file and the measurement input (here TF's enrichment scores from DoRothEA) +/- additional information i.e. target of perturbation and additional node penalty weight (here pathway scores from PROGENy).
+After the optimisation, the results will be stored in the specified folder name on the variable "Result_dir" or in the folder called "Results_CARNIVAL" by default if not specified. Please note that this variable doesn't support the assignment of the full path e.g. "/home/users/Results_CARNIVAL" but it still supports the assignment of sub-folder e.g. "output/Results_CARNIVAL".
+
+In order to run the user defined optimisation problem, users should have already prepared the network file and the measurement input (here TF's enrichment scores from DoRothEA) +/- additional information i.e. target of perturbation and additional node penalty weight (here pathway scores from PROGENy).
 Once the input files are prepared in the correct format, the user could run the following code: (Note: we present here the input files for Example 2 as a case study. We advise users to check the format of input files from the ones for Example 2 to ensure the compatibility with the CARNIVAL pipeline.)
 
 ```R
