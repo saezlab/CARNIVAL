@@ -44,11 +44,11 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
 
         }
 
-        objectiveFunctionVec <- paste0(" + ", allWeights, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+        objectiveFunctionVec <- paste0(" + ", allWeights, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
       } else {
 
-        objectiveFunctionVec <- paste0(" + ", alphaWeight, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+        objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
       }
 
@@ -99,7 +99,7 @@ write_objective_function_all <- function(dataMatrix = dataMatrix, variables = va
 
       } else {
 
-        objectiveFunctionVec <- paste0(" + ", alphaWeight, "absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
+        objectiveFunctionVec <- paste0(" + ", alphaWeight, " absDiff", gsub(measuredVar, pattern = "xb", replacement = ""))
 
       }
       objectiveFunction <- paste(objectiveFunctionVec, collapse = "")
