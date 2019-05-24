@@ -144,12 +144,12 @@ runCARNIVAL <- function(CplexPath=NULL,
   }
 
   # Input processing
-  network <- read.table(file = netFile, sep = "\t", header = TRUE)
+  network <- read.delim(file = netFile, sep = "\t", header = TRUE)
   measWeights <- as.matrix(read.delim(file = measFile, sep = "\t"))
   measurements <- sign(measWeights) # Extracted sign of measurement for ILP fitting
   measWeights <- abs(measWeights) # Weights are all positives
   if (!is.null(inputFile)) {
-    inputs <- read.table(file = inputFile, sep = "\t", header = TRUE)
+    inputs <- read.delim(file = inputFile, sep = "\t", header = TRUE)
   }
   if (!is.null(weightFile)) {
     edgeWeights <- read.delim(file = weightFile, sep = "\t")
