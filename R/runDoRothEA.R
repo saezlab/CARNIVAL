@@ -21,7 +21,8 @@ runDoRothEA<-function(df, regulon, confidence_level=c('A','B','C'), write2file =
   library(viper)
   library(tibble)
   library(tidyr)
-  names(regulon) <- sapply(strsplit(names(viper_regulon), split = ' - '), head, 1)
+  # names(regulon) <- sapply(strsplit(names(viper_regulon), split = ' - '), head, 1)
+  names(regulon) <- sapply(strsplit(names(regulon), split = ' - '), head, 1)
   filtered_regulon <- regulon %>%
     map_df(.f = function(i) {
       tf_target = i$tfmode %>%
