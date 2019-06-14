@@ -8,7 +8,7 @@
 #' @param universeFile The file containing the list of nodes/genes (with the header(s) 'genesymbol' +/- 'uniprot') to be considered as universe in the enrichment analyses
 #' @param networkID Index of the column with the network identifiers used in the universeFile
 #' @param universeID Index of the column with the genesymbol identifiers in the universeFile
-#' @param datasource The data source on MSigDB C2 branch: c("kegg":default,"biocarta","reactome","allc2")
+#' @param datasource The data source on MSigDB C2 branch: c("kegg":default,"biocarta","reactome","allc2","cpg","cp","hallmark")
 #' @param datapath Path to GMT file if not specified by datasource 
 #' @param directionalORA If TRUE directional over-representation analysis is performed
 #' @param undirectionalORA If TRUE undirectional over-representation analysis is performed
@@ -40,8 +40,12 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL, networ
   if (!is.null(datasource)){
     if (datasource %in% c("biocarta","reactome", "kegg")){
       datasourcefile<-paste0("c2.cp.",datasource,".v6.2.symbols.gmt")
+    }else if (datasource %in% c("cgp","cp")){
+      datasourcefile<-paste0("c2.",datasource,".v6.2.symbols.gmt")
     }else if (datasource=="allc2"){
       datasourcefile<-"c2.cp.v6.2.symbols.gmt"
+    }else if (datasource=="hallmark"){
+      datasourcefile<-"h.all.v6.2.symbols.gmt"
     }else {
       stop("Please provide a valid datasource, or leave it as NULL and provide a datapath instead.")
     } 
@@ -55,11 +59,14 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL, networ
   
   file.copy(from=system.file(datasourcefile,package="CARNIVAL"), to=getwd() ,overwrite=TRUE) # retrieve network file
   test<-getGmt(datasourcefile,
-               collectionType=BroadCollection(category="c2"),
+               if (datasource %in% c("biocarta","reactome", "kegg", "cgp","cp", "allc2")){
+                collectionType=BroadCollection(category="c2")
+               } else if (datasource=="hallmark") {
+                collectionType=BroadCollection(category="h")
+               }
+               ,
                geneIdType=SymbolIdentifier())
   file.remove(datasourcefile)
-  
-  
   
   set_orig<-read.delim(paste0(Result_dir,"/nodesAttributes_1.txt"))
   
@@ -217,15 +224,20 @@ enrichCARNIVAL<-function(Result_dir="Results_CARNIVAL",universeFile=NULL, networ
     
     
     if (plot==T & nrow(df)>0){
+      sig<-df%>%group_by(annot, direct)%>%summarise('med'=median(pval))%>%filter(med<0.05)
       if (pathwayfilter==T) {
-        sig<-df%>%group_by(annot, direct)%>%summarise('med'=median(pval))%>%filter(med<0.05)
         disease<-sig[grepl('CANCER',sig$annot)|grepl('LEUKEMIA',sig$annot)|grepl('OMA',sig$annot)|grepl('INFECTION', sig$annot)|grepl('DIABETES', sig$annot)|grepl('DISEASE', sig$annot),]
-        nodisease<-sig%>%filter(!(annot %in% disease$annot))
-        nodisease<-nodisease[order(nodisease$med, decreasing = F),]
-        poi<-df%>%filter(annot %in% nodisease$annot)
-      } else {poi<-sig}
+      } else {
+        # poi<-sig
+        # disease<-sig
+        disease<-sig[grepl('RANDOMTERMS', sig$annot),]
+      }
       
+      nodisease<-sig%>%filter(!(annot %in% disease$annot))
+      nodisease<-nodisease[order(nodisease$med, decreasing = F),]
+      poi<-df%>%filter(annot %in% nodisease$annot)
       poi$annot<-factor(poi$annot,levels = rev(unique(nodisease$annot)))
+      
       g3<- ggplot((poi), aes(annot, -log10(pval)))+
         # geom_boxplot(aes(color=annot))+
         geom_point(aes(color=annot))+
