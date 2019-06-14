@@ -20,7 +20,7 @@ enrichCARNIVAL(Result_dir = "Results_CARNIVAL", universeFile = NULL,
 
 \item{datapath}{Path to GMT file if not specified by datasource}
 
-\item{datasource}{The data source on MSigDB C2 branch: c("kegg":default,"biocarta","reactome","allc2")}
+\item{datasource}{The data source on MSigDB C2 branch: c("kegg":default,"biocarta","reactome","allc2","cpg","cp","hallmark")}
 
 \item{directionalORA}{If TRUE directional over-representation analysis is performed}
 
