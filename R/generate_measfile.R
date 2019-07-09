@@ -21,7 +21,7 @@ generate_measfile<-function(measurements, topnumber=NULL, write2folder="./measur
     drug<-drugs[i]
     if(is.null(topnumber)){
       df_drug<-t(df_drugall)
-      filepath=paste0( folderpath,"/meas_",drug ,"_all.txt")
+      filepath=paste0( write2folder,"/meas_",drug ,"_all.txt")
     }else{
       df_drug<-t(df_drugall[1:topnumber,])
       filepath=paste0( write2folder,"/meas_",drug ,"_", topnumber,".txt")
