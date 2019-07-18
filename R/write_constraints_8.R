@@ -25,12 +25,7 @@ write_constraints_8 <- function(variables=variables, inputs=inputs, pknList=pknL
     
     ##
     kk <- paste0("Species ", colnames(inputs), " in experiment ", ii)
-    cc= c()
-    for(jj in 1:length(kk)){
-      cName = strsplit(x = kk[jj], split = " ")[[1]][2]
-      cc = c(cc, paste0(variables[[ii]]$variables[which(variables[[ii]]$exp==paste0("Species ", cName, " in experiment ", ii))], " = ", inputs[ii, jj]))
-    }
-    # cc <- paste0(variables[[ii]]$variables[variables[[ii]]$idxNodes[which(variables[[ii]]$exp[variables[[ii]]$idxNodes] %in% kk)]], " = ", inputs[ii, ])
+    cc <- paste0(variables[[ii]]$variables[variables[[ii]]$idxNodes[which(variables[[ii]]$exp[variables[[ii]]$idxNodes] %in% kk)]], " = ", inputs[ii, ])
     constraints8 <- c(constraints8, cc)
     
     ##
