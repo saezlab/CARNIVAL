@@ -5,9 +5,9 @@ Transcription factors’ (TFs) activities and pathway scores from gene expressio
 TFs’ activities and signed directed protein-protein interaction networks +/- drug targets and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. 
 An ILP solver (CPLEX) is subsequently applied to identify the sub-network topology with minimised discrepancies on fitting error and model size.
 
-More detailed descriptions of CARNIVAL, benchmarking and applicational studies can be found in [Liu, Trairatphisan, Gjerga et al.](https://www.biorxiv.org/content/10.1101/541888v1):
+More detailed descriptions of CARNIVAL, benchmarking and applicational studies can be found on it's dedicated [web-page](https://saezlab.github.io/CARNIVAL/) and in [Liu, Trairatphisan, Gjerga et al.](https://www.nature.com/articles/s41540-019-0118-z):
 
-> Liu A*, Trairatphisan P*, Gjerga E*, Didangelos A, Barratt J, Saez-Rodriguez J. (2019). From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL. *bioRxiv*, https://doi.org/10.1101/541888 (*equal contributions).
+> Liu A*, Trairatphisan P*, Gjerga E*, Didangelos A, Barratt J, Saez-Rodriguez J. (2019). From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL. *npj Systems Biology and Applications*, https://doi.org/10.1038/s41540-019-0118-z (*equal contributions).
 
 
 ## Getting Started
