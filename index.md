@@ -48,3 +48,7 @@ The outcome of CARNIVAL includes the list of identified networks that fitted to 
 > Garcia-Alonso L. et al. [Transcription Factor Activities Enhance Markers of Drug Sensitivity in Cancer.](http://cancerres.aacrjournals.org/content/78/3/769.full) _Cancer Res. 2018 Feb 1;78(3):769-780. doi: 10.1158/0008-5472.CAN-17-1679. Epub 2017 Dec 11_.
 
 > Schubert M. et al. [Perturbation-response genes reveal signaling footprints in cancer gene expression](https://www.nature.com/articles/s41467-017-02391-6) _Nature Communicationsvolume 9, Article number: 20 (2018) doi: 10.1038/s41467-017-02391-6_.
+
+## Studies where CARNIVAL was used
+
+> Buhl E.M. et al. [Dysregulated mesenchymal PDGFR‐β drives kidney fibrosis](https://www.embopress.org/doi/10.15252/emmm.201911021) _EMBO Mol Med (2020)e11021 doi: 10.15252/emmm.201911021_
