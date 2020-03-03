@@ -1,8 +1,6 @@
-#'\code{solveCARNIVAL}
-#'
-#' Returning result object after solving with CARNIVAL
-#'
-#'Enio Gjerga, 2020
+## Returning result object after solving with CARNIVAL
+##
+## Enio Gjerga, 2020
 
 solveCARNIVAL <- function(solverPath = solverPath, 
                           netObj = netObj, 

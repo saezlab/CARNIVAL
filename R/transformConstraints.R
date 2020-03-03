@@ -1,8 +1,6 @@
-#'\code{transformConstraints}
-#'
-#' Vectorizing the constraints
-#'
-#'Enio Gjerga, 2020
+## Vectorizing the constraints
+##
+## Enio Gjerga, 2020
 
 transformConstraints <- function(mt = mt, lpFile = lpFile){
   

@@ -1,18 +1,41 @@
 #'\code{assignPROGENyScores}
 #'
+#'@details This function is used to assign the PROGENy weights to pathway 
+#'members for a selected set of samples.
+#'
 #'@param progeny contains the progeny scores as obtained from \code{runPROGENy}.
 #'@param progenyMembers contains the list of members for each PROGENy pathway.
 #'@param id contains the members identifiers (default: gene).
 #'@param access_idx index of the sample to consider (default set to 
 #'access_idx = 1)
 #'
-#'@return This function is used to account for the PROGENy scores in the 
-#'objective function. It creates a list object with progeny scores for a 
-#'selected set of samples (by default for all of them)
+#'@return It returns a data-frame where columns are the representative nodes for
+#'each pathway member (as in progenyMembers list), while the eleents are the
+#'estimated normalized (from -1 to 1) pthway activities.
+#'
+#'@author Enio Gjerga & Panuwat Trairatphisan, 2020 \email{carnival.developers@gmail.com}
+#'
+#'@examples
+#'library(CARNIVAL)
+#'library(CARNIVAL)
+#'expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 
+#'                                                   package = "progeny"), 
+#'                                                   row.names = 1))
+#'
+#'human_def_act <- progeny(expr, scale = TRUE,  organism = "Human", top = 100, 
+#'                         perm = 10000, z_scores = FALSE)
+#'
+#'## loading the progeny members to assign the weights
+#'load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
+#'
+#'## now assigning the PROGENy weights to pathway members only for the first 
+#'## sample which we can consider for the CARNIVAL analysis
+#'weightObj <- assignPROGENyScores(progeny = human_def_act, 
+#'                                 progenyMembers = progenyMembers, 
+#'                                 id = "gene", access_idx = 1)
 #'
 #'@export
 #'
-#'Enio Gjerga & Panuwat Trairatphisan, 2020
 
 assignPROGENyScores <- function(progeny = progeny, 
                                 progenyMembers = progenyMembers, 

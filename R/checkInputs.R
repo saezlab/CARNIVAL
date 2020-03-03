@@ -1,10 +1,6 @@
-#'\code{checkInputs}
-#'
-#'@return Error message in case of errors in the inputs
-#'
-#'@export
-#'
-#'Enio Gjerga, 2020
+## Error message in case of errors in the inputs
+##
+## Enio Gjerga, 2020
 
 checkInputs <- function(solverPath=NULL,
                         netObj=NULL,
@@ -23,8 +19,7 @@ checkInputs <- function(solverPath=NULL,
                         betaWeight=0.2,
                         threads=0,
                         dir_name=paste0(getwd(), "/DOTfigures"),
-                        solver="cbc",
-                        parIdx=NULL){
+                        solver="cbc"){
   
   returnList = list()
   checkSolver(solverPath = solverPath, solver = solver, dir_name = dir_name)
@@ -36,8 +31,7 @@ checkInputs <- function(solverPath=NULL,
                         poolrelGAP=poolrelGAP, limitPop=limitPop, poolCap=poolCap,
                         poolIntensity=poolIntensity, poolReplace=poolReplace,
                         threads=threads,
-                        alphaWeight=alphaWeight, betaWeight=betaWeight,
-                        parIdx=parIdx)
+                        alphaWeight=alphaWeight, betaWeight=betaWeight)
 
   if(weightObj[1]!="NULL"){
     if(nrow(weightObj)!=nrow(measObj)){

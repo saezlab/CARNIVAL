@@ -1,8 +1,6 @@
-#'\code{transformObjectiveFunction}
-#'
-#' Vectorizing the objective function
-#'
-#'Enio Gjerga, 2020
+## Vectorizing the objective function
+##
+## Enio Gjerga, 2020
 
 transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
   

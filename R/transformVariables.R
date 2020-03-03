@@ -1,8 +1,6 @@
-#'\code{transformVariables}
-#'
-#' Transforming our variables
-#'
-#'Eio Gjerga, 2020
+## Transforming our variables
+##
+## Eio Gjerga, 2020
 
 transformVariables <- function(variables = variables, measObj = measObj){
   

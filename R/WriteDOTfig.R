@@ -1,9 +1,7 @@
-#'\code{WriteDOTfig}
-#'
-#' This function takes results from ILP optimisation and write out a figure in 
-#' DOT format
-#'
-#'Panuwat Trairatphisan, 2020
+## This function takes results from ILP optimisation and write out a figure in 
+## DOT format
+##
+## Panuwat Trairatphisan, 2020
 
 WriteDOTfig <- function(res, idxModel=0, dir_name, 
                         inputs, measurements, UP2GS=FALSE){

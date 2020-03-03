@@ -1,9 +1,7 @@
-#'\code{AddPerturbationNode}
-#'
-#' Introduces a perturbation node connecting periphery nodes without a target in 
-#' the prior knowledge network.
-#' 
-#' Panuwat Trairatphisan, 2020
+## Introduces a perturbation node connecting periphery nodes without a target in 
+## the prior knowledge network.
+## 
+## Panuwat Trairatphisan, 2020
 
 AddPerturbationNode <- function(network) {
   

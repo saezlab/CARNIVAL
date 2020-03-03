@@ -1,8 +1,6 @@
-#'\code{checkSolverParam}
-#'
-#'Checking solver parameters
-#'
-#'Enio Gjerga, 2020
+## Checking solver parameters
+##
+## Enio Gjerga, 2020
 
 checkSolverParam <- function(DOTfig=DOTfig,
                              timelimit=timelimit,
@@ -14,8 +12,7 @@ checkSolverParam <- function(DOTfig=DOTfig,
                              poolReplace=poolReplace,
                              threads=threads,
                              alphaWeight=alphaWeight,
-                             betaWeight=betaWeight,
-                             parIdx=parIdx){
+                             betaWeight=betaWeight){
   
   returnList = NULL
   parallelIdx1=1
@@ -25,16 +22,7 @@ checkSolverParam <- function(DOTfig=DOTfig,
          for running CARNIVAL in parallelisation ")
   } else {
     if(parallelIdx1==1 & parallelIdx2==1) { # default case
-      if(is.null(parIdx)){
-        repIndex=1
-      } else {
-        if(!is.numeric(parIdx)){
-          stop("parIdx parameter if not NULL should be numeric")
-        } else {
-          repIndex=parIdx
-        }
-      }
-      condition=1
+      repIndex=1;condition=1
     } else {
       condition=parallelIdx1;repIndex=parallelIdx2
     }

@@ -1,8 +1,6 @@
-#'\code{prepareLPMatrixSingle}
-#'
-#' Returning LP matrix for one condition
-#'
-#'Enio Gjerga, 2020
+## Returning LP matrix for one condition
+##
+## Enio Gjerga, 2020
 
 prepareLPMatrixSingle <- function(variables = variables, 
                                   measObj = measObj){

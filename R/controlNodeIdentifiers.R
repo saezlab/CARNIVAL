@@ -1,12 +1,6 @@
-#'\code{controlNodeIdentifiers}
-#'
-#'@param netObj Network object
-#'
-#'@return Warning message in case of unwanted symbols in node id's
-#'
-#'@export
-#'
-#'Enio Gjerga, 2020
+## Warning message in case of unwanted symbols in node id's
+##
+## Enio Gjerga, 2020
 
 controlNodeIdentifiers <- function(netObj = netObj){
   
