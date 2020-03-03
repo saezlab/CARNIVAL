@@ -1,20 +1,10 @@
-#'\code{checkSolver}
-#'
-#'Run CARNIVAL pipeline using to the user-provided list of inputs or run 
-#'CARNIVAL built-in examples
-#'Note: The pipeline requires either all required user-defined input variables 
-#'(netObj and measObj) are set to NULL or CARNIVAL_example is set to NULL to 
-#'execute
-#'
-#'@param solverPath Path to executable cplex file - always required
-#'@param solver Solver name
-#'@param dir_name Name of directory where to store DOT result
-#'
-#'@return Error message in case of errors in the inputs
-#'
-#'@export
-#'
-#'Enio Gjerga, 2020
+## Run CARNIVAL pipeline using to the user-provided list of inputs or run 
+## CARNIVAL built-in examples
+## Note: The pipeline requires either all required user-defined input variables 
+## (netObj and measObj) are set to NULL or CARNIVAL_example is set to NULL to 
+## execute
+##
+## Enio Gjerga, 2020
 
 checkSolver <- function(solverPath = solverPath, solver = solver,
                         dir_name = dir_name){

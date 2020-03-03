@@ -1,8 +1,6 @@
-#'\code{write_binaries}
-#'
-#' This code writes the list of binary variables (xp, xm, up & um).
-#' 
-#' Enio Gjerga, 2020
+## This code writes the list of binary variables (xp, xm, up & um).
+## 
+## Enio Gjerga, 2020
 
 write_binaries <- function(variables=variables){
   

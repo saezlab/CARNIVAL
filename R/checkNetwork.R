@@ -1,12 +1,6 @@
-#'\code{checkNetwork}
-#'
-#'@param netObj Network object
-#'
-#'@return Error message in case of errors in the inputs
-#'
-#'@export
-#'
-#'Enio Gjerga, 2020
+##Error message in case of errors in the inputs
+##
+##Enio Gjerga, 2020
 
 checkNetwork <- function(netObj = netObj){
   

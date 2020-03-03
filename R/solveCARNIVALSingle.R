@@ -1,8 +1,6 @@
-#'\code{solveCARNIVALSingle}
-#'
-#' Solving CARNIVAL problem for one single experimental condition
-#'
-#'Enio Gjerga, 2020
+## Solving CARNIVAL problem for one single experimental condition
+##
+## Enio Gjerga, 2020
 
 solveCARNIVALSingle <- function(data = data, pknList = pknList,
                                 inputs = inputs, alphaWeight = alphaWeight,

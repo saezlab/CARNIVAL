@@ -1,8 +1,6 @@
-#'\code{transformBinaries}
-#'
-#' Vectorizing the binaries
-#'
-#'Enio Gjerga, 2020
+## Vectorizing the binaries
+##
+## Enio Gjerga, 2020
 
 transformBinaries <- function(mt = mt, lpFile = lpFile){
   
