@@ -1,9 +1,7 @@
-#'\code{write_constraints_1_all}
-#'
-#' This code writes the list of constraints (1) of the ILP problem for all the 
-#' conditions.
-#' 
-#' Enio Gjerga
+## This code writes the list of constraints (1) of the ILP problem for all the 
+## conditions.
+## 
+## Enio Gjerga
 
 write_constraints_1_all <- function(variables=variables){
 

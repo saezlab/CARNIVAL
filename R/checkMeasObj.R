@@ -1,12 +1,6 @@
-#'\code{checkMeasObj}
-#'
-#'@param measObj Measurement object
-#'
-#'@return Error message in case of errors in the inputs
-#'
-#'@export
-#'
-#'Enio Gjerga. 2020
+## Returning error message in case of errors in the inputs
+##
+## Enio Gjerga, 2020
 
 checkMeasObj <- function(measObj = measObj, netObj = netObj){
   

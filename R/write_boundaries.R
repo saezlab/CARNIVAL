@@ -1,8 +1,6 @@
-#'\code{write_boundaries}
-#'
-#' This code writes the boundaries of each variable.
-#'
-#'Enio Gjerga, 2020
+## This code writes the boundaries of each variable.
+##
+## Enio Gjerga, 2020
 
 write_boundaries <- function(variables=variables, oF=oF){
   

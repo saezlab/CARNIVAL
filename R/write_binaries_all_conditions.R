@@ -1,11 +1,6 @@
-#'\code{write_binaries_all_conditions}
-#'
-#'@param variables Contains the list of variables as used to formulate the ILP 
-#'problem, explanations for each variable and a list of useful indices.
-#'
-#'@return This code writes the list of binary variables (xp, xm, up & um).
-#'
-#'Enio Gjerga, 2020
+## Writing binary variables across all conditions
+##
+## Enio Gjerga, 2020
 
 write_binaries_all_conditions <- function(variables=variables){
   

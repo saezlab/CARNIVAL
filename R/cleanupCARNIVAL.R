@@ -1,8 +1,6 @@
-#'\code{cleanupCARNIVAL}
-#'
-#'Cleanup auxilliary files
-#'
-#'Enio Gjerga, 2020
+## Cleanup auxilliary files
+##
+## Enio Gjerga, 2020
 
 cleanupCARNIVAL <- function(condition=condition, repIndex=repIndex){
   

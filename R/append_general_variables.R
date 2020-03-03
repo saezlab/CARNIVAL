@@ -1,8 +1,6 @@
-#'\code{append_general_variables}
-#'
-#' Appending the general variables for each condition
-#' 
-#' Enio Gjerga, 2020
+## Appending the general variables for each condition
+##
+## Enio Gjerga, 2020
 
 append_general_variables <- function(variables = variables){
   

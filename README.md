@@ -26,7 +26,7 @@ CARNIVAL is currently available for the installation as an R-package from our Gi
 # Install CARNIVAL from Github using devtools
 # install.packages('devtools') # in case devtools hasn't been installed
 library(devtools)
-install_github('saezlab/CARNIVAL', build_vignettes = TRUE)
+install_github('saezlab/CARNIVAL-Bioconductor-Dev', build_vignettes = TRUE)
 # or download the source file from GitHub and install from source
 install.packages('path_to_extracted_CARNIVAL_directory', repos = NULL, type="source")
 ```
