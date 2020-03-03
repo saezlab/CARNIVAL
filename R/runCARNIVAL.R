@@ -1,45 +1,30 @@
 #'\code{runCARNIVAL}
 #'
-#'Run CARNIVAL pipeline using to the user-provided list of inputs or run
-#'CARNIVAL built-in examples
-#'Note: The pipeline requires either all required user-defined input variables
-#'(netObj and measObj) are set to NULL or CARNIVAL_example is set to NULL to
-#'execute
+#'@details Run CARNIVAL pipeline using to the user-provided list of inputs or
+#'run CARNIVAL built-in examples
 #'
 #'@param inputObj Data frame of the list for target of perturbation - optional
-#'or default set to NULL to run invCARNIVAL when inputs are not known
+#'or default set to NULL to run invCARNIVAL when inputs are not known.
 #'@param measObj Data frame of the measurement file (i.e. DoRothEA normalised
-#'enrichment scores) - always required
-#'@param netObj Data frame of the prior knowledge network - always required
+#'enrichment scores) - always required.
+#'@param netObj Data frame of the prior knowledge network - always required.
 #'@param weightObj Data frame of the additional weight (i.e. PROGENy pathway
 #'score or measured protein activities) - optional or default set as NULL to run
-#'CARNIVAL without weights
+#'CARNIVAL without weights.
 #'@param solverPath Path to executable cbc/cplex file - default set to NULL, in
-#'which case the solver from lpSolve package is used
-#'@param solver Solver type that user wishes to use: lpSolve/cbc/cplex
-#'(default set to lpSolve). The lpSolve does not require installation of any
-#'solver and it can give only one solution and it is not optimal for modelling
-#'of very large networks. The free cbc solver can be used for modelling of large
-#'scale networks and it can also give only one solution. The cplex solver is
-#'efficient, works well for lage scale networks and it can give multiple
-#'solutions.
+#'which case the solver from lpSolve package is used.
+#'@param solver Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).
 #'@param DOTfig For plotting: define if DOT figure will be exported in the
-#'result folder (logical TRUE/FALSE - default set to FALSE)
-#'@param timelimit CPLEX parameter: Time limit of CPLEX optimisation (in
-#'seconds - default set to 600)
-#'@param mipGAP CPLEX parameter: Allowed gap of accepted solution comparing to
-#'the best solution (fraction; default: 0.05 = 5 percents)
-#'@param poolrelGAP CPLEX parameter: Allowed relative gap of accepted solution
-#'comparing within the pool of accepted solution (fraction; default: 0.0001)
-#'@param inverseCR Execute the inverse CARNIVAL pipeline (logical TRUE/FALSE)
-#'@param DOTfig For plotting: define if DOT figure will be exported in the
-#'result folder (logical TRUE/FALSE)
-#'@param timelimit CPLEX parameter: Time limit of CPLEX optimisation (in
-#'seconds)
-#'@param mipGAP CPLEX parameter: Allowed gap of accepted solution comparing to
-#'the best solution (fraction; default: 0.05 = 5 percents)
-#'@param poolrelGAP CPLEX parameter: Allowed relative gap of accepted solution
-#'comparing within the pool of accepted solution (fraction; default: 0.0001)
+#'result folder (logical T/F). Default set to TRUE. If this the case, the
+#'plotted DOT figures will be saved in the defined dir_name directory.
+#'@param timelimit CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
+#'seconds (default set to 3600).
+#'@param mipGAP CPLEX parameter: the absolute tolerance on the gap between the
+#'best integer objective and the objective of the best node remaining. When this
+#'difference falls below the value of this parameter, the linear integer
+#'optimization is stopped (default set to 0.05)
+#'@param poolrelGAP CPLEX/Cbc parameter: Allowed relative gap of accepted
+#'solution comparing within the pool of accepted solution (default: 0.0001)
 #'@param limitPop CPLEX parameter: Allowed number of solutions to be generated
 #'(default: 500)
 #'@param poolCap CPLEX parameter: Allowed number of solution to be kept in the
@@ -51,23 +36,59 @@
 #'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
 #'@param threads CPLEX parameter: Number of threads to use
 #'default: 0 for maximum number possible threads on system
-#'@param dir_name Name of the directory where to store the DOT figure (by
-#'default it will be stored in the /DOTfigures folder generated in the current
-#'working directory).
-#'@param parIdx Parallelization index (default set to NULL)
+#'@param dir_name Specify directory name to store results. by default it will
+#'create a /DOTfigures directory within the current working directory
 #'
-#'@return The networks and predicted node activities from the CARNIVAL pipeline
-#'as a variable which are also saved in the destined result folder
+#'@return The function will return a list of results containing:
+#'1. weightedSIF: A table with 4 columns containing the combined network
+#'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
+#'Sign of the interaction (Sign), the Target of the interaction (Node2) and the
+#'weight of the interaction (Weight) which shows how often an interaction
+#'appears across the various solutions.
+#'
+#'2. nodesAttributes: A table with 6 columns containing information about
+#'infered protein activity states and attributes. It contains the Protein IDs
+#'(Node); how often this node has taken an activity of 0, 1 and -1 across the
+#'solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
+#'(AvgAct); and the node attribute (measured, target, inferred).
+#'
+#'3. sifAll: A list of separate network solutions
+#'
+#'4. attributesAll: A list of separate inferred node activities across the
+#'various solutions.
+#'
+#'@author Enio Gjerga, 2020 \email{carnival.developers@gmail.com}
+#'
+#'@examples
+#' load(file = system.file("toy_inputs_ex1.RData",
+#'                         package="CARNIVAL"))
+#' load(file = system.file("toy_measurements_ex1.RData",
+#'                         package="CARNIVAL"))
+#' load(file = system.file("toy_network_ex1.RData",
+#'                         package="CARNIVAL"))
+#'
+#' ## lpSolve
+#' res1 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+#'                    netObj = toy_network_ex1)
+#'
+#' ## cbc
+#' res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+#'                    netObj = toy_network_ex1, solverPath = solverPath,
+#'                    solver = "cbc")
+#'
+#' ## cplex
+#' res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+#'                    netObj = toy_network_ex1, solverPath = solverPath,
+#'                    solver = "cbc")
 #'
 #'@import doParallel
-#'@import CARNIVAL
 #'@import readr
 #'@import readxl
 #'@import lpSolve
+#'@import igraph
 #'
 #'@export
 #'
-#'Enio Gjerga, 2020
 
 runCARNIVAL <- function(inputObj=NULL,
                         measObj=measObj,
@@ -86,35 +107,34 @@ runCARNIVAL <- function(inputObj=NULL,
                         alphaWeight=1,
                         betaWeight=0.2,
                         threads=0,
-                        dir_name=paste0(getwd(), "/DOTfigures"),
-                        parIdx=NULL)
+                        dir_name=paste0(getwd(), "/DOTfigures"))
 {
 
-  res = checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj, 
+  res = checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj,
                     inputObj = inputObj, weightObj = weightObj, DOTfig = DOTfig,
-                    timelimit = timelimit, mipGAP = mipGAP, 
-                    poolrelGAP = poolrelGAP, limitPop = limitPop, 
-                    poolCap = poolCap, poolIntensity = poolIntensity, 
-                    poolReplace = poolReplace, alphaWeight = alphaWeight, 
-                    betaWeight = betaWeight, dir_name = dir_name, 
-                    solver = solver, threads = threads, parIdx = parIdx)
-  
+                    timelimit = timelimit, mipGAP = mipGAP,
+                    poolrelGAP = poolrelGAP, limitPop = limitPop,
+                    poolCap = poolCap, poolIntensity = poolIntensity,
+                    poolReplace = poolReplace, alphaWeight = alphaWeight,
+                    betaWeight = betaWeight, dir_name = dir_name,
+                    solver = solver, threads = threads)
+
   cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)
 
-  result = solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network, 
-                         measObj = res$measurements, 
-                         inputObj = res$inputs$inputs, 
+  result = solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
+                         measObj = res$measurements,
+                         inputObj = res$inputs$inputs,
                          weightObj = res$weights, DOTfig = DOTfig,
                          timelimit = timelimit, mipGAP = mipGAP,
                          poolrelGAP = poolrelGAP, limitPop = limitPop,
                          poolCap = poolCap, poolIntensity = poolIntensity,
-                         poolReplace = poolReplace, alphaWeight = alphaWeight, 
-                         betaWeight = betaWeight, dir_name = dir_name, 
+                         poolReplace = poolReplace, alphaWeight = alphaWeight,
+                         betaWeight = betaWeight, dir_name = dir_name,
                          solver = solver,
                          threads = threads,
                          experimental_conditions = res$exp,
                          condition = res$condition, repIndex = res$repIndex)
-  
+
   cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)
 
   return(result)

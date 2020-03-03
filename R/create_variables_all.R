@@ -1,10 +1,8 @@
-#'\code{create_variables_all}
-#'
-#'This function returns the identifiers of all the variables used in the ILP 
-#'formulation together with an explanation about the meaning of each of them. 
-#'Also it returns a list of useful identifiers.
-#'
-#'Enio Gjerga, 2020
+## This function returns the identifiers of all the variables used in the ILP 
+## formulation together with an explanation about the meaning of each of them. 
+## Also it returns a list of useful identifiers.
+##
+## Enio Gjerga, 2020
 
 create_variables_all <- function(pknList=pknList, dataMatrix=dataMatrix){
 

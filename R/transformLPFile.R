@@ -1,8 +1,6 @@
-#'\code{transformLPFile}
-#'
-#' Vectorizing the bounds
-#'
-#'Enio Gjerga, 2020
+## Vectorizing the bounds
+##
+## Enio Gjerga, 2020
 
 transformLPFile <- function(lpFileName = "testFile_1_1.lp"){
   

@@ -1,8 +1,6 @@
-#'\code{write_generals}
-#'
-#' This code writes all the variables.
-#' 
-#' Enio Gjerga, 2020
+## This code writes all the variables.
+##
+## Enio Gjerga, 2020
 
 write_generals <- function(variables=variables, oF=oF){
   

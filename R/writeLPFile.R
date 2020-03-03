@@ -1,9 +1,7 @@
-#'\code{writeLPFile}
-#'
-#' Write a list of linear programming (LP) constraints into a file while will be
-#' read by interactive cplex solver to perform network optimisation.
-#'
-#'Enio Gjerga, 2020
+## Write a list of linear programming (LP) constraints into a file while will be
+## read by interactive cplex solver to perform network optimisation.
+##
+## Enio Gjerga, 2020
 
 writeLPFile <- function(data = data, pknList = pknList, inputs = inputs,
                         alphaWeight=1, betaWeight=0.2, scores=scores,
@@ -31,9 +29,9 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs,
   c4 <- write_constraints_4_all(variables = variables)
   c5 <- write_constraints_5_all(variables = variables)
   c6 <- write_constraints_6(variables = variables, dataMatrix = dataMatrix,
-                            inputs = inputs)
+                            inputs = inputs, pknList = pknList)
   c7 <- write_constraints_7(variables = variables, dataMatrix = dataMatrix,
-                            inputs = inputs)
+                            inputs = inputs, pknList = pknList)
   c8 <- write_constraints_8(variables = variables, inputs = inputs,
                             pknList = pknList)
   c9 <- write_loop_constraints(variables = variables, pknList = pknList,

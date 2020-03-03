@@ -1,9 +1,7 @@
-#'\code{exportResult}
-#'
-#' Extract and export the optimisation results from the cplex solution file 
-#' (XML) as files and variables for further plotting functions
-#'
-#'Enio Gjerga, 2020
+## Extract and export the optimisation results from the cplex solution file 
+## (XML) as files and variables for further plotting functions
+##
+## Enio Gjerga, 2020
 
 exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, 
                          variables = variables, conditionIDX = conditionIDX,

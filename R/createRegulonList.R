@@ -1,11 +1,34 @@
 #'\code{createRegulonList}
 #'
-#' Creating regulon list similar to vipper from an interaction data-frame
+#' @details Creating regulon list similar to vipper from an interaction 
+#' data-frame
 #' 
 #' @param regulon_table the regulon matrix with columns the source, sign and
 #' target of the TF interaction.
+#' 
+#' @return A regulon list similar to the one required for the viper analysis
+#' 
+#' @author Enio Gjerga, 2020 \email{carnival.developers@gmail.com}
+#' 
+#' @examples
+#' library(CARNIVAL)
+#' library(OmnipathR)
+#' 
+#' regulon_df <- 
+#'   import_TFregulons_Interactions(select_organism = 9606)
+#' 
+#' regulon_df <- 
+#'   regulon_df[which((regulon_df$is_stimulation+regulon_df$is_inhibition)==1), ]
+#' 
+#' regulon_table <- matrix(data = , nrow = nrow(regulon_df), ncol = 3)
+#' regulon_table[, 1] <- regulon_df$source_genesymbol
+#' regulon_table[which(regulon_df$is_stimulation==1), 2] = "1"
+#' regulon_table[which(regulon_df$is_inhibition==1), 2] = "-1"
+#' regulon_table[, 3] <- regulon_df$target_genesymbol
 #'
-#'Enio Gjerga, 2020
+#' regulons <- createRegulonList(regulon_table = regulon_table)
+#'
+#' @export
 
 createRegulonList <- function(regulon_table = regulon_table){
   

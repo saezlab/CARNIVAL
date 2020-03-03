@@ -1,8 +1,6 @@
-#'\code{append_binaries}
-#'
-#' Appending the binaries for each condition
-#' 
-#' Enio Gjerga, 2020
+## Appending the binaries for each condition
+##
+## Enio Gjerga, 2020
 
 append_binaries = function(binaries = binaries, variables = variables){
   

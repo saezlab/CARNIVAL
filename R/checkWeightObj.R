@@ -1,12 +1,6 @@
-#'\code{checkWeightObj}
-#'
-#'@param weightObj Weight object
-#'
-#'@return Error message in case of errors in the weights
-#'
-#'@export
-#'
-#'Enio Gjerga, 2020
+## Returning error message in case of errors in the weights
+##
+## Enio Gjerga, 2020
 
 checkWeightObj <- function(weightObj = weightObj, netObj = netObj){
   
