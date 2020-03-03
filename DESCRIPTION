@@ -1,31 +1,28 @@
 Package: CARNIVAL
 Type: Package
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
-Version: 0.9.3
-Author: Anika Liu, Panuwat Trairatphisan, Enio Gjerga 
-Maintainer: Panuwat Trairatphisan <panuwat.trairatphisan@outlook.com>
+Version: 1.0.1
+Author: Enio Gjerga, Panuwat Trairatphisan, Anika Liu, Alberto Valdeolivas, Nikolas Peschke
+Maintainer: Enio Gjerga <enio.gjerga@gmail.com>
 Description: An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores. 
-             Cplex parameters can be freely adjusted and multiple solutions from cplex can be obtained and aggregated.
+             Optimization parameters can be freely adjusted and multiple solutions can be obtained and aggregated.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
     doParallel,
-    igraph,
+    readr,
     viper,
     IRanges,
     AnnotationDbi,
-    GSEABase, 
-    genefilter,   
     Category,
-    dplyr,
-    purrr,
     tibble,
     tidyr,    
     ggplot2,
-    UniProt.ws
+    UniProt.ws,
+    lpSolve
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
-biocViews:
+biocViews: Transcriptomics, GeneExpression, Network
