@@ -1,0 +1,474 @@
+%\VignetteIndexEntry{Main vignette:Playing with networks using CARNIVAL}
+%\VignetteKeywords{Contextualizing large scale signalling networks from expression footprints
+% with CARNIVAL
+%}
+
+%\VignettePackage{CARNIVAL}
+
+\documentclass{article}
+\usepackage{Sweave,fullpage}
+\usepackage{url, color}
+
+%\usepackage{cmap}
+
+\usepackage{authblk}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks, linkcolor=blue
+}
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb,color}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\setkeys{Gin}{width=0.8\textwidth}
+
+
+\definecolor{gris90}{gray}{0.90}
+\definecolor{gris10}{gray}{0.1}
+\definecolor{green}{rgb}{0.6, 0.9,0.6}
+
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{%
+    fontshape=sl,
+    frame=single,
+    xleftmargin=2em,
+    fillcolor=\color{gris90},
+%    numbers=left % prevent copy/paste entire code
+    }
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{
+    fontshape=sl,
+    frame=single,
+    xleftmargin=2em,
+    fillcolor=\color{green}
+}
+
+
+\DefineVerbatimEnvironment{shell}{Verbatim}{formatcom=\color{blue}}
+
+\title{Contextualizing large scale signalling networks from expression footprints
+with CARNIVAL
+}
+\author[1,2]{Enio Gjerga \thanks{enio.gjerga@gmail.com}}
+\author[2]{Panuwat Trairatphisan}
+\author[2]{Anika Liu}
+\author[2]{Alberto Valdeolivas}
+\author[2]{Nicolas Peschke}
+
+\affil[1]{RWTH Aachen University, Faculty of Medicine, Joint Research Centre for 
+Computational Biomedicine (JRC-COMBINE), 52074, Aachen, Germany}
+\affil[2]{Heidelberg University, Faculty of Medicine, and Heidelberg University 
+Hospital, Institute of Computational Biomedicine, Bioquant, 69120, Heidelberg, Germany}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+% gg
+<<preliminaries, eval=True, results=hide, include=False, echo=FALSE>>=
+options(width=70, useFancyQuotes="UTF-8", prompt=" ", continue="  ")
+@
+
+\section{Introduction}
+
+While gene expression profiling is commonly used to gain an overview of cellular
+processes, the identification of upstream processes that drive expression 
+changes remains a challenge. To address this issue, we introduce 
+\emph{CARNIVAL}~\cite{CARNIVAL}, a causal network contextualization tool which 
+derives network architectures from gene expression footprints. \emph{CARNIVAL} 
+(CAusal Reasoning pipeline for Network identification using Integer VALue 
+programming)(see \url{https://saezlab.github.io/CARNIVAL/}) integrates different
+sources of prior knowledge including signed and directed protein–protein 
+interactions, transcription factor targets, and pathway signatures.
+
+\subsection{CARNIVAL pipeline}
+
+CARNIVAL refines a quantitative objective function for ILP problem by 
+incorporating TF and pathway activities on a continuous scale. In addition, the 
+CARNIVAL framework allows us to contextualize the network with or without known 
+targets of perturbations. The implementation is separated into two pipelines 
+which will be referred henceforth as Standard CARNIVAL \emph{StdCARNIVAL} (with 
+known perturbation targets as an input) and Inverse CARNIVAL \emph{InvCARNIVAL} 
+(without information on targets of perturbation), see Figure 
+\ref{fig:carnival_pipeline}. The differential gene expression is used to infer 
+transcription factor (TF) activities with DoRothEA, which are subsequently 
+discretized in order to formulate ILPconstraints. As a result, CARNIVAL derives 
+a family of highest scoring networks which best explain theinferred TF 
+activities. Continuous pathway and TF activities can be additionally considered
+in the objective function.
+
+\begin{center}
+\begin{figure}[ht]
+\includegraphics[height=10cm, width=16.5cm]{carnival_pipeline}
+\caption{\emph{CARNIVAL} pipeline}
+\label{fig:carnival_pipeline}
+\end{figure}
+\end{center}
+
+\subsection{ILP solvers}
+\emph{CARNIVAL} is an extension of the previously implemented Causal Reasoning 
+method from Melas et al.~\cite{Melas}.The network inference process is swiftly 
+performed with an Integer Linear Programming (ILP) formulation of causal 
+reasoning using three solvers: the \emph{R-CRAN lpSolve} free software used for
+solving linear problems; the open-source mixed integer programming solver
+\emph{Cbc} (Coin-or branch and cut)(see \url{https://projects.coin-or.org/Cbc}); 
+or the \emph{CPLEX optimizer} from \emph{IBM} (see 
+\url{https://www.ibm.com/analytics/cplex-optimizer}) which can be obtained for 
+free through the Academic Initiative. To perform the analysis with \emph{cplex}
+or \emph{cbc}, the users will then need to store the binary \emph{cbc} or
+\emph{cplex} executables on any  directory they wish. The binary files of
+\emph{cbc} can be found by first downloading one of the optimization suites
+provided here: \url{https://www.coin-or.org/download/binary/OptimizationSuite/},
+unzip the download and from there save the \emph{cbc} executable (which can be
+found on the \emph{bin} directory) file on any of the direcotries they wish of
+their machines. As for the \emph{cplex}, the executable file can be obtained
+after registration on the \emph{ILOG CPLEX Optimization Studio} here:
+\url{https://my15.digitalexperience.ibm.com/b73a5759-c6a6-4033-ab6b-d9d4f9a6d65b/dxsites/151914d1-03d2-48fe-97d9-d21166848e65/technology/data-science}. 
+Similar like before, users will have to find the \emph{cplex} executable binary 
+file and save on a directory of their own wish or keep them on their default 
+installation paths. The path to interactive version of \emph{CPLEX} is differed 
+based on the operating system. The default installation path for each OS is as 
+follows:
+
+For Mac OS:
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+# ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex
+@
+
+For Linux:
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+# /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex
+@
+
+For Windows:
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+# C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe
+@
+
+Note that the version of \emph{CPLEX} has to be changed accordingly (the latest
+current version is CPLEX-Studio129).
+
+The  \emph{lpSolve} solver can be used after downloading and installing the
+\emph{lpSolve} R-package (see
+\url{https://cran.r-project.org/web/packages/lpSolve/index.html}). This solver
+only works for smaller examples and it can give only one optimal solution. For
+larger real-case examples, the users can use \emph{cbc} or \emph{cplex} solvers.
+
+While \emph{Cbc} is open-source and can be used from any user, the \emph{CPLEX}
+solver is more computationally efficient and is able to provide multiple
+equivalent solutions which are then combined. The  \emph{mipGAP},
+\emph{limitPop}, \emph{poolCap}, \emph{poolIntensity} and \emph{poolReplace}
+work only if \emph{CPLEX} solver is used to train the networks.
+
+\subsection{Citation}
+\emph{CARNIVAL} can be cited as follows:
+
+Liu, A., Trairatphisan, P., Gjerga, E. et al. From expression footprints to 
+causal pathways: contextualizing large signaling networks with CARNIVAL. npj 
+Syst Biol Appl 5, 40 (2019) doi:10.1038/s41540-019-0118-z
+
+\subsection{Prerequisites}
+Besides the above mentioned solvers, users need also to install the following 
+R-package dependencies: \emph{readr}(see 
+\url{https://cran.r-project.org/web/packages/readr/index.html}); \emph{igraph}
+(see \url{https://igraph.org/r/}); \emph{readxl}(see 
+\url{https://readxl.tidyverse.org/}); \emph{dplyr}(see 
+\url{https://www.rdocumentation.org/packages/dplyr/versions/0.7.8});
+\emph{lpSolve}(see \url{https://cran.r-project.org/web/packages/lpSolve/index.html})
+
+In order to visualize the automatically generated \emph{CARNIVAL} networks, 
+users will also need to download and install the Graph Visualization software 
+\emph{graphviz}(see \url{https://www.graphviz.org/}).
+
+\clearpage
+
+\section{Running CARNIVAL}
+
+In the CARNIVAL package, built-in examples are available as the test cases as 
+follows:
+
+1. A small toy example where the inputs are known (\emph{stdCARNIVAL})
+
+2. A small toy example where the inputs are not known (\emph{invCARNVAL})
+
+\subsection{Toy Example - 1}
+
+Let us consider the toy example of \ref{fig:toy_network_ex1}. In this case, the
+inputs are known (\emph{I1=1} and \emph{I2=1}), while the network has all the
+interactions as activatory besides the connection connecting \emph{I2} with
+\emph{N2}. The measurements we have them both \emph{M1=1} and \emph{M2=1}.
+
+Users can run the CARNIVAL analysis with the free solver as follows:
+
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+library(CARNIVAL)
+
+load(file = system.file("toy_inputs_ex1.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_measurements_ex1.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_network_ex1.RData",
+                        package="CARNIVAL"))
+
+# lpSolve
+result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+                     netObj = toy_network_ex1)
+
+print(result)
+@
+
+The \emph{result} object will contain the following fields:
+
+- \emph{weightedSIF}: which contains all the combined solutions generated
+(\emph{lpSolve} and \emph{cbc} will generate only 1 solution, while \emph{cplex}
+can generate multiple solutions) with the Weight column indicating how
+frequently an interaction has appeard on the combined solution.
+
+- \emph{nodesAttributes}: indicating the weigted mean activities of each of the
+proteins present in the combined solution and the type of the node (Input (S),
+Measured (T) or Inferred).
+
+- \emph{sifAll}: A list containing all the separate CARNIVAL solutions.
+
+The CARNIVAL results for the Toy Example - 1 are as shown in
+\ref{fig:toy_network_ex1_solution}.
+
+
+\begin{figure*}
+\centerline{\includegraphics[width=\textwidth]{toy_network_ex1.jpeg}}
+\caption{Prior Knowledge Network of Toy Example - 1}
+\label{fig:toy_network_ex1}
+\end{figure*}
+
+\begin{figure*}
+\centerline{\includegraphics[width=\textwidth]{toy_network_ex1_solution.jpeg}}
+\caption{Solution network of Toy Example - 1}
+\label{fig:toy_network_ex1_solution}
+\end{figure*}
+
+\subsection{Toy Example - 2}
+
+Now let us consider the toy example of \ref{fig:toy_network_ex2}. In this case,
+the inputs are not known and thus a dummy \emph{Perturbation} node will be
+automatically generated and which connects all the nodes in the network which
+do not have any incoming interaction via activatory and inhibitory interactions.
+In this way, CARNIVAL will infere the possible activities of the upper nodes in
+a way which best fits the downstram measurements
+
+Users on this case can run the invCARNIVAL analysis with the free solver as
+follows:
+
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+library(CARNIVAL) # load CARNIVAL library
+
+load(file = system.file("toy_measurements_ex2.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_network_ex2.RData",
+                        package="CARNIVAL"))
+
+# lpSolve
+result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
+
+print(result)
+@
+
+The CARNIVAL results for the Toy Example - 2 are as shown in
+\ref{fig:toy_network_ex2_solution}.
+
+\begin{figure*}
+\centerline{\includegraphics[width=\textwidth]{toy_network_ex2.jpeg}}
+\caption{Prior Knowledge Network of Toy Example - 2}
+\label{fig:toy_network_ex2}
+\end{figure*}
+
+\begin{figure*}
+\centerline{\includegraphics[width=\textwidth]{toy_network_ex2_solution.jpeg}}
+\caption{Solution network of Toy Example - 2}
+\label{fig:toy_network_ex2_solution}
+\end{figure*}
+
+\subsection{Real Case Example}
+Now we show an example about how we can run CARNIVAL on a real case-study. We 
+will show step-by-step how we can build a prior knowledge of signalling and a 
+DoRothEA regulon list from ~\emph{OmniPath}~\cite{OmniPath} (see 
+\url{https://github.com/saezlab/OmnipathR} for the R-package). Next we show how
+we can esti mate pathway activities via PROGENy (see 
+\url{https://github.com/saezlab/progeny} for the R-package). Next we will 
+demonstrate how we can use the \emph{viper}~\cite{viper} (see 
+\url{https://www.bioconductor.org/packages/release/bioc/html/viper.html} for the
+R-package). Finally we will show how we can use CARNIVAL to combine all this 
+information in order to infer the causal regulatory network.
+
+Through \emph{OmnipathR} package, we build the network object needed for 
+contextualizing the signalling network with CARNIVAL.
+
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+library(OmnipathR) # load OmnipathR library
+
+##importing interactions from SignaLink3, PhosphoSite and Signor
+interactions <- 
+  import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
+                                                  "Signor"))
+
+## keeping the directed interactions
+interactions <- interactions[which(interactions$is_directed==1), ]
+
+# keeping signed interactions only
+interactions <- 
+  interactions[which((interactions$is_stimulation+
+                        interactions$is_inhibition)==1), ]
+
+## now building the network data-frame and keeping it as netObj
+network <- matrix(data = , nrow = nrow(interactions), ncol = 3)
+network[, 1] <- interactions$source_genesymbol
+network[which(interactions$is_stimulation==1), 2] <- "1"
+network[which(interactions$is_inhibition==1), 2] <- "-1"
+network[, 3] <- interactions$target_genesymbol
+
+netObj <- as.data.frame(network)
+@
+
+For the analysis we consider the expression data example from the \emph{progeny} 
+R-package (see \url{https://github.com/saezlab/progeny}). We estimate normalized
+(from -1 to 1) pathway activity scores via the \emph{progeny} function for the 
+first sample and then we assign the inferred activities as node weights to the 
+progeny members from the \emph{progenyMembers} object loaded from 
+\emph{CARNIVAL} package. Users can estimate the pathway activities for any 
+sample they wish (see documentation of \emph{assignPROGENyScores()} function)
+
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+library(progeny)
+library(CARNIVAL)
+
+expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 
+                                              package = "progeny"), 
+                                              row.names = 1))
+
+human_def_act <- progeny(expr, scale = TRUE,  organism = "Human", top = 100, 
+                         perm = 10000, z_scores = FALSE)
+
+
+## loading the progeny members to assign the weights
+load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
+
+## now assigning the PROGENy weights to pathway members only for the first 
+## sample which we can consider for the CARNIVAL analysis
+weightObj <- assignPROGENyScores(progeny = human_def_act, 
+                                 progenyMembers = progenyMembers, 
+                                 id = "gene", access_idx = 1)
+@
+
+Next we can retrieve regulons from OmniPath and create the regulon table. From
+there we obtain the \emph{viper} regulon list through the 
+\emph{createRegulonList} function (see documentation for more details).
+
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+regulon_df <- 
+  import_TFregulons_Interactions(select_organism = 9606)
+
+regulon_df <- 
+  regulon_df[which((regulon_df$is_stimulation+regulon_df$is_inhibition)==1), ]
+
+regulon_table <- matrix(data = , nrow = nrow(regulon_df), ncol = 3)
+regulon_table[, 1] <- regulon_df$source_genesymbol
+regulon_table[which(regulon_df$is_stimulation==1), 2] = "1"
+regulon_table[which(regulon_df$is_inhibition==1), 2] = "-1"
+regulon_table[, 3] <- regulon_df$target_genesymbol
+
+regulons <- createRegulonList(regulon_table = regulon_table)
+@
+
+From here we can estimate the TF activities and generate the continuos 
+measurement inputs for CARNIVAL.
+
+<<eval=TRUE, pgf=TRUE, echo=TRUE>>=
+library(viper)
+
+TF_activities = as.data.frame(viper::viper(eset = expr, 
+                                           regulon = regulons, nes = T, 
+                                           method = 'none', minsize = 4, 
+                                           eset.filter = F))
+
+tfList <- generateTFList(df = TF_activities, top = "all", access_idx = 1)
+@
+
+So far we have generated the prior knowledge network which will be used to 
+contextualize the regulatory signalling network (\emph{netObj}) as well as a 
+list object containing the progeny weights (\emph{weightObj}) and the TF 
+activities (\emph{tfList} to be assigned to the \emph{measObj}). For running 
+CARNIVAL we have to access one element at the time from the \emph{weightObj} and
+\emph{tfList}. We use all this as inputs to run the CARNIVAL analysis through 
+the \emph{runCARNIVAL} function. Since the input targets are not known, we 
+perform the \emph{invCARNIVAL} analysis.
+
+<<eval=FALSE, pgf=TRUE, echo=TRUE>>=
+
+##users need to define the path to the cplex solver
+
+res <- runCARNIVAL(measObj = tfList[[1]], netObj = netObj, 
+                   weightObj = weightObj[[1]], solverPath = solverPath, 
+                   solver = "cplex", DOTfig = TRUE)
+
+@
+
+The solution network of this small real-case application is as shown in 
+\ref{fig:real_case}.
+
+\begin{figure*}
+\centerline{\includegraphics[width=\textwidth]{real_case.jpg}}
+\caption{Solution for the real case example}
+\label{fig:real_case}
+\end{figure*}
+
+\begin{thebibliography}{}
+
+\bibitem{CARNIVAL}
+A.~Liu, P.~Trairatphisan, E.~Gjerga, A.~Didangelos, J.~Barratt and 
+J.~Saez-Rodriguez.
+\newblock From expression footprints to causal pathways: contextualizing large 
+signaling networks with CARNIVAL.
+\newblock {npj Syst Biol Appl 5, 40 (2019) doi:10.1038/s41540-019-0118-z.}
+
+\bibitem{Melas}
+I.N.~Melas, T.~Sakellaropoulos, F.~Iorio, L.G.~Alexopoulos, W.~Loh, 
+D.A.~Lauffenburger, J.~Saez-Rodriguez and J.P.F.~Bai
+\newblock Identification of drug-specific pathways based on gene expression 
+data: application to drug induced lung injury.
+\newblock {Integr Biol (Camb). 2015 Aug;7(8):904-20. doi: 10.1039/c4ib00294f.}
+
+\bibitem{dorothea}
+L.~Garcia-Alonso, F.~Iorio, A.~Matchan, N.~Fonseca, P.~Jaaks, G.~Peat, 
+M.~Pignatelli, F.~Falcone, C.H.~Benes, I.~Dunham, G.R.~Bignell, S.~McDade, 
+M.J.~Garnett and J.~Saez-Rodriguez
+\newblock Transcription Factor Activities Enhance Markers of Drug Sensitivity in 
+Cancer.
+\newblock {Cancer Research, 78(3), 769–780.}
+
+\bibitem{progeny}
+M.~Schubert, B.~Klinger, M.~Klunemann, A.~Sieber, F.~Uhlitz, S.~Sauer, 
+M.J.~Garnett, N.~Bluthgen and J.~Saez-Rodriguez
+\newblock Perturbation-response genes reveal signaling footprints in cancer gene 
+expression
+\newblock {Nat Commun. 2018;9(1):20.}
+
+\bibitem{OmniPath}
+D.~Turei, T.~Korcsmáros, and J.~Saez-Rodriguez
+\newblock OmniPath: guidelines and gateway for literature-curated signaling 
+pathway resources.
+\newblock {Nat Methods 2016 Nov 29;13(12):966-967}
+
+\bibitem{viper}
+M.J.~Alvarez, Y.~Shen, F.M.~Giorgi, A.~Lachman, B.B.~Ding, B.H.~Ye and 
+A.~Califano
+\newblock Functional characterization of somatic mutations in cancer using 
+network-based inference of protein activity
+\newblock {Nat Genetics volume 48, pages838–847(2016)}
+
+\end{thebibliography}
+
+
+\end{document}

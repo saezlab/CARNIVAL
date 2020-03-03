@@ -1,10 +1,9 @@
 #'\code{buildDataMatrix}
 #'
-#'@param data Contains the measured data.
-#'@param pknList Contains the background network which serves as a prior knowledge and which we train.
-#'@param inputs Contains the list of targets as inputs.
+#'This function returns the data matrix containing the data for running CARNIVAL 
+#'and a set of identifiers for Targets, Measured and Un-measured nodes.
 #'
-#'@return This function returns the data matrix containing the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
+#'Enio Gjerga, 2020
 
 buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
 
@@ -28,9 +27,12 @@ buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
 
   colnames(dataMatrix) <- c(dnNames, dsNames)
 
-  if(length(which(is.element(el = colnames(data), set = setdiff(colnames(data), ds)))) > 0){
+  if(length(which(is.element(el = colnames(data), 
+                             set = setdiff(colnames(data), ds)))) > 0){
 
-    dataMatrix[, (length(dn)+1):length(allSpecies)] <- as.matrix(data[, -which(is.element(el = colnames(data), set = setdiff(colnames(data), ds)))])
+    dataMatrix[, (length(dn)+1):length(allSpecies)] <- 
+      as.matrix(data[, -which(is.element(el = colnames(data), 
+                                         set = setdiff(colnames(data), ds)))])
 
   }
   else{
@@ -39,15 +41,14 @@ buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
 
   }
 
-  # dataMatrix[which(abs(dataMatrix)<cutoff, arr.ind = TRUE)] <- 0
-
   dataMatrixSign <- sign(dataMatrix)
 
   dnID <- 1:length(dn)
   dsID <- (length(dn)+1):length(allSpecies)
   tsID <- which(is.element(el = c(dn, ds), set = ts))
 
-  res <- list(dataMatrix=dataMatrix, dataMatrixSign=dataMatrixSign, dnID=dnID, dsID=dsID, tsID=tsID, species=c(dn, ds))
+  res <- list(dataMatrix=dataMatrix, dataMatrixSign=dataMatrixSign, dnID=dnID, 
+              dsID=dsID, tsID=tsID, species=c(dn, ds))
 
   return(res)
 

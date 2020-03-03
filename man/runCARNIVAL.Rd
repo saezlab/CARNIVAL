@@ -4,66 +4,106 @@
 \alias{runCARNIVAL}
 \title{\code{runCARNIVAL}}
 \usage{
-runCARNIVAL(CplexPath = NULL, netFile = NULL, measFile = NULL,
-  inputFile = NULL, weightFile = NULL, CARNIVAL_example = 2,
-  Result_dir = "Results_CARNIVAL", inverseCR = F, parallelIdx1 = 1,
-  parallelIdx2 = 1, nodeID = "uniprot", UP2GS = T, DOTfig = T,
-  Export_all = F, timelimit = 600, mipGAP = 0.05,
-  poolrelGAP = 1e-04, limitPop = 500, poolCap = 100,
-  poolIntensity = 4, poolReplace = 2, alphaWeight = 1,
-  betaWeight = 0.2)
+runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
+            solverPath=NULL, solver="lpSolve", DOTfig=FALSE, timelimit=3600,
+            mipGAP=0.05, poolrelGAP=0.0001, limitPop=500, poolCap=100,
+            poolIntensity=4, poolReplace=2, alphaWeight=1, betaWeight=0.2,
+            dir_name=paste0(getwd(), "/DOTfigures"))
 }
 \arguments{
-\item{CplexPath}{Path to executable cplex file - always required}
 
-\item{netFile}{Filename of the prior knowledge network - always required or set as NULL to run CARNIVAL built-in example}
+\item{inputObj}{Data frame of the list for target of perturbation - optional 
+                or default set to NULL to run invCARNIVAL when inputs are not 
+                known}
 
-\item{measFile}{Filename of the measurement file (here DoRothEA normalised enrichment scores) - always required or set as NULL to run CARNIVAL built-in example}
+\item{measObj}{Data frame of the measurement file (i.e. DoRothEA normalised 
+               enrichment scores) - always required}
+               
+\item{netObj}{Data frame of the prior knowledge network - always required}
 
-\item{inputFile}{Filename of the list for target of perturbation - optional or set as NULL to run CARNIVAL built-in example}
+\item{weightObj}{Data frame of the additional weight (i.e. PROGENy pathway 
+                 score or measured protein activities) - optional or default set 
+                 as NULL to run CARNIVAL without weights}
+                 
+\item{solverPath}{Path to executable cbc/cplex file - default set to NULL, in
+                  which case the solver from lpSolve package is used}
+                 
+\item{solver}{Solver to use: lpSolve/cplex/cbc (Default set to lpSolve)}
 
-\item{weightFile}{Filename of the additional weight (here PROGENy pathway score) - optional or set as NULL to run CARNIVAL built-in example}
+\item{DOTfig}{For plotting: define if DOT figure will be exported in the result 
+              folder (logical T/F). Default set to TRUE. If this the case, the
+              plotted DOT figures will be saved in the defined dir_name 
+              directory}
 
-\item{CARNIVAL_example}{Number of built-in CARNIVAL example (1=Toy Model,2=SBVimprove-EGF,3=TG-GATEs-APAP) or set as NULL to use user-defined input files}
+\item{timelimit}{CPLEX/Cbc parameter: Time limit of CPLEX optimisation (in 
+                 seconds)}
 
-\item{Result_dir}{Specify directory name to store results}
+\item{mipGAP}{CPLEX parameter: the absolute tolerance on the gap between the 
+              best integer objective and the objective of the best node 
+              remaining. When this difference falls below the value of this 
+              parameter, the linear integer optimization is stopped. Default set
+              to 0.05}
 
-\item{inverseCR}{Execute the inverse CARNIVAL pipeline (logical T/F)}
+\item{poolrelGAP}{CPLEX/Cbc parameter: Allowed relative gap of accepted solution 
+      comparing within the pool of accepted solution (fraction; default: 
+      0.0001)}
 
-\item{parallelIdx1}{First index number suitable for parallelisation (numeric - set to 1 by default)}
+\item{limitPop}{CPLEX parameter: Allowed number of solutions to be generated 
+                (default: 500)}
 
-\item{parallelIdx2}{Second index number suitable for parallelisation (numeric - set to 1 by default)}
+\item{poolCap}{CPLEX parameter: Allowed number of solution to be kept in the 
+               pool of solution (default: 100)}
 
-\item{nodeID}{Define the input format of nodes in the network (either 'uniprot' or 'gene' symbol)}
+\item{poolIntensity}{CPLEX parameter: Intensity of solution searching (0,1,2,3,4
+                     - default: 4)}
 
-\item{UP2GS}{For plotting: define if Uniprot ID will be converted to gene symbols for better readability (logical T/F)}
+\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the 
+                   pool (0,1,2 - default: 2 = most diversified solutions)}
 
-\item{DOTfig}{For plotting: define if DOT figure will be exported in the result folder (logical T/F)}
-
-\item{Export_all}{Define if all CPLEX variables results will be exported into files (logical T/F) - only recommended for debugging}
-
-\item{timelimit}{CPLEX parameter: Time limit of CPLEX optimisation (in seconds)}
-
-\item{mipGAP}{CPLEX parameter: Allowed gap of accepted solution comparing to the best solution (fraction; default: 0.05 = 5 percents)}
-
-\item{poolrelGAP}{CPLEX parameter: Allowed relative gap of accepted solution comparing within the pool of accepted solution (fraction; default: 0.0001)}
-
-\item{limitPop}{CPLEX parameter: Allowed number of solutions to be generated (default: 500)}
-
-\item{poolCap}{CPLEX parameter: Allowed number of solution to be kept in the pool of solution (default: 100)}
-
-\item{poolIntensity}{CPLEX parameter: Intensity of solution searching (0,1,2,3,4 - default: 4)}
-
-\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the pool (0,1,2 - default: 2 = most diversified solutions)}
-
-\item{alphaWeight}{Objective function: weight for mismatch penalty (default: 1 - will only be applied once measurement file only contains discrete values)}
+\item{alphaWeight}{Objective function: weight for mismatch penalty (default: 1 - 
+                   will only be applied once measurement file only contains 
+                   discrete values)}
 
 \item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
+
+\item{dir_name}{Specify directory name to store results. by default it will
+                create a /DOTfigures directory within the current working
+                directory}
+
 }
 \value{
-The networks and predicted node activities from the CARNIVAL pipeline as a variable which are also saved in the destined result folder
+The networks and predicted node activities from the CARNIVAL pipeline as a 
+variable which are also optionally saved in the destined result folder
 }
 \description{
-Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL built-in examples
-Note: The pipeline requires either all required user-defined input variables (netFile and measFile) are set to NULL or CARNIVAL_example is set to NULL to execute
+Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL 
+built-in examples
+}
+\examples{
+## loading toy example 1
+
+load(file = system.file("toy_inputs_ex1.RData",
+package="CARNIVAL"))
+load(file = system.file("toy_measurements_ex1.RData",
+package="CARNIVAL"))
+load(file = system.file("toy_network_ex1.RData",
+package="CARNIVAL"))
+
+## lpSolve
+res1 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
+                      netObj = toy_network_ex1)
+
+## cbc
+res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
+                      netObj = toy_network_ex1, solverPath = solverPath,
+                      solver = "cbc")
+                      
+## cplex
+res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
+                      netObj = toy_network_ex1, solverPath = solverPath,
+                      solver = "cbc")
+
+}
+\author{
+Enio Gjerga
 }
