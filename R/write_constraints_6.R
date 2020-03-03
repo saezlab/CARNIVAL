@@ -1,14 +1,13 @@
 #'\code{write_constraints_6}
 #'
-#'@param variables The list of mapping indices of LP variables.variables Contains the list of variables as used to formulate the ILP problem, explanations for each variable and a list of useful indices.
-#'@param dataMatrix Contains the matrix which stores the data for running CARNIVAL and a set of identifiers for Targets, Measured and Un-measured nodes.
-#'@param inputs Contains the list of targets as inputs.
-#'
-#'@import igraph
-#'
-#'@return This code writes the list of constraints (6) of the ILP problem for all the conditions.
+#' This code writes the list of constraints (6) of the ILP problem for all the 
+#' conditions.
+#' 
+#' Enio Gjerga, 2020
 
-write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix, inputs = inputs) {
+write_constraints_6 <- function(variables=variables, 
+                                dataMatrix=dataMatrix, 
+                                inputs = inputs) {
   
   library(igraph)
   constraints6 <- c()
@@ -27,14 +26,34 @@ write_constraints_6 <- function(variables=variables, dataMatrix=dataMatrix, inpu
     
     if(length(idx1)>0){
       
-      constraints6 <- c(constraints6, paste0(variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("SpeciesUP ", rownames(adj)[idx1], " in experiment ", ii))], " <= 0"))
+      constraints6 <- 
+        c(constraints6, 
+          paste0(variables[[ii]]$variables[which(
+            variables[[ii]]$exp%in%paste0(
+              "SpeciesUP ", 
+              rownames(adj)[idx1], 
+              " in experiment ", ii))], " <= 0"))
       
     }
     
     for(i in 1:length(idx2)){
       
-      cc <- paste0(variables[[ii]]$variables[which(variables[[ii]]$exp==paste0("SpeciesUP ", rownames(adj)[idx2[i]], " in experiment ", ii))], 
-                   paste(paste0(" - ", variables[[ii]]$variables[which(variables[[ii]]$exp%in%paste0("ReactionUp ", colnames(adj)[which(adj[idx2[i], ]>0)], "=", rownames(adj)[idx2[i]], " in experiment ", ii))]), collapse = ""), " <= 0")
+      cc <- paste0(
+        variables[[ii]]$variables[which(
+          variables[[ii]]$exp==paste0(
+            "SpeciesUP ", 
+            rownames(adj)[idx2[i]], 
+            " in experiment ", ii))], 
+                   paste(
+                     paste0(
+                       " - ", 
+                       variables[[ii]]$variables[which(
+                         variables[[ii]]$exp%in%paste0(
+                           "ReactionUp ", 
+                           colnames(adj)[which(adj[idx2[i], ]>0)], 
+                           "=", 
+                           rownames(adj)[idx2[i]], 
+                           " in experiment ", ii))]), collapse = ""), " <= 0")
       
       constraints6 <- c(constraints6, cc)
       
