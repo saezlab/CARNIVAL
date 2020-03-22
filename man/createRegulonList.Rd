@@ -19,7 +19,6 @@ target of the interaction
 \code{assignPROGENyScores}
 }
 \examples{
-library(CARNIVAL)
 library(OmnipathR)
 
 regulon_df <- 

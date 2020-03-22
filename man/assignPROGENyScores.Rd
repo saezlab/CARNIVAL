@@ -28,7 +28,6 @@ samples (by default for all of them)
 \code{assignPROGENyScores}
 }
 \examples{
-library(CARNIVAL)
 library(progeny)
 
 expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 

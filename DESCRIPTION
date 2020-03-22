@@ -23,6 +23,6 @@ Imports:
     lpSolve
 Suggests: knitr,
     rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder:
 RoxygenNote: 6.1.1
 biocViews: Transcriptomics, GeneExpression, Network

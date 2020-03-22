@@ -15,7 +15,7 @@
 #'which case the solver from lpSolve package is used.
 #'@param solver Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).
 #'@param DOTfig For plotting: define if DOT figure will be exported in the
-#'result folder (logical T/F). Default set to TRUE. If this the case, the
+#'result folder (logical TRUE/FALSE). Default set to TRUE. If this the case, the
 #'plotted DOT figures will be saved in the defined dir_name directory.
 #'@param timelimit CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
 #'seconds (default set to 3600).
