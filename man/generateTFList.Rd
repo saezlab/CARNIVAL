@@ -27,7 +27,6 @@ target of the interaction
 \code{assignPROGENyScores}
 }
 \examples{
-library(CARNIVAL)
 library(OmnipathR)
 library(viper)
 library(progeny)
@@ -51,9 +50,9 @@ regulon_table[, 3] <- regulon_df$target_genesymbol
 regulons <- createRegulonList(regulon_table = regulon_table)
 
 TF_activities = as.data.frame(viper::viper(eset = expr, 
-                                           regulon = regulons, nes = T, 
+                                           regulon = regulons, nes = TRUE, 
                                            method = 'none', minsize = 4, 
-                                           eset.filter = F))
+                                           eset.filter = FALSE))
 
 tfList <- generateTFList(df = TF_activities, top = "all", 
                             access_idx = 1)
