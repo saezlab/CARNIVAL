@@ -306,7 +306,7 @@ information in order to infer the causal regulatory network.
 Through \emph{OmnipathR} package, we build the network object needed for 
 contextualizing the signalling network with CARNIVAL.
 
-<<eval=FALSE, pgf=FALSE, echo=FALSE>>=
+<<eval=FALSE, pgf=FALSE, echo=TRUE>>=
 library(OmnipathR) # load OmnipathR library
 
 ##importing interactions from SignaLink3, PhosphoSite and Signor
@@ -340,7 +340,7 @@ progeny members from the \emph{progenyMembers} object loaded from
 \emph{CARNIVAL} package. Users can estimate the pathway activities for any 
 sample they wish (see documentation of \emph{assignPROGENyScores()} function)
 
-<<eval=FALSE, pgf=FALSE, echo=FALSE>>=
+<<eval=FALSE, pgf=FALSE, echo=TRUE>>=
 library(progeny)
 library(CARNIVAL)
 
@@ -366,7 +366,7 @@ Next we can retrieve regulons from OmniPath and create the regulon table. From
 there we obtain the \emph{viper} regulon list through the 
 \emph{createRegulonList} function (see documentation for more details).
 
-<<eval=FALSE, pgf=FALSE, echo=FALSE>>=
+<<eval=FALSE, pgf=FALSE, echo=TRUE>>=
 regulon_df <- 
   import_TFregulons_Interactions(select_organism = 9606)
 
@@ -385,7 +385,7 @@ regulons <- createRegulonList(regulon_table = regulon_table)
 From here we can estimate the TF activities and generate the continuos 
 measurement inputs for CARNIVAL.
 
-<<eval=FALSE, pgf=FALSE, echo=FALSE>>=
+<<eval=FALSE, pgf=FALSE, echo=TRUE>>=
 library(viper)
 
 TF_activities = as.data.frame(viper::viper(eset = expr, 
@@ -405,7 +405,7 @@ CARNIVAL we have to access one element at the time from the \emph{weightObj} and
 the \emph{runCARNIVAL} function. Since the input targets are not known, we 
 perform the \emph{invCARNIVAL} analysis.
 
-<<eval=FALSE, pgf=FALSE, echo=FALSE>>=
+<<eval=FALSE, pgf=FALSE, echo=TRUE>>=
 
 ##users need to define the path to the cplex solver
 
