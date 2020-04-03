@@ -93,15 +93,15 @@ package="CARNIVAL"))
 res1 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
                       netObj = toy_network_ex1)
 
-## cbc
-res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-                      netObj = toy_network_ex1, solverPath = solverPath,
-                      solver = "cbc")
-                      
-## cplex
-res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-                      netObj = toy_network_ex1, solverPath = solverPath,
-                      solver = "cplex")
+# ## cbc
+# res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
+#                    netObj = toy_network_ex1, solverPath = solverPath,
+#                    solver = "cbc")
+# 
+# ## cplex
+# res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
+#                    netObj = toy_network_ex1, solverPath = solverPath,
+#                    solver = "cplex")
 
 }
 \author{
