@@ -28,25 +28,24 @@ samples (by default for all of them)
 \code{assignPROGENyScores}
 }
 \examples{
-library(progeny)
-
-expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 
-                                              package = "progeny"), 
-                                              row.names = 1))
-
-human_def_act <- progeny(expr, scale = TRUE,  organism = "Human", top = 100, 
-                         perm = 10000, z_scores = FALSE)
-
-
-## loading the progeny members to assign the weights
-load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
-# load(file = "progenyMembers.RData")
-
-## now assigning the PROGENy weights to pathway members only for the first 
-## sample which we can consider for the CARNIVAL analysis
-weightObj <- assignPROGENyScores(progeny = human_def_act, 
-                                 progenyMembers = progenyMembers, 
-                                 id = "gene", access_idx = 1)
+# library(progeny)
+#
+# expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 
+#                                               package = "progeny"), 
+#                                               row.names = 1))
+#
+# human_def_act <- progeny(expr, scale = TRUE,  organism = "Human", top = 100, 
+#                          perm = 10000, z_scores = FALSE)
+#
+#
+# ## loading the progeny members to assign the weights
+# load(file = system.file("progenyMembers.RData",package="CARNIVAL"))
+#
+# ## now assigning the PROGENy weights to pathway members only for the first 
+# ## sample which we can consider for the CARNIVAL analysis
+# weightObj <- assignPROGENyScores(progeny = human_def_act, 
+#                                  progenyMembers = progenyMembers, 
+#                                  id = "gene", access_idx = 1)
 
 }
 \author{
