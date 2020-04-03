@@ -27,35 +27,35 @@ target of the interaction
 \code{assignPROGENyScores}
 }
 \examples{
-library(OmnipathR)
-library(viper)
-library(progeny)
-
-expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 
-                                              package = "progeny"), 
-                                              row.names = 1))
-
-regulon_df <- 
-  import_TFregulons_Interactions(select_organism = 9606)
-
-regulon_df <- 
-  regulon_df[which((regulon_df$is_stimulation+regulon_df$is_inhibition)==1), ]
-
-regulon_table <- matrix(data = , nrow = nrow(regulon_df), ncol = 3)
-regulon_table[, 1] <- regulon_df$source_genesymbol
-regulon_table[which(regulon_df$is_stimulation==1), 2] = "1"
-regulon_table[which(regulon_df$is_inhibition==1), 2] = "-1"
-regulon_table[, 3] <- regulon_df$target_genesymbol
-
-regulons <- createRegulonList(regulon_table = regulon_table)
-
-TF_activities = as.data.frame(viper::viper(eset = expr, 
-                                           regulon = regulons, nes = TRUE, 
-                                           method = 'none', minsize = 4, 
-                                           eset.filter = FALSE))
-
-tfList <- generateTFList(df = TF_activities, top = "all", 
-                            access_idx = 1)
+# library(OmnipathR)
+# library(viper)
+# library(progeny)
+#
+# expr <- as.matrix(read.csv(system.file("extdata", "human_input.csv", 
+#                                              package = "progeny"), 
+#                                              row.names = 1))
+#
+# regulon_df <- 
+#   import_TFregulons_Interactions(select_organism = 9606)
+#
+# regulon_df <- 
+#   regulon_df[which((regulon_df$is_stimulation+regulon_df$is_inhibition)==1), ]
+#
+# regulon_table <- matrix(data = , nrow = nrow(regulon_df), ncol = 3)
+# regulon_table[, 1] <- regulon_df$source_genesymbol
+# regulon_table[which(regulon_df$is_stimulation==1), 2] = "1"
+# regulon_table[which(regulon_df$is_inhibition==1), 2] = "-1"
+# regulon_table[, 3] <- regulon_df$target_genesymbol
+#
+# regulons <- createRegulonList(regulon_table = regulon_table)
+#
+# TF_activities = as.data.frame(viper::viper(eset = expr, 
+#                                            regulon = regulons, nes = TRUE, 
+#                                            method = 'none', minsize = 4, 
+#                                            eset.filter = FALSE))
+#
+# tfList <- generateTFList(df = TF_activities, top = "all", 
+#                             access_idx = 1)
 
 }
 \author{
