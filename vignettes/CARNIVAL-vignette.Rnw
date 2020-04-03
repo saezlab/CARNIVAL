@@ -2,7 +2,7 @@
 %\VignetteKeywords{Contextualizing large scale signalling networks from expression footprints
 % with CARNIVAL
 %}
-%\VignetteEngine{knitr::rmarkdown}
+%\VignetteEngine{knitr}
 
 %\VignettePackage{CARNIVAL}
 
