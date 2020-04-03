@@ -70,7 +70,7 @@ Hospital, Institute of Computational Biomedicine, Bioquant, 69120, Heidelberg, G
 \tableofcontents
 
 % gg
-<<preliminaries, eval=True, results=hide, include=False, echo=FALSE>>=
+<<preliminaries, eval=TRUE, results=hide, include=False, echo=FALSE>>=
 options(width=70, useFancyQuotes="UTF-8", prompt=" ", continue="  ")
 @
 
