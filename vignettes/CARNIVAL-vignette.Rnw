@@ -26,7 +26,7 @@ and above)}}
 
 
 
-\author[1,2]{Enio Gjerga \thanks{enio.gjerga@gmail.com}}
+\author[1,2]{Enio Gjerga}
 \author[2]{Panuwat Trairatphisan}
 \author[2]{Anika Liu}
 \author[2]{Alberto Valdeolivas}
