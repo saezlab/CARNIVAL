@@ -32,11 +32,6 @@ and above)}}
 \author[2]{Alberto Valdeolivas}
 \author[2]{Nicolas Peschke}
 
-\affil[1]{RWTH Aachen University, Faculty of Medicine, Joint Research Centre for 
-Computational Biomedicine (JRC-COMBINE), 52074, Aachen, Germany}
-\affil[2]{Heidelberg University, Faculty of Medicine, and Heidelberg University 
-Hospital, Institute of Computational Biomedicine, Bioquant, 69120, Heidelberg, Germany}
-
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \maketitle
