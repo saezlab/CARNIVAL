@@ -1,57 +1,31 @@
 %\VignetteIndexEntry{Main vignette:Playing with networks using CARNIVAL}
-%\VignetteKeywords{Contextualizing large scale signalling networks from expression footprints
-% with CARNIVAL
-%}
-
+%\VignetteKeywords{Contextualizing large scale signalling networks from expression footprints with CARNIVAL }
 %\VignettePackage{CARNIVAL}
 
 \documentclass{article}
-\usepackage{Sweave,fullpage}
+\usepackage{Sweave, fullpage}
+\usepackage{enumerate}
 \usepackage{url, color}
-
-%\usepackage{cmap}
-
-\usepackage{authblk}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-
 \usepackage{hyperref}
-
 \hypersetup{
   colorlinks, linkcolor=blue
 }
-
-\RequirePackage[T1]{fontenc}
-\RequirePackage{graphicx,ae,fancyvrb,color}
-\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
-\setkeys{Gin}{width=0.8\textwidth}
-
-
-\definecolor{gris90}{gray}{0.90}
-\definecolor{gris10}{gray}{0.1}
-\definecolor{green}{rgb}{0.6, 0.9,0.6}
+% 10 
+% 11 \usepackage{authblk}
+% 12 \usepackage[T1]{fontenc}
+% 13 \usepackage[utf8]{inputenc}
+% 14 
 
 
-\DefineVerbatimEnvironment{Sinput}{Verbatim}{%
-    fontshape=sl,
-    frame=single,
-    xleftmargin=2em,
-    fillcolor=\color{gris90},
-%    numbers=left % prevent copy/paste entire code
-    }
-\DefineVerbatimEnvironment{Soutput}{Verbatim}{
-    fontshape=sl,
-    frame=single,
-    xleftmargin=2em,
-    fillcolor=\color{green}
-}
 
 
-\DefineVerbatimEnvironment{shell}{Verbatim}{formatcom=\color{blue}}
 
-\title{Contextualizing large scale signalling networks from expression footprints
-with CARNIVAL
-}
+\title{Contextualizing large scale signalling networks from expression footprints with \emph{CARNIVAL} \\\small{(version 1.0.0
+and above)}}
+
+
+
+
 \author[1,2]{Enio Gjerga \thanks{enio.gjerga@gmail.com}}
 \author[2]{Panuwat Trairatphisan}
 \author[2]{Anika Liu}
@@ -64,14 +38,13 @@ Computational Biomedicine (JRC-COMBINE), 52074, Aachen, Germany}
 Hospital, Institute of Computational Biomedicine, Bioquant, 69120, Heidelberg, Germany}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \maketitle
 
-\tableofcontents
 
-% gg
-<<preliminaries, eval=True, results=hide, include=False, echo=FALSE>>=
-options(width=70, useFancyQuotes="UTF-8", prompt=" ", continue="  ")
-@
+
+
+\tableofcontents
 
 \section{Introduction}
 
@@ -424,7 +397,7 @@ The solution network of this small real-case application is as shown in
 \label{fig:real_case}
 \end{figure*}
 
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
 
 \bibitem{CARNIVAL}
 A.~Liu, P.~Trairatphisan, E.~Gjerga, A.~Didangelos, J.~Barratt and 

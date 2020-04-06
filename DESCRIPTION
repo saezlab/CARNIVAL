@@ -1,28 +1,14 @@
 Package: CARNIVAL
 Type: Package
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
-Version: 0.99.9
+Version: 1.99.19
+Date: 2020-06-04
 Author: Enio Gjerga, Panuwat Trairatphisan, Anika Liu, Alberto Valdeolivas, Nikolas Peschke
-Maintainer: Enio Gjerga <enio.gjerga@gmail.com>
+Maintainer: E.Gjerga <enio.gjerga@gmail.com>
+Depends: R (>= 3.6.0), CellNOptR (>= 1.4.0), graph
+Suggests: doParallel, readr, viper, IRanges, AnnotationDbi, Category, tibble, tidyr, ggplot2, UniProt.ws, lpSolve
+biocViews: Transcriptomics, GeneExpression, Network
 Description: An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores. 
              Optimization parameters can be freely adjusted and multiple solutions can be obtained and aggregated.
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
-Imports: 
-    doParallel,
-    readr,
-    viper,
-    IRanges,
-    AnnotationDbi,
-    Category,
-    tibble,
-    tidyr,    
-    ggplot2,
-    UniProt.ws,
-    lpSolve
-Suggests: knitr,
-    rmarkdown
-VignetteBuilder: knitr
-RoxygenNote: 6.1.1
-biocViews: Transcriptomics, GeneExpression, Network
+LazyLoad: yes
