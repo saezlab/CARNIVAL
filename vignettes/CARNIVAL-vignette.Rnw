@@ -55,7 +55,7 @@ changes remains a challenge. To address this issue, we introduce
 derives network architectures from gene expression footprints. \emph{CARNIVAL} 
 (CAusal Reasoning pipeline for Network identification using Integer VALue 
 programming)(see \url{https://saezlab.github.io/CARNIVAL/}) integrates different
-sources of prior knowledge including signed and directed protein–protein 
+sources of prior knowledge including signed and directed protein-protein 
 interactions, transcription factor targets, and pathway signatures.
 
 \subsection{CARNIVAL pipeline}
@@ -419,7 +419,7 @@ M.~Pignatelli, F.~Falcone, C.H.~Benes, I.~Dunham, G.R.~Bignell, S.~McDade,
 M.J.~Garnett and J.~Saez-Rodriguez
 \newblock Transcription Factor Activities Enhance Markers of Drug Sensitivity in 
 Cancer.
-\newblock {Cancer Research, 78(3), 769–780.}
+\newblock {Cancer Research, 78(3), 769-780.}
 
 \bibitem{progeny}
 M.~Schubert, B.~Klinger, M.~Klunemann, A.~Sieber, F.~Uhlitz, S.~Sauer, 
@@ -429,7 +429,7 @@ expression
 \newblock {Nat Commun. 2018;9(1):20.}
 
 \bibitem{OmniPath}
-D.~Turei, T.~Korcsmáros, and J.~Saez-Rodriguez
+D.~Turei, T.~Korcsmaros, and J.~Saez-Rodriguez
 \newblock OmniPath: guidelines and gateway for literature-curated signaling 
 pathway resources.
 \newblock {Nat Methods 2016 Nov 29;13(12):966-967}
@@ -439,7 +439,7 @@ M.J.~Alvarez, Y.~Shen, F.M.~Giorgi, A.~Lachman, B.B.~Ding, B.H.~Ye and
 A.~Califano
 \newblock Functional characterization of somatic mutations in cancer using 
 network-based inference of protein activity
-\newblock {Nat Genetics volume 48, pages838–847(2016)}
+\newblock {Nat Genetics volume 48, pages838-847(2016)}
 
 \end{thebibliography}
 
