@@ -1,0 +1,165 @@
+---
+title: "Contextualizing large scale signalling networks from expression footprints with CARNIVAL"
+author: "Enio Gjerga"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{narray Usage Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, echo=FALSE, results='hide', warning=FALSE, error=FALSE, message=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(
+  cache = FALSE,
+  echo = TRUE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE
+)
+```
+
+Introduction
+============
+While gene expression profiling is commonly used to gain an overview of cellular
+processes, the identification of upstream processes that drive expression 
+changes remains a challenge. To address this issue, we introduce 
+CARNIVAL ([Liu, Trairatphisan, Gjerga et al 2019](https://www.nature.com/articles/s41540-019-0118-z)), 
+a causal network contextualization tool which derives network architectures from
+gene expression footprints. [CARNIVAL](https://saezlab.github.io/CARNIVAL/) 
+(CAusal Reasoning pipeline for Network identification using Integer VALue 
+programming) integrates different sources of prior knowledge including signed 
+and directed protein-protein interactions, transcription factor targets, and 
+pathway signatures.
+
+Pipeline
+--------
+CARNIVAL refines a quantitative objective function for ILP problem by 
+incorporating TF and pathway activities on a continuous scale. In addition, the 
+CARNIVAL framework allows us to contextualize the network with or without known 
+targets of perturbations. The implementation is separated into two pipelines 
+which will be referred henceforth as Standard CARNIVAL StdCARNIVAL (with 
+known perturbation targets as an input) and Inverse CARNIVAL InvCARNIVAL 
+(without information on targets of perturbation). The differential gene 
+expression is used to infer transcription factor (TF) activities with DoRothEA, 
+which are subsequently discretized in order to formulate ILPconstraints. As a 
+result, CARNIVAL derives a family of highest scoring networks which best explain
+the inferred TF activities. Continuous pathway and TF activities can be 
+additionally considered in the objective function.
+
+ILP solvers
+-----------
+CARNIVAL is an extension of the previously implemented Causal Reasoning 
+method from [Melas et al.](https://pubs.rsc.org/en/content/articlelanding/2015/ib/c4ib00294f#!divAbstract).
+The network inference process is swiftly performed with an Integer Linear 
+Programming (ILP) formulation of causal reasoning using three solvers: the 
+[R-CRAN lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html) 
+free software used for solving linear problems; the open-source mixed integer 
+programming solver [Cbc](https://projects.coin-or.org/Cbc) (Coin-or branch and 
+cut); or the [CPLEX optimizer](https://www.ibm.com/analytics/cplex-optimizer) 
+from IBM which can be obtained for free through the Academic Initiative. To 
+perform the analysis with cplex or cbc, the users will then need to store the 
+binary cbc or cplex executables on any  directory they wish. The binary files of
+cbc can be found by first downloading one of the optimization suites
+provided here: https://www.coin-or.org/download/binary/OptimizationSuite/,
+unzip the download and from there save the cbc executable (which can be
+found on the bin directory) file on any of the direcotries they wish of
+their machines. As for the cplex, the executable file can be obtained
+after registration on the [ILOG CPLEX Optimization Studio]({https://my15.digitalexperience.ibm.com/b73a5759-c6a6-4033-ab6b-d9d4f9a6d65b/dxsites/151914d1-03d2-48fe-97d9-d21166848e65/technology/data-science)
+Similar like before, users will have to find the cplex executable binary 
+file and save on a directory of their own wish or keep them on their default 
+installation paths. The path to interactive version of CPLEX is differed 
+based on the operating system. The default installation path for each OS is as 
+follows:
+
+For Mac OS:
+```{r}
+# ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex
+```
+
+For Linux:
+```{r}
+# /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex
+```
+
+For Windows:
+```{r}
+# C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe
+```
+
+Note that the version of CPLEX has to be changed accordingly (the latest
+current version is CPLEX-Studio129).
+
+The  lpSolve solver can be used after downloading and installing the
+[lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html) R-package.
+This solver only works for smaller examples and it can give only one optimal 
+solution. For larger real-case examples, the users can use cbc or cplex solvers.
+
+Prerequisites
+-------------
+Besides the above mentioned solvers, users need also to install the following 
+R-package dependencies: [readr](https://cran.r-project.org/web/packages/readr/index.html);
+[igraph](https://igraph.org/r/); [readxl](https://readxl.tidyverse.org/); 
+[dplyr](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8);
+[lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
+
+In order to visualize the automatically generated CARNIVAL networks, 
+users will also need to download and install the Graph Visualization software 
+[graphviz](https://www.graphviz.org/).
+
+Running CARNIVAL
+================
+In the CARNIVAL package, built-in examples are available as the test cases as 
+follows:
+
+1. A small toy example where the inputs are known (stdCARNIVAL)
+
+2. A small toy example where the inputs are not known (invCARNVAL)
+
+Toy Example - 1
+---------------
+Toy example for the stdCARNIVAL pipeline:
+
+```{r}
+library(CARNIVAL)
+
+load(file = system.file("toy_inputs_ex1.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_measurements_ex1.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_network_ex1.RData",
+                        package="CARNIVAL"))
+
+# lpSolve
+result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+                     netObj = toy_network_ex1)
+
+print(result)
+```
+
+Toy Example - 2
+---------------
+Toy example for the invCARNIVAL pipeline:
+
+```{r}
+library(CARNIVAL) # load CARNIVAL library
+
+load(file = system.file("toy_measurements_ex2.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_network_ex2.RData",
+                        package="CARNIVAL"))
+
+# lpSolve
+result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
+
+print(result)
+```
+
+R version information
+---------------------
+
+```{r echo=FALSE}
+sessionInfo()
+```
