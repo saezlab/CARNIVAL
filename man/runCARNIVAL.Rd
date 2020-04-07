@@ -8,7 +8,7 @@ runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
             solverPath=NULL, solver="lpSolve", DOTfig=FALSE, timelimit=3600,
             mipGAP=0.05, poolrelGAP=0.0001, limitPop=500, poolCap=100,
             poolIntensity=4, poolReplace=2, alphaWeight=1, betaWeight=0.2,
-            dir_name=paste0(getwd(), "/DOTfigures"))
+            threads = 0, dir_name=paste0(getwd(), "/DOTfigures"))
 }
 \arguments{
 
@@ -64,7 +64,10 @@ runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
                    will only be applied once measurement file only contains 
                    discrete values)}
 
-\item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
+\item{betaWeight}{Objective function: weight for node penalty (default: 0.2)}
+
+\item{threads}{Number of threads to be used for the analysis (default: 0 - 
+meaning all threads)}
 
 \item{dir_name}{Specify directory name to store results. by default it will
                 create a /DOTfigures directory within the current working
