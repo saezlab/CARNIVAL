@@ -12,7 +12,7 @@ Description: An upgraded causal reasoning tool from Melas et al in R with update
 URL: https://github.com/saezlab/CARNIVAL
 BugReports: https://github.com/saezlab/CARNIVAL/issues
 Depends:
-    R (>= 4.0)
+    R (>= 3.6.0)
 Imports:
     doParallel,
     readr,
