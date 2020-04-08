@@ -1,6 +1,6 @@
 Package: CARNIVAL
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
-Version: 0.99.22
+Version: 0.99.23
 Author: Enio Gjerga <enio.gjerga@gmail.com>
 	 Panuwat Trairatphisan
 	 Anika Liu
@@ -12,7 +12,7 @@ Description: An upgraded causal reasoning tool from Melas et al in R with update
 URL: https://github.com/saezlab/CARNIVAL
 BugReports: https://github.com/saezlab/CARNIVAL/issues
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.0)
 Imports:
     doParallel,
     readr,
