@@ -18,7 +18,7 @@ write_constraints_6 <- function(variables=variables,
     target <- unique(variables[[ii]]$reactionTarget)
 
     gg <- igraph::graph_from_data_frame(d = pknList[, c(3, 1)])
-    adj <- get.adjacency(gg)
+    adj <- igraph::get.adjacency(gg)
     adj <- as.matrix(adj)
 
     idx1 <- which(rowSums(adj)==0)
