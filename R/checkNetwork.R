@@ -22,12 +22,12 @@ checkNetwork <- function(netObj = netObj){
       netObj$target = as.character(netObj$target)
     }
     
-    idx2rem = which(duplicated(netObj[, c(1, 3)]))
-    if(length(idx2rem)>0){
-      print("There are duplicated interactions in the network. Removing the 
-            duplications..")
-      netObj = netObj[-idx2rem, ]
-    }
+    ## idx2rem = which(duplicated(netObj[, c(1, 3)]))
+    ## if(length(idx2rem)>0){
+    ##   print("There are duplicated interactions in the network. Removing the 
+    ##         duplications..")
+    ##   netObj = netObj[-idx2rem, ]
+    ## }
     
     if(ncol(netObj)!=3){
       stop("network object should have three columns: source node, interaction 
