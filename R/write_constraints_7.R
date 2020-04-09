@@ -10,7 +10,7 @@ write_constraints_7 <- function(variables=variables,
                                 pknList = pknList) {
 
   ##library(igraph)
-  requireNamespace("igraph")
+  ##requireNamespace("igraph")
   constraints7 <- c()
 
   for(ii in 1:length(variables)){
