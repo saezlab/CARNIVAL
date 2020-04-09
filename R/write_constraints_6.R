@@ -8,7 +8,8 @@ write_constraints_6 <- function(variables=variables,
                                 inputs = inputs,
                                 pknList = pknList) {
 
-  library(igraph)
+  ##library(igraph)
+  requireNamespace("igraph")
   constraints6 <- c()
 
   for(ii in 1:length(variables)){
@@ -16,8 +17,8 @@ write_constraints_6 <- function(variables=variables,
     source <- unique(variables[[ii]]$reactionSource)
     target <- unique(variables[[ii]]$reactionTarget)
 
-    gg <- graph_from_data_frame(d = pknList[, c(3, 1)])
-    adj <- get.adjacency(gg)
+    gg <- igraph::graph_from_data_frame(d = pknList[, c(3, 1)])
+    adj <- igraph::get.adjacency(gg)
     adj <- as.matrix(adj)
 
     idx1 <- which(rowSums(adj)==0)
