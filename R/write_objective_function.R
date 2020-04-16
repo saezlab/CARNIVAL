@@ -16,7 +16,7 @@ write_objective_function <- function(dataMatrix = dataMatrix,
                      pattern = "DS:", replacement = "")
 
     idxMeasured <- c()
-    for(i in 1:length(measured)){
+    for(i in seq_len(length(measured))){
 
       idxMeasured <- c(idxMeasured, 
                        which(variables$expNodesReduced==paste0("Species ", 
@@ -32,7 +32,7 @@ write_objective_function <- function(dataMatrix = dataMatrix,
 
       weightedSpecies <- rownames(measWeights)
 
-      for(i in 1:length(weightedSpecies)){
+      for(i in seq_len(length(weightedSpecies))){
 
         allWeights[which(
           which(
@@ -81,7 +81,7 @@ write_objective_function <- function(dataMatrix = dataMatrix,
                      pattern = "DS:", replacement = "")
 
     idxMeasured <- c()
-    for(i in 1:length(measured)){
+    for(i in seq_len(length(measured))){
 
       idxMeasured <- c(idxMeasured, 
                        which(variables$expNodesReduced==paste0("Species ", 
@@ -97,7 +97,7 @@ write_objective_function <- function(dataMatrix = dataMatrix,
 
       weightedSpecies <- rownames(measWeights)
 
-      for(i in 1:length(weightedSpecies)){
+      for(i in seq_len(length(weightedSpecies))){
 
         allWeights[which(
           which(
@@ -135,7 +135,7 @@ write_objective_function <- function(dataMatrix = dataMatrix,
 
       speciesPos <- colnames(scores)[idxPos]
 
-      for(ii in 1:length(speciesPos)){
+      for(ii in seq_len(length(speciesPos))){
 
         currPos <- speciesPos[ii]
 
@@ -163,7 +163,7 @@ write_objective_function <- function(dataMatrix = dataMatrix,
 
       speciesNeg <- colnames(scores)[idxNeg]
 
-      for(ii in 1:length(speciesNeg)){
+      for(ii in seq_len(length(speciesNeg))){
 
         currNeg <- speciesNeg[ii]
 
