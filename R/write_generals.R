@@ -6,7 +6,7 @@ write_generals <- function(variables=variables, oF=oF){
   
   generals <- c()
   
-  for(i in 1:length(variables)){
+  for(i in seq_len(length(variables))){
     
     generals <- c(generals, 
                   paste0("\t", 
