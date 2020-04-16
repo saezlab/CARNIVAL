@@ -42,7 +42,7 @@ exportResultLPSolve <- function(variables = variables,
   
   solMatrix = as.matrix(solMatrix)
   
-  for(ii in 2:ncol(solMatrix)){
+  for(ii in seq(from = 2, to = ncol(solMatrix), by = 1)){
     
     values <- solMatrix[, ii]
     
@@ -126,7 +126,7 @@ exportResultLPSolve <- function(variables = variables,
     kk1 <- as.numeric(which(edgesUp[, 2] == 1))
     if(length(kk1) > 0){
       
-      for(i in 1:length(kk1)){
+      for(i in seq_len(length(kk1))){
         
         ss <- 
           strsplit(
@@ -161,7 +161,7 @@ exportResultLPSolve <- function(variables = variables,
     kk1 <- as.numeric(which(edgesDown[, 2] == 1))
     if(length(kk1) > 0){
       
-      for(i in 1:length(kk1)){
+      for(i in seq_len(length(kk1))){
         
         ss <- 
           strsplit(strsplit(
@@ -218,7 +218,7 @@ exportResultLPSolve <- function(variables = variables,
       
       activityNodes <- matrix(data = , nrow = length(idx), ncol = 2)
       activityNodes[, 2] <- nodesAct[idx, 2]
-      for(i in 1:length(idx)){
+      for(i in seq_len(length(idx))){
         
         activityNodes[i, 1] <- 
           strsplit(variables[[conditionIDX]]$exp[which(
@@ -240,7 +240,7 @@ exportResultLPSolve <- function(variables = variables,
   
   if(length(sifAll)==0){
     
-    print("No network was generated for this setting..")
+    message("No network was generated for this setting..")
     
     RES <- NULL
     
@@ -248,7 +248,7 @@ exportResultLPSolve <- function(variables = variables,
     
   } else {
     
-    for(ii in 1:length(sifAll)){
+    for(ii in seq_len(length(sifAll))){
       
       if(ii ==1){
         
@@ -264,12 +264,12 @@ exportResultLPSolve <- function(variables = variables,
     
     ##
     weightedSIF <- matrix(data = , nrow = nrow(SIF), ncol = 4)
-    weightedSIF[, 1:3] <- SIF
-    for(i in 1:nrow(SIF)){
+    weightedSIF[, seq_len(3)] <- SIF
+    for(i in seq_len(nrow(SIF))){
       
       cnt <- 0
       
-      for(j in 1:length(sifAll)){
+      for(j in seq_len(length(sifAll))){
         
         idxNode1 <- which(sifAll[[j]][, 1]==SIF[i, 1])
         idxSign <- which(sifAll[[j]][, 2]==SIF[i, 2])
@@ -298,7 +298,7 @@ exportResultLPSolve <- function(variables = variables,
     
     ##
     nodesVar <- c()
-    for(ii in 1:length(nodesAll)){
+    for(ii in seq_len(length(nodesAll))){
       
       nodesVar <- unique(c(nodesVar, unique(nodesAll[[ii]][, 1])))
       
@@ -306,7 +306,7 @@ exportResultLPSolve <- function(variables = variables,
     
     nodesNames <- c()
     var <- variables[[conditionIDX]]
-    for(ii in 1:length(nodesVar)){
+    for(ii in seq_len(length(nodesVar))){
       
       nodesNames <- c(nodesNames, 
                       strsplit(x = var$exp[which(
@@ -316,13 +316,13 @@ exportResultLPSolve <- function(variables = variables,
     
     nodesAttributes <- matrix(data = , nrow = length(nodesNames), ncol = 6)
     nodesAttributes[, 1] <- nodesNames
-    for(i in 1:nrow(nodesAttributes)){
+    for(i in seq_len(nrow(nodesAttributes))){
       
       zeroCnt <- 0
       upCnt <- 0
       downCnt <- 0
       
-      for(j in 1:length(nodesAll)){
+      for(j in seq_len(length(nodesAll))){
         
         currVar <- nodesVar[i]
         
