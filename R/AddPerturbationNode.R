@@ -11,10 +11,12 @@ AddPerturbationNode <- function(network) {
   
   AddToNet <- data.frame(matrix(NA,length(inputList)*2,3))
   AddToNet[,1] <- "Perturbation"
-  AddToNet[1:length(inputList),2] <- "1";
-  AddToNet[1:length(inputList),3] <- inputList
-  AddToNet[(length(inputList)+1):(length(inputList)*2),2] <- "-1";
-  AddToNet[(length(inputList)+1):(length(inputList)*2),3] <- inputList
+  AddToNet[seq_len(length(inputList)),2] <- "1";
+  AddToNet[seq_len(length(inputList)),3] <- inputList
+  AddToNet[seq(from = length(inputList)+1, 
+               to = length(inputList)*2, by = 1),2] <- "-1";
+  AddToNet[seq(from = length(inputList)+1,
+               to = length(inputList)*2, by = 1),3] <- inputList
   colnames(AddToNet) <- colnames(network)
   network <- rbind(network,AddToNet)
   inputs <- data.frame("NaN"); colnames(inputs) <- "Perturbation"
