@@ -7,17 +7,20 @@ transformConstraints <- function(mt = mt, lpFile = lpFile){
   idx1 <- which(lpFile$`enter Problem`=="Subject To")
   idx2 <- which(lpFile$`enter Problem`=="Bounds")
   
-  constraintSet <- lpFile$`enter Problem`[(idx1+1):(idx2-1)]
+  constraintSet <- lpFile$`enter Problem`[seq(from = idx1+1, 
+                                              to = idx2-1, by = 1)]
   constraintSet <- lapply(strsplit(x = constraintSet, 
                                    split = "\t", fixed = TRUE), "[[", 2)
   
   directions <- c("=", "<", ">", "<=", ">=")
   
   f.con <- matrix(data = 0, nrow = length(constraintSet), ncol = nrow(mt))
-  f.dir <- c()
-  f.rhs <- c()
+  ## f.dir <- c()
+  ## f.rhs <- c()
+  f.dir <- rep("", length(constraintSet))
+  f.rhs <- rep("", length(constraintSet))
   
-  for(ii in 1:length(constraintSet)){
+  for(ii in seq_len(length(constraintSet))){
     
     currConstraint <- constraintSet[[ii]]
     currConstraintSplit <- strsplit(x = currConstraint, split = " ", 
@@ -63,8 +66,8 @@ transformConstraints <- function(mt = mt, lpFile = lpFile){
     }
     
     idx2 <- which(currConstraintSplit%in%directions)
-    f.dir <- c(f.dir, currConstraintSplit[idx2])
-    f.rhs <- c(f.rhs, currConstraintSplit[idx2+1])
+    f.dir[ii] <- currConstraintSplit[idx2]
+    f.rhs[ii] <- currConstraintSplit[idx2+1]
     
   }
   
