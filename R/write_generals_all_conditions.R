@@ -6,7 +6,7 @@ write_generals_all_conditions <- function(variables=variables, oF=oF){
   
   generals <- c()
   
-  for(i in 1:length(variables)){
+  for(i in seq_len(length(variables))){
     
     if(i != length(variables)){
       
