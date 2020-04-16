@@ -5,10 +5,10 @@
 \title{\code{runCARNIVAL}}
 \usage{
 runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
-            solverPath=NULL, solver="lpSolve", DOTfig=FALSE, timelimit=3600,
+            solverPath=NULL, solver="lpSolve", timelimit=3600,
             mipGAP=0.05, poolrelGAP=0.0001, limitPop=500, poolCap=100,
             poolIntensity=4, poolReplace=2, alphaWeight=1, betaWeight=0.2,
-            threads = 0, dir_name=paste0(getwd(), "/DOTfigures"))
+            threads = 0, dir_name=NULL)
 }
 \arguments{
 
@@ -29,11 +29,6 @@ runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
                   which case the solver from lpSolve package is used}
                  
 \item{solver}{Solver to use: lpSolve/cplex/cbc (Default set to lpSolve)}
-
-\item{DOTfig}{For plotting: define if DOT figure will be exported in the result 
-              folder (logical T/F). Default set to TRUE. If this the case, the
-              plotted DOT figures will be saved in the defined dir_name 
-              directory}
 
 \item{timelimit}{CPLEX/Cbc parameter: Time limit of CPLEX optimisation (in 
                  seconds)}
@@ -69,9 +64,11 @@ runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
 \item{threads}{Number of threads to be used for the analysis (default: 0 - 
 meaning all threads)}
 
-\item{dir_name}{Specify directory name to store results. by default it will
-                create a /DOTfigures directory within the current working
-                directory}
+\item{dir_name}{For plotting: define if DOT figure will be exported in the 
+directory defined by this variable. Default set to NULL, meaning that no .DOT 
+figure will be exported. If a valid path is specified, the figure will be 
+exported as 'network_solution.dot' file in the specified directory. If 
+specified dir_name path oes not exist, nos figure will be generated}
 
 }
 \value{
