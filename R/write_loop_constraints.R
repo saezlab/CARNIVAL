@@ -25,7 +25,7 @@ write_loop_constraints <- function(variables=variables,
     
   }
   
-  for(ii in 1:length(variables)){
+  for(ii in seq_len(length(variables))){
     
     reactionsUp <- 
       variables[[ii]]$variables[which(
