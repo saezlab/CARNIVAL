@@ -5,10 +5,10 @@
 \title{\code{runCARNIVAL}}
 \usage{
 runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
-            solverPath=NULL, solver="lpSolve", timelimit=3600,
-            mipGAP=0.05, poolrelGAP=0.0001, limitPop=500, poolCap=100,
-            poolIntensity=4, poolReplace=2, alphaWeight=1, betaWeight=0.2,
-            threads = 0, dir_name=NULL)
+            solverPath=NULL, solver=c("lpSolve", "cplex", "cbc"), 
+            timelimit=3600, mipGAP=0.05, poolrelGAP=0.0001, limitPop=500, 
+            poolCap=100, poolIntensity=4, poolReplace=2, alphaWeight=1, 
+            betaWeight=0.2, threads = 0, dir_name=NULL)
 }
 \arguments{
 
