@@ -18,7 +18,7 @@ checkMeasObj <- function(measObj = measObj, netObj = netObj){
         mSpecies = colnames(measObj)
         
         idx = which(mSpecies%in%nSpecies)
-        idx2rem = setdiff(1:length(mSpecies), idx)
+        idx2rem = setdiff(seq_len(length(mSpecies)), idx)
         
         if(length(idx2rem)==length(mSpecies)){
           stop("Something wrong with your measurements object/network object. 
