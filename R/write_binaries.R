@@ -6,7 +6,7 @@ write_binaries <- function(variables=variables){
   
   binaries <- c()
   
-  for(i in 1:length(variables)){
+  for(i in seq_len(length(variables))){
     
     binaries <- c(binaries, 
                   paste0("\t", 
