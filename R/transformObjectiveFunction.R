@@ -27,9 +27,9 @@ transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
             x = problem, split = "+ ", fixed = TRUE)[[1]], 
           split = " ", fixed = TRUE), "[[", 2)))
   
-  idx <- c()
-  for(ii in 1:length(varID)){
-    idx = c(idx, which(mt[, 1]==varID[ii]))
+  idx <- rep(NA, length(varID))
+  for(ii in seq_len(length(varID))){
+    idx[ii] = which(mt[, 1]==varID[ii])
   }
   
   f.obj = rep(0, nrow(mt))
