@@ -6,7 +6,7 @@ write_binaries_all_conditions <- function(variables=variables){
   
   binaries <- c()
   
-  for(i in 1:length(variables)){
+  for(i in seq_len(length(variables))){
     
     if(i != length(variables)){
       
