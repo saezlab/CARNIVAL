@@ -19,14 +19,14 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
       sif_input <- res$sifAll[[idxModel]]
       act_input <- res$attributesAll[[idxModel]]
     } else { ## if multiple models were specified
-      for (counter in 1:length(idxModel)) {
+      for (counter in seq_len(length.out = length(idxModel))) {
         sif_input[[counter]] <- res$sifAll[[idxModel[counter]]]
         act_input[[counter]] <- res$attributesAll[[idxModel[counter]]]
       }
     }
   }
 
-  for (counter_mod in if (!is.list(sif_input)){1}else{1:length(sif_input)}) {
+  for (counter_mod in if (!is.list(sif_input)){1}else{seq_len(length.out = length(sif_input))}) {
 
     if (!is.list(sif_input)) {
       sif <- sif_input
@@ -61,7 +61,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     Dot_text <- c(Dot_text,"digraph {")
     Dot_text <- c(Dot_text,"")
 
-    for (counter in 1:nrow(sif)) {
+    for (counter in seq_len(length.out = nrow(sif))) {
       ArrowType <- ifelse(as.numeric(sif[counter,2])==1,'"vee"','"tee"')
       ArrowColor <- ifelse(as.numeric(sif[counter,2])*
                              as.numeric(
@@ -82,7 +82,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
                        system.file("HUMAN_9606_idmapping_onlyGeneName.dat",
                                    package="CARNIVAL"), header = FALSE, 
                      sep = "\t", stringsAsFactors = FALSE)
-        for (counter in 1:length(inputsName)) {
+        for (counter in seq_len(length.out = length(inputsName))) {
           ## check first if the ID could be mapped
           if (length(which(IDmap[,1] == inputsName[counter])>0)) {
             inputsName[counter] <- IDmap[which(IDmap[,1] == 
@@ -96,7 +96,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     NoInputName <- setdiff(inputsName, act[,1])
     if (length(NoInputName)>0) {
         NoInputIdx <- NULL
-      for (counter_input in 1:length(NoInputName)) {
+      for (counter_input in seq_len(length.out = length(NoInputName))) {
         NoInputIdx <- c(NoInputIdx,
                         which(NoInputName[counter_input]==inputsName))
       }
@@ -107,7 +107,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     ColorNodeAll <- c("lavender","mistyrose")
     IdxMapped <- NULL
 
-    for (counter in 1:length(inputsName)) {
+    for (counter in seq_len(length(inputsName))) {
       ## special case for perturbation (allow 0)
       if (inputsName[counter]=="Perturbation") {
         IdxInput <- which(inputsName[counter]==act[,1])[1]
@@ -150,7 +150,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
             file = system.file("HUMAN_9606_idmapping_onlyGeneName.dat",
                                package="CARNIVAL"),header = FALSE,sep = "\t",
             stringsAsFactors = FALSE)
-        for (counter in 1:length(AllMeas)) {
+        for (counter in seq_len(length(AllMeas))) {
           ## check first if the ID could be mapped
           if (length(which(IDmap[,1] == AllMeas[counter])>0)) {
             AllMeas[counter] <- IDmap[which(IDmap[,1] == AllMeas[counter]),3][1]
@@ -160,13 +160,13 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     }
     measName <- NULL
     AllNodeSIF <- unique(c(sif[,1],sif[,3]))
-    for (counter in 1:length(AllMeas)) {
+    for (counter in seq_len(length(AllMeas))) {
       if (sum(AllMeas[counter]==AllNodeSIF)>0) {
         measName <- c(measName,AllMeas[counter])
       }
     }
 
-    for (counter in 1:length(measName)) {
+    for (counter in seq_len(length(measName))) {
       if (abs(as.numeric(act[which(measName[counter]==act[,1]),2][1]))>0) {
         IdxMeas <- which(measName[counter]==act[,1])[1]
         Dot_text <- c(Dot_text,paste0(measName[counter],
@@ -185,7 +185,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     # Map the rest of nodes activities
 
     IdxAllNodeSIF <- NULL
-    for (counter in 1:length(AllNodeSIF)) {
+    for (counter in seq_len(length(AllNodeSIF))) {
       IdxAllNodeSIF <- c(IdxAllNodeSIF,which(AllNodeSIF[counter]==act[,1])[1])
     }
 
@@ -201,7 +201,7 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     RemainingNodeName <- act[RemainingNodeIdx,1]
 
     if (length(RemainingNodeIdx)>0) {
-      for (counter in 1:length(RemainingNodeIdx)) {
+      for (counter in seq_len(length(RemainingNodeIdx))) {
         Dot_text <- c(Dot_text,
                       paste0(act[RemainingNodeIdx[counter],1],
                              " [style=filled, fillcolor=",
@@ -217,16 +217,18 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     Dot_text <- c(Dot_text,"")
     Dot_text <- c(Dot_text,"}")
 
-    if(!is.null(UP2GS)){
-      dir.create(dir_name)
-      fileConn <- file(paste0(dir_name,
-                              "/ActivityNetwork_model_Nr",
-                              idxModel[counter_mod],"_",UP2GStag,".dot"))
-    } else {
-      dir.create(dir_name)
-      fileConn <- file(paste0(dir_name,"/ActivityNetwork_model_Nr",
-                              idxModel[counter_mod],".dot"))
-    }
+    ## if(!is.null(UP2GS)){
+    ##   dir.create(dir_name)
+    ##   fileConn <- file(paste0(dir_name,
+    ##                           "/ActivityNetwork_model_Nr",
+    ##                           idxModel[counter_mod],"_",UP2GStag,".dot"))
+    ## } else {
+    ##   dir.create(dir_name)
+    ##   fileConn <- file(paste0(dir_name,"/ActivityNetwork_model_Nr",
+    ##                           idxModel[counter_mod],".dot"))
+    ## }
+    fileConn <- file(paste0(dir_name,
+                            "/network_solution.dot"))
     writeLines(Dot_text,fileConn)
     close(fileConn)
 
