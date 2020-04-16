@@ -9,7 +9,7 @@ write_constraints_8 <- function(variables=variables,
   
   constraints8 <- c()
   
-  for(ii in 1:length(variables)){
+  for(ii in seq_len(length(variables))){
     
     ##
     cc <- paste0(
@@ -31,7 +31,7 @@ write_constraints_8 <- function(variables=variables,
     ##
     kk <- paste0("Species ", colnames(inputs), " in experiment ", ii)
     cc= c()
-    for(jj in 1:length(kk)){
+    for(jj in seq_len(length(kk))){
       cName = strsplit(x = kk[jj], split = " ")[[1]][2]
       cc = c(cc, paste0(
         variables[[ii]]$variables[which(
