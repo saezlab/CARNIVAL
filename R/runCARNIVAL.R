@@ -14,9 +14,6 @@
 #'@param solverPath Path to executable cbc/cplex file - default set to NULL, in
 #'which case the solver from lpSolve package is used.
 #'@param solver Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).
-#'@param DOTfig For plotting: define if DOT figure will be exported in the
-#'result folder (logical TRUE/FALSE). Default set to TRUE. If this the case, the
-#'plotted DOT figures will be saved in the defined dir_name directory.
 #'@param timelimit CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
 #'seconds (default set to 3600).
 #'@param mipGAP CPLEX parameter: the absolute tolerance on the gap between the
@@ -36,8 +33,8 @@
 #'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
 #'@param threads CPLEX parameter: Number of threads to use
 #'default: 0 for maximum number possible threads on system
-#'@param dir_name Specify directory name to store results. by default it will
-#'create a /DOTfigures directory within the current working directory
+#'@param dir_name Specify directory name to store results. by default set to
+#'NULL
 #'
 #'@return The function will return a list of results containing:
 #'1. weightedSIF: A table with 4 columns containing the combined network
@@ -95,8 +92,7 @@ runCARNIVAL <- function(inputObj=NULL,
                         netObj=netObj,
                         weightObj=NULL,
                         solverPath=NULL,
-                        solver="lpSolve",
-                        DOTfig=FALSE,
+                        solver=c('lpSolve', 'cplex', 'cbc'),
                         timelimit=3600,
                         mipGAP=0.05,
                         poolrelGAP=0.0001,
@@ -107,11 +103,12 @@ runCARNIVAL <- function(inputObj=NULL,
                         alphaWeight=1,
                         betaWeight=0.2,
                         threads=0,
-                        dir_name=paste0(getwd(), "/DOTfigures"))
+                        dir_name=NULL)
 {
 
+  solver <- match.arg(solver)
   res = checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj,
-                    inputObj = inputObj, weightObj = weightObj, DOTfig = DOTfig,
+                    inputObj = inputObj, weightObj = weightObj,
                     timelimit = timelimit, mipGAP = mipGAP,
                     poolrelGAP = poolrelGAP, limitPop = limitPop,
                     poolCap = poolCap, poolIntensity = poolIntensity,
@@ -124,7 +121,7 @@ runCARNIVAL <- function(inputObj=NULL,
   result = solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
                          measObj = res$measurements,
                          inputObj = res$inputs$inputs,
-                         weightObj = res$weights, DOTfig = DOTfig,
+                         weightObj = res$weights,
                          timelimit = timelimit, mipGAP = mipGAP,
                          poolrelGAP = poolrelGAP, limitPop = limitPop,
                          poolCap = poolCap, poolIntensity = poolIntensity,
