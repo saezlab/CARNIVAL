@@ -7,7 +7,7 @@ write_constraints_3_all <- function(variables=variables) {
 
   constraints3 <- c()
 
-  for(i in 1:length(variables)){
+  for(i in seq_len(length(variables))){
 
     var <- variables[[i]]
 

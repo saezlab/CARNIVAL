@@ -16,7 +16,7 @@ Uniprot2GeneSymbol <- function(res){
   Unmapped <- NULL
 
   # Common SIF
-  for (counter in 1:length(res[[1]][,1])) {
+  for (counter in seq_len(length(res[[1]][,1]))) {
     if (length(IDmap[which(IDmap[,1] == res[[1]][counter,1]),3])>0) {
       res[[1]][counter,1] <- IDmap[which(IDmap[,1] == res[[1]][counter,1]),3][1]
     } else {
@@ -29,7 +29,7 @@ Uniprot2GeneSymbol <- function(res){
     }
   }
   # Common node activity
-  for (counter in 1:length(res[[2]][,1])) {
+  for (counter in seq_len(length(res[[2]][,1]))) {
     if (length(IDmap[which(IDmap[,1] == res[[2]][counter,1]),3])>0) {
       res[[2]][counter,1] <- IDmap[which(IDmap[,1] == res[[2]][counter,1]),3][1]
     } else {
@@ -37,8 +37,8 @@ Uniprot2GeneSymbol <- function(res){
     }
   }
   ## Individual SIF
-  for (counter in 1:length(res[[3]])) {
-    for (counter2 in 1:length(res[[3]][[counter]][,1])) {
+  for (counter in seq_len(length(res[[3]]))) {
+    for (counter2 in seq_len(length(res[[3]][[counter]][,1]))) {
       if (length(IDmap[which(IDmap[,1] == 
                              res[[3]][[counter]][counter2,1]),3])>0) {
         res[[3]][[counter]][counter2,1] <- 
@@ -56,8 +56,8 @@ Uniprot2GeneSymbol <- function(res){
     }
   }
   # Individual node activity
-  for (counter in 1:length(res[[4]])) {
-    for (counter2 in 1:length(res[[4]][[counter]][,1])) {
+  for (counter in seq_len(length(res[[4]]))) {
+    for (counter2 in seq_len(length(res[[4]][[counter]][,1]))) {
       if (length(IDmap[which(IDmap[,1] == 
                              res[[4]][[counter]][counter2,1]),3])>0) {
         res[[4]][[counter]][counter2,1] <- 
@@ -68,7 +68,7 @@ Uniprot2GeneSymbol <- function(res){
     }
   }
 
-  print(paste0("The following node couldn't be mapped to gene symbol: ",
+  message(paste0("The following node couldn't be mapped to gene symbol: ",
                paste(unique(Unmapped),collapse = " ")))
 
   return(res)
