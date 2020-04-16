@@ -10,7 +10,7 @@ checkInputObj <- function(inputObj = inputObj, netObj = netObj){
   returnList = list()
   
   if(is.null(inputObj)){
-    print("inputObj set to NULL -- running InvCARNIVAL")
+    message("inputObj set to NULL -- running InvCARNIVAL")
     MappedPertNode <- AddPerturbationNode(network = as.matrix(netObj))
     returnList = MappedPertNode
   } else {
@@ -39,7 +39,7 @@ checkInputObj <- function(inputObj = inputObj, netObj = netObj){
     }
     
     idx = which(mSpecies%in%nSpecies)
-    idx2rem = setdiff(1:length(mSpecies), idx)
+    idx2rem = setdiff(seq_len(length(mSpecies)), idx)
     
     if(length(idx2rem)==length(mSpecies)){
       stop("Something wrong with your measurements object/network object. 

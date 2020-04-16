@@ -7,7 +7,7 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                                 betaWeight = betaWeight, scores = scores,
                                 mipGAP = mipGAP, poolrelGAP = poolrelGAP,
                                 limitPop = limitPop, poolCap = poolCap,
-                                poolIntensity = poolIntensity, DOTfig = DOTfig,
+                                poolIntensity = poolIntensity,
                                 poolReplace = poolReplace,
                                 timelimit = timelimit,
                                 threads = threads,
@@ -30,7 +30,7 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
   
   ## Solve ILP problem with cplex, remove temp files, 
   ## and return to the main directory
-  print("Solving LP problem...")
+  message("Solving LP problem...")
   
   if(solver=="cplex"){
     
@@ -45,10 +45,10 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
     }
     
     ## Write result files in the results folder
-    print("Saving results...")
+    message("Saving results...")
     resList <- list()
     if (file.exists(paste0("results_cplex_",condition,"_",repIndex,".txt"))) {
-      for(i in 1:length(variables)){
+      for(i in seq_len(length(variables))){
         res <- exportResult(cplexSolutionFileName = paste0("results_cplex_",
                                                            condition,"_",
                                                            repIndex,".txt"),
@@ -60,15 +60,21 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
         resList[[length(resList)+1]] <- res
       }
       if (!is.null(res)) {
-        if (DOTfig) {WriteDOTfig(res=res,
-                                 dir_name=dir_name,
-                                 inputs=inputObj,
-                                 measurements=measObj,
-                                 UP2GS=FALSE)}
+        if(!is.null(dir_name)){
+          if(dir.exists(dir_name)){
+            WriteDOTfig(res=res,
+                        dir_name=dir_name,
+                        inputs=inputObj,
+                        measurements=measObj,
+                        UP2GS=FALSE)
+          } else {
+            warning("Specified directory does not exist. DOT figure not saved.")
+          }
+        }
+      } else {
+        message("No result to be written")
+        return(NULL)
       }
-    } else {
-      print("No result to be written")
-      return(NULL)
     }
     
     cleanupCARNIVAL(condition = condition, repIndex = repIndex)
@@ -77,9 +83,9 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
     objs <- ls(pos = ".GlobalEnv")
     rm(list = objs[grep("pknList", objs)], pos = ".GlobalEnv")
     
-    print(" ")
-    print("--- End of the CARNIVAL pipeline ---")
-    print(" ")
+    message(" ")
+    message("--- End of the CARNIVAL pipeline ---")
+    message(" ")
     
     result = resList[[1]]
     
@@ -107,11 +113,20 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                           solver = "cbc")
       
       if (!is.null(res)) {
-        if (DOTfig) {WriteDOTfig(res=res,
-                                 dir_name=dir_name,
-                                 inputs=inputObj,
-                                 measurements=measObj,
-                                 UP2GS=FALSE)}
+        if(!is.null(dir_name)){
+          if(dir.exists(dir_name)){
+            WriteDOTfig(res=res,
+                        dir_name=dir_name,
+                        inputs=inputObj,
+                        measurements=measObj,
+                        UP2GS=FALSE)
+          } else {
+            warning("Specified directory does not exist. DOT figure not saved.")
+          }
+        }
+      } else {
+        message("No result to be written")
+        return(NULL)
       }
       
       ## cleanupCARNIVAL(condition = condition, repIndex = repIndex)
@@ -134,11 +149,20 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                           conditionIDX = 1)
       
       if (!is.null(res)) {
-        if (DOTfig) {WriteDOTfig(res=res,
-                                 dir_name=dir_name,
-                                 inputs=inputObj,
-                                 measurements=measObj,
-                                 UP2GS=FALSE)}
+        if(!is.null(dir_name)){
+          if(dir.exists(dir_name)){
+                  WriteDOTfig(res=res,
+                              dir_name=dir_name,
+                              inputs=inputObj,
+                              measurements=measObj,
+                              UP2GS=FALSE)
+          } else {
+            warning("Specified directory does not exist. DOT figure not saved.")
+          }
+        }
+      } else {
+        message("No result to be written")
+        return(NULL)
       }
       
       return(res)
