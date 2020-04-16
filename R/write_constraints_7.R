@@ -13,7 +13,7 @@ write_constraints_7 <- function(variables=variables,
   ##requireNamespace("igraph")
   constraints7 <- c()
 
-  for(ii in 1:length(variables)){
+  for(ii in seq_len(length(variables))){
 
     source <- unique(variables[[ii]]$reactionSource)
     target <- unique(variables[[ii]]$reactionTarget)
@@ -23,7 +23,7 @@ write_constraints_7 <- function(variables=variables,
     adj <- as.matrix(adj)
 
     idx1 <- which(rowSums(adj)==0)
-    idx2 <- setdiff(1:nrow(adj), idx1)
+    idx2 <- setdiff(seq_len(nrow(adj)), idx1)
 
     if (length(idx1)>0) {
       constraints7 <-
@@ -35,7 +35,7 @@ write_constraints_7 <- function(variables=variables,
                 rownames(adj)[idx1], " in experiment ", ii))], " <= 0"))
     }
 
-    for(i in 1:length(idx2)){
+    for(i in seq_len(length(idx2))){
 
       cc <- paste0(
         variables[[ii]]$variables[which(

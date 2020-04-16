@@ -2,8 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-checkSolverParam <- function(DOTfig=DOTfig,
-                             timelimit=timelimit,
+checkSolverParam <- function(timelimit=timelimit,
                              mipGAP=mipGAP,
                              poolrelGAP=poolrelGAP,
                              limitPop=limitPop,
@@ -31,11 +30,6 @@ checkSolverParam <- function(DOTfig=DOTfig,
     returnList[[length(returnList)+1]] = condition
     returnList[[length(returnList)+1]] = repIndex
     names(returnList) = c("condition", "repIndex")
-  }
-  
-  if(!is.logical(DOTfig)){stop("For plotting: please choose whether to plot DOT 
-                                figure as an output with a logical value
-                                TRUE/FALSE")
   }
   
   if(!is.numeric(timelimit)){
