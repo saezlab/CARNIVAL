@@ -28,21 +28,22 @@ buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
   if(length(which(is.element(el = colnames(data), 
                              set = setdiff(colnames(data), ds)))) > 0){
 
-    dataMatrix[, (length(dn)+1):length(allSpecies)] <- 
+    dataMatrix[, seq(from = length(dn)+1, to = length(allSpecies), by = 1)] <- 
       as.matrix(data[, -which(is.element(el = colnames(data), 
                                          set = setdiff(colnames(data), ds)))])
 
   }
   else{
 
-    dataMatrix[, (length(dn)+1):length(allSpecies)] <- as.matrix(data)
+    dataMatrix[, seq(from = length(dn)+1, 
+                     to = length(allSpecies), by = 1)] <- as.matrix(data)
 
   }
 
   dataMatrixSign <- sign(dataMatrix)
 
-  dnID <- 1:length(dn)
-  dsID <- (length(dn)+1):length(allSpecies)
+  dnID <- seq_len(length(dn))
+  dsID <- seq(from = length(dn)+1, to = length(allSpecies), by = 1)
   tsID <- which(is.element(el = c(dn, ds), set = ts))
 
   res <- list(dataMatrix=dataMatrix, dataMatrixSign=dataMatrixSign, dnID=dnID, 
