@@ -41,7 +41,7 @@ write_constraints_objFunction_all <- function(variables=variables,
 
   constraints0 <- c()
 
-  for (i in 1:nrow(dataMatrix$dataMatrix)) {
+  for (i in seq_len(nrow(dataMatrix$dataMatrix))) {
 
     dM <- dataMatrix
     dM$dataMatrix <- as.matrix(t(dataMatrix$dataMatrix[i, ]))
