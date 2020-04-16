@@ -42,7 +42,7 @@ checkWeightObj <- function(weightObj = weightObj, netObj = netObj){
         mSpecies = colnames(weightObj)
         
         idx = which(mSpecies%in%nSpecies)
-        idx2rem = setdiff(1:length(mSpecies), idx)
+        idx2rem = setdiff(seq_len(length(mSpecies)), idx)
         
         if(length(idx2rem)==length(mSpecies)){
           stop("Something wrong with your weight object/network object. 
