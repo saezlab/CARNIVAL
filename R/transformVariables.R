@@ -4,26 +4,20 @@
 
 transformVariables <- function(variables = variables, measObj = measObj){
   
-  allVariables <- c()
-  for(ii in 1:length(variables)){
-    allVariables <- c(allVariables, variables[[ii]][[1]])
-  }
+  vars1 <- variables[[1]][[1]]
   
   measSpecies = colnames(measObj)
-  for(ii in 1:length(variables)){
-    for(jj in 1:length(measSpecies)){
-      idx = which(variables[[ii]]$exp==paste0("Species ", 
-                                              measSpecies[jj], 
-                                              " in experiment ", ii))
-      if(length(idx)>0){
-        allVariables <- c(allVariables, paste0("absDiff", idx, "_", ii))
-      }
-    }
+  vars2 <- rep("", length(measSpecies))
+  for(jj in seq_len(length(measSpecies))){
+    idx = which(variables[[1]]$exp==paste0("Species ",
+                                            measSpecies[jj],
+                                            " in experiment ", 1))
+    vars2[jj] <- paste0("absDiff", idx, "_", 1)
   }
   
-  mappingTable = matrix(data = , nrow = length(allVariables), ncol = 2)
-  mappingTable[, 1] = allVariables
-  mappingTable[, 2] = paste0("x", 1:length(allVariables))
+  mappingTable = matrix(data = , nrow = length(c(vars1, vars2)), ncol = 2)
+  mappingTable[, 1] = c(vars1, vars2)
+  mappingTable[, 2] = paste0("x", seq_len(length(c(vars1, vars2))))
   
   return(mappingTable)
   
