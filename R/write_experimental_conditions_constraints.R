@@ -6,9 +6,9 @@
 write_experimental_conditions_constraints <- function(variables = variables){
   
   constraint1 = c()
-  for(jj in 1:length(variables$`Reaction Variables`$Explanation)){
+  for(jj in seq_len(length(variables$`Reaction Variables`$Explanation))){
     
-    for(ii in 1:(length(variables)-1)){
+    for(ii in seq_len((length(variables)-1))){
       
       tt <- 
         strsplit(x = strsplit(
@@ -50,9 +50,9 @@ write_experimental_conditions_constraints <- function(variables = variables){
   }
   
   constraint2 = c()
-  for(jj in 1:length(variables$`Reaction Variables`$Explanation)){
+  for(jj in seq_len(length(variables$`Reaction Variables`$Explanation))){
     
-    for(ii in 1:(length(variables)-1)){
+    for(ii in seq_len((length(variables)-1))){
       
       ss <- 
         strsplit(x = strsplit(
@@ -78,12 +78,12 @@ write_experimental_conditions_constraints <- function(variables = variables){
   }
   
   constraint3 = c()
-  for(jj in 1:length(variables$`Reaction Variables`$Explanation)){
+  for(jj in seq_len(length(variables$`Reaction Variables`$Explanation))){
     
     c1 = variables$`Reaction Variables`$Variables[jj]
     c2 = c()
     
-    for(ii in 1:(length(variables)-1)){
+    for(ii in seq_len((length(variables)-1))){
       
       c1 = paste0(c1, " - ", 
                   variables[[ii]]$variables[variables[[ii]]$idxEdges[jj]])
