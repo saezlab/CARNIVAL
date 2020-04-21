@@ -49,8 +49,9 @@ write_constraints_objFunction_all <- function(variables=variables,
 
     var <- variables[[i]]
 
-    constraints0 <- c(constraints0, write_constraints_objFunction(
-      variables = var, dataMatrix = dM, conditionIDX = i))
+    constraints0 <- write_constraints_objFunction(variables = var, 
+                                                  dataMatrix = dM, 
+                                                  conditionIDX = 1)
 
   }
 

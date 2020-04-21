@@ -5,16 +5,22 @@
 
 write_constraints_1_all <- function(variables=variables){
 
-  constraints1 <- c()
-
-  for(i in seq_len(length(variables))){
-
-    var <- variables[[i]]
-
-    constraints1 <- c(constraints1, write_constraints_1(variables = var, 
-                                                        conditionIDX = i))
-
-  }
+  ## constraints1 <- c()
+  ## 
+  ## for(i in seq_len(length(variables))){
+  ## 
+  ##   var <- variables[[i]]
+  ## 
+  ##   constraints1 <- c(constraints1, write_constraints_1(variables = var, 
+  ##                                                       conditionIDX = i))
+  ## 
+  ## }
+  
+  i = 1
+  
+  var <- variables[[i]]
+  
+  constraints1 <- write_constraints_1(variables = var, conditionIDX = i)
 
   return(constraints1)
 
