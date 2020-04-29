@@ -1,12 +1,25 @@
 Package: CARNIVAL
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
 Version: 0.99.44
-Author: Enio Gjerga <enio.gjerga@gmail.com>
-	 Panuwat Trairatphisan
-	 Anika Liu
-	 Alberto Valdeolivas
-	 Nikolas Peschke
-Maintainer: Enio Gjerga <enio.gjerga@gmail.com>
+Authors@R: c(
+    person(given = "Enio",
+           family = "Gjerga",
+           role = c("cre", "aut"),
+           email = "enio.gjerga@gmail.com",
+           comment = c(ORCID = "0000-0002-3060-5786")),
+    person(given = "Panuwat",
+           family = "Trairatphisan",
+           role = "aut"),
+    person(given = "Anika",
+           family = "Liu",
+           role = "aut"),
+    person(given = "Alberto",
+           family = "Valdeolivas",
+           role = "aut"),
+    person(given = "Nikolas",
+           family = "Peschke",
+           role = "aut")
+           )
 Description: An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores. 
              Optimization parameters can be freely adjusted and multiple solutions can be obtained and aggregated.
 URL: https://github.com/saezlab/CARNIVAL

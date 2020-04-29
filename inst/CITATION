@@ -1,0 +1,15 @@
+citEntry(
+    entry="article",
+    author = c(person("Anika", "Liu"),
+               person("Panuwat", "Trairatphisan"),
+               person("Enio", "Gjerga"),
+               person("Athanasios", "Didangelos"),
+               person("Jonathan", "Barratt"),
+               person("Julio", "Saez-Rodriguez")),
+    title = "From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL",
+    journal = "npj Systems Biology and Applications",
+    year = 2019,
+    doi = "10.1038/s41540-019-0118-z",
+    
+    textVersion = "Liu A., Trairatphisan P., Gjerga E. et al. 'From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL.' npj Systems Biology and Applications volume 5, Article number: 40 (2019) (equal contributions)."
+)
