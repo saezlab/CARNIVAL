@@ -1,14 +1,38 @@
 # CARNIVAL
 
-CARNIVAL is an R-package providing a framework to perform causal reasoning to infer a subset of signalling network from transcriptomics data. This work was originally based on [Melas et al.](https://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f) with a number improved functionalities comparing to the original version.
-Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools [DoRothEA](https://github.com/saezlab/DoRothEA) & [PROGENy](https://github.com/saezlab/progeny), respectively.
-TFs’ activities and signed directed protein-protein interaction networks +/- drug targets and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. 
-An ILP solver (CPLEX) is subsequently applied to identify the sub-network topology with minimised discrepancies on fitting error and model size.
+## Overview
+CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
 
-More detailed descriptions of CARNIVAL, benchmarking and applicational studies can be found on it's dedicated [web-page](https://saezlab.github.io/CARNIVAL/) and in [Liu, Trairatphisan, Gjerga et al.](https://www.nature.com/articles/s41540-019-0118-z):
+This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on following paper.
 
-> Liu A*, Trairatphisan P*, Gjerga E*, Didangelos A, Barratt J, Saez-Rodriguez J. (2019). From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL. *npj Systems Biology and Applications*, https://doi.org/10.1038/s41540-019-0118-z (*equal contributions).
+> Liu A., Trairatphisan P., Gjerga E. et al. [From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL](https://www.nature.com/articles/s41540-019-0118-z) _npj Systems Biology and Applications volume 5, Article number: 40 (2019) (equal contributions)_.
 
+The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes: 
+
+ * 1) Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools DoRothEA & PROGENy, respectively. 
+
+ * 2) TFs’ activities and signed directed protein-protein interaction networks with or without the provided target of perturbations and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. 
+
+ * 3) An ILP solver (IBM ILOG CPLEX) is subsequently applied to identify the sub-network topology with minimised fitting error and model size.
+
+Applications of CARNIVAL include the identification of drug’s modes of action and of deregulated processes in diseases (even if the molecular targets remain unknown) by deciphering the alterations of main signalling pathways as well as alternative pathways and off-target effects.
+
+<img src="/CARNIVAL/public/CARNIVAL_Workflow_Dec2018.png" alt="CARNIVAL workflow">
+
+<center><i>Inputs and Outputs of CARNIVAL</i></center>
+<br>
+
+The input for CARNIVAL consists of:
+
+ * A prior knowledge network (PKN) comprises a list of signed and directed interactions between signalling proteins. (Required)
+
+ * Inferred transcription factor activities which can be inferred from GEX data using [DoRothEA](https://github.com/saezlab/dorothea). (Required)
+ 
+ * A list of target of perturbations (drugs, diseases, etc.) with or without their effects on signalling proteins. (Optional) 
+ 
+ * Inferred pathway scores representing signalling pathway activities from GEX data using [PROGENy](https://github.com/saezlab/progeny) (Optional)
+
+The outcome of CARNIVAL includes the list of identified networks that fitted to the provided experimental data as well as the predicted activities of signalling proteins in the networks whether they are up- or down-regulated.
 
 ## Getting Started
 
@@ -20,7 +44,7 @@ CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the
 
 ### Installing
 
-CARNIVAL is currently available for the installation as an R-package from our GitHub page
+CARNIVAL is currently available for the installation as an R-package from our GitHub page.
 
 ```R
 # Install CARNIVAL from Github using devtools
@@ -49,14 +73,19 @@ Distributed under the GNU GPLv3 License. See accompanying file [LICENSE.txt](htt
 
 > Melas IN, Sakellaropoulos T, Iorio F, Alexopoulos L, Loh WY, Lauffenburger DA, Saez-Rodriguez J, Bai JPF. (2015). Identification of drug-specific pathways based on gene expression data: application to drug induced lung injury. *Integrative Biology*, Issue 7, Pages 904-920, https://doi.org/10.1039/C4IB00294F.
 
-[DoRothEA v2 - Garcia-Alonso et al.](https://www.biorxiv.org/content/early/2018/06/03/337915):
+[DoRothEA v2 - Garcia-Alonso et al.](https://genome.cshlp.org/content/29/8/1363.full):
 
-> Garcia-Alonso L, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. *bioRXiv*, https://doi.org/10.1101/337915.
+> Garcia-Alonso L, Holland CH, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. *Genome Research* 2019. 29: 1363-1375.
 
 [PROGENy - Schubert et al.](https://www.nature.com/articles/s41467-017-02391-6):
 
 > Schubert M, Klinger B, Klünemann M, Sieber A, Uhlitz F, Sauer S, Garnett MJ, Blüthgen N, Saez-Rodriguez J. (2018). Perturbation-response genes reveal signaling footprints in cancer gene expression. *Nature Communication*, Issue 9, Nr. 20. https://doi.org/10.1038/s41467-017-02391-6.
 
+## Studies where CARNIVAL was used
+
+> Buhl E.M. et al. [Dysregulated mesenchymal PDGFR‐β drives kidney fibrosis](https://www.embopress.org/doi/10.15252/emmm.201911021) _EMBO Mol Med (2020)e11021 doi: 10.15252/emmm.201911021_
+
+> Binenbaum I. et. al. [Bioinformatic framework for analysis of transcription factor changes as the molecular link between replicative cellular senescence signaling pathways and carcinogenesis](https://link.springer.com/content/pdf/10.1007/s10522-020-09866-y.pdf) _Biogerontology doi: 10.1007/s10522-020-09866-y_
 
 ## Acknowledgement
 
