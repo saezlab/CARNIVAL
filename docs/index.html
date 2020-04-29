@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -94,12 +94,27 @@
   <div class="contents col-md-9">
 <div id="carnival" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#carnival" class="anchor"></a>CARNIVAL</h1></div>
-<p>CARNIVAL is an R-package providing a framework to perform causal reasoning to infer a subset of signalling network from transcriptomics data. This work was originally based on <a href="https://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f">Melas et al.</a> with a number improved functionalities comparing to the original version. Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools <a href="https://github.com/saezlab/DoRothEA">DoRothEA</a> &amp; <a href="https://github.com/saezlab/progeny">PROGENy</a>, respectively. TFs’ activities and signed directed protein-protein interaction networks +/- drug targets and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems. An ILP solver (CPLEX) is subsequently applied to identify the sub-network topology with minimised discrepancies on fitting error and model size.</p>
-<p>More detailed descriptions of CARNIVAL, benchmarking and applicational studies can be found on it’s dedicated <a href="https://saezlab.github.io/CARNIVAL/">web-page</a> and in <a href="https://www.nature.com/articles/s41540-019-0118-z">Liu, Trairatphisan, Gjerga et al.</a>:</p>
+<a href="#carnival" class="anchor"></a>CARNIVAL <img src="reference/figures/logo.png" align="right" height="139">
+</h1></div>
+<!-- badges: start -->
+<!-- badges: end -->
+<div id="overview" class="section level2">
+<h2 class="hasAnchor">
+<a href="#overview" class="anchor"></a>Overview</h2>
+<p>CARNIVAL (<strong>CA</strong>usal <strong>R</strong>easoning for <strong>N</strong>etwork identification using <strong>I</strong>nteger <strong>VAL</strong>ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).</p>
+<p>This is a tool currently being developed by the <a href="http://saezlab.org/">saezlab</a> members and is an extension of the previously implemented Causal Reasoning (<a href="http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f"><em>Melas et al.</em></a>) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on following paper.</p>
 <blockquote>
-<p>Liu A<em>, Trairatphisan P</em>, Gjerga E<em>, Didangelos A, Barratt J, Saez-Rodriguez J. (2019). From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL. </em>npj Systems Biology and Applications<em>, <a href="https://doi.org/10.1038/s41540-019-0118-z" class="uri">https://doi.org/10.1038/s41540-019-0118-z</a> (</em>equal contributions).</p>
+<p>Liu A., Trairatphisan P., Gjerga E. et al. <a href="https://www.nature.com/articles/s41540-019-0118-z">From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL</a> <em>npj Systems Biology and Applications</em> volume 5, Article number: 40 (2019) (equal contributions).</p>
 </blockquote>
+<p>The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes:</p>
+<ul>
+<li><p>1) Transcription factors’ (TFs) activities and pathway scores from gene expressions can be inferred with our in-house tools DoRothEA &amp; PROGENy, respectively.</p></li>
+<li><p>2) TFs’ activities and signed directed protein-protein interaction networks with or without the provided target of perturbations and pathway scores are then used to derive a series of linear constraints to generate integer linear programming (ILP) problems.</p></li>
+<li><p>3) An ILP solver (IBM ILOG CPLEX) is subsequently applied to identify the sub-network topology with minimised fitting error and model size.</p></li>
+</ul>
+<p>Applications of CARNIVAL include the identification of drug’s modes of action and of deregulated processes in diseases (even if the molecular targets remain unknown) by deciphering the alterations of main signalling pathways as well as alternative pathways and off-target effects.</p>
+<p><img src="reference/figures/graphical_abstract.png" align="center" width="800"></p>
+</div>
 <div id="getting-started" class="section level2">
 <h2 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting Started</h2>
@@ -109,16 +124,30 @@
 <a href="#prerequisites" class="anchor"></a>Prerequisites</h3>
 <p>CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative <a href="https://www.ibm.com/products/ilog-cplex-optimization-studio?S_PKG=CoG&amp;cm_mmc=Search_Google-_-Data+Science_Data+Science-_-WW_IDA-_-+IBM++CPLEX_Broad_CoG&amp;cm_mmca1=000000RE&amp;cm_mmca2=10000668&amp;cm_mmca7=9041989&amp;cm_mmca8=kwd-412296208719&amp;cm_mmca9=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_&amp;cm_mmca10=267798126431&amp;cm_mmca11=b&amp;mkwid=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_%7C470%7C135655&amp;cvosrc=ppc.google.%2Bibm%20%2Bcplex&amp;cvo_campaign=000000RE&amp;cvo_crid=267798126431&amp;Matchtype=b&amp;gclid=Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB">here</a>. The <a href="https://projects.coin-or.org/Cbc">CBC</a> solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">lpSolve R-package</a>.</p>
 </div>
-<div id="installing" class="section level3">
+<div id="installation" class="section level3">
 <h3 class="hasAnchor">
-<a href="#installing" class="anchor"></a>Installing</h3>
-<p>CARNIVAL is currently available for the installation as an R-package from our GitHub page</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># Install CARNIVAL from Github using devtools</span>
-<span class="co"># install.packages('devtools') # in case devtools hasn't been installed</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
-<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">'saezlab/CARNIVAL'</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="co"># or download the source file from GitHub and install from source</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">'path_to_extracted_CARNIVAL_directory'</span>, <span class="kw">repos</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">type</span><span class="kw">=</span><span class="st">"source"</span>)</pre></div>
+<a href="#installation" class="anchor"></a>Installation</h3>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install from bioconductor</span>
+<span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
+
+<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"CARNIVAL"</span>)
+
+<span class="co"># install the development version from GitHub</span>
+<span class="co"># install.packages("devtools")</span>
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"saezlab/CARNIVAL"</span>)</pre></div>
+</div>
+<div id="inputs-and-outputs-of-carnival" class="section level3">
+<h3 class="hasAnchor">
+<a href="#inputs-and-outputs-of-carnival" class="anchor"></a>Inputs and Outputs of CARNIVAL</h3>
+<p>The input for CARNIVAL consists of:</p>
+<ul>
+<li><p>A prior knowledge network (PKN) comprises a list of signed and directed interactions between signalling proteins. (Required)</p></li>
+<li><p>Inferred transcription factor activities which can be inferred from GEX data using <a href="https://github.com/saezlab/dorothea">DoRothEA</a>. (Required)</p></li>
+<li><p>A list of target of perturbations (drugs, diseases, etc.) with or without their effects on signalling proteins. (Optional)</p></li>
+<li><p>Inferred pathway scores representing signalling pathway activities from GEX data using <a href="https://github.com/saezlab/progeny">PROGENy</a> (Optional)</p></li>
+</ul>
+<p>The outcome of CARNIVAL includes the list of identified networks that fitted to the provided experimental data as well as the predicted activities of signalling proteins in the networks whether they are up- or down-regulated.</p>
 </div>
 </div>
 <div id="running-carnival" class="section level2">
@@ -127,11 +156,6 @@
 <p>To obtain the list of tutorials/vignettes of the CARNIVAL package, user can start with typing the following commmand on R-console:</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"CARNIVAL-vignette"</span>)</pre></div>
 </div>
-<div id="license" class="section level2">
-<h2 class="hasAnchor">
-<a href="#license" class="anchor"></a>License</h2>
-<p>Distributed under the GNU GPLv3 License. See accompanying file <a href="https://github.com/saezlab/CARNIVAL/blob/master/LICENSE.txt">LICENSE.txt</a> or copy at <a href="http://www.gnu.org/licenses/gpl-3.0.html">http://www.gnu.org/licenses/gpl-3.0.html</a>.</p>
-</div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
@@ -139,13 +163,23 @@
 <blockquote>
 <p>Melas IN, Sakellaropoulos T, Iorio F, Alexopoulos L, Loh WY, Lauffenburger DA, Saez-Rodriguez J, Bai JPF. (2015). Identification of drug-specific pathways based on gene expression data: application to drug induced lung injury. <em>Integrative Biology</em>, Issue 7, Pages 904-920, <a href="https://doi.org/10.1039/C4IB00294F" class="uri">https://doi.org/10.1039/C4IB00294F</a>.</p>
 </blockquote>
-<p><a href="https://www.biorxiv.org/content/early/2018/06/03/337915">DoRothEA v2 - Garcia-Alonso et al.</a>:</p>
+<p><a href="https://github.com/saezlab/dorothea">DoRothEA - Garcia-Alonso et al.</a>:</p>
 <blockquote>
-<p>Garcia-Alonso L, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. <em>bioRXiv</em>, <a href="https://doi.org/10.1101/337915" class="uri">https://doi.org/10.1101/337915</a>.</p>
+<p>Garcia-Alonso L, Holland CH, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. <em>Genome Research</em> 2019. 29: 1363-1375, <a href="https://doi.org/10.1101/gr.240663.118" class="uri">https://doi.org/10.1101/gr.240663.118</a></p>
 </blockquote>
-<p><a href="https://www.nature.com/articles/s41467-017-02391-6">PROGENy - Schubert et al.</a>:</p>
+<p><a href="https://github.com/saezlab/progeny">PROGENy - Schubert et al.</a>:</p>
 <blockquote>
 <p>Schubert M, Klinger B, Klünemann M, Sieber A, Uhlitz F, Sauer S, Garnett MJ, Blüthgen N, Saez-Rodriguez J. (2018). Perturbation-response genes reveal signaling footprints in cancer gene expression. <em>Nature Communication</em>, Issue 9, Nr. 20. <a href="https://doi.org/10.1038/s41467-017-02391-6" class="uri">https://doi.org/10.1038/s41467-017-02391-6</a>.</p>
+</blockquote>
+</div>
+<div id="studies-where-carnival-was-used" class="section level2">
+<h2 class="hasAnchor">
+<a href="#studies-where-carnival-was-used" class="anchor"></a>Studies where CARNIVAL was used</h2>
+<blockquote>
+<p>Buhl E.M. et al. <a href="https://www.embopress.org/doi/10.15252/emmm.201911021">Dysregulated mesenchymal PDGFR‐β drives kidney fibrosis</a> <em>EMBO Mol Med (2020)e11021 doi: 10.15252/emmm.201911021</em></p>
+</blockquote>
+<blockquote>
+<p>Binenbaum I. et. al. <a href="https://link.springer.com/content/pdf/10.1007/s10522-020-09866-y.pdf">Bioinformatic framework for analysis of transcription factor changes as the molecular link between replicative cellular senescence signaling pathways and carcinogenesis</a> <em>Biogerontology doi: 10.1007/s10522-020-09866-y</em></p>
 </blockquote>
 </div>
 <div id="acknowledgement" class="section level2">
@@ -172,7 +206,8 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>Apache License (== 3.0) | file <a href="LICENSE-text.html">LICENSE</a>
+<li>
+<a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>

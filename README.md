@@ -1,11 +1,14 @@
-# CARNIVAL
+# CARNIVAL <img src="man/figures/logo.png" align="right" height="139">
+
+<!-- badges: start -->
+<!-- badges: end -->
 
 ## Overview
 CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
 
-This is a tool currently being developed by the [SaezLab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on following paper.
+This is a tool currently being developed by the [saezlab](http://saezlab.org/) members and is an extension of the previously implemented Causal Reasoning ([*Melas et al.*](http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f)) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on following paper.
 
-> Liu A., Trairatphisan P., Gjerga E. et al. [From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL](https://www.nature.com/articles/s41540-019-0118-z) _npj Systems Biology and Applications volume 5, Article number: 40 (2019) (equal contributions)_.
+> Liu A., Trairatphisan P., Gjerga E. et al. [From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL](https://www.nature.com/articles/s41540-019-0118-z) _npj Systems Biology and Applications_ volume 5, Article number: 40 (2019) (equal contributions).
 
 The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes: 
 
@@ -17,10 +20,31 @@ The aim of the CARNIVAL pipeline is to identify a subset of interactions from a 
 
 Applications of CARNIVAL include the identification of drug’s modes of action and of deregulated processes in diseases (even if the molecular targets remain unknown) by deciphering the alterations of main signalling pathways as well as alternative pathways and off-target effects.
 
-<img src="/CARNIVAL/public/CARNIVAL_Workflow_Dec2018.png" alt="CARNIVAL workflow">
+<img src="man/figures/graphical_abstract.png" align="center" width="800">
 
-<center><i>Inputs and Outputs of CARNIVAL</i></center>
-<br>
+## Getting Started
+
+A tutorial for preparing CARNIVAL input files starting from differentially gene expression (DEG) and for running the CARNIVAL pipeline are provided as vignettes in R-Markdown, R-script and HTML formats. The wrapper script "runCARNIVAL" was introduced to take input arguments, pre-process input descriptions, run optimisation and export results as network files and figures. Three built-in CARNIVAL examples are also supplied as case studies for users.
+
+### Prerequisites
+
+CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative [here](https://www.ibm.com/products/ilog-cplex-optimization-studio?S_PKG=CoG&cm_mmc=Search_Google-_-Data+Science_Data+Science-_-WW_IDA-_-+IBM++CPLEX_Broad_CoG&cm_mmca1=000000RE&cm_mmca2=10000668&cm_mmca7=9041989&cm_mmca8=kwd-412296208719&cm_mmca9=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_&cm_mmca10=267798126431&cm_mmca11=b&mkwid=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_|470|135655&cvosrc=ppc.google.%2Bibm%20%2Bcplex&cvo_campaign=000000RE&cvo_crid=267798126431&Matchtype=b&gclid=Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB). The [CBC](https://projects.coin-or.org/Cbc) solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available [lpSolve R-package](https://cran.r-project.org/web/packages/lpSolve/index.html).
+
+### Installation
+
+```r
+# install from bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("CARNIVAL")
+
+# install the development version from GitHub
+# install.packages("devtools")
+devtools::install_github("saezlab/CARNIVAL")
+```
+
+### Inputs and Outputs of CARNIVAL
 
 The input for CARNIVAL consists of:
 
@@ -34,38 +58,13 @@ The input for CARNIVAL consists of:
 
 The outcome of CARNIVAL includes the list of identified networks that fitted to the provided experimental data as well as the predicted activities of signalling proteins in the networks whether they are up- or down-regulated.
 
-## Getting Started
-
-A tutorial for preparing CARNIVAL input files starting from differentially gene expression (DEG) and for running the CARNIVAL pipeline are provided as vignettes in R-Markdown, R-script and HTML formats. The wrapper script "runCARNIVAL" was introduced to take input arguments, pre-process input descriptions, run optimisation and export results as network files and figures. Three built-in CARNIVAL examples are also supplied as case studies for users.
-
-### Prerequisites
-
-CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative [here](https://www.ibm.com/products/ilog-cplex-optimization-studio?S_PKG=CoG&cm_mmc=Search_Google-_-Data+Science_Data+Science-_-WW_IDA-_-+IBM++CPLEX_Broad_CoG&cm_mmca1=000000RE&cm_mmca2=10000668&cm_mmca7=9041989&cm_mmca8=kwd-412296208719&cm_mmca9=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_&cm_mmca10=267798126431&cm_mmca11=b&mkwid=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_|470|135655&cvosrc=ppc.google.%2Bibm%20%2Bcplex&cvo_campaign=000000RE&cvo_crid=267798126431&Matchtype=b&gclid=Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB). The [CBC](https://projects.coin-or.org/Cbc) solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available [lpSolve R-package](https://cran.r-project.org/web/packages/lpSolve/index.html).
-
-### Installing
-
-CARNIVAL is currently available for the installation as an R-package from our GitHub page.
-
-```R
-# Install CARNIVAL from Github using devtools
-# install.packages('devtools') # in case devtools hasn't been installed
-library(devtools)
-install_github('saezlab/CARNIVAL', build_vignettes = TRUE)
-# or download the source file from GitHub and install from source
-install.packages('path_to_extracted_CARNIVAL_directory', repos = NULL, type="source")
-```
-
 ## Running CARNIVAL
 
 To obtain the list of tutorials/vignettes of the CARNIVAL package, user can start with typing the following commmand on R-console:
 
-```R
+```r
 vignette("CARNIVAL-vignette")
 ```
-
-## License
-
-Distributed under the GNU GPLv3 License. See accompanying file [LICENSE.txt](https://github.com/saezlab/CARNIVAL/blob/master/LICENSE.txt) or copy at [http://www.gnu.org/licenses/gpl-3.0.html](http://www.gnu.org/licenses/gpl-3.0.html).
 
 ## References
 
@@ -73,11 +72,11 @@ Distributed under the GNU GPLv3 License. See accompanying file [LICENSE.txt](htt
 
 > Melas IN, Sakellaropoulos T, Iorio F, Alexopoulos L, Loh WY, Lauffenburger DA, Saez-Rodriguez J, Bai JPF. (2015). Identification of drug-specific pathways based on gene expression data: application to drug induced lung injury. *Integrative Biology*, Issue 7, Pages 904-920, https://doi.org/10.1039/C4IB00294F.
 
-[DoRothEA v2 - Garcia-Alonso et al.](https://genome.cshlp.org/content/29/8/1363.full):
+[DoRothEA - Garcia-Alonso et al.](https://github.com/saezlab/dorothea):
 
-> Garcia-Alonso L, Holland CH, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. *Genome Research* 2019. 29: 1363-1375.
+> Garcia-Alonso L, Holland CH, Ibrahim MM, Turei D, Saez-Rodriguez J. (2018). Benchmark and integration of resources for the estimation of human transcription factor activities. *Genome Research* 2019. 29: 1363-1375, https://doi.org/10.1101/gr.240663.118
 
-[PROGENy - Schubert et al.](https://www.nature.com/articles/s41467-017-02391-6):
+[PROGENy - Schubert et al.](https://github.com/saezlab/progeny):
 
 > Schubert M, Klinger B, Klünemann M, Sieber A, Uhlitz F, Sauer S, Garnett MJ, Blüthgen N, Saez-Rodriguez J. (2018). Perturbation-response genes reveal signaling footprints in cancer gene expression. *Nature Communication*, Issue 9, Nr. 20. https://doi.org/10.1038/s41467-017-02391-6.
 
