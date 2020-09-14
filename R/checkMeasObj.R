@@ -15,6 +15,24 @@ checkMeasObj <- function(measObj = measObj, netObj = netObj){
       stop("Measurement object should either be of matrix or data.frame class")
     } else {
       if(ncol(measObj)>0){
+        
+        colnames(measObj) <- gsub(pattern = "-", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = "+", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = "*", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = "/", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = "<", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = ">", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = "=", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        colnames(measObj) <- gsub(pattern = " ", replacement = "_", 
+                            x = colnames(measObj), fixed = TRUE)
+        
         mSpecies = colnames(measObj)
         
         idx = which(mSpecies%in%nSpecies)
@@ -38,23 +56,6 @@ checkMeasObj <- function(measObj = measObj, netObj = netObj){
       }
     }
   }
-  
-  colnames(measObj) <- gsub(pattern = "-", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = "+", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = "*", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = "/", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = "<", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = ">", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = "=", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-  colnames(measObj) <- gsub(pattern = " ", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
   
   return(measObj)
   
