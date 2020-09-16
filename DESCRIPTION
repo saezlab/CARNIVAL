@@ -1,6 +1,6 @@
 Package: CARNIVAL
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
-Version: 1.0.1
+Version: 1.1.0
 Authors@R: c(
     person(given = "Enio",
            family = "Gjerga",
@@ -21,8 +21,11 @@ Authors@R: c(
            role = "ctb"),
     person(given = "Aurelien",
            family = "Dugourd",
-           role = "cre",
-           email = "adugourd@ukaachen.de")
+           role = "ctb"),
+    person(given = "Olga", 
+           family = "Ivanova", 
+           role = "cre", 
+           email = "olga.ivanova@bioquant.uni-heidelberg.de")
            )
 Description: An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores. 
              Optimization parameters can be freely adjusted and multiple solutions can be obtained and aggregated.
