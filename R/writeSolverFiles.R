@@ -63,7 +63,7 @@ writeSolverFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
         gurobiCommand, append = TRUE)
   write(paste0(" TimeLimit=",timelimit, " \ "),
         gurobiCommand, append = TRUE)
-  write(paste0(" RseultFile=results_cplex_", condition,"_",repIndex,".txt \ "), 
+  write(paste0(" ResultFile=results_cplex_", condition,"_",repIndex,".txt \ "), 
         gurobiCommand, append = TRUE)
   write(paste0(" testFile_", condition,"_",repIndex,".lp"),
         gurobiCommand, append = TRUE)
