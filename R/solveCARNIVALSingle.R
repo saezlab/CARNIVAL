@@ -91,8 +91,60 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
     
     return(result)
     
-  } else {
+  } else if(solver == "gurobi"){
     
+      system(paste0("bash gurobiCommand_", 
+                    condition,"_",repIndex,".txt"))
+
+    
+    ## Write result files in the results folder
+    message("Saving results...")
+    resList <- list()
+    if (file.exists(paste0("results_gurobi_",condition,"_",repIndex,".txt"))) {
+      for(i in seq_len(length(variables))){
+        res <- exportResult(cplexSolutionFileName = paste0("results_gurobi_",
+                                                           condition,"_",
+                                                           repIndex,".txt"),
+                            variables = variables, 
+                            pknList = pknList, 
+                            conditionIDX = i,
+                            inputs=inputObj,
+                            measurements=measObj)
+        resList[[length(resList)+1]] <- res
+      }
+      if (!is.null(res)) {
+        if(!is.null(dir_name)){
+          if(dir.exists(dir_name)){
+            WriteDOTfig(res=res,
+                        dir_name=dir_name,
+                        inputs=inputObj,
+                        measurements=measObj,
+                        UP2GS=FALSE)
+          } else {
+            warning("Specified directory does not exist. DOT figure not saved.")
+          }
+        }
+      } else {
+        message("No result to be written")
+        return(NULL)
+      }
+    }
+    
+    cleanupCARNIVAL(condition = condition, repIndex = repIndex)
+    
+    ## Remove global variable 
+    objs <- ls(pos = ".GlobalEnv")
+    rm(list = objs[grep("pknList", objs)], pos = ".GlobalEnv")
+    
+    message(" ")
+    message("--- End of the CARNIVAL pipeline ---")
+    message(" ")
+    
+    result = resList[[1]]
+    
+    return(result)
+    
+  } else {    
     if(solver=="cbc"){
       
       resFile = paste0("results_cbc_", 1, "_", 1, ".txt")
@@ -172,3 +224,4 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
   }
   
 }
+

@@ -16,6 +16,15 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName,
                              pknList = pknList, inputs = inputs, 
                              measurements = measurements)
     
+  } else if(solver=="gurobi"){
+      
+      RES <- exportResultGurobi(cplexSolutionFileName = cplexSolutionFileName, 
+                             variables = variables, conditionIDX = conditionIDX, 
+                             pknList = pknList, inputs = inputs, 
+                             measurements = measurements)
+      
+      return(RES)
+
   } else {
     
     if(solver=="cbc"){

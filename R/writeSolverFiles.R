@@ -48,5 +48,25 @@ writeSolverFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
   write(paste0("write results_cplex_", condition,"_",repIndex,".txt sol all"), 
         cplexCommand, append = TRUE)
   write("quit", cplexCommand, append = TRUE)
-  
+
+      ## write gurobiCommand file
+  gurobiCommand <- paste0("gurobiCommand_", condition,"_",repIndex,".txt")
+  write(paste0("gurobi_cl \ "), 
+        gurobiCommand, append = TRUE)
+  write(paste0(" MIPGap=",mipGAP, " \ "), 
+        gurobiCommand, append = TRUE)
+  write(paste0(" PoolGap=",poolrelGAP, " \ "), 
+        gurobiCommand, append = TRUE)
+  write(paste0(" PoolSearchMode=", poolReplace, " \ "), 
+        gurobiCommand, append = TRUE)
+  write(paste0(" PoolSolutions= ",poolCap, " \ "), 
+        gurobiCommand, append = TRUE)
+  write(paste0(" TimeLimit=",timelimit, " \ "),
+        gurobiCommand, append = TRUE)
+  write(paste0(" RseultFile=results_cplex_", condition,"_",repIndex,".txt \ "), 
+        gurobiCommand, append = TRUE)
+  write(paste0(" testFile_", condition,"_",repIndex,".lp"),
+        gurobiCommand, append = TRUE)
+
+
 }
