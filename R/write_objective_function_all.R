@@ -214,12 +214,12 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
   for (i in seq_len(nrow(dataMatrix$dataMatrix))) {
     
     dM <- dataMatrix
-    dM$dataMatrix <- as.matrix(t(dataMatrix$dataMatrix[i, ]))
-    dM$dataMatrixSign <- as.matrix(t(dataMatrix$dataMatrixSign[i, ]))
+    dM$dataMatrix <- as.matrix(t(dataMatrix$dataMatrix[i, ,drop=FALSE]))
+    dM$dataMatrixSign <- as.matrix(t(dataMatrix$dataMatrixSign[i, ,drop=FALSE]))
     
     if(!is.null(measWeights)){
       
-      mm <- as.matrix(measWeights[i, ])
+      mm <- as.matrix(measWeights[i, ,drop=FALSE])
       
     } else {
       
