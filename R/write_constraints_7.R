@@ -69,7 +69,7 @@ write_constraints_7 <- function(variables=variables,
   
   idx1 <- which(rowSums(adj)==0)
   idx2 <- setdiff(seq_len(nrow(adj)), idx1)
-  
+  cc1 <- rep("", length(idx1))
   if (length(idx1)>0) {
     cc1 <-
       paste0(

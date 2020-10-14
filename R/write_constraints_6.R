@@ -72,7 +72,7 @@ write_constraints_6 <- function(variables=variables,
   
   idx1 <- which(rowSums(adj)==0)
   idx2 <- setdiff(seq_len(nrow(adj)), idx1)
-  
+  cc1 = NULL
   if(length(idx1)>0){
     
     cc1 <-

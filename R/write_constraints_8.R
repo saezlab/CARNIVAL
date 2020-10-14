@@ -91,6 +91,7 @@ write_constraints_8 <- function(variables=variables,
   ## constraints8 <- c(constraints8, cc)
   
   ##
+  cc4 = c()
   if (length(
     setdiff(
       as.character(pknList[, 1]), 
