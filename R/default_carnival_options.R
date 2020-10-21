@@ -9,56 +9,81 @@
 
 #TODO add Attila as authors
 
-default_carnival_options = function(){
+supportedSolvers <- list(cplex="cplex", cbc="cbc", lpSolve="lpSolve")
+
+defaultCplexCarnivalOptions <- function(){
     
-    opts <- list(solver_path=NULL,
-         solver=c("lpSolve"), 
+    opts <- list(
+         solverPath=NULL,
+         solver=supportedSolvers$cplex, 
          timelimit=3600, 
-         mip_gap=0.05,
-         poolrel_gap=0.0001,
-         limit_pop=500, 
-         pool_cap=100,
-         pool_intensity=4,
-         pool_replace=2,
-         alpha_weight=1, 
-         beta_weight=0.2,
-         threads = 1,
-         max_memory_usage="8GB",
-         dir_name=NULL
+         mipGap=0.05,
+         poolrelGap=0.0001,
+         limitPop=500, 
+         poolCap=100,
+         poolIntensity=4,
+         poolReplace=2,
+         alphaWeight=1, 
+         betaWeight=0.2,
+         threads=1,
+         cplexMemoryLimit=8192,
+         dirName=NULL
     )
     return(opts)
 }
 
+#TODO options list from the cplex itself
+defaultCplexOptions <- function() {
+    opts <- list(
+        mipGap=1e-04, 
+        poolrelGap=1e75,
+        limitPop=20,
+        poolCap=2.1e9,
+        poolIntensity=0,
+        poolReprace=0
+    )
+    return(opts)
+}
+
+#TODO what other params are needed here
+defaultLpSolveCarnivalOptions = function() {
+    
+    opts <- list(
+        solver=supportedSolvers$lpSolve
+    )
+    
+    return(opts)
+}
 
 
 #' check_CARNIVAL_options
 #' 
 #' checks options provided for CARNIVAL
 #' 
-check_carnival_options <- function(opts){
+checkCplexCarnivalOptions <- function(opts){
     
     if(!is.list(opts)) stop("CARNIVAL options should be a list")
-    req_names <- c(
-        "solver_path",
+    requiredNames <- c(
+        "solverPath",
         "solver", 
         "timelimit",
-        "mip_gap",
-        "poolrel_gap",
-        "limit_pop", 
-        "pool_cap",
-        "pool_intensity",
-        "pool_replace",
-        "alpha_weight", 
-        "beta_weight",
+        "mipGap",
+        "poolrelGap",
+        "limitPop", 
+        "poolCap",
+        "poolIntensity",
+        "poolReplace",
+        "alphaWeight", 
+        "betaWeight",
         "threads",
-        "dir_name")
+        "dirName")
     
-    if(!all(req_names %in% names(opts))){
+    if(!all(requiredNames %in% names(opts))){
         stop("CARNIVAL options should contain all options. 
              Start by calling default_carnival_options() and replace entries. ")
     }
     
     
-    if(is.null(opts$solver_path)) stop("path to ILP solver must be provided")
+    if(is.null(opts$solverPath)) stop("path to ILP solver must be provided")
     
 }

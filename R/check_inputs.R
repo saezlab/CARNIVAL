@@ -2,6 +2,12 @@
 ##
 ## Enio Gjerga, 2020
 
+#TODO
+checkInputs_v1.2 <- function(){ 
+  returnList = list()
+  
+}
+
 checkInputs <- function(solverPath=NULL,
                         netObj=NULL,
                         measObj=NULL,
@@ -26,27 +32,28 @@ checkInputs <- function(solverPath=NULL,
   measObj = checkMeasObj(measObj = measObj, netObj = netObj)
   inputObj = checkInputObj(inputObj = inputObj, netObj = netObj)
   weightObj = checkWeightObj(weightObj = weightObj, netObj = netObj)
+  
   pp = checkSolverParam(timelimit=timelimit, mipGAP=mipGAP,
                         poolrelGAP=poolrelGAP, limitPop=limitPop, poolCap=poolCap,
                         poolIntensity=poolIntensity, poolReplace=poolReplace,
                         threads=threads,
                         alphaWeight=alphaWeight, betaWeight=betaWeight)
 
-  if(weightObj[1]!="NULL"){
-    if(nrow(weightObj)!=nrow(measObj)){
+  if( !is.null(weightObj[1]) ){
+    if( nrow(weightObj) != nrow(measObj) ){
       stop("Number of rows provided for the weightObj is different to measObj.
            Please check your inputs again.")
     }
   }
 
-  if(!is.null(inputObj$inputs)){
+  if( !is.null(inputObj$inputs) ){
     if(nrow(inputObj$inputs)!=nrow(measObj)){
       stop("Number of rows provided for the inputObj is different to measObj.
            Please check your inputs again.")
     }
   }
 
-  if(nrow(measObj)==1){
+  if( nrow(measObj) == 1 ){
     experimental_conditions = "NULL"
   } else {
     experimental_conditions = seq_len(nrow(measObj))

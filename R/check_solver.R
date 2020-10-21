@@ -6,8 +6,9 @@
 ##
 ## Enio Gjerga, 2020
 
-checkSolver <- function(solverPath = solverPath, solver = solver,
-                        dir_name = dir_name){
+checkSolver <- function(solverPath=solverPath, 
+                        solver=solver,
+                        dirName=dirName){
   
   if(!is.null(solverPath)){
     if(!is(solverPath, "character")){
@@ -30,8 +31,8 @@ checkSolver <- function(solverPath = solverPath, solver = solver,
     }
   }
   
-  if(!is.null(dir_name)){
-    if(!is(dir_name, "character")){
+  if(!is.null(dirName)){
+    if(!is(dirName, "character")){
       stop("dir_name should either be NULL or provided as a character")
     }
   }

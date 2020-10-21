@@ -87,13 +87,37 @@
 #'@export
 #'
 
-run_carnival1 <- function(perturbations, measurements, network, weights,
-                          solver, solver_path, carnival_options = default_carnival_options()) {
-  #TODO
+#TODO make it possible to change just one param right here
+#TODO documentation, change default option to lpSolve later
+runCarnival <- function(perturbations, measurements, network, weights,
+                        carnivalOptions = defaultCplexCarnivalOptions()) {
+  
+  solver <- match.arg(solver)
+  
+  res = checkInputs(perturbations, measurements, priorKnowledgeNetwork, weights, 
+                    carnivalOptions)
+  
+  if (cleanTmpFiles) {
+    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
+  }
+  
+  result = solveCARNIVAL(perturbations = res$inputs$network,
+                         measurements = res$measurements,
+                         priorKnowledgeNetwork = res$inputs$inputs,
+                         weights = res$weights,
+                         carnivalOptions=carnivalOptions,
+                         experimentalConditions = res$exp,
+                         condition = res$condition, repIndex = res$repIndex)
+  
+  if (cleanTmpFiles) {
+    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
+  }
+  
+  return(result)
 }
 
 run_inverse_carnival <- function(measurements, network, weights,
-                                 solver, solver_path){
+                                 carnival_options = default_carnival_options()){
   #TODO
 }
 
@@ -113,8 +137,8 @@ runCARNIVAL <- function(inputObj=NULL,
                         alphaWeight=1,
                         betaWeight=0.2,
                         threads=0,
-                        memory_limit="8GB",
-                        clean_tmp_files=TRUE,
+                        cplexMemoryLimit=8192,
+                        cleanTmpFiles=TRUE,
                         dir_name=NULL)
 {
   
@@ -129,7 +153,7 @@ runCARNIVAL <- function(inputObj=NULL,
                     betaWeight = betaWeight, dir_name = dir_name,
                     solver = solver, threads = threads)
   
-  if (clean_tmp_files) {
+  if (cleanTmpFiles) {
     cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
   }
   
@@ -147,7 +171,7 @@ runCARNIVAL <- function(inputObj=NULL,
                          experimental_conditions = res$exp,
                          condition = res$condition, repIndex = res$repIndex)
   
-  if (clean_tmp_files) {
+  if (cleanTmpFiles) {
     cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
   }
   
