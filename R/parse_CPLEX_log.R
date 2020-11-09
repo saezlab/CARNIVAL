@@ -8,7 +8,7 @@
 #' - `objective` objective function value
 #' - `termination_reason`: reason of termination.
 #' @importFrom readr read_lines
-#' @importFrom stringr str_detect
+
 
 parse_CPLEX_log <- function(log_file){
     
@@ -19,43 +19,71 @@ parse_CPLEX_log <- function(log_file){
     # then discard  and find first Nodes
     # lasts until Clique cuts
     
-    n_phases = length(which(stringr::str_detect(convergence_text,"Clique cuts ")))
-    if(n_phases>2) warning("parser assumes max. 2 phases. Convergence report is incomplete.")
+    parse_convergence = TRUE
     
-    convergence_text <- lines
-    start <- which(stringr::str_detect(convergence_text,"Populate: phase I "))
-    end <-  which(stringr::str_detect(convergence_text,"Clique cuts "))[[1]]-1
-    convergence_text <- convergence_text[start:end]
-    start <- which(nchar(convergence_text)==0)[[1]] + 2 
-    convergence_text <- convergence_text[start: length(convergence_text) ]
+    n_phases = length(grep("Populate: phase ",lines))
     
-    phase_table <- convergence_text_to_table(text = convergence_text)
+    if(n_phases==0) {
+        # for some very small cases there is no convergence reported. 
+        parse_convergence = FALSE
+    }
+    if(n_phases>2) warning("parser assumes max. 2 phases. Convergence report is incomplete. Submit a Github issue if this is ever detected.")
     
-    if(n_phases > 1){
+    if(parse_convergence){
         convergence_text <- lines
-        start <- which(stringr::str_detect(convergence_text,"Populate: phase II "))
-        end <-  which(stringr::str_detect(convergence_text,"Clique cuts "))[[2]]-1
-        convergence_text <- convergence_text[start:end]
-        start <- which(nchar(convergence_text)==0)[[1]] + 2 
-        convergence_text <- convergence_text[start: length(convergence_text) ]
+        # Structure of a phase: 
+        # - Phase #number is stated
+        # - lines describing optimisation steps
+        # - Convergence table
+        # the convergence table starts and ends with an empty line
+        # the header is also sperated by an empty line
         
-        phaseII_table <- convergence_text_to_table(text = convergence_text)
+        ph_start <- grep("Populate: phase I ",convergence_text)
         
-        phase_table <-  bind_rows(phase_table,phaseII_table)
+        # the start is the first empty line, then we also skip the first row of
+        # the header. 
+        # the end is the third empty line after the start of Phase: 
+        empty_lines = which(nchar(convergence_text)==0)
+        
+        tbl_start <- empty_lines[empty_lines > ph_start][[1]]+2
+        tbl_end <- empty_lines[empty_lines > ph_start][[3]]-1
+        
+        
+        convergence_text <- convergence_text[tbl_start:tbl_end]
+        
+        phase_table <- convergence_text_to_table(text = convergence_text)
+        
+        if(n_phases > 1){
+            convergence_text <- lines
+            ph_start <- grep("Populate: phase II ",convergence_text)
+            empty_lines = which(nchar(convergence_text)==0)
+            tbl_start <- empty_lines[empty_lines > ph_start][[1]]+2
+            tbl_end <- empty_lines[empty_lines > ph_start][[3]]-1
+            convergence_text <- convergence_text[tbl_start:tbl_end]
+            phaseII_table <- convergence_text_to_table(text = convergence_text)
+            
+            phase_table <-  bind_rows(phase_table,phaseII_table)
+        }
+    }else{
+        phase_table = empty_convergence()
     }
     ## process final part:
     
     # number of solution
     solution_text <- grep("^Solution pool:",lines,value = TRUE)
-    n_solutions = str_extract(solution_text,"[0-9]+") %>% as.numeric()
+    n_solutions =  regmatches(solution_text,regexpr("[0-9]+", solution_text)) %>%
+        as.numeric()
+    
+   
     
     # termination
     termination_text <- grep("Populate - ",lines,value = TRUE)
-    termination_reason <- str_extract(termination_text,"-.*:") %>%
-        str_sub(.,start = 3, end = nchar(.)-1)
+    termination_reason <- 
+        regmatches(termination_text,regexpr("-.*:", termination_text)) %>%
+        substr(.,start = 3, stop = nchar(.)-1)
     
-    objective = str_extract(termination_text,"=.*$") %>%
-        str_sub(.,start = 2, end = nchar(.))%>% as.numeric()
+    objective = regmatches(termination_text,regexpr("=.*$", termination_text)) %>%
+        substr(.,start = 2, stop = nchar(.)) %>% as.numeric()
     
     diagnostics <- list(convergence = phase_table,
                         n_solutions = n_solutions,
@@ -75,20 +103,23 @@ convergence_text_to_table <- function(text){
     text = text[-1:-2]
     
     # remove cuts
-    cuts <- which(stringr::str_detect(text,"Cuts"))
+    cuts <- grep("Cuts",text)
     if(length(cuts>0)) text <- text[-cuts]
     # remove stars and plus sign
-    marked <- which(stringr::str_detect(text,"[+*]"))
+    marked <- grep("[+*]",text)
     if(length(marked)>0) text <- text[-marked]
     
     # remove node file size reports:
-    node_file_index <- which(stringr::str_detect(text,"Nodefile size"))
+    node_file_index <-grep("Nodefile size",text)
     if(length(node_file_index)>0) text <- text[-node_file_index]
     
     # save the lines where elapsed time is reported: 
-    time_line_index <- which(stringr::str_detect(text,"Elapsed time"))
+    time_line_index <- grep("Elapsed time",text)
     time_text = text[time_line_index]
     if(length(time_line_index)>0)   text <- text[-time_line_index]
+
+    
+    if(length(text)==0) return(empty_convergence())
     
     # split lines to values
     line_list <- strsplit(text," +")
@@ -99,7 +130,7 @@ convergence_text_to_table <- function(text){
     
     phaseI_table <- line_list[llength==9] %>%
         do.call(rbind,.) %>% 
-        as_tibble(,.name_repair ="minimal")
+        as_tibble(.,.name_repair ="minimal")
     
     phaseI_table <- phaseI_table[,-1]
     names(phaseI_table) <- header
@@ -117,10 +148,22 @@ convergence_text_to_table <- function(text){
     result <- phaseI_table %>%
         mutate(index = 1:n()) %>%
         left_join(time_table,by = "index") %>%
-        select(-index)
+        dplyr::select(-index)
     
 }
 
+
+empty_convergence <- function(){
+    tibble(Node= numeric(),
+               `Nodes Left`= numeric(),
+               Objective = numeric(),
+               IInf = numeric(),
+               `Best Integer` = numeric(),
+               `Best Bound`= numeric(),
+               ItCnt = numeric(),
+               Gap = numeric() )
+    
+}
 # add elapsed time info
 time_string_to_table <- function(time_text){
     

@@ -54,6 +54,9 @@
 #'4. attributesAll: A list of separate inferred node activities across the
 #'various solutions.
 #'
+#'5. diagnostics: reports the convergence of optimization and reason of 
+#' the termination. Only for CPLEX solver. 
+#'
 #'@author Enio Gjerga, 2020 \email{carnival.developers@gmail.com}
 #'
 #'@examples
@@ -132,7 +135,7 @@ runCARNIVAL <- function(inputObj=NULL,
                          experimental_conditions = res$exp,
                          condition = res$condition, repIndex = res$repIndex)
 
-  cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)
+  #cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)
 
   return(result)
 
