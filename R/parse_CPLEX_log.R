@@ -36,33 +36,44 @@ parse_CPLEX_log <- function(log_file){
         # - lines describing optimisation steps
         # - Convergence table
         # the convergence table starts and ends with an empty line
-        # the header is also sperated by an empty line
-        
+        # the header is also separated by an empty line
         ph_start <- grep("Populate: phase I ",convergence_text)
         
-        # the start is the first empty line, then we also skip the first row of
-        # the header. 
+        # detect table headers: 
+        table_headers = grep("^ +Nodes +Cuts",convergence_text)
+        # table starts after second row of header and an empty line
+        tbl_start = table_headers[table_headers>ph_start] +3
+        
         # the end is the third empty line after the start of Phase: 
         empty_lines = which(nchar(convergence_text)==0)
-        
-        tbl_start <- empty_lines[empty_lines > ph_start][[1]]+2
-        tbl_end <- empty_lines[empty_lines > ph_start][[3]]-1
-        
+        tbl_end <- empty_lines[empty_lines > tbl_start][[1]]-1
         
         convergence_text <- convergence_text[tbl_start:tbl_end]
         
         phase_table <- convergence_text_to_table(text = convergence_text)
         
         if(n_phases > 1){
-            convergence_text <- lines
-            ph_start <- grep("Populate: phase II ",convergence_text)
-            empty_lines = which(nchar(convergence_text)==0)
-            tbl_start <- empty_lines[empty_lines > ph_start][[1]]+2
-            tbl_end <- empty_lines[empty_lines > ph_start][[3]]-1
-            convergence_text <- convergence_text[tbl_start:tbl_end]
-            phaseII_table <- convergence_text_to_table(text = convergence_text)
             
-            phase_table <-  bind_rows(phase_table,phaseII_table)
+            # sometimes more phases but only 1 table, then we skip processing 
+            if(length(table_headers)  > 1 ){
+                convergence_text <- lines
+                ph_start <- grep("Populate: phase II ",convergence_text)
+                
+                table_headers = grep("^ +Nodes +Cuts",convergence_text)
+                # table starts after second row of header and an empty line
+                tbl_start = table_headers[table_headers>ph_start] +3
+                
+                empty_lines = which(nchar(convergence_text)==0)
+                
+                tbl_end <- empty_lines[empty_lines > tbl_start][[1]]-1
+                convergence_text <- convergence_text[tbl_start:tbl_end]
+                phaseII_table <- convergence_text_to_table(text = convergence_text)
+                
+                phase_table <-  bind_rows(phase_table,phaseII_table)
+                
+            } 
+            
+           
         }
     }else{
         phase_table = empty_convergence()
