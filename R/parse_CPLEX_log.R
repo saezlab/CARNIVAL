@@ -1,7 +1,8 @@
 #' parse carnival logs
 #' 
 #' parses the CPLEX log file and reads some basic information
-#' @param log_file path of log file resulted from a carnival run
+#' @param log path of log file resulted from a carnival run OR the content
+#' of this file read by \link{\code[readr]{read_lines}}.
 #' @return list variable with following fields:
 #' - `convergence` a table that contains information on the convergence of CPLEX 
 #' - `n_solutions` number of solutions found 
@@ -9,10 +10,113 @@
 #' - `termination_reason`: reason of termination.
 #' @importFrom readr read_lines
 
-
-parse_CPLEX_log <- function(log_file){
+parse_CPLEX_log <- function(log){
     
-    lines <- readr::read_lines(log_file)
+    if(length(log) == 1 && file.exists(log)){
+        lines <- readr::read_lines(log)    
+    }else(
+        lines = log
+    )
+    
+    # There are possible multiple phases, each one with convergence tables. 
+    
+    parse_convergence = TRUE
+    interrupted = FALSE
+    
+    n_phases = length(grep("Populate: phase ",lines))
+    
+    if(n_phases==0) {
+        # for some very small cases there is no convergence reported. 
+        parse_convergence = FALSE
+    } else{
+        parse_convergence = TRUE
+    }
+    
+    
+    if(parse_convergence){
+        convergence_text <- lines
+        
+        # detect table headers: 
+        table_headers = grep("^ +Nodes +Cuts",convergence_text)
+        empty_lines = which(nchar(convergence_text)==0)
+        
+        parsed_table = list()
+        
+        for(i_table in 1:length(table_headers)){
+            # select text from the phase
+            convergence_text <- lines
+            
+            # table starts after second row of header and an empty line
+            tbl_start = table_headers[i_table] +3
+            
+            # the table ends at the first empty line after it starts, unless 
+            # CPLEX was interrupted:
+            
+            # we should check if CPLEX finished
+            # if CPLEX was interrupted, then there is no empty space after 
+            # the header. 
+            
+            if(!any(empty_lines > tbl_start)) {
+                interrupted = TRUE
+                tbl_end = length(convergence_text)
+            }else{
+                interrupted = FALSE
+                tbl_end <- empty_lines[empty_lines > tbl_start][[1]]-1
+            }
+            
+            convergence_text <- convergence_text[tbl_start:tbl_end]
+            
+            parsed_table[[i_table]] <- convergence_text_to_table(text = convergence_text)
+            
+        }
+        
+        phase_table <-  bind_rows(parsed_table)
+        
+        
+    }else{
+        phase_table = empty_convergence()
+    }
+    ## process final part:
+    
+    if(!interrupted){
+        # number of solution
+        solution_text <- grep("^Solution pool:",lines,value = TRUE)
+        n_solutions =  regmatches(solution_text,regexpr("[0-9]+", solution_text)) %>%
+            as.numeric()
+        
+        
+        
+        # termination
+        termination_text <- grep("Populate - ",lines,value = TRUE)
+        termination_reason <- 
+            regmatches(termination_text,regexpr("-.*:", termination_text)) %>%
+            substr(.,start = 3, stop = nchar(.)-1)
+        
+        objective = regmatches(termination_text,regexpr("=.*$", termination_text)) %>%
+            substr(.,start = 2, stop = nchar(.)) %>% as.numeric()
+    }else{
+        n_solutions = 0
+        objective = as.numeric(NaN)
+        termination_reason = "CPLEX was interrupted"
+    }
+    
+    diagnostics <- list(convergence = phase_table,
+                        n_solutions = n_solutions,
+                        objective = objective,
+                        termination_reason = termination_reason)
+}
+
+
+
+
+
+parse_CPLEX_log_old <- function(log){
+    
+    if(length(log) == 1 && file.exists(log)){
+        lines <- readr::read_lines(log)    
+    }else(
+        lines = log
+    )
     
     ## Convergence table
     # Starts with Populate: phase I or II
@@ -20,6 +124,7 @@ parse_CPLEX_log <- function(log_file){
     # lasts until Clique cuts
     
     parse_convergence = TRUE
+    interrupted = FALSE
     
     n_phases = length(grep("Populate: phase ",lines))
     
@@ -42,7 +147,7 @@ parse_CPLEX_log <- function(log_file){
         # detect table headers: 
         table_headers = grep("^ +Nodes +Cuts",convergence_text)
         # table starts after second row of header and an empty line
-        tbl_start = table_headers[table_headers>ph_start] +3
+        tbl_start = table_headers[table_headers>ph_start][[1]] +3
         
         # the end is the third empty line after the start of Phase: 
         empty_lines = which(nchar(convergence_text)==0)
@@ -61,11 +166,22 @@ parse_CPLEX_log <- function(log_file){
                 
                 table_headers = grep("^ +Nodes +Cuts",convergence_text)
                 # table starts after second row of header and an empty line
-                tbl_start = table_headers[table_headers>ph_start] +3
+                tbl_start = table_headers[table_headers>ph_start][[1]] +3
                 
                 empty_lines = which(nchar(convergence_text)==0)
                 
-                tbl_end <- empty_lines[empty_lines > tbl_start][[1]]-1
+                # we should check if CPLEX finished or reached memory limit. 
+                # if CPLEX was interrupted, then there is no empty space after 
+                # the header. 
+                
+                if(!any(empty_lines > tbl_start)) {
+                    interrupted = TRUE
+                    tbl_end = length(convergence_text)
+                }else{
+                    interrupted = FALSE
+                    tbl_end <- empty_lines[empty_lines > tbl_start][[1]]-1
+                }
+                
                 convergence_text <- convergence_text[tbl_start:tbl_end]
                 phaseII_table <- convergence_text_to_table(text = convergence_text)
                 
@@ -73,28 +189,34 @@ parse_CPLEX_log <- function(log_file){
                 
             } 
             
-           
+            
         }
     }else{
         phase_table = empty_convergence()
     }
     ## process final part:
     
-    # number of solution
-    solution_text <- grep("^Solution pool:",lines,value = TRUE)
-    n_solutions =  regmatches(solution_text,regexpr("[0-9]+", solution_text)) %>%
-        as.numeric()
-    
-   
-    
-    # termination
-    termination_text <- grep("Populate - ",lines,value = TRUE)
-    termination_reason <- 
-        regmatches(termination_text,regexpr("-.*:", termination_text)) %>%
-        substr(.,start = 3, stop = nchar(.)-1)
-    
-    objective = regmatches(termination_text,regexpr("=.*$", termination_text)) %>%
-        substr(.,start = 2, stop = nchar(.)) %>% as.numeric()
+    if(!interrupted){
+        # number of solution
+        solution_text <- grep("^Solution pool:",lines,value = TRUE)
+        n_solutions =  regmatches(solution_text,regexpr("[0-9]+", solution_text)) %>%
+            as.numeric()
+        
+        
+        
+        # termination
+        termination_text <- grep("Populate - ",lines,value = TRUE)
+        termination_reason <- 
+            regmatches(termination_text,regexpr("-.*:", termination_text)) %>%
+            substr(.,start = 3, stop = nchar(.)-1)
+        
+        objective = regmatches(termination_text,regexpr("=.*$", termination_text)) %>%
+            substr(.,start = 2, stop = nchar(.)) %>% as.numeric()
+    }else{
+        n_solutions = 0
+        objective = as.numeric(NaN)
+        termination_reason = "CPLEX was interrupted"
+    }
     
     diagnostics <- list(convergence = phase_table,
                         n_solutions = n_solutions,
@@ -128,7 +250,7 @@ convergence_text_to_table <- function(text){
     time_line_index <- grep("Elapsed time",text)
     time_text = text[time_line_index]
     if(length(time_line_index)>0)   text <- text[-time_line_index]
-
+    
     
     if(length(text)==0) return(empty_convergence())
     
@@ -165,14 +287,14 @@ convergence_text_to_table <- function(text){
 
 
 empty_convergence <- function(){
-    tibble(Node= numeric(),
-               `Nodes Left`= numeric(),
-               Objective = numeric(),
-               IInf = numeric(),
-               `Best Integer` = numeric(),
-               `Best Bound`= numeric(),
-               ItCnt = numeric(),
-               Gap = numeric() )
+    data.frame(Node= numeric(),
+           `Nodes Left`= numeric(),
+           Objective = numeric(),
+           IInf = numeric(),
+           `Best Integer` = numeric(),
+           `Best Bound`= numeric(),
+           ItCnt = numeric(),
+           Gap = numeric() )
     
 }
 # add elapsed time info
