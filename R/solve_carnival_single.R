@@ -34,15 +34,24 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
   
   if(solver=="cplex"){
     
+    # create temp file for logs
+    cplex_log <- tempfile(pattern = "cplex_log_",tmpdir = tempdir(check = TRUE),fileext = ".txt")
+    
+    
     if (Sys.info()[1]=="Windows") {
+      # TODO: implement logging on Win machine. 
       file.copy(from = solverPath,to = getwd())
       system(paste0("cplex.exe -f cplexCommand_", 
                     condition,"_",repIndex,".txt"))
       file.remove("cplex.exe")
     } else {
-      system(paste0(solverPath, " -f cplexCommand_", 
-                    condition,"_",repIndex,".txt"))
+      system(paste0(solverPath,
+                    " -f cplexCommand_", 
+                    condition,"_",repIndex,".txt",
+                    " | tee ", cplex_log)) # send output to logfile and stdout
     }
+    
+    
     
     ## Write result files in the results folder
     message("Saving results...")
@@ -88,6 +97,15 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
     message(" ")
     
     result = resList[[1]]
+    
+    # add log to results
+    if(file.exists(cplex_log)){
+      cplex_out <- parse_CPLEX_log(cplex_log)
+      result$diagnostics = cplex_out
+    }else{
+      result$diagnostics = list()
+    }
+    
     
     return(result)
     

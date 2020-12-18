@@ -4,106 +4,127 @@
 \alias{runCARNIVAL}
 \title{\code{runCARNIVAL}}
 \usage{
-runCARNIVAL(inputObj=NULL, measObj=measObj, netObj=netObj, weightObj=NULL,
-            solverPath=NULL, solver=c("lpSolve", "cplex", "cbc"), 
-            timelimit=3600, mipGAP=0.05, poolrelGAP=0.0001, limitPop=500, 
-            poolCap=100, poolIntensity=4, poolReplace=2, alphaWeight=1, 
-            betaWeight=0.2, threads = 0, dir_name=NULL)
+runCARNIVAL(
+  inputObj = NULL,
+  measObj = measObj,
+  netObj = netObj,
+  weightObj = NULL,
+  solverPath = NULL,
+  solver = c("lpSolve", "cplex", "cbc"),
+  timelimit = 3600,
+  mipGAP = 0.05,
+  poolrelGAP = 0.0001,
+  limitPop = 500,
+  poolCap = 100,
+  poolIntensity = 4,
+  poolReplace = 2,
+  alphaWeight = 1,
+  betaWeight = 0.2,
+  threads = 0,
+  dir_name = NULL
+)
 }
 \arguments{
+\item{inputObj}{Data frame of the list for target of perturbation - optional
+or default set to NULL to run invCARNIVAL when inputs are not known.}
 
-\item{inputObj}{Data frame of the list for target of perturbation - optional 
-                or default set to NULL to run invCARNIVAL when inputs are not 
-                known}
+\item{measObj}{Data frame of the measurement file (i.e. DoRothEA normalised
+enrichment scores) - always required.}
 
-\item{measObj}{Data frame of the measurement file (i.e. DoRothEA normalised 
-               enrichment scores) - always required}
-               
-\item{netObj}{Data frame of the prior knowledge network - always required}
+\item{netObj}{Data frame of the prior knowledge network - always required.}
 
-\item{weightObj}{Data frame of the additional weight (i.e. PROGENy pathway 
-                 score or measured protein activities) - optional or default set 
-                 as NULL to run CARNIVAL without weights}
-                 
+\item{weightObj}{Data frame of the additional weight (i.e. PROGENy pathway
+score or measured protein activities) - optional or default set as NULL to run
+CARNIVAL without weights.}
+
 \item{solverPath}{Path to executable cbc/cplex file - default set to NULL, in
-                  which case the solver from lpSolve package is used}
-                 
-\item{solver}{Solver to use: lpSolve/cplex/cbc (Default set to lpSolve)}
+which case the solver from lpSolve package is used.}
 
-\item{timelimit}{CPLEX/Cbc parameter: Time limit of CPLEX optimisation (in 
-                 seconds)}
+\item{solver}{Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).}
 
-\item{mipGAP}{CPLEX parameter: the absolute tolerance on the gap between the 
-              best integer objective and the objective of the best node 
-              remaining. When this difference falls below the value of this 
-              parameter, the linear integer optimization is stopped. Default set
-              to 0.05}
+\item{timelimit}{CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
+seconds (default set to 3600).}
 
-\item{poolrelGAP}{CPLEX/Cbc parameter: Allowed relative gap of accepted solution 
-      comparing within the pool of accepted solution (fraction; default: 
-      0.0001)}
+\item{mipGAP}{CPLEX parameter: the absolute tolerance on the gap between the
+best integer objective and the objective of the best node remaining. When this
+difference falls below the value of this parameter, the linear integer
+optimization is stopped (default set to 0.05)}
 
-\item{limitPop}{CPLEX parameter: Allowed number of solutions to be generated 
-                (default: 500)}
+\item{poolrelGAP}{CPLEX/Cbc parameter: Allowed relative gap of accepted
+solution comparing within the pool of accepted solution (default: 0.0001)}
 
-\item{poolCap}{CPLEX parameter: Allowed number of solution to be kept in the 
-               pool of solution (default: 100)}
+\item{limitPop}{CPLEX parameter: Allowed number of solutions to be generated
+(default: 500)}
 
-\item{poolIntensity}{CPLEX parameter: Intensity of solution searching (0,1,2,3,4
-                     - default: 4)}
+\item{poolCap}{CPLEX parameter: Allowed number of solution to be kept in the
+pool of solution (default: 100)}
 
-\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the 
-                   pool (0,1,2 - default: 2 = most diversified solutions)}
+\item{poolIntensity}{CPLEX parameter: Intensity of solution searching
+(0,1,2,3,4 - default: 4)}
 
-\item{alphaWeight}{Objective function: weight for mismatch penalty (default: 1 - 
-                   will only be applied once measurement file only contains 
-                   discrete values)}
+\item{alphaWeight}{Objective function: weight for mismatch penalty (default:
+1 - will only be applied once measurement file only contains discrete values)}
 
-\item{betaWeight}{Objective function: weight for node penalty (default: 0.2)}
+\item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
 
-\item{threads}{Number of threads to be used for the analysis (default: 0 - 
-meaning all threads)}
+\item{threads}{CPLEX parameter: Number of threads to use
+default: 0 for maximum number possible threads on system}
 
-\item{dir_name}{For plotting: define if DOT figure will be exported in the 
-directory defined by this variable. Default set to NULL, meaning that no .DOT 
-figure will be exported. If a valid path is specified, the figure will be 
-exported as 'network_solution.dot' file in the specified directory. If 
-specified dir_name path oes not exist, nos figure will be generated}
-
+\item{dir_name}{Specify directory name to store results. by default set to
+NULL}
 }
 \value{
-The networks and predicted node activities from the CARNIVAL pipeline as a 
-variable which are also optionally saved in the destined result folder
+The function will return a list of results containing:
+1. weightedSIF: A table with 4 columns containing the combined network
+solutions from CARNIVAL. It contains the Source of the interaction (Node1),
+Sign of the interaction (Sign), the Target of the interaction (Node2) and the
+weight of the interaction (Weight) which shows how often an interaction
+appears across the various solutions.
+
+2. nodesAttributes: A table with 6 columns containing information about
+infered protein activity states and attributes. It contains the Protein IDs
+(Node); how often this node has taken an activity of 0, 1 and -1 across the
+solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
+(AvgAct); and the node attribute (measured, target, inferred).
+
+3. sifAll: A list of separate network solutions
+
+4. attributesAll: A list of separate inferred node activities across the
+various solutions.
+
+5. diagnostics: reports the convergence of optimization and reason of 
+the termination. Only for CPLEX solver.
 }
 \description{
-Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL 
-built-in examples
+\code{runCARNIVAL}
+}
+\details{
+Run CARNIVAL pipeline using to the user-provided list of inputs or
+run CARNIVAL built-in examples
 }
 \examples{
-## loading toy example 1
-
 load(file = system.file("toy_inputs_ex1.RData",
-package="CARNIVAL"))
+                        package="CARNIVAL"))
 load(file = system.file("toy_measurements_ex1.RData",
-package="CARNIVAL"))
+                        package="CARNIVAL"))
 load(file = system.file("toy_network_ex1.RData",
-package="CARNIVAL"))
+                        package="CARNIVAL"))
 
 ## lpSolve
-res1 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-                      netObj = toy_network_ex1)
+res1 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+                   netObj = toy_network_ex1)
 
-# ## cbc
-# res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-#                    netObj = toy_network_ex1, solverPath = solverPath,
-#                    solver = "cbc")
-# 
-# ## cplex
-# res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-#                    netObj = toy_network_ex1, solverPath = solverPath,
-#                    solver = "cplex")
+## cbc
+res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+                   netObj = toy_network_ex1, solverPath = solverPath,
+                   solver = "cbc")
+
+## cplex
+res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+                   netObj = toy_network_ex1, solverPath = solverPath,
+                   solver = "cbc")
 
 }
 \author{
-Enio Gjerga
+Enio Gjerga, 2020 \email{carnival.developers@gmail.com}
 }
