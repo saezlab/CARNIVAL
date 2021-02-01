@@ -2,8 +2,9 @@
 title: "Contextualizing large scale signalling networks from expression footprints with CARNIVAL"
 author: "Enio Gjerga"
 date: "`r Sys.Date()`"
-output:
+output: 
   rmarkdown::html_vignette
+  rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{narray Usage Examples}
   %\VignetteEngine{knitr::rmarkdown}
@@ -75,18 +76,18 @@ based on the operating system. The default installation path for each OS is as
 follows:
 
 For Mac OS:
-```{r}
-# ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex
+```
+    ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex
 ```
 
 For Linux:
-```{r}
-# /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex
+```
+    /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex
 ```
 
 For Windows:
-```{r}
-# C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe
+```
+    C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe
 ```
 
 Note that the version of CPLEX has to be changed accordingly (the latest
@@ -132,12 +133,37 @@ load(file = system.file("toy_measurements_ex1.RData",
 load(file = system.file("toy_network_ex1.RData",
                         package="CARNIVAL"))
 
+# Output dir
+dir.create("example1")
+
 # lpSolve
 result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
                      netObj = toy_network_ex1)
-
+```
+which generates the following output:
+```{r}
 print(result)
 ```
+The output from CARNIVAL can be saved in `Rds` format like so:
+```{r}
+saveRDS(result, "example1/network_solution.Rds")
+```
+
+By adding specifying the input for `dir_name` flag, the file 
+`network_solution.dot` is saved in the specified directory. 
+For example:
+```{r}
+result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+                     netObj = toy_network_ex1, dir_name = "example1")
+```
+which produces `network_solution.dot` file in the current working directory. 
+This file, in turn, can be visualised using a software from 
+[graphviz](https://graphviz.org) suite of tools. For example, using `dot`:
+```{bash}
+dot example1/network_solution.dot -T pdf > example1/network_solution.pdf
+```
+
+![Network solution to toy example 1](example1/network_solution.pdf)
 
 Toy Example - 2
 ---------------
@@ -151,11 +177,29 @@ load(file = system.file("toy_measurements_ex2.RData",
 load(file = system.file("toy_network_ex2.RData",
                         package="CARNIVAL"))
 
+# Output dir
+dir.create("example2")
+
 # lpSolve
 result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
-
+```
+which generates the following output:
+```{r}
 print(result)
 ```
+As in the previous example, by adding `dir_name` flag, CARNIVAL exports `dot` 
+file of the solution network in `network_solution.dot` file:
+```{r}
+result = runCARNIVAL(measObj = toy_measurements_ex2, 
+                     netObj = toy_network_ex2, 
+                     dir_name = "example2")
+```
+which can be visualised in the same manner as previous example:
+```{bash}
+dot example2/network_solution.dot -T pdf > example2/network_solution.pdf
+```
+
+![Network solution to toy example 2](example2/network_solution.pdf)
 
 R version information
 ---------------------
