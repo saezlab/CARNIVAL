@@ -1,6 +1,6 @@
 ## Checking solver parameters
 ##
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020
 
 params <- list(
   timelimit =     c(is.numeric,

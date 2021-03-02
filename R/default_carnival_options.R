@@ -7,83 +7,77 @@
 #' @export
 #' 
 
-#TODO add Attila as authors
 
 supportedSolvers <- list(cplex="cplex", cbc="cbc", lpSolve="lpSolve")
+requiredCarnivalCplexOptions <- c("solverPath", "solver", "timelimit", "alphaWeight", "betaWeight", "threads", "dirName")
+requiredCplexOptions <- c("mipGap", "poolrelGap", "limitPop", "poolCap", "poolIntensity", "poolReplace")
 
-defaultCplexCarnivalOptions <- function(){
+defaultCplexCarnivalOptions <- function(solverPath=""){
     
-    opts <- list(
-         solverPath=NULL,
+    options <- list(
+         solverPath=solverPath,
          solver=supportedSolvers$cplex, 
          timelimit=3600, 
          mipGap=0.05,
-         poolrelGap=0.0001,
-         limitPop=500, 
-         poolCap=100,
-         poolIntensity=4,
-         poolReplace=2,
          alphaWeight=1, 
          betaWeight=0.2,
          threads=1,
          cplexMemoryLimit=8192,
+         cleanTmpFiles=TRUE,
+         keepLPFiles=TRUE,
          dirName=NULL
     )
-    return(opts)
+    
+    options <- c(options, defaultCplexOptions())
+    return(options)
+}
+
+#TODO write a function that will accept any options from the defined list 
+#TODO write another function that will accept any options outside of the defined list
+setCarnivalOptions <- function(options=NULL, ...) {
+  options <- c(options, ...)
+  
+  return(options)
 }
 
 #TODO options list from the cplex itself
 defaultCplexOptions <- function() {
-    opts <- list(
+  options <- list(
         mipGap=1e-04, 
         poolrelGap=1e75,
         limitPop=20,
         poolCap=2.1e9,
         poolIntensity=0,
-        poolReprace=0
+        poolReplace=0
     )
-    return(opts)
+    return(options)
+}
+
+#TODO ask Enio what those indices represent and how they were supposed to be used
+setParallelRuns <- function(idx1, idx2) {
+  parallelIdx1=1
+  parallelIdx2=1
+  if(!is.numeric(parallelIdx1) | !is.numeric(parallelIdx2)){
+    stop("Please set numbers on the parameters 'parallelIdx1' and 'parallelIdx2'
+         for running CARNIVAL in parallelisation ")
+  } else {
+    if(parallelIdx1==1 & parallelIdx2==1) { # default case
+      repIndex=1;condition=1
+    } else {
+      condition=parallelIdx1;repIndex=parallelIdx2
+    }
+  }
+  return(c("condition"=condition, "repIndex"=repIndex))
 }
 
 #TODO what other params are needed here
 defaultLpSolveCarnivalOptions = function() {
     
-    opts <- list(
+  options <- list(
         solver=supportedSolvers$lpSolve
     )
     
-    return(opts)
+    return(options)
 }
 
 
-#' check_CARNIVAL_options
-#' 
-#' checks options provided for CARNIVAL
-#' 
-checkCplexCarnivalOptions <- function(opts){
-    
-    if(!is.list(opts)) stop("CARNIVAL options should be a list")
-    requiredNames <- c(
-        "solverPath",
-        "solver", 
-        "timelimit",
-        "mipGap",
-        "poolrelGap",
-        "limitPop", 
-        "poolCap",
-        "poolIntensity",
-        "poolReplace",
-        "alphaWeight", 
-        "betaWeight",
-        "threads",
-        "dirName")
-    
-    if(!all(requiredNames %in% names(opts))){
-        stop("CARNIVAL options should contain all options. 
-             Start by calling default_carnival_options() and replace entries. ")
-    }
-    
-    
-    if(is.null(opts$solverPath)) stop("path to ILP solver must be provided")
-    
-}

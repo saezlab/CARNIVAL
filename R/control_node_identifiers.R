@@ -17,7 +17,7 @@ collect_special_characters_names <- function(names_with_special_characters, node
 
 #TODO keep names mapping
 #TODO v.1.2
-controlNodeIdentifiers_v1_2 <- function(network = network, verbose=F) {
+controlNodeIdentifiers_v1_2 <- function(network = network, verbose=FALSE) {
   special_characters <- c("*", "+", "=")
   substitution_character <- c("-", "<", ">", "/", " ")
   
@@ -34,8 +34,8 @@ controlNodeIdentifiers_v1_2 <- function(network = network, verbose=F) {
     
     all_special_characters_found <- unique(unlist(res_source), unlist(res_target))
     
-    all_substituted_names_source <- names(res_source[lengths(res_source) != 0]
-    all_substituted_names_target <- names(res_target[lengths(res_target) != 0]
+    all_substituted_names_source <- names(res_source[lengths(res_source) != 0])
+    all_substituted_names_target <- names(res_target[lengths(res_target) != 0])
     
     warning("Your network contains node identifiers with characters ", 
             paste0(all_special_characters_found, sep=", "), " and they will
@@ -143,3 +143,4 @@ controlNodeIdentifiers <- function(netObj = netObj){
   return(netObj)
   
 }
+

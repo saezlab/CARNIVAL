@@ -1,6 +1,10 @@
 ## Returning result object after solving with CARNIVAL
 ##
-## Enio Gjerga, 2020
+## Olga Ivanova, Enio Gjerga, 2021
+
+solveCarnival <- function() {
+  
+}
 
 solveCARNIVAL <- function(solverPath = solverPath, 
                           netObj = netObj, 

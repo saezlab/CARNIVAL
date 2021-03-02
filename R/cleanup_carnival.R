@@ -2,9 +2,13 @@
 ##
 ## Enio Gjerga, 2020
 
-cleanupCARNIVAL <- function(condition=condition, repIndex=repIndex){
+clean_solver_files <- function(files=c("lp", "log", "txt"), folder="") {
+  #TODO 
+}
+
+cleanupCARNIVAL <- function(condition=condition, repIndex=repIndex, keepLPFiles=FALSE){
   
-  if(file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))){
+  if(!keepLPFiles & file.exists(paste0("testFile_",condition,"_",repIndex,".lp"))){
     file.remove(paste0("testFile_",condition,"_",repIndex,".lp"))
   }
   

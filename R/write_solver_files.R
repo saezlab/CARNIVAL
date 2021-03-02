@@ -11,6 +11,8 @@ writeSolverFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
                              poolIntensity=poolIntensity, timelimit=timelimit){
   
   ## write the .lp file
+  print(condition)
+  print(repIndex)
   data = paste0("testFile_", condition,"_",repIndex,".lp")
   write("enter Problem", data)
   write("", data, append = TRUE)
