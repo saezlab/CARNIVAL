@@ -3,24 +3,27 @@
 ##
 ## Enio Gjerga, 2020
 
-writeLPFile <- function(data = data, pknList = pknList, inputs = inputs,
+writeSolverFiles <- function(data = data, pknList = pknList, inputs = inputs,
+                        inputObj = inputObj, measObj = measObj,
                         alphaWeight=1, betaWeight=0.2, scores=scores,
                         mipGAP=0.1, poolrelGAP=0.01, limitPop=100, poolCap=100,
                         poolIntensity=0, poolReplace=2,timelimit=1800,
                         threads=threads, measWeights=NULL, repIndex, condition="") {
-
+  
+  #preventing scientific notation
   options(scipen=999)
 
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs)
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
-  oF <- write_objective_function_all(dataMatrix = dataMatrix,
+  objective_function <- write_objective_function_all(
+                                     dataMatrix = dataMatrix,
                                      variables = variables,
                                      alphaWeight = alphaWeight,
                                      betaWeight = betaWeight, scores=scores,
                                      measWeights=measWeights)
-  bounds <- write_boundaries(variables = variables, oF=oF)
+  bounds <- write_boundaries(variables = variables, oF= objective_function)
   binaries <- write_binaries(variables = variables)
-  generals <- write_generals(variables = variables, oF = oF)
+  generals <- write_generals(variables = variables, oF = objective_function)
   c0 <- write_constraints_objFunction_all(variables = variables,
                                           dataMatrix = dataMatrix)
   c1 <- write_constraints_1_all(variables = variables)
@@ -39,13 +42,27 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs,
   allC <- all_constraints_wLoop(c0 = c0, c1 = c1, c2 = c2, c3 = c3, c4 = c4,
                                 c5 = c5, c6 = c6, c7 = c7, c8 = c8, c9 = c9)
 
-  writeSolverFiles(condition=condition, repIndex=repIndex, oF=oF,
-                   allC=allC, bounds=bounds, binaries=binaries,
-                   generals=generals, mipGAP=mipGAP,
-                   poolrelGAP=poolrelGAP, poolReplace=poolReplace,
-                   limitPop=limitPop, poolCap=poolCap,
-                   poolIntensity=poolIntensity, timelimit=timelimit,
-                   threads=threads)
-
+  writeLpFile(condition=condition, repIndex=repIndex, 
+              objective_function=objective_function,
+              allC=allC, bounds=bounds, 
+              binaries=binaries,
+              generals=generals)
+  
+  writeCplexCommandFile(condition=condition,
+                        repIndex=repIndex,
+                        mipGAP=mipGAP,
+                        poolrelGAP=poolrelGAP, poolReplace=poolReplace,
+                        limitPop=limitPop, poolCap=poolCap,
+                        poolIntensity=poolIntensity, timelimit=timelimit,
+                        threads=threads)
+  
+  writeParsedData(condition=condition,
+                  repIndex=repIndex,
+                  variables = variables, 
+                  pknList = pknList, 
+                  inputObj = inputObj,
+                  measObj = measObj)
+  
+  
   return(variables)
 }

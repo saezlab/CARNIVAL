@@ -2,6 +2,31 @@
 ##
 ## Enio Gjerga, 2020
 
+
+solveCarnivalSingleFromLp <- function(#lpFile = "", 
+                                      parsedDataFile = "",
+                                      repIndex = repIndex,
+                                      condition = condition, 
+                                      solver = solver, 
+                                      solverPath = solverPath,
+                                      clean_tmp_files = TRUE,
+                                      dir_name = dir_name) {
+  load(parsedDataFile) 
+  
+  result <- sendTaskToSolver(variables = variables, 
+                             pknList = pknList, 
+                             inputObj = inputObj,
+                             measObj = measObj,           
+                             repIndex = repIndex,
+                             condition = condition, 
+                             solver = solver, 
+                             solverPath = solverPath,
+                             clean_tmp_files = clean_tmp_files,
+                             dir_name = dir_name)
+  
+  return(result)
+}
+
 solveCARNIVALSingle <- function(data = data, pknList = pknList,
                                 inputs = inputs, alphaWeight = alphaWeight,
                                 betaWeight = betaWeight, scores = scores,
@@ -15,9 +40,11 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                                 condition = condition, solver = solver, 
                                 solverPath = solverPath, variables = variables,
                                 measObj = measObj, inputObj = inputObj, 
+                                clean_tmp_files = TRUE,
                                 dir_name = dir_name){
   
-  variables <- writeLPFile(data = data, pknList = pknList,
+  variables <- writeSolverFiles(data = data, pknList = pknList,
+                           inputObj = inputObj, measObj = measObj,
                            inputs = inputs, alphaWeight = alphaWeight,
                            betaWeight = betaWeight, scores = scores,
                            mipGAP = mipGAP, poolrelGAP = poolrelGAP,
@@ -28,35 +55,59 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                            measWeights = measWeights, repIndex = repIndex,
                            condition = condition)
   
+  result <- sendTaskToSolver(variables = variables, 
+                             pknList = pknList, 
+                             inputObj = inputObj,
+                             measObj = measObj,           
+                             repIndex = repIndex,
+                             condition = condition, 
+                             solver = solver, 
+                             solverPath = solverPath,
+                             clean_tmp_files = TRUE,
+                             dir_name = dir_name)
+
+  return(result)
+}
+
+sendTaskToSolver <- function(variables = variables, 
+                             pknList = pknList, 
+                             inputObj = inputObj,
+                             measObj = measObj,
+                             repIndex = repIndex,
+                             condition = condition, 
+                             solver = solver, 
+                             solverPath = solverPath,
+                             clean_tmp_files = TRUE,
+                             dir_name = dir_name, 
+                             solverCommandFile = "") {
   ## Solve ILP problem with cplex, remove temp files, 
   ## and return to the main directory
   message("Solving LP problem...")
   
-  if(solver=="cplex"){
+  if(solver == "cplex"){
     
     # create temp file for logs
-    cplex_log <- tempfile(pattern = "cplex_log_",tmpdir = tempdir(check = TRUE),fileext = ".txt")
-    
+    cplex_log <- tempfile(pattern = "cplex_log_", tmpdir = tempdir(check = TRUE), fileext = ".txt")
     
     if (Sys.info()[1]=="Windows") {
       # TODO: implement logging on Win machine. 
       file.copy(from = solverPath,to = getwd())
       system(paste0("cplex.exe -f cplexCommand_", 
-                    condition,"_",repIndex,".txt"))
+                    condition,"_", repIndex, ".txt"))
       file.remove("cplex.exe")
     } else {
       system(paste0(solverPath,
                     " -f cplexCommand_", 
-                    condition,"_",repIndex,".txt",
+                    condition,"_", repIndex, ".txt",
                     " | tee ", cplex_log)) # send output to logfile and stdout
     }
-    
     
     
     ## Write result files in the results folder
     message("Saving results...")
     resList <- list()
     if (file.exists(paste0("results_cplex_",condition,"_",repIndex,".txt"))) {
+    
       for(i in seq_len(length(variables))){
         res <- exportResult(cplexSolutionFileName = paste0("results_cplex_",
                                                            condition,"_",
@@ -66,6 +117,7 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                             conditionIDX = i,
                             inputs=inputObj,
                             measurements=measObj)
+        
         resList[[length(resList)+1]] <- res
       }
       if (!is.null(res)) {
@@ -86,7 +138,9 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
       }
     }
     
-    cleanupCARNIVAL(condition = condition, repIndex = repIndex)
+    if(clean_tmp_files) {
+      cleanupCARNIVAL(condition = condition, repIndex = repIndex)  
+    }
     
     ## Remove global variable 
     objs <- ls(pos = ".GlobalEnv")
@@ -169,11 +223,11 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
       if (!is.null(res)) {
         if(!is.null(dir_name)){
           if(dir.exists(dir_name)){
-                  WriteDOTfig(res=res,
-                              dir_name=dir_name,
-                              inputs=inputObj,
-                              measurements=measObj,
-                              UP2GS=FALSE)
+            WriteDOTfig(res=res,
+                        dir_name=dir_name,
+                        inputs=inputObj,
+                        measurements=measObj,
+                        UP2GS=FALSE)
           } else {
             warning("Specified directory does not exist. DOT figure not saved.")
           }
@@ -188,5 +242,4 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
     }
     
   }
-  
 }

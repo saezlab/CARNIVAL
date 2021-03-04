@@ -2,6 +2,44 @@
 ##
 ## Enio Gjerga, 2020
 
+solveCarnivalFromLp <- function(solverPath = solverPath, 
+                                 #lpFile = lpFile, 
+                                 parsedDataFile = parsedDataFile,
+                                 timelimit = timelimit, 
+                                 mipGAP = mipGAP, 
+                                 poolrelGAP = poolrelGAP, 
+                                 limitPop = limitPop, 
+                                 poolCap = poolCap, 
+                                 poolIntensity = poolIntensity, 
+                                 poolReplace = poolReplace, 
+                                 alphaWeight = alphaWeight, 
+                                 betaWeight = betaWeight, 
+                                 dir_name = dir_name, 
+                                 solver = solver,
+                                 threads = threads,
+                                 clean_tmp_files = TRUE,
+                                 experimental_conditions = NULL,
+                                 condition = condition,
+                                 repIndex = repIndex)
+{
+  
+  if(is.null(experimental_conditions)){
+    result <- solveCarnivalSingleFromLp(#lpFile = lpFile, 
+                              parsedDataFile = parsedDataFile,
+                              repIndex = repIndex,
+                              condition = condition, solver = solver, 
+                              solverPath = solverPath,
+                              clean_tmp_files = clean_tmp_files,
+                              dir_name = dir_name)
+  } else {
+    
+    stop("This version of CARNIVAL does not support analysis with multiple
+         experimental conditions. Please split your data frame input objects
+         into single experimental conditions.")
+    
+  }
+}
+
 solveCARNIVAL <- function(solverPath = solverPath, 
                           netObj = netObj, 
                           measObj = measObj, 
@@ -19,6 +57,7 @@ solveCARNIVAL <- function(solverPath = solverPath,
                           dir_name = dir_name, 
                           solver = solver,
                           threads = threads,
+                          clean_tmp_files=TRUE,
                           experimental_conditions = experimental_conditions,
                           condition = condition,
                           repIndex = repIndex){
@@ -60,6 +99,7 @@ solveCARNIVAL <- function(solverPath = solverPath,
                                   solver = solver, solverPath = solverPath,
                                   variables = variables, measObj = measObj,
                                   inputObj = inputObj,
+                                  clean_tmp_files = clean_tmp_files,
                                   dir_name = dir_name)
 
   } else {

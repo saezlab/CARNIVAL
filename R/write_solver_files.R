@@ -2,7 +2,78 @@
 ##
 ## Enio Gjerga, 2020
 
-writeSolverFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
+writeLpFile <- function(condition=condition,
+                        repIndex=repIndex, 
+                        objective_function=objective_function,
+                        allC=allC, 
+                        bounds=bounds, 
+                        binaries=binaries,
+                        generals=generals) {
+  ## write the .lp file
+  lp_filename <- paste0("testFile_", condition, "_", repIndex, ".lp")
+  write("enter Problem", lp_filename)
+  write("", lp_filename, append = TRUE)
+  write("Minimize", lp_filename, append = TRUE)
+  write(objective_function, lp_filename, append = TRUE)
+  write("Subject To", lp_filename, append = TRUE)
+  write(allC, lp_filename, append = TRUE)
+  write("Bounds", lp_filename, append = TRUE)
+  write(bounds, lp_filename, append = TRUE)
+  write("Binaries", lp_filename, append = TRUE)
+  write(binaries, lp_filename, append = TRUE)
+  write("Generals", lp_filename, append = TRUE)
+  write(generals, lp_filename, append = TRUE)
+  write("End", lp_filename, append = TRUE)
+}
+  
+writeCplexCommandFile <- function(condition=condition,
+                                  repIndex=repIndex, 
+                                  mipGAP=mipGAP, 
+                                  poolrelGAP=poolrelGAP, poolReplace=poolReplace,
+                                  limitPop=limitPop, poolCap=poolCap,
+                                  threads = threads,
+                                  poolIntensity=poolIntensity, timelimit=timelimit) {
+  ## write cplexCommand file
+  cplexCommand <- paste0("cplexCommand_", condition,"_", repIndex,".txt")
+  write(paste0("read testFile_", condition,"_",repIndex,".lp"), 
+        cplexCommand, append = TRUE)
+  
+  #TODO transform to extandable version with apply 
+  write(paste0("set mip tolerances mipgap ", mipGAP), 
+        cplexCommand, append = TRUE)
+  write(paste0("set mip pool relgap ", poolrelGAP), 
+        cplexCommand, append = TRUE)
+  write(paste0("set mip pool replace ", poolReplace), 
+        cplexCommand, append = TRUE)
+  write(paste0("set mip limits populate ", limitPop), 
+        cplexCommand, append = TRUE)
+  write(paste0("set mip pool capacity ", poolCap), 
+        cplexCommand, append = TRUE)
+  write(paste0("set mip pool intensity ", poolIntensity), 
+        cplexCommand, append = TRUE)
+  
+  write(paste0("set timelimit ",timelimit), cplexCommand, append = TRUE)
+  write(paste0("set threads ", threads), cplexCommand, append = TRUE)
+  
+  write("populate", cplexCommand, append = TRUE)
+  write(paste0("write results_cplex_", condition,"_", repIndex,".txt sol all"), 
+        cplexCommand, append = TRUE)
+  write("quit", cplexCommand, append = TRUE)
+  
+}
+
+#TODO add condition and repIndex to the filename? 
+writeParsedData <- function (condition=condition, repIndex=repIndex, 
+                             variables = variables, 
+                             pknList = pknList, 
+                             inputObj=inputObj,
+                             measObj=measObj,
+                             filename="parsedData.RData") {
+  save(variables, pknList, inputObj, measObj, file=filename)
+}
+
+#TODO remove, left for tests for now
+writeLpCommandFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
                              allC=allC, bounds=bounds, binaries=binaries,
                              generals=generals, mipGAP=mipGAP, 
                              poolrelGAP=poolrelGAP, poolReplace=poolReplace,
@@ -11,7 +82,7 @@ writeSolverFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
                              poolIntensity=poolIntensity, timelimit=timelimit){
   
   ## write the .lp file
-  data = paste0("testFile_", condition,"_",repIndex,".lp")
+  data = paste0("testFile_", condition,"_", repIndex,".lp")
   write("enter Problem", data)
   write("", data, append = TRUE)
   write("Minimize", data, append = TRUE)
@@ -48,5 +119,4 @@ writeSolverFiles <- function(condition=condition, repIndex=repIndex, oF=oF,
   write(paste0("write results_cplex_", condition,"_",repIndex,".txt sol all"), 
         cplexCommand, append = TRUE)
   write("quit", cplexCommand, append = TRUE)
-  
 }

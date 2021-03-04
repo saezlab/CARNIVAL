@@ -90,15 +90,61 @@
 #'@export
 #'
 
-run_carnival1 <- function(perturbations, measurements, network, weights,
-                          solver, solver_path, carnival_options = default_carnival_options()) {
-  #TODO
+#TODO at the moment, just put cplex command file and test file to the working directory
+#only point out to the parsedDataFile manually (by default currently also saved to the working directory in the first run)
+runCarnivalFromLp <- function(#lpFile="",
+                              parsedDataFile="",
+                              solverPath=NULL,
+                              solver=c('lpSolve', 'cplex', 'cbc'),
+                              timelimit=3600,
+                              mipGAP=0.05,
+                              poolrelGAP=0.0001,
+                              limitPop=500,
+                              poolCap=100,
+                              poolIntensity=4,
+                              poolReplace=2,
+                              alphaWeight=1,
+                              betaWeight=0.2,
+                              threads=0,
+                              memory_limit="8GB",
+                              clean_tmp_files=TRUE,
+                              dir_name=NULL) 
+{
+  res <- checkInputs(solverPath = solverPath,
+                     solver = solver, 
+                     timelimit = timelimit, mipGAP = mipGAP,
+                     poolrelGAP = poolrelGAP, limitPop = limitPop,
+                     poolCap = poolCap, poolIntensity = poolIntensity,
+                     poolReplace = poolReplace, alphaWeight = alphaWeight,
+                     betaWeight = betaWeight, dir_name = dir_name,
+                     threads = threads)
+  
+  if (clean_tmp_files) {
+    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
+  }
+  
+  #TODO experimental conditions? 
+  result <- solveCarnivalFromLp(
+                         #lpFile = lpFile,
+                         parsedDataFile = parsedDataFile,
+                         solverPath = solverPath, 
+                         timelimit = timelimit, mipGAP = mipGAP,
+                         poolrelGAP = poolrelGAP, limitPop = limitPop,
+                         poolCap = poolCap, poolIntensity = poolIntensity,
+                         poolReplace = poolReplace, alphaWeight = alphaWeight,
+                         betaWeight = betaWeight, dir_name = dir_name,
+                         solver = solver,
+                         threads = threads,
+                         clean_tmp_files = clean_tmp_files,
+                         condition = res$condition, repIndex = res$repIndex)
+  
+  if (clean_tmp_files) {
+    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
+  }
+  
+  return(result)
 }
 
-run_inverse_carnival <- function(measurements, network, weights,
-                                 solver, solver_path){
-  #TODO
-}
 
 runCARNIVAL <- function(inputObj=NULL,
                         measObj=measObj,
@@ -121,22 +167,25 @@ runCARNIVAL <- function(inputObj=NULL,
                         dir_name=NULL)
 {
   
-  solver <- match.arg(solver)
+  res <- checkInputs(solverPath = solverPath,
+                     solver = solver, 
+                     timelimit = timelimit, mipGAP = mipGAP,
+                     poolrelGAP = poolrelGAP, limitPop = limitPop,
+                     poolCap = poolCap, poolIntensity = poolIntensity,
+                     poolReplace = poolReplace, alphaWeight = alphaWeight,
+                     betaWeight = betaWeight, dir_name = dir_name,
+                     threads = threads)
   
-  res = checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj,
-                    inputObj = inputObj, weightObj = weightObj,
-                    timelimit = timelimit, mipGAP = mipGAP,
-                    poolrelGAP = poolrelGAP, limitPop = limitPop,
-                    poolCap = poolCap, poolIntensity = poolIntensity,
-                    poolReplace = poolReplace, alphaWeight = alphaWeight,
-                    betaWeight = betaWeight, dir_name = dir_name,
-                    solver = solver, threads = threads)
+  resDataCheck <- checkData(netObj = netObj, measObj = measObj,
+                            inputObj = inputObj, weightObj = weightObj)
+  
+  res <- c(resDataCheck, res)
   
   if (clean_tmp_files) {
     cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
   }
   
-  result = solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
+  result <- solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
                          measObj = res$measurements,
                          inputObj = res$inputs$inputs,
                          weightObj = res$weights,
@@ -147,6 +196,7 @@ runCARNIVAL <- function(inputObj=NULL,
                          betaWeight = betaWeight, dir_name = dir_name,
                          solver = solver,
                          threads = threads,
+                         clean_tmp_files = clean_tmp_files,
                          experimental_conditions = res$exp,
                          condition = res$condition, repIndex = res$repIndex)
   
