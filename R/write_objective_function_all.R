@@ -219,7 +219,7 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
     
     if(!is.null(measWeights)){
       
-      mm <- as.matrix(measWeights[i, ])
+      mm <- as.matrix(measWeights[i, ,drop=FALSE])
       
     } else {
       
