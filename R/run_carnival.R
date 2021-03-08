@@ -93,10 +93,9 @@
 #'@export
 #'
 
-#TODO add carnival options for the documentation purposes 
-
 #TODO make it possible to change just one param right here
-#TODO documentation, change default option to lpSolve later
+#TODO update documentation
+#TODO change default option to lpSolve later in carnival options
 runCarnival <- function(perturbations, 
                         measurements, 
                         priorKnowledgeNetwork, 
@@ -136,16 +135,10 @@ runCarnival <- function(perturbations,
 run_inverse_carnival <- function(measurements, 
                                  priorKnowledgeNetwork, 
                                  pathwayWeights,
-                                 carnival_options = default_carnival_options()){
-  #TODO 
+                                 carnivalOptions = default_carnival_options()){
 }
 
-#TODO
-runCarnivalWithConstraintsFiles <- function(constraints_folder) {
-  #TODO
-}
-
-#TODO Keeping for regression tests, will be removed in the final version
+#TODO Keeping for regression tests, will be removed in the final version of bioc release
 runCARNIVAL_regression <- function(inputObj=NULL,
                         measObj=measObj,
                         netObj=netObj,
@@ -202,7 +195,7 @@ runCARNIVAL_regression <- function(inputObj=NULL,
   
 }
 
-#TODO Keeping for backward compatibility 
+#TODO Keeping for backward compatibility for the current version in development
 runCARNIVAL <- function(inputObj=NULL,
                         measObj=measObj,
                         netObj=netObj,

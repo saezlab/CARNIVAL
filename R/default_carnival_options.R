@@ -61,7 +61,7 @@ setParallelRuns <- function(idx1, idx2) {
     stop("Please set numbers on the parameters 'parallelIdx1' and 'parallelIdx2'
          for running CARNIVAL in parallelisation ")
   } else {
-    if(parallelIdx1==1 & parallelIdx2==1) { # default case
+    if(parallelIdx1 == 1 & parallelIdx2 == 1) { # default case
       repIndex=1;condition=1
     } else {
       condition=parallelIdx1;repIndex=parallelIdx2
@@ -71,7 +71,7 @@ setParallelRuns <- function(idx1, idx2) {
 }
 
 #TODO what other params are needed here
-defaultLpSolveCarnivalOptions = function() {
+defaultLpSolveCarnivalOptions <- function() {
     
   options <- list(
         solver=supportedSolvers$lpSolve
