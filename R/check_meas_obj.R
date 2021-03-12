@@ -2,10 +2,11 @@
 ##
 ## Enio Gjerga, 2020
 
-checkMeasObj <- function(measObj = measObj, netObj = netObj){
+checkMeasurements <- function(measurements = measurements, 
+                              priorKnowledgeNetwork = priorKnowledgeNetwork){
   
-  nSpecies = unique(c(as.character(as.matrix(netObj)[, 1]), 
-                      as.character(as.matrix(netObj)[, 3])))
+  nSpecies = unique(c(as.character(as.matrix(priorKnowledgeNetwork)[, 1]), 
+                      as.character(as.matrix(priorKnowledgeNetwork)[, 3])))
   
   if (is.null(measObj)) {
     stop("Please provide a valid measurement object.")

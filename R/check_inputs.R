@@ -9,7 +9,7 @@
 #' measured data must appear in the PKN 
 #' 
 
-#TODO remove when done changing this file
+#TODO adapt from COSMOS code!
 checkData <- function(perturbations,
                       measurements,
                       priorKnowledgeNetwork, 
@@ -40,43 +40,14 @@ checkData2 <- function( perturbations,
                        pathwayWeights = NULL ) {
   
   returnList = list() 
-  netObj = checkNetwork(netObj = priorKnowledgeNetwork)
-  #measObj = checkMeasObj(measObj = measurements, netObj = priorKnowledgeNetwork)
-  measObj = measurements
+  netObj = checkNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  measObj = checkMeasurements(measurements = measurements, priorKnowledgeNetwork = priorKnowledgeNetwork)
   inputObj = checkPerturbationsData(perturbations = perturbations, priorKnowledgeNetwork = priorKnowledgeNetwork)
   weightObj = checkWeightObj(weightObj = pathwayWeights, netObj = priorKnowledgeNetwork)
-  
-  #TODO tmp
-  #stopifnot(is.vector(perturbations))
-  #stopifnot(is.vector(measurements))
-  
-  stopifnot(is.data.frame(priorKnowledgeNetwork))
-  stopifnot(all(c("source", "interaction", "target") %in% tolower(names(priorKnowledgeNetwork)))) 
-  stopifnot(ncol(priorKnowledgeNetwork) == 3)
-  
-  #TODO think about it - maybe we need just a note, not a full stop of the run? 
-  # check inputs and measurements are in the network
-  stopifnot(all(names(perturbations) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
-  stopifnot(all(names(measurements) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
-  
-  #TODO keep this
-  # if( !is.null(weightObj[1]) ){
-  #   if( nrow(weightObj) != nrow(measObj) ){
-  #     stop("Number of rows provided for the weightObj is different to measObj.
-  #          Please check your inputs again.")
-  #   }
-  # }
-  # 
-  # if( !is.null(inputObj$inputs) ){
-  #   if(nrow(inputObj$inputs)!=nrow(measObj)){
-  #     stop("Number of rows provided for the inputObj is different to measObj.
-  #          Please check your inputs again.")
-  #   }
-  # }
 
-  #TODO tmp solution
-#  if(nrow(measurements) == 1){
-    experimental_conditions = "NULL"
+  #TODO multiple experimental conditions are not going to be supported currently
+ # if(nrow(measurements) == 1){
+ #    experimental_conditions = "NULL"
  # } else {
     #experimental_conditions = seq_len(nrow(measObj))
   #}
@@ -85,9 +56,10 @@ checkData2 <- function( perturbations,
   returnList[[length(returnList)+1]] = measObj
   returnList[[length(returnList)+1]] = inputObj
   returnList[[length(returnList)+1]] = weightObj
-  returnList[[length(returnList)+1]] = experimental_conditions
+  #TODO multiple experimental conditions are not going to be supported currently
+  #returnList[[length(returnList)+1]] = experimental_conditions
   names(returnList) = c("network", "measurements", "inputs",
-                        "weights", "exp")
+                        "weights")#, "exp")
   
   return(returnList)
   

@@ -2,26 +2,22 @@
 ##
 ##Enio Gjerga, 2020
 
-checkNetwork <- function(netObj = netObj){
+checkNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork){
   
-  if((!is(netObj, "matrix")) && (!is(netObj, "data.frame"))){
+  if((!is(priorKnowledgeNetwork, "matrix")) && (!is(priorKnowledgeNetwork, "data.frame"))){
     stop("Network object should either be of matrix or data.frame class")
   } else {
     
-    colnames(netObj) = c("source", "interaction", "target")
-    if( "data.frame" %in% is(netObj) ){
-      netObj$source = as.character(netObj$source)
-      netObj$interaction = as.numeric(as.character(netObj$interaction))
-      netObj$target = as.character(netObj$target)
-      
-    } else {
-      netObj = as.data.frame(netObj)
-      netObj$source = as.character(netObj$source)
-      netObj$interaction = as.numeric(as.character(netObj$interaction))
-      netObj$target = as.character(netObj$target)
-    }
+    colnames(priorKnowledgeNetwork) = c("source", "interaction", "target")
+    if( !("data.frame" %in% is(priorKnowledgeNetwork)) ){
+      priorKnowledgeNetwork = as.data.frame(priorKnowledgeNetwork)
+    } 
     
-    if(ncol(netObj)!=3){
+    priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
+    priorKnowledgeNetwork$interaction = as.numeric(as.character(priorKnowledgeNetwork$interaction))
+    priorKnowledgeNetwork$target = as.character(priorKnowledgeNetwork$target)
+    
+    if(ncol(netObj) != 3){
       stop("Network object should have three columns: source node, interaction 
             sign and target node")
     } else {

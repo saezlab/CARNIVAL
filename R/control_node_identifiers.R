@@ -16,19 +16,19 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
 }
 
 #TODO implement keeping names mapping
-controlNodeIdentifiers <- function(network = network, 
-                                        verbose=FALSE,
-                                        keepMapping=FALSE) {
-  specialCharacters <- c("*", "+", "=")
-  substitutionCharacter <- c("-", "<", ">", "/", " ")
+controlNodeIdentifiers <- function( network = network, 
+                                    verbose=FALSE,
+                                    keepMapping=FALSE ){
+  specialRegExpCharacters <- c("*", "+", "=")
+  substitutionCharacters <- c("-", "<", ">", "/", " ")
   
-  preparedPattern <- paste0("\\", specialCharacters, collapse="|")
-  preparedPattern <- paste0(c(preparedPattern, substitutionCharacter), collapse="|")
+  preparedPattern <- paste0("\\", specialRegExpCharacters, collapse="|")
+  preparedPattern <- paste0(c(preparedPattern, substitutionCharacters), collapse="|")
   
   if (verbose) {
 
-    namesWithSpecialCharactersSource <- gregexpr(pattern=preparedPattern, text = network$source) 
-    namesWithSpecialCharactersTarget <- gregexpr(pattern=preparedPattern, text = network$target) 
+    namesWithSpecialCharactersSource <- gregexpr(pattern = preparedPattern, text = network$source) 
+    namesWithSpecialCharactersTarget <- gregexpr(pattern = preparedPattern, text = network$target) 
     
     resSource <- collectSpecialCharactersNames(namesWithSpecialCharactersSource, network$source)
     resTarget <- collectSpecialCharactersNames(namesWithSpecialCharactersTarget, network$target)
@@ -43,8 +43,8 @@ controlNodeIdentifiers <- function(network = network,
             be replaced with '_'")
   }  
 
-  network$source = gsub(pattern=preparedPattern, x = test_grepl, replacement="_")  
-  network$target = gsub(pattern=preparedPattern, x = test_grepl, replacement="_")  
+  network$source = gsub(pattern = preparedPattern, x = test_grepl, replacement = "_")  
+  network$target = gsub(pattern = preparedPattern, x = test_grepl, replacement = "_")  
   
   return(network) 
 }
