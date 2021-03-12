@@ -51,13 +51,13 @@ checkData2 <- function( perturbations,
       #experimental_conditions = seq_len(nrow(measObj))
   #}
   
-  results <- list("priorKnowledgeNetwork" = inputObj$network, 
+  results <- list("priorKnowledgeNetwork" = netObj, 
                   "measurements" = measObj, 
                   "perturbations" = inputObj, 
                   "weights" = weightObj, 
                   #TODO multiple experimental conditions are not going to be supported currently
                   "experimental_conditions" = experimentalConditions)
-
+  
   return(results)
   
 } 

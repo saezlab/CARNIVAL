@@ -13,19 +13,8 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
                            repIndex = repIndex,
                            carnivalOptions) {
   
-  ## Write constraints as ILP inputObj
-  message("Writing constraints...")
-  
+
   if( experimentalConditions[1] == "NULL" ){ experimentalConditions <- NULL }
-  
-  #TODO This can go now
-  print(priorKnowledgeNetwork)
-  priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
-  colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
-  
-  priorKnowledgeNetwork$Node1 = as.character(priorKnowledgeNetwork$Node1)
-  priorKnowledgeNetwork$Sign = as.character(as.numeric(as.character(priorKnowledgeNetwork$Sign)))
-  priorKnowledgeNetwork$Node2 = as.character(priorKnowledgeNetwork$Node2)
   
   ## Extracted sign of measurement for ILP fitting
   measurementsSign <- sign(measurements)
@@ -34,9 +23,6 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
   ## Check the weight
   if( pathwayWeights[1] == "NULL" ){ pathwayWeights = NULL }
   
-  priorKnowledgeNetwork <<- priorKnowledgeNetwork
-  
-  print(priorKnowledgeNetwork)
   
   if( is.null(experimentalConditions) ){
     result <- solveCarnivalSingleRun( perturbations = perturbations,

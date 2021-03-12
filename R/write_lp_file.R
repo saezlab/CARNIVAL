@@ -29,6 +29,7 @@ writeLPFile <- function(perturbations,
                                      scores = pathwayWeights,
                                      measWeights = measurementsWeights)
   
+  message("Generating constraints for linear programming problem...")
   bounds <- write_boundaries(variables = variables, oF=oF)
   binaries <- write_binaries(variables = variables)
   generals <- write_generals(variables = variables, oF = oF)
@@ -52,6 +53,8 @@ writeLPFile <- function(perturbations,
   allC <- all_constraints_wLoop(c0 = c0, c1 = c1, c2 = c2, c3 = c3, c4 = c4,
                                 c5 = c5, c6 = c6, c7 = c7, c8 = c8, c9 = c9)
   
+  message("Creating LP file...")
+  
   writeSolverFiles(condition=condition, repIndex=repIndex, oF=oF,
                    allC=allC, bounds=bounds, binaries=binaries,
                    generals=generals, 
@@ -63,6 +66,8 @@ writeLPFile <- function(perturbations,
                    poolIntensity=carnivalOptions$poolIntensity, 
                    timelimit=carnivalOptions$timelimit,
                    threads=carnivalOptions$threads)
+  
+  message("Done: Creating LP file.")
   
   return(variables)
 }

@@ -96,8 +96,7 @@ runCarnival <- function( perturbations,
                     repIndex = resultsChecks$repIndex, 
                     carnivalOptions$keepLPFiles)  
   }
-  
-  print(resultsChecks)
+
   #TODO remove inputs/network in perturbation objects - it is not needed there
   result <- solveCarnival( perturbations = resultsChecks$perturbations$inputs,
                            measurements = resultsChecks$measurements,

@@ -31,6 +31,9 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowled
   })
   
   stopifnot( incorrectInteractionValue = all(unique(priorKnowledgeNetwork$interaction) %in% c(-1, 1)) )  
+  
+  #renaming is done here; used during export of results of each solver (see export_result.R)
+  colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
  
   return(priorKnowledgeNetwork)           
 }

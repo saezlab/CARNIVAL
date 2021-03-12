@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-solveCarnivalSingleRun <- function(perturbations, 
+ solveCarnivalSingleRun <- function(perturbations, 
                                    measurements, 
                                    measurementsSign, 
                                    measurementsWeights, 
@@ -11,9 +11,12 @@ solveCarnivalSingleRun <- function(perturbations,
                                    repIndex, 
                                    condition,
                                    carnivalOptions) {
-  message("Creating LP file...")
+  message("Writing constraints...")
   
-  variables <- writeLPFile2(perturbations, 
+  #Don't remove the line below, it breaks cplex runs
+  priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
+  
+  variables <- writeLPFile(perturbations, 
                            measurements, 
                            measurementsSign, 
                            measurementsWeights, 
@@ -23,7 +26,7 @@ solveCarnivalSingleRun <- function(perturbations,
                            condition,
                            carnivalOptions)
   
-  message("Done: Creating LP file...")
+  
   message("Solving LP problem...")
   
   result <- c()
@@ -65,7 +68,7 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
                                 measObj = measObj, inputObj = inputObj, 
                                 dir_name = dir_name){
   
-
+ 
   variables <- writeLPFile(data = data, pknList = pknList,
                            inputs = inputs, alphaWeight = alphaWeight,
                            betaWeight = betaWeight, scores = scores,
