@@ -3,39 +3,15 @@
 #'@details Run CARNIVAL pipeline using to the user-provided list of inputs or
 #'run CARNIVAL built-in examples
 #'
-#'@param inputObj Data frame of the list for target of perturbation - optional
+#'@param perturbations Vector of targets of perturbation - optional
 #'or default set to NULL to run invCARNIVAL when inputs are not known.
-#'@param measObj Data frame of the measurement file (i.e. DoRothEA normalised
+#'@param measurements Vector of the measurements (i.e. DoRothEA normalised
 #'enrichment scores) - always required.
-#'@param netObj Data frame of the prior knowledge network - always required.
-#'@param weightObj Data frame of the additional weight (i.e. PROGENy pathway
+#'@param priorKnowledgeNetwork Data frame of the prior knowledge network - always required.
+#'@param pathwayWeights Vector of the additional weight (i.e. PROGENy pathway
 #'score or measured protein activities) - optional or default set as NULL to run
 #'CARNIVAL without weights.
-#'@param solverPath Path to executable cbc/cplex file - default set to NULL, in
-#'which case the solver from lpSolve package is used.
-#'@param solver Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).
-#'@param timelimit CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
-#'seconds (default set to 3600).
-#'@param mipGAP CPLEX parameter: the absolute tolerance on the gap between the
-#'best integer objective and the objective of the best node remaining. When this
-#'difference falls below the value of this parameter, the linear integer
-#'optimization is stopped (default set to 0.05)
-#'@param poolrelGAP CPLEX/Cbc parameter: Allowed relative gap of accepted
-#'solution comparing within the pool of accepted solution (default: 0.0001)
-#'@param limitPop CPLEX parameter: Allowed number of solutions to be generated
-#'(default: 500)
-#'@param poolCap CPLEX parameter: Allowed number of solution to be kept in the
-#'pool of solution (default: 100)
-#'@param poolIntensity CPLEX parameter: Intensity of solution searching
-#'(0,1,2,3,4 - default: 4)
-#'@param alphaWeight Objective function: weight for mismatch penalty (default:
-#'1 - will only be applied once measurement file only contains discrete values)
-#'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
-#'@param threads CPLEX parameter: Number of threads to use
-#'default: 0 for maximum number possible threads on system
-#'@param dir_name Specify directory name to store results. by default set to
-#'NULL
-#'
+
 #'@return The function will return a list of results containing:
 #'1. weightedSIF: A table with 4 columns containing the combined network
 #'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
@@ -82,7 +58,8 @@
 #' res3 = runCARNIVAL(perturbations = toy_inputs_ex1, 
 #'                    measurements = toy_measurements_ex1,
 #'                    priorKnowledgeNetwork = toy_network_ex1, 
-#'                    solver = supportedSolver$cplex)
+#'                    solver = supportedSolver$cplex,
+#'                    solverPath = "your_path/")
 #'
 #'@import doParallel
 #'@import readr
@@ -93,8 +70,7 @@
 #'@export
 #'
 
-#TODO make it possible to change just one param right here
-#TODO update documentation
+#TODO make it possible to change just one/two params from here
 #TODO change default option to lpSolve later in carnival options
 #TODO make a data structure containing all data in one
 runCarnival <- function( perturbations, 
@@ -113,7 +89,7 @@ runCarnival <- function( perturbations,
   
   resultOptionsCheck <- checkInputs2(carnivalOptions)
   
-  res <- c(resultDataCheck, resultOptionsCheck)
+  resultsChecks <- c(resultDataCheck, resultOptionsCheck)
   
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(condition = res$condition, 
@@ -121,89 +97,32 @@ runCarnival <- function( perturbations,
                     carnivalOptions$keepLPFiles)  
   }
 
-  result <- solveCarnival( perturbations = res$inputs$inputs,
-                           measurements = res$measurements,
-                           priorKnowledgeNetwork = res$inputs$network,
-                           pathwayWeights = res$weights,
-                           experimentalConditions = res$exp,
-                           condition = res$condition, 
-                           repIndex = res$repIndex,
+  result <- solveCarnival( perturbations = resultsChecks$inputs$inputs,
+                           measurements = resultsChecks$measurements,
+                           priorKnowledgeNetwork = resultsChecks$inputs$network,
+                           pathwayWeights = resultsChecks$weights,
+                           experimentalConditions = resultsChecks$exp,
+                           condition = resultsChecks$condition, 
+                           repIndex = resultsChecks$repIndex,
                            carnivalOptions = carnivalOptions )
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, 
-                    repIndex = res$repIndex, 
+    cleanupCARNIVAL(condition = resultsChecks$condition, 
+                    repIndex = resultsChecks$repIndex, 
                     carnivalOptions$keepLPFiles)  
   }
   
   return(result)
 }
 
-#TODO
+#TODO 
 run_inverse_carnival <- function(measurements, 
                                  priorKnowledgeNetwork, 
                                  pathwayWeights,
                                  carnivalOptions = default_carnival_options()){
 }
 
-#TODO Keeping for regression tests, will be removed in the final version of bioc release
-runCARNIVAL_regression <- function(inputObj=NULL,
-                        measObj=measObj,
-                        netObj=netObj,
-                        weightObj=NULL,
-                        solverPath=NULL,
-                        solver=c('lpSolve', 'cplex', 'cbc'),
-                        timelimit=3600,
-                        mipGAP=0.05,
-                        poolrelGAP=0.0001,
-                        limitPop=500,
-                        poolCap=100,
-                        poolIntensity=4,
-                        poolReplace=2,
-                        alphaWeight=1,
-                        betaWeight=0.2,
-                        threads=0,
-                        cplexMemoryLimit=8192,
-                        cleanTmpFiles=TRUE,
-                        dir_name=NULL)
-{
-  
-  res = checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj,
-                    inputObj = inputObj, weightObj = weightObj,
-                    timelimit = timelimit, mipGAP = mipGAP,
-                    poolrelGAP = poolrelGAP, limitPop = limitPop,
-                    poolCap = poolCap, poolIntensity = poolIntensity,
-                    poolReplace = poolReplace, alphaWeight = alphaWeight,
-                    betaWeight = betaWeight, dir_name = dir_name,
-                    solver = solver, threads = threads)
-  
-  if (cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
-  
-  result = solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
-                         measObj = res$measurements,
-                         inputObj = res$inputs$inputs,
-                         weightObj = res$weights,
-                         timelimit = timelimit, mipGAP = mipGAP,
-                         poolrelGAP = poolrelGAP, limitPop = limitPop,
-                         poolCap = poolCap, poolIntensity = poolIntensity,
-                         poolReplace = poolReplace, alphaWeight = alphaWeight,
-                         betaWeight = betaWeight, dir_name = dir_name,
-                         solver = solver,
-                         threads = threads,
-                         experimental_conditions = res$exp,
-                         condition = res$condition, repIndex = res$repIndex)
-  
-  if (cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
-  
-  return(result)
-  
-}
-
-#TODO Keeping for backward compatibility for the current version in development
+#TODO Keeping for backward compatibility for the current version 
 runCARNIVAL <- function(inputObj=NULL,
                         measObj=measObj,
                         netObj=netObj,
@@ -222,56 +141,31 @@ runCARNIVAL <- function(inputObj=NULL,
                         threads=0,
                         cplexMemoryLimit=8192,
                         cleanTmpFiles=TRUE,
-                        dir_name=NULL)
-{
+                        dir_name=NULL) {
   
   solver <- match.arg(solver)
+ 
+  opts = c(solverPath = solverPath,
+           solver = solver, 
+           timelimit = timelimit,
+           mipGap = mipGAP,
+           poolrelGap = poolrelGAP,
+           limitPop = limitPop, 
+           poolCap = poolCap,
+           poolIntensity = poolIntensity,
+           poolReplace = poolReplace,
+           alphaWeight = alphaWeight, 
+           betaWeight = betaWeight,
+           threads = threads,
+           cplexMemoryLimit = cplexMemoryLimit,
+           cleanTmpFiles = cleanTmpFiles,
+           dirName = dir_name)
   
-  opts = c(solverPath,
-           solver, 
-           timelimit,
-           mipGAP,
-           poolrelGAP,
-           limitPop, 
-           poolCap,
-           poolIntensity,
-           poolReplace,
-           alphaWeight, 
-           betaWeight,
-           threads,
-           dir_name)
-  
-  res <- checkCplexCarnivalOptions(opts)
-  res <- checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj,
-                    inputObj = inputObj, weightObj = weightObj,
-                    timelimit = timelimit, mipGAP = mipGAP,
-                    poolrelGAP = poolrelGAP, limitPop = limitPop,
-                    poolCap = poolCap, poolIntensity = poolIntensity,
-                    poolReplace = poolReplace, alphaWeight = alphaWeight,
-                    betaWeight = betaWeight, dir_name = dir_name,
-                    solver = solver, threads = threads)
-  
-  if (cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
-  
-  result = solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
-                         measObj = res$measurements,
-                         inputObj = res$inputs$inputs,
-                         weightObj = res$weights,
-                         timelimit = timelimit, mipGAP = mipGAP,
-                         poolrelGAP = poolrelGAP, limitPop = limitPop,
-                         poolCap = poolCap, poolIntensity = poolIntensity,
-                         poolReplace = poolReplace, alphaWeight = alphaWeight,
-                         betaWeight = betaWeight, dir_name = dir_name,
-                         solver = solver,
-                         threads = threads,
-                         experimental_conditions = res$exp,
-                         condition = res$condition, repIndex = res$repIndex)
-  
-  if (cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
+  result <- runCarnival(perturbations = inputObj, 
+                        measurements = measObj, 
+                        priorKnowledgeNetwork = netObj, 
+                        pathwayWeights = weightObj, 
+                        carnivalOptions = opts)
   
   return(result)
   

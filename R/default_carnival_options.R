@@ -2,6 +2,32 @@
 #' 
 #' generates default CARNIVAL options.  
 #' 
+#'@param solverPath Path to executable cbc/cplex file - default set to NULL, in
+#'which case the solver from lpSolve package is used.
+#'@param solver Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).
+#'@param timelimit CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
+#'seconds (default set to 3600).
+#'@param mipGAP CPLEX parameter: the absolute tolerance on the gap between the
+#'best integer objective and the objective of the best node remaining. When this
+#'difference falls below the value of this parameter, the linear integer
+#'optimization is stopped (default set to 0.05)
+#'@param poolrelGAP CPLEX/Cbc parameter: Allowed relative gap of accepted
+#'solution comparing within the pool of accepted solution (default: 0.0001)
+#'@param limitPop CPLEX parameter: Allowed number of solutions to be generated
+#'(default: 500)
+#'@param poolCap CPLEX parameter: Allowed number of solution to be kept in the
+#'pool of solution (default: 100)
+#'@param poolIntensity CPLEX parameter: Intensity of solution searching
+#'(0,1,2,3,4 - default: 4)
+#'@param alphaWeight Objective function: weight for mismatch penalty (default:
+#'1 - will only be applied once measurement file only contains discrete values)
+#'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
+#'@param threads CPLEX parameter: Number of threads to use
+#'default: 0 for maximum number possible threads on system
+#'@param dirName Specify directory name to store results. by default set to
+#'NULL
+#'
+#' 
 #' @return returns a list with all possible options implemented in CARNIVAL.
 #' see the documentation on \code{\link{CARNIVAL::runCARNIVAL}}.
 #' @export
@@ -18,7 +44,6 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          solverPath=solverPath,
          solver=supportedSolvers$cplex, 
          timelimit=3600, 
-         mipGap=0.05,
          alphaWeight=1, 
          betaWeight=0.2,
          threads=1,

@@ -2,41 +2,35 @@
 ##
 ##Enio Gjerga, 2020
 
-checkNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork){
+checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork){
   
-  if((!is(priorKnowledgeNetwork, "matrix")) && (!is(priorKnowledgeNetwork, "data.frame"))){
-    stop("Network object should either be of matrix or data.frame class")
-  } else {
-    
-    colnames(priorKnowledgeNetwork) = c("source", "interaction", "target")
-    if( !("data.frame" %in% is(priorKnowledgeNetwork)) ){
-      priorKnowledgeNetwork = as.data.frame(priorKnowledgeNetwork)
-    } 
-    
-    priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
-    priorKnowledgeNetwork$interaction = as.numeric(as.character(priorKnowledgeNetwork$interaction))
-    priorKnowledgeNetwork$target = as.character(priorKnowledgeNetwork$target)
-    
-    if(ncol(netObj) != 3){
-      stop("Network object should have three columns: source node, interaction 
-            sign and target node")
-    } else {
-      if(((!is(netObj$source, "character")) 
-          || (!is(netObj$interaction, "numeric")) 
-          || (!is(netObj$target, "character")))){
-        stop("Source and target node columns (1 & 3) should be of a 
-              character type, while interaction column (2) should be of a
-              numeric type")
-      } else {
-        if(!all(unique(netObj$interaction)%in%c(-1, 1))){
-          stop("Interactions column should contain either 1 or -1")
-        }
-      }
-    }
-  }
+  incorrectDataTypeError <- "Network object should either be of matrix or data.frame class"
+  incorrectColumnsInNetworkError <- "Network object should have three columns: source node ('source'), interaction 
+                                      sign ('interaction') and target node('target')"
   
-  netObj = controlNodeIdentifiers(netObj = netObj)
   
-  return(netObj)
+  stopifnot(incorrectDataTypeError = is.data.frame(priorKnowledgeNetwork))
+  stopifnot(incorrectColumnsInNetworkError = all( c("source","interaction", "target") %in% names(priorKnowledgeNetwork)))
+  stopifnot(ncol(priorKnowledgeNetwork) == 3)
   
+  return(TRUE)
+}
+
+preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork) {
+  incorrectInteractionValue <- "Interactions column should contain either 1 or -1"
+  
+  priorKnowledgeNetwork = controlNodeIdentifiers(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  
+  priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
+  priorKnowledgeNetwork$target = as.character(priorKnowledgeNetwork$target)
+  
+  tryCatch({
+    priorKnowledgeNetwork$interaction = as.numeric(as.character(priorKnowledgeNetwork$interaction))  
+  }, warning = function(w) {
+    stop("Check the interaction column in your prior knowledge network: contains non numeric values!")
+  })
+  
+  stopifnot(incorrectInteractionValue = all(unique(priorKnowledgeNetwork$interaction) %in% c(-1, 1) )  
+ 
+  return(priorKnowledgeNetwork)           
 }

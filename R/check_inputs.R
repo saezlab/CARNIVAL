@@ -1,6 +1,6 @@
 ## Error message in case of errors in the inputs
 ##
-## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020
+## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
 
 #' Check input data for CARNIVAL
 #' 
@@ -9,7 +9,7 @@
 #' measured data must appear in the PKN 
 #' 
 
-#TODO adapt from COSMOS code!
+#TODO adapt from COSMOS code
 checkData <- function(perturbations,
                       measurements,
                       priorKnowledgeNetwork, 
@@ -32,36 +32,33 @@ checkData <- function(perturbations,
 }
 
 
-#TODO add progeny weight check - check out which format it shoud be
-#TODO stop if not is not good here, I aim to provide a better readable error messages
 checkData2 <- function( perturbations,
-                       measurements,
-                       priorKnowledgeNetwork, 
-                       pathwayWeights = NULL ) {
+                        measurements,
+                        priorKnowledgeNetwork, 
+                        pathwayWeights = NULL ) {
+
+  checkPriorKlowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  netObj <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   
-  returnList = list() 
-  netObj = checkNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   measObj = checkMeasurements(measurements = measurements, priorKnowledgeNetwork = priorKnowledgeNetwork)
   inputObj = checkPerturbationsData(perturbations = perturbations, priorKnowledgeNetwork = priorKnowledgeNetwork)
   weightObj = checkWeightObj(weightObj = pathwayWeights, netObj = priorKnowledgeNetwork)
 
   #TODO multiple experimental conditions are not going to be supported currently
- # if(nrow(measurements) == 1){
- #    experimental_conditions = "NULL"
- # } else {
-    #experimental_conditions = seq_len(nrow(measObj))
+  #if(nrow(measurements) == 1){
+  #   experimental_conditions = "NULL"
+  #} else {
+      #experimental_conditions = seq_len(nrow(measObj))
   #}
   
-  returnList[[length(returnList)+1]] = inputObj$network
-  returnList[[length(returnList)+1]] = measObj
-  returnList[[length(returnList)+1]] = inputObj
-  returnList[[length(returnList)+1]] = weightObj
-  #TODO multiple experimental conditions are not going to be supported currently
-  #returnList[[length(returnList)+1]] = experimental_conditions
-  names(returnList) = c("network", "measurements", "inputs",
-                        "weights")#, "exp")
-  
-  return(returnList)
+  results <- list("network" = inputObj$network, 
+                  "measurements" = measObj. 
+                  "perturbations" = inputObj, 
+                  "weights" = weightObj) #, )
+                  #TODO multiple experimental conditions are not going to be supported currently
+                  #"exp" = experimental_conditions
+
+  return(results)
   
 } 
 
@@ -158,6 +155,7 @@ cplexOptionsErrorChecks <- list(
 #' checks options provided for CARNIVAL
 #' 
 checkCplexCarnivalOptions <- function(options) {
+  
   if (!is.list(options))
     stop("CARNIVAL options should be a list")
   
@@ -224,7 +222,7 @@ checkCplexCarnivalOptions <- function(options) {
 
 
 
-#TODO keeping for now for tests and backward compatibility
+#TODO keeping now for tests and backward compatibility
 checkInputs <- function(solverPath=NULL,
                         netObj=NULL,
                         measObj=NULL,
