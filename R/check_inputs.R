@@ -17,31 +17,16 @@ checkData <- function(perturbations,
   
   stopifnot(is.vector(perturbations))
   stopifnot(is.vector(measurements))
+  stopifnot(is.vector(pathwayWeights))
   
   stopifnot(is.data.frame(priorKnowledgeNetwork))
   stopifnot(all(c("source","interaction","target") %in% tolower(names(priorKnowledgeNetwork)))) 
-  stopifnot(ncol(priorKnowledgeNetwork)==3)
+  stopifnot(ncol(priorKnowledgeNetwork) == 3)
   
-  #TODO think about it - maybe we need just a note, not a full stop of the run? 
+  #TODO maybe we need just a note, not a full stop of the run? 
   # check inputs and measurements are in the network
   stopifnot(all(names(perturbations) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
   stopifnot(all(names(measurements) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
-  
-  #TODO keep this
-  # if( !is.null(weightObj[1]) ){
-  #   if( nrow(weightObj) != nrow(measObj) ){
-  #     stop("Number of rows provided for the weightObj is different to measObj.
-  #          Please check your inputs again.")
-  #   }
-  # }
-  # 
-  # if( !is.null(inputObj$inputs) ){
-  #   if(nrow(inputObj$inputs)!=nrow(measObj)){
-  #     stop("Number of rows provided for the inputObj is different to measObj.
-  #          Please check your inputs again.")
-  #   }
-  # }
-  
   
   return(TRUE)
 }
@@ -108,32 +93,24 @@ checkData2 <- function( perturbations,
   
 } 
 
-checkInputs2 <- function(solverPath=NULL,
-                        solver="lpSolve",
-                        timelimit=600,
-                        mipGAP=0.05,
-                        poolrelGAP=0.0001,
-                        limitPop=500,
-                        poolCap=100,
-                        poolIntensity=4,
-                        poolReplace=2,
-                        alphaWeight=1,
-                        betaWeight=0.2,
-                        threads=0,
-                        dirName = dirName
-){
+#TODO add default options for lpSolve
+checkInputs2 <- function(carnivalOptions){
   
   returnList = list() 
-  checkSolver(solverPath = solverPath, solver = solver, dirName = dirName)
+  checkSolver(solverPath = carnivalOptions$solverPath, 
+              solver = carnivalOptions$solver, 
+              dirName = carnivalOptions$dirName)
   
-  pp = checkSolverParam(timelimit = timelimit, mipGAP = mipGAP,
-                        poolrelGAP = poolrelGAP, limitPop = limitPop,
-                        poolCap = poolCap,
-                        poolIntensity = poolIntensity, 
-                        poolReplace = poolReplace,
-                        threads = threads,
-                        alphaWeight = alphaWeight, 
-                        betaWeight = betaWeight)
+  pp = checkSolverParam(timelimit = carnivalOptions$timelimit, 
+                        mipGAP = carnivalOptions$mipGap,
+                        poolrelGAP = carnivalOptions$poolrelGap, 
+                        limitPop = carnivalOptions$limitPop,
+                        poolCap = carnivalOptions$poolCap,
+                        poolIntensity = carnivalOptions$poolIntensity, 
+                        poolReplace = carnivalOptions$poolReplace,
+                        threads = carnivalOptions$threads,
+                        alphaWeight = carnivalOptions$alphaWeight, 
+                        betaWeight = carnivalOptions$betaWeight)
   
   
   returnList[[length(returnList)+1]] = pp$condition

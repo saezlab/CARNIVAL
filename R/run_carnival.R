@@ -96,73 +96,43 @@
 #TODO make it possible to change just one param right here
 #TODO update documentation
 #TODO change default option to lpSolve later in carnival options
-#TODO make a data structure containing all three things 
-runCarnival <- function(perturbations, 
-                        measurements, 
-                        priorKnowledgeNetwork, 
-                        pathwayWeights = NULL,
-                        solver = supportedSolvers$lpSolve,
-                        solverPath = "",
-                        carnivalOptions = 
-                          defaultCplexCarnivalOptions(solverPath=solverPath)) {
+#TODO make a data structure containing all data in one
+runCarnival <- function( perturbations, 
+                         measurements, 
+                         priorKnowledgeNetwork, 
+                         pathwayWeights = NULL,
+                         solver = supportedSolvers$lpSolve,
+                         solverPath = "",
+                         carnivalOptions = 
+                           defaultCplexCarnivalOptions(solverPath=solverPath) ) {
   
-  res <- checkInputs2(solverPath = solverPath,
-                     solver = solver, 
-                     timelimit = carnivalOptions$timelimit, 
-                     mipGAP = carnivalOptions$mipGap,
-                     poolrelGAP = carnivalOptions$poolrelGap, 
-                     limitPop = carnivalOptions$limitPop,
-                     poolCap = carnivalOptions$poolCap, 
-                     poolIntensity = carnivalOptions$poolIntensity,
-                     poolReplace = carnivalOptions$poolReplace, 
-                     alphaWeight = carnivalOptions$alphaWeight,
-                     betaWeight = carnivalOptions$betaWeight, 
-                     dirName = carnivalOptions$dirName,
-                     threads = carnivalOptions$threads)
+  resultDataCheck <- checkData2( perturbations, 
+                                 measurements, 
+                                 priorKnowledgeNetwork,
+                                 pathwayWeights )
   
-  resDataCheck <- checkData2(perturbations, 
-                  measurements, 
-                  priorKnowledgeNetwork,
-                  pathwayWeights)
+  resultOptionsCheck <- checkInputs2(carnivalOptions)
   
-  res <- c(resDataCheck, res)
-  print(res)
+  res <- c(resultDataCheck, resultOptionsCheck)
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex, 
+    cleanupCARNIVAL(condition = res$condition, 
+                    repIndex = res$repIndex, 
                     carnivalOptions$keepLPFiles)  
   }
-  
-  # result <- solveCARNIVAL(perturbations = res$inputs$inputs,
-  #                        measurements = res$measurements,
-  #                        priorKnowledgeNetwork = res$inputs$network,
-  #                        weights = res$weights,
-  #                        carnivalOptions = carnivalOptions,
-  #                        experimentalConditions = res$exp,
-  #                        condition = res$condition, repIndex = res$repIndex)
-  
-  result <- solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
-                         measObj = res$measurements,
-                         inputObj = res$inputs$inputs,
-                         weightObj = res$weights,
-                         timelimit = carnivalOptions$timelimit, 
-                         mipGAP =carnivalOptions$mipGap,
-                         poolrelGAP = carnivalOptions$poolrelGap, 
-                         limitPop = carnivalOptions$limitPop,
-                         poolCap = carnivalOptions$poolCap, 
-                         poolIntensity = carnivalOptions$poolIntensity,
-                         poolReplace = carnivalOptions$poolReplace, 
-                         alphaWeight = carnivalOptions$alphaWeight,
-                         betaWeight = carnivalOptions$betaWeight, 
-                         dir_name = carnivalOptions$dir_name,
-                         solver = solver,
-                         threads = carnivalOptions$threads,
-                         experimental_conditions = res$exp,
-                         condition = res$condition, 
-                         repIndex = res$repIndex)
+
+  result <- solveCarnival( perturbations = res$inputs$inputs,
+                           measurements = res$measurements,
+                           priorKnowledgeNetwork = res$inputs$network,
+                           pathwayWeights = res$weights,
+                           experimentalConditions = res$exp,
+                           condition = res$condition, 
+                           repIndex = res$repIndex,
+                           carnivalOptions = carnivalOptions )
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex, 
+    cleanupCARNIVAL(condition = res$condition, 
+                    repIndex = res$repIndex, 
                     carnivalOptions$keepLPFiles)  
   }
   

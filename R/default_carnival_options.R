@@ -23,8 +23,7 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          betaWeight=0.2,
          threads=1,
          cplexMemoryLimit=8192,
-         #TODO tmp
-         cleanTmpFiles=FALSE,
+         cleanTmpFiles=TRUE,
          keepLPFiles=TRUE,
          dirName=NULL
     )
@@ -37,7 +36,6 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
 #TODO write another function that will accept any options outside of the defined list
 setCarnivalOptions <- function(options=NULL, ...) {
   options <- c(options, ...)
-  
   return(options)
 }
 

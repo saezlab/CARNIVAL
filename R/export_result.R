@@ -3,24 +3,28 @@
 ##
 ## Enio Gjerga, 2020
 
-exportResult <- function(cplexSolutionFileName = cplexSolutionFileName, 
-                         variables = variables, conditionIDX = conditionIDX,
-                         pknList = pknList, inputs=inputs, 
-                         measurements=measurements, solver = "cplex", 
-                         lpSolution = NULL, mt = NULL){
+exportResult <- function(solutionFileName = solutionFileName, 
+                         variables = variables, 
+                         conditionIDX = conditionIDX,
+                         pknList = pknList, 
+                         inputs = inputs, 
+                         measurements = measurements, 
+                         solver = "cplex", 
+                         lpSolution = NULL, 
+                         mt = NULL){
   
-  if(solver=="cplex"){
+  if( solver == supportedSolvers$cplex ){
     
-    RES <- exportResultCPLEX(cplexSolutionFileName = cplexSolutionFileName, 
+    results <- exportResultCPLEX(cplexSolutionFileName = solutionFileName, 
                              variables = variables, conditionIDX = conditionIDX, 
                              pknList = pknList, inputs = inputs, 
                              measurements = measurements)
     
   } else {
     
-    if(solver=="cbc"){
+    if( solver == supportedSolvers$cbc ){
       
-      RES <- exportResultCBC(cplexSolutionFileName = cplexSolutionFileName, 
+      results <- exportResultCBC(cplexSolutionFileName = solutionFileName, 
                              variables = variables, conditionIDX = conditionIDX, 
                              pknList = pknList, inputs = inputs, 
                              measurements = measurements)
@@ -29,15 +33,14 @@ exportResult <- function(cplexSolutionFileName = cplexSolutionFileName,
       
     } else {
       
-      RES <- exportResultLPSolve(variables = variables, 
+      results <- exportResultLPSolve(variables = variables, 
                                  conditionIDX = conditionIDX, pknList = pknList,
                                  inputs = inputs, measurements = measurements, 
                                  lpSolution = lpSolution, mt = mt)
       
-      return(RES)
+      return(results)
       
     }
-    
   }
   
 }

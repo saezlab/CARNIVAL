@@ -9,7 +9,7 @@ checkNetwork <- function(netObj = netObj){
   } else {
     
     colnames(netObj) = c("source", "interaction", "target")
-    if("data.frame"%in%is(netObj)){
+    if( "data.frame" %in% is(netObj) ){
       netObj$source = as.character(netObj$source)
       netObj$interaction = as.numeric(as.character(netObj$interaction))
       netObj$target = as.character(netObj$target)

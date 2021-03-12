@@ -2,6 +2,54 @@
 ##
 ## Enio Gjerga, 2020
 
+solveCarnivalSingleRun <- function(perturbations, 
+                                   measurements, 
+                                   measurementsSign, 
+                                   measurementsWeights, 
+                                   pathwayWeights, 
+                                   priorKnowledgeNetwork, 
+                                   repIndex, 
+                                   condition,
+                                   carnivalOptions) {
+  message("Creating LP file...")
+  
+  variables <- writeLPFile2(perturbations, 
+                           measurements, 
+                           measurementsSign, 
+                           measurementsWeights, 
+                           pathwayWeights, 
+                           priorKnowledgeNetwork, 
+                           repIndex, 
+                           condition,
+                           carnivalOptions)
+  
+  message("Done: Creating LP file...")
+  message("Solving LP problem...")
+  
+  result <- c()
+  #TODO rewrite with dep inj? 
+  if(carnivalOptions$solver == supportedSolvers$cplex){
+    result <- solveWithCplex(carnivalOptions$solverPath,
+                             carnivalOptions$dirName, 
+                             condition, 
+                             repIndex, 
+                             variables,
+                             priorKnowledgeNetwork, 
+                             perturbations, 
+                             measurements) 
+    
+  } else if(carnivalOptions$solver == supportedSolvers$cbc) {
+    #TODO add params
+    result <- solveWithCbc()
+  } else {
+    #TODO add params
+    result <- solveWithLpSolve()
+  }
+  
+  return(result)
+  
+}
+
 solveCARNIVALSingle <- function(data = data, pknList = pknList,
                                 inputs = inputs, alphaWeight = alphaWeight,
                                 betaWeight = betaWeight, scores = scores,
@@ -46,12 +94,18 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
     result <- solveWithLpSolve()
   }
   
-  
   return(result)
 }
 
-solveWithCplex <- function(solverPath, condition, repIndex, variables,
-                           pknList, inputObj, measObj, dir_name) {
+solveWithCplex <- function(solverPath, 
+                           dirName, 
+                           condition, 
+                           repIndex, 
+                           variables,
+                           priorKnowledgeNetwork, 
+                           perturbations, 
+                           measurements) {
+  
   # create temp file for logs
   cplex_log <- tempfile(pattern = "cplex_log_", tmpdir = tempdir(check = TRUE), fileext = ".txt")
   
@@ -73,25 +127,26 @@ solveWithCplex <- function(solverPath, condition, repIndex, variables,
   ## Write result files in the results folder
   message("Saving results...")
   resList <- list()
+   
   if (file.exists(paste0("results_cplex_", condition, "_", repIndex,".txt"))) {
     for(i in seq_len(length(variables))){
       res <- exportResult(cplexSolutionFileName = paste0("results_cplex_",
                                                          condition,"_",
                                                          repIndex,".txt"),
                           variables = variables, 
-                          pknList = pknList, 
                           conditionIDX = i,
-                          inputs = inputObj,
-                          measurements = measObj)
-      resList[[length(resList)+1]] <- res
+                          pknList = priorKnowledgeNetwork, 
+                          inputs = perturbations,
+                          measurements = measurements)
+      resList[[length(resList) + 1]] <- res
     }
     if (!is.null(res)) {
-      if(!is.null(dir_name)){
-        if(dir.exists(dir_name)){
+      if(!is.null(dirName)){
+        if(dir.exists(dirName)){
           WriteDOTfig(res = res,
-                      dir_name = dir_name,
-                      inputs = inputObj,
-                      measurements = measObj,
+                      dir_name = dirName,
+                      inputs = perturbations,
+                      measurements = measurements,
                       UP2GS = FALSE)
         } else {
           warning("Specified directory does not exist. DOT figure not saved.")
@@ -103,7 +158,6 @@ solveWithCplex <- function(solverPath, condition, repIndex, variables,
     }
   }
   
-  #TODO tmp
   #cleanupCARNIVAL(condition = condition, repIndex = repIndex)
   
   ## Remove global variable 
@@ -148,10 +202,10 @@ solveWithCbc <- function() {
                       solver = "cbc")
   
   if (!is.null(res)) {
-    if(!is.null(dir_name)){
-      if(dir.exists(dir_name)){
+    if(!is.null(dirName)){
+      if(dir.exists(dirName)){
         WriteDOTfig(res=res,
-                    dir_name = dir_name,
+                    dir_name = dirName,
                     inputs = inputObj,
                     measurements = measObj,
                     UP2GS = FALSE)
@@ -183,10 +237,10 @@ solveWithLpSolve <- function() {
                       conditionIDX = 1)
   
   if (!is.null(res)) {
-    if(!is.null(dir_name)){
-      if(dir.exists(dir_name)){
+    if(!is.null(dirName)){
+      if(dir.exists(dirName)){
         WriteDOTfig(res=res,
-                    dir_name=dir_name,
+                    dir_name=dirName,
                     inputs=inputObj,
                     measurements=measObj,
                     UP2GS=FALSE)

@@ -5,9 +5,6 @@
 #TODO tmp function, later will be rewritten
 checkPerturbationsData <- function(perturbations = perturbations, 
                                    priorKnowledgeNetwork = priorKnowledgeNetwork) {
-  
-  #TODO tmp
-  #perturbations <-  t(as.data.frame(perturbations))
 
   netObj <- priorKnowledgeNetwork
   inputObj <- perturbations
