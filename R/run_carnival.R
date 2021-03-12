@@ -92,14 +92,16 @@ runCarnival <- function( perturbations,
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(condition = res$condition, 
-                    repIndex = res$repIndex, 
+    cleanupCARNIVAL(condition = resultsChecks$condition, 
+                    repIndex = resultsChecks$repIndex, 
                     carnivalOptions$keepLPFiles)  
   }
-
-  result <- solveCarnival( perturbations = resultsChecks$inputs$inputs,
+  
+  print(resultsChecks)
+  #TODO remove inputs/network in perturbation objects - it is not needed there
+  result <- solveCarnival( perturbations = resultsChecks$perturbations$inputs,
                            measurements = resultsChecks$measurements,
-                           priorKnowledgeNetwork = resultsChecks$inputs$network,
+                           priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
                            pathwayWeights = resultsChecks$weights,
                            experimentalConditions = resultsChecks$exp,
                            condition = resultsChecks$condition, 

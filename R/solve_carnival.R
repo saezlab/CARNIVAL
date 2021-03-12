@@ -8,6 +8,7 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
                            measurements = res$measurements,
                            priorKnowledgeNetwork = res$inputs$network,
                            pathwayWeights = res$weights,
+                           experimentalConditions = experimentalConditions,
                            condition = condition,
                            repIndex = repIndex,
                            carnivalOptions) {
@@ -17,8 +18,11 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
   
   if( experimentalConditions[1] == "NULL" ){ experimentalConditions <- NULL }
   
+  #TODO This can go now
+  print(priorKnowledgeNetwork)
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
   colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
+  
   priorKnowledgeNetwork$Node1 = as.character(priorKnowledgeNetwork$Node1)
   priorKnowledgeNetwork$Sign = as.character(as.numeric(as.character(priorKnowledgeNetwork$Sign)))
   priorKnowledgeNetwork$Node2 = as.character(priorKnowledgeNetwork$Node2)
@@ -31,6 +35,8 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
   if( pathwayWeights[1] == "NULL" ){ pathwayWeights = NULL }
   
   priorKnowledgeNetwork <<- priorKnowledgeNetwork
+  
+  print(priorKnowledgeNetwork)
   
   if( is.null(experimentalConditions) ){
     result <- solveCarnivalSingleRun( perturbations = perturbations,

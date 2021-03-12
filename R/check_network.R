@@ -19,7 +19,7 @@ checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNet
 preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork) {
   incorrectInteractionValue <- "Interactions column should contain either 1 or -1"
   
-  priorKnowledgeNetwork = controlNodeIdentifiers(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  priorKnowledgeNetwork <- controlNodeIdentifiers(network = priorKnowledgeNetwork)
   
   priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
   priorKnowledgeNetwork$target = as.character(priorKnowledgeNetwork$target)
@@ -30,7 +30,7 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowled
     stop("Check the interaction column in your prior knowledge network: contains non numeric values!")
   })
   
-  stopifnot(incorrectInteractionValue = all(unique(priorKnowledgeNetwork$interaction) %in% c(-1, 1) )  
+  stopifnot( incorrectInteractionValue = all(unique(priorKnowledgeNetwork$interaction) %in% c(-1, 1)) )  
  
   return(priorKnowledgeNetwork)           
 }

@@ -130,7 +130,7 @@ solveWithCplex <- function(solverPath,
    
   if (file.exists(paste0("results_cplex_", condition, "_", repIndex,".txt"))) {
     for(i in seq_len(length(variables))){
-      res <- exportResult(cplexSolutionFileName = paste0("results_cplex_",
+      res <- exportResult(solutionFileName = paste0("results_cplex_",
                                                          condition,"_",
                                                          repIndex,".txt"),
                           variables = variables, 

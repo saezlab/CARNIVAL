@@ -16,7 +16,8 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
 }
 
 #TODO implement keeping names mapping
-controlNodeIdentifiers <- function( network = network, 
+controlNodeIdentifiers <- function( network = network,
+                                    replacementSymbol = "_",
                                     verbose=FALSE,
                                     keepMapping=FALSE ){
   specialRegExpCharacters <- c("*", "+", "=")
@@ -43,8 +44,8 @@ controlNodeIdentifiers <- function( network = network,
             be replaced with '_'")
   }  
 
-  network$source = gsub(pattern = preparedPattern, x = test_grepl, replacement = "_")  
-  network$target = gsub(pattern = preparedPattern, x = test_grepl, replacement = "_")  
+  network$source <- gsub(pattern = preparedPattern, x = network$source, replacement = replacementSymbol)  
+  network$target <- gsub(pattern = preparedPattern, x = network$target, replacement = replacementSymbol)  
   
   return(network) 
 }

@@ -37,7 +37,7 @@ checkData2 <- function( perturbations,
                         priorKnowledgeNetwork, 
                         pathwayWeights = NULL ) {
 
-  checkPriorKlowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  checkPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   netObj <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   
   measObj = checkMeasurements(measurements = measurements, priorKnowledgeNetwork = priorKnowledgeNetwork)
@@ -46,17 +46,17 @@ checkData2 <- function( perturbations,
 
   #TODO multiple experimental conditions are not going to be supported currently
   #if(nrow(measurements) == 1){
-  #   experimental_conditions = "NULL"
+  experimentalConditions = "NULL"
   #} else {
       #experimental_conditions = seq_len(nrow(measObj))
   #}
   
-  results <- list("network" = inputObj$network, 
-                  "measurements" = measObj. 
+  results <- list("priorKnowledgeNetwork" = inputObj$network, 
+                  "measurements" = measObj, 
                   "perturbations" = inputObj, 
-                  "weights" = weightObj) #, )
+                  "weights" = weightObj, 
                   #TODO multiple experimental conditions are not going to be supported currently
-                  #"exp" = experimental_conditions
+                  "experimental_conditions" = experimentalConditions)
 
   return(results)
   

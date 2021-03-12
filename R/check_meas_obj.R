@@ -8,33 +8,33 @@ checkMeasurements <- function(measurements = measurements,
   nSpecies = unique(c(as.character(as.matrix(priorKnowledgeNetwork)[, 1]), 
                       as.character(as.matrix(priorKnowledgeNetwork)[, 3])))
   
-  if (is.null(measObj)) {
+  if (is.null(measurements)) {
     stop("Please provide a valid measurement object.")
   } else {
     ## allowedClass = c("matrix", "data.frame")
-    if((!is(measObj, "matrix")) && (!is(measObj, "data.frame"))){
+    if((!is(measurements, "matrix")) && (!is(measurements, "data.frame"))){
       stop("Measurement object should either be of matrix or data.frame class")
     } else {
-      if(ncol(measObj)>0){
+      if(ncol(measurements)>0){
         
-        colnames(measObj) <- gsub(pattern = "-", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = "+", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = "*", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = "/", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = "<", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = ">", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = "=", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
-        colnames(measObj) <- gsub(pattern = " ", replacement = "_", 
-                            x = colnames(measObj), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = "-", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = "+", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = "*", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = "/", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = "<", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = ">", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = "=", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
+        colnames(measurements) <- gsub(pattern = " ", replacement = "_", 
+                            x = colnames(measurements), fixed = TRUE)
         
-        mSpecies = colnames(measObj)
+        mSpecies = colnames(measurements)
         
         idx = which(mSpecies%in%nSpecies)
         idx2rem = setdiff(seq_len(length(mSpecies)), idx)
@@ -44,11 +44,11 @@ checkMeasurements <- function(measurements = measurements,
                No measurements is present in the network")
         } else {
           if(length(idx2rem)>0){
-            if((nrow(measObj)==1) && (is(measObj, "matrix"))){
-              measObj = measObj[, -idx2rem]
-              measObj = t(as.matrix(measObj))
+            if((nrow(measurements)==1) && (is(measurements, "matrix"))){
+              measurements = measurements[, -idx2rem]
+              measurements = t(as.matrix(measurements))
             } else {
-              measObj = measObj[, -idx2rem]
+              measurements = measurements[, -idx2rem]
             }
           }
         }
@@ -58,6 +58,6 @@ checkMeasurements <- function(measurements = measurements,
     }
   }
   
-  return(measObj)
+  return(measurements)
   
 }
