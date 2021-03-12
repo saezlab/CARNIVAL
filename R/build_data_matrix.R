@@ -5,6 +5,10 @@
 
 buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
 
+  #TODO tmp
+  data <- as.data.frame(data)
+  print(data)
+  
   colnames(pknList) <- c("X1", "X2", "X3")
   allSpecies <- unique(c(as.character(pknList$X1), as.character(pknList$X3)))
 
@@ -15,7 +19,6 @@ buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
   }
 
   ds <- intersect(colnames(data), allSpecies)
-
   dn <- setdiff(allSpecies, ds)
 
   dataMatrix <- matrix(0, nrow = nrow(data), ncol = length(allSpecies))
@@ -46,8 +49,11 @@ buildDataMatrix <- function(data = data, pknList = pknList, inputs = inputs) {
   dsID <- seq(from = length(dn)+1, to = length(allSpecies), by = 1)
   tsID <- which(is.element(el = c(dn, ds), set = ts))
 
-  res <- list(dataMatrix=dataMatrix, dataMatrixSign=dataMatrixSign, dnID=dnID, 
-              dsID=dsID, tsID=tsID, species=c(dn, ds))
+  res <- list(dataMatrix = dataMatrix, 
+              dataMatrixSign = dataMatrixSign, 
+              dnID = dnID, 
+              dsID = dsID, tsID = tsID, 
+              species = c(dn, ds))
 
   return(res)
 

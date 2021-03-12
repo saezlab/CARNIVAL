@@ -5,9 +5,10 @@
 
 write_objective_function_all <- function(dataMatrix = dataMatrix, 
                                          variables = variables, 
-                                         alphaWeight=alphaWeight, 
-                                         betaWeight=betaWeight,scores=scores, 
-                                         measWeights=measWeights, 
+                                         alphaWeight = alphaWeight, 
+                                         betaWeight = betaWeight, 
+                                         scores = scores, 
+                                         measWeights = measWeights, 
                                          conditionIDX = conditionIDX ) {
   
   ## ======================================= ##
@@ -16,8 +17,8 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
   
   write_objective_function <- function(dataMatrix = dataMatrix, 
                                        variables = variables, 
-                                       alphaWeight=alphaWeight, 
-                                       betaWeight=betaWeight, 
+                                       alphaWeight = alphaWeight, 
+                                       betaWeight = betaWeight, 
                                        scores = scores, 
                                        measWeights = measWeights, 
                                        conditionIDX = conditionIDX ){
@@ -218,18 +219,13 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
     dM$dataMatrixSign <- as.matrix(t(dataMatrix$dataMatrixSign[i, ]))
     
     if(!is.null(measWeights)){
-      
       mm <- as.matrix(measWeights[i, ,drop=FALSE])
-      
     } else {
-      
       mm <- NULL
-      
     }
-    # print(mm)
-    
+  
     var <- variables[[i]]
-    if (i==1) {
+    if (i == 1) {
       OF <- paste0(OF, write_objective_function(dataMatrix = dM, 
                                                 variables = var, 
                                                 alphaWeight=alphaWeight, 

@@ -6,9 +6,9 @@
 ##
 ## Enio Gjerga, 2020
 
-checkSolver <- function(solverPath=solverPath, 
-                        solver=solver,
-                        dirName=dirName){
+checkSolver <- function(solverPath = solverPath, 
+                        solver = solver,
+                        dirName = dirName){
   
   if(!is.null(solverPath)){
     if(!is(solverPath, "character")){

@@ -7,8 +7,9 @@
 #' checks the format of the main data inputs for CARNIVL. Checks the data format
 #' and coverage of nodes in the PKN and data. All nodes in input_data and 
 #' measured data must appear in the PKN 
-#TODO add progeny weight check - check out which format it shoud be
-#TODO stop if not is not good here, I aim to provide a better readable error messages
+#' 
+
+#TODO remove when done changing this file
 checkData <- function(perturbations,
                       measurements,
                       priorKnowledgeNetwork, 
@@ -43,6 +44,105 @@ checkData <- function(perturbations,
   
   
   return(TRUE)
+}
+
+
+#TODO add progeny weight check - check out which format it shoud be
+#TODO stop if not is not good here, I aim to provide a better readable error messages
+checkData2 <- function( perturbations,
+                       measurements,
+                       priorKnowledgeNetwork, 
+                       pathwayWeights = NULL ) {
+  
+  returnList = list() 
+  netObj = checkNetwork(netObj = priorKnowledgeNetwork)
+  #measObj = checkMeasObj(measObj = measurements, netObj = priorKnowledgeNetwork)
+  measObj = measurements
+  inputObj = checkPerturbationsData(perturbations = perturbations, priorKnowledgeNetwork = priorKnowledgeNetwork)
+  weightObj = checkWeightObj(weightObj = pathwayWeights, netObj = priorKnowledgeNetwork)
+  
+  #TODO tmp
+  #stopifnot(is.vector(perturbations))
+  #stopifnot(is.vector(measurements))
+  
+  stopifnot(is.data.frame(priorKnowledgeNetwork))
+  stopifnot(all(c("source", "interaction", "target") %in% tolower(names(priorKnowledgeNetwork)))) 
+  stopifnot(ncol(priorKnowledgeNetwork) == 3)
+  
+  #TODO think about it - maybe we need just a note, not a full stop of the run? 
+  # check inputs and measurements are in the network
+  stopifnot(all(names(perturbations) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
+  stopifnot(all(names(measurements) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
+  
+  #TODO keep this
+  # if( !is.null(weightObj[1]) ){
+  #   if( nrow(weightObj) != nrow(measObj) ){
+  #     stop("Number of rows provided for the weightObj is different to measObj.
+  #          Please check your inputs again.")
+  #   }
+  # }
+  # 
+  # if( !is.null(inputObj$inputs) ){
+  #   if(nrow(inputObj$inputs)!=nrow(measObj)){
+  #     stop("Number of rows provided for the inputObj is different to measObj.
+  #          Please check your inputs again.")
+  #   }
+  # }
+
+  #TODO tmp solution
+#  if(nrow(measurements) == 1){
+    experimental_conditions = "NULL"
+ # } else {
+    #experimental_conditions = seq_len(nrow(measObj))
+  #}
+  
+  returnList[[length(returnList)+1]] = inputObj$network
+  returnList[[length(returnList)+1]] = measObj
+  returnList[[length(returnList)+1]] = inputObj
+  returnList[[length(returnList)+1]] = weightObj
+  returnList[[length(returnList)+1]] = experimental_conditions
+  names(returnList) = c("network", "measurements", "inputs",
+                        "weights", "exp")
+  
+  return(returnList)
+  
+} 
+
+checkInputs2 <- function(solverPath=NULL,
+                        solver="lpSolve",
+                        timelimit=600,
+                        mipGAP=0.05,
+                        poolrelGAP=0.0001,
+                        limitPop=500,
+                        poolCap=100,
+                        poolIntensity=4,
+                        poolReplace=2,
+                        alphaWeight=1,
+                        betaWeight=0.2,
+                        threads=0,
+                        dirName = dirName
+){
+  
+  returnList = list() 
+  checkSolver(solverPath = solverPath, solver = solver, dirName = dirName)
+  
+  pp = checkSolverParam(timelimit = timelimit, mipGAP = mipGAP,
+                        poolrelGAP = poolrelGAP, limitPop = limitPop,
+                        poolCap = poolCap,
+                        poolIntensity = poolIntensity, 
+                        poolReplace = poolReplace,
+                        threads = threads,
+                        alphaWeight = alphaWeight, 
+                        betaWeight = betaWeight)
+  
+  
+  returnList[[length(returnList)+1]] = pp$condition
+  returnList[[length(returnList)+1]] = pp$repIndex
+  
+  names(returnList) = c("condition", "repIndex")
+  
+  return(returnList)
+  
 }
 
 carnivalOptionsErrorChecks <- list(
@@ -175,6 +275,7 @@ checkCplexCarnivalOptions <- function(options) {
 
 
 
+#TODO keeping for now for tests and backward compatibility
 checkInputs <- function(solverPath=NULL,
                         netObj=NULL,
                         measObj=NULL,

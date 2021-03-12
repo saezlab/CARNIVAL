@@ -10,14 +10,15 @@ writeLPFile <- function(data = data, pknList = pknList, inputs = inputs,
                         threads=threads, measWeights=NULL, repIndex, condition="") {
 
   options(scipen=999)
-
+ 
   dataMatrix <- buildDataMatrix(data = data, pknList = pknList, inputs = inputs)
   variables <- create_variables_all(pknList = pknList, dataMatrix = dataMatrix)
   oF <- write_objective_function_all(dataMatrix = dataMatrix,
                                      variables = variables,
                                      alphaWeight = alphaWeight,
-                                     betaWeight = betaWeight, scores=scores,
-                                     measWeights=measWeights)
+                                     betaWeight = betaWeight, 
+                                     scores=scores,
+                                     measWeights = measWeights)
   bounds <- write_boundaries(variables = variables, oF=oF)
   binaries <- write_binaries(variables = variables)
   generals <- write_generals(variables = variables, oF = oF)

@@ -96,6 +96,7 @@
 #TODO make it possible to change just one param right here
 #TODO update documentation
 #TODO change default option to lpSolve later in carnival options
+#TODO make a data structure containing all three things 
 runCarnival <- function(perturbations, 
                         measurements, 
                         priorKnowledgeNetwork, 
@@ -105,23 +106,60 @@ runCarnival <- function(perturbations,
                         carnivalOptions = 
                           defaultCplexCarnivalOptions(solverPath=solverPath)) {
   
-  res = checkData(perturbations, 
+  res <- checkInputs2(solverPath = solverPath,
+                     solver = solver, 
+                     timelimit = carnivalOptions$timelimit, 
+                     mipGAP = carnivalOptions$mipGap,
+                     poolrelGAP = carnivalOptions$poolrelGap, 
+                     limitPop = carnivalOptions$limitPop,
+                     poolCap = carnivalOptions$poolCap, 
+                     poolIntensity = carnivalOptions$poolIntensity,
+                     poolReplace = carnivalOptions$poolReplace, 
+                     alphaWeight = carnivalOptions$alphaWeight,
+                     betaWeight = carnivalOptions$betaWeight, 
+                     dirName = carnivalOptions$dirName,
+                     threads = carnivalOptions$threads)
+  
+  resDataCheck <- checkData2(perturbations, 
                   measurements, 
                   priorKnowledgeNetwork,
                   pathwayWeights)
+  
+  res <- c(resDataCheck, res)
+  print(res)
   
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex, 
                     carnivalOptions$keepLPFiles)  
   }
   
-  result = solveCARNIVAL(perturbations = res$inputs$inputs,
-                         measurements = res$measurements,
-                         priorKnowledgeNetwork = res$inputs$network,
-                         weights = res$weights,
-                         carnivalOptions=carnivalOptions,
-                         experimentalConditions = res$exp,
-                         condition = res$condition, repIndex = res$repIndex)
+  # result <- solveCARNIVAL(perturbations = res$inputs$inputs,
+  #                        measurements = res$measurements,
+  #                        priorKnowledgeNetwork = res$inputs$network,
+  #                        weights = res$weights,
+  #                        carnivalOptions = carnivalOptions,
+  #                        experimentalConditions = res$exp,
+  #                        condition = res$condition, repIndex = res$repIndex)
+  
+  result <- solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
+                         measObj = res$measurements,
+                         inputObj = res$inputs$inputs,
+                         weightObj = res$weights,
+                         timelimit = carnivalOptions$timelimit, 
+                         mipGAP =carnivalOptions$mipGap,
+                         poolrelGAP = carnivalOptions$poolrelGap, 
+                         limitPop = carnivalOptions$limitPop,
+                         poolCap = carnivalOptions$poolCap, 
+                         poolIntensity = carnivalOptions$poolIntensity,
+                         poolReplace = carnivalOptions$poolReplace, 
+                         alphaWeight = carnivalOptions$alphaWeight,
+                         betaWeight = carnivalOptions$betaWeight, 
+                         dir_name = carnivalOptions$dir_name,
+                         solver = solver,
+                         threads = carnivalOptions$threads,
+                         experimental_conditions = res$exp,
+                         condition = res$condition, 
+                         repIndex = res$repIndex)
   
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex, 
@@ -223,7 +261,7 @@ runCARNIVAL <- function(inputObj=NULL,
            solver, 
            timelimit,
            mipGAP,
-           poolrelGap,
+           poolrelGAP,
            limitPop, 
            poolCap,
            poolIntensity,
@@ -231,7 +269,7 @@ runCARNIVAL <- function(inputObj=NULL,
            alphaWeight, 
            betaWeight,
            threads,
-           dirName)
+           dir_name)
   
   res <- checkCplexCarnivalOptions(opts)
   res <- checkInputs(solverPath = solverPath, netObj = netObj, measObj = measObj,
