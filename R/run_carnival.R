@@ -94,13 +94,11 @@ runCarnival <- function( perturbations,
     cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
   }
 
-  #TODO remove inputs/network in perturbation objects - it is not needed there
-  result <- solveCarnival( perturbations = resultsChecks$perturbations,
-                           measurements = resultsChecks$measurements,
-                           priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
-                           pathwayWeights = resultsChecks$weights,
-                           experimentalConditions = resultsChecks$exp,
-                           carnivalOptions = carnivalOptions )
+  result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
+                                    measurements = resultsChecks$measurements,
+                                    priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
+                                    pathwayWeights = resultsChecks$weights,
+                                    carnivalOptions = carnivalOptions )
   
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
@@ -114,6 +112,11 @@ run_inverse_carnival <- function(measurements,
                                  priorKnowledgeNetwork, 
                                  pathwayWeights,
                                  carnivalOptions = default_carnival_options()){
+  
+}
+
+#TODO
+runCarnivalWithManualConstraints <- function() {
   
 }
 
