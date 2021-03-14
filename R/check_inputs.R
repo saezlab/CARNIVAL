@@ -9,40 +9,18 @@
 #' measured data must appear in the PKN 
 #' 
 
-#TODO adapt from COSMOS code
-checkData <- function(perturbations,
-                      measurements,
-                      priorKnowledgeNetwork, 
-                      pathwayWeights = NULL){
-  
-  stopifnot(is.vector(perturbations))
-  stopifnot(is.vector(measurements))
-  stopifnot(is.vector(pathwayWeights))
-  
-  stopifnot(is.data.frame(priorKnowledgeNetwork))
-  stopifnot(all(c("source","interaction","target") %in% tolower(names(priorKnowledgeNetwork)))) 
-  stopifnot(ncol(priorKnowledgeNetwork) == 3)
-  
-  #TODO maybe we need just a note, not a full stop of the run? 
-  # check inputs and measurements are in the network
-  stopifnot(all(names(perturbations) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
-  stopifnot(all(names(measurements) %in% c(priorKnowledgeNetwork$source, priorKnowledgeNetwork$target)))
-  
-  return(TRUE)
-}
-
-
-checkData2 <- function( perturbations,
+#TODO for all check up functions, write a wrapper (similar to carnival options checks)
+checkData <- function( perturbations,
                         measurements,
                         priorKnowledgeNetwork, 
                         pathwayWeights = NULL ) {
 
   checkPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
-  netObj <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   
-  measObj = checkMeasurements(measurements = measurements, priorKnowledgeNetwork = priorKnowledgeNetwork)
-  inputObj = checkPerturbationsData(perturbations = perturbations, priorKnowledgeNetwork = priorKnowledgeNetwork)
-  weightObj = checkWeightObj(weightObj = pathwayWeights, netObj = priorKnowledgeNetwork)
+  measurementsProcessed = checkMeasurements(measurements = measurements, priorKnowledgeNetwork = priorKnowledgeNetwork)
+  perturbationsProcessed = checkPerturbations(perturbations = perturbations, priorKnowledgeNetwork = priorKnowledgeNetwork)
+  weightsProcessed = checkWeights(weights = pathwayWeights, priorKnowledgeNetwork = priorKnowledgeNetwork)
 
   #TODO multiple experimental conditions are not going to be supported currently
   #if(nrow(measurements) == 1){
@@ -51,10 +29,10 @@ checkData2 <- function( perturbations,
       #experimental_conditions = seq_len(nrow(measObj))
   #}
   
-  results <- list("priorKnowledgeNetwork" = netObj, 
-                  "measurements" = measObj, 
-                  "perturbations" = inputObj, 
-                  "weights" = weightObj, 
+  results <- list("priorKnowledgeNetwork" = priorKnowledgeNetworkProcessed, 
+                  "measurements" = measurementsProcessed, 
+                  "perturbations" = perturbationsProcessed, 
+                  "weights" = weightsProcessed, 
                   #TODO multiple experimental conditions are not going to be supported currently
                   "experimental_conditions" = experimentalConditions)
   
@@ -62,47 +40,25 @@ checkData2 <- function( perturbations,
   
 } 
 
-#TODO add default options for lpSolve
-checkInputs2 <- function(carnivalOptions){
-  
-  returnList = list() 
-  checkSolver(solverPath = carnivalOptions$solverPath, 
-              solver = carnivalOptions$solver, 
-              dirName = carnivalOptions$dirName)
-  
-  pp = checkSolverParam(timelimit = carnivalOptions$timelimit, 
-                        mipGAP = carnivalOptions$mipGap,
-                        poolrelGAP = carnivalOptions$poolrelGap, 
-                        limitPop = carnivalOptions$limitPop,
-                        poolCap = carnivalOptions$poolCap,
-                        poolIntensity = carnivalOptions$poolIntensity, 
-                        poolReplace = carnivalOptions$poolReplace,
-                        threads = carnivalOptions$threads,
-                        alphaWeight = carnivalOptions$alphaWeight, 
-                        betaWeight = carnivalOptions$betaWeight)
-  
-  
-  returnList[[length(returnList)+1]] = pp$condition
-  returnList[[length(returnList)+1]] = pp$repIndex
-  
-  names(returnList) = c("condition", "repIndex")
-  
-  return(returnList)
-  
+checkSolverInputs <- funciton(options){
+  if (options$solver == supportedSolvers$cplex) {
+    checkCplexCarnivalOptions(options)  
+  } else {
+    stop("Other solvers are not supported yet in the updated API")
+  }
 }
 
 carnivalOptionsErrorChecks <- list(
-  timelimit =     data.frame(func = "is.numeric",
-                             param = "",
-                             message="Error in parameter timelimit: set a time limit for ILP optimisation in
-                             seconds, e.g. 3600"),
+  #TODO solver and solverPath checks are not tested
+  #solver =       data.frame( func = c("!is.null", "`%in%`")
+  #                           param = c("", "supportedSolvers")
+  #                           message = paste0("Error in solver paramter: invalid value provided, you can used only", 
+  #                                            supportedSolvers))
   
-  threads =       data.frame(func =  c("is.numeric", "`>=`"),
-                             param = c("","0"),
-                             message=c("Error in parameter threads: set the number of threads to 0 for automatic
-                                       detection or a value > 0 for a specific number of threads", 
-                                       "Error in CPLEX parameter: set the number of threads above 0.")),
-  
+  #solverPath = data.frame(func = c("is.character", "file.exists"), 
+  #                        param = c("", ""),
+  #                        message = "Error: Invalid path to solver provided.")
+    
   alphaWeight =   data.frame(func = "is.numeric", 
                              param = "",
                              message = "Error in Objective Function, alphaWeight: Please set a weight for 
@@ -116,6 +72,11 @@ carnivalOptionsErrorChecks <- list(
 )
 
 cplexOptionsErrorChecks <- list(
+  timelimit =     data.frame(func = "is.numeric",
+                             param = "",
+                             message="Error in parameter timelimit: set a time limit for ILP optimisation in
+                             seconds, e.g. 3600"),
+  
   mipGap =        data.frame(func = "is.numeric", 
                              param = "", 
                              message = "Error in CPLEX parameter mipGap: set the allowed
@@ -146,9 +107,17 @@ cplexOptionsErrorChecks <- list(
   poolReplace =   data.frame(func = c("is.numeric", "`%in%`"), 
                              param = c("", "c(0:2)"),
                              message = c(rep("Error in CPLEX parameter poolReplace: set the replacement strategy of solution
-                                         [0,1,2]. CPLEX default value (0) - First In First Out", 2)))
+                                         [0,1,2]. CPLEX default value (0) - First In First Out", 2))),
+  
+  threads =       data.frame(func =  c("is.numeric", "`>=`"),
+                             param = c("","0"),
+                             message=c("Error in parameter threads: set the number of threads to 0 for automatic
+                                       detection or a value > 0 for a specific number of threads", 
+                                       "Error in CPLEX parameter: set the number of threads above 0."))
   
 )
+
+#TODO this function must be rewritten: separated to two, and other check for cbc and lpSolve should be added
 
 #' check_CARNIVAL_options
 #' 
@@ -220,57 +189,3 @@ checkCplexCarnivalOptions <- function(options) {
     }))
 }
 
-
-
-#TODO keeping now for tests and backward compatibility
-checkInputs <- function(solverPath=NULL,
-                        netObj=NULL,
-                        measObj=NULL,
-                        inputObj=NULL,
-                        weightObj=NULL,
-                        timelimit=600,
-                        mipGAP=0.05,
-                        poolrelGAP=0.0001,
-                        limitPop=500,
-                        poolCap=100,
-                        poolIntensity=4,
-                        poolReplace=2,
-                        alphaWeight=1,
-                        betaWeight=0.2,
-                        threads=0,
-                        dir_name=dir_name,
-                        solver="lpSolve"){
-   
-  returnList = list()
-  checkSolver(solverPath = solverPath, solver = solver, dirName = dir_name)
-  netObj = checkNetwork(netObj = netObj)
-  measObj = checkMeasObj(measObj = measObj, netObj = netObj)
-  inputObj = checkInputObj(inputObj = inputObj, netObj = netObj)
-  weightObj = checkWeightObj(weightObj = weightObj, netObj = netObj)
-  
-  pp = checkSolverParam(timelimit=timelimit, mipGAP=mipGAP,
-                        poolrelGAP=poolrelGAP, limitPop=limitPop, poolCap=poolCap,
-                        poolIntensity=poolIntensity, poolReplace=poolReplace,
-                        threads=threads,
-                        alphaWeight=alphaWeight, betaWeight=betaWeight)
-
-
-  if( nrow(measObj) == 1 ){
-    experimental_conditions = "NULL"
-  } else {
-    experimental_conditions = seq_len(nrow(measObj))
-  }
-  
-  returnList[[length(returnList)+1]] = inputObj$network
-  returnList[[length(returnList)+1]] = measObj
-  returnList[[length(returnList)+1]] = inputObj
-  returnList[[length(returnList)+1]] = weightObj
-  returnList[[length(returnList)+1]] = pp$condition
-  returnList[[length(returnList)+1]] = pp$repIndex
-  returnList[[length(returnList)+1]] = experimental_conditions
-  names(returnList) = c("network", "measurements", "inputs",
-                        "weights", "condition", "repIndex", "exp")
-  
-  return(returnList)
-  
-}

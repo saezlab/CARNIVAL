@@ -9,8 +9,6 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
                            priorKnowledgeNetwork = res$inputs$network,
                            pathwayWeights = res$weights,
                            experimentalConditions = experimentalConditions,
-                           condition = condition,
-                           repIndex = repIndex,
                            carnivalOptions) {
   
 
@@ -31,8 +29,6 @@ solveCarnival <- function( perturbations = res$inputs$inputs,
                                       measurementsWeights = measurementsWeights,
                                       pathwayWeights = pathwayWeights,
                                       priorKnowledgeNetwork = priorKnowledgeNetwork,
-                                      condition = condition,
-                                      repIndex = repIndex,
                                       carnivalOptions )
     
   } else {

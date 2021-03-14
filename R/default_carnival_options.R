@@ -33,10 +33,11 @@
 #' @export
 #' 
 
-
 supportedSolvers <- list(cplex="cplex", cbc="cbc", lpSolve="lpSolve")
-requiredCarnivalCplexOptions <- c("solverPath", "solver", "timelimit", "alphaWeight", "betaWeight", "threads", "dirName")
-requiredCplexOptions <- c("mipGap", "poolrelGap", "limitPop", "poolCap", "poolIntensity", "poolReplace")
+requiredCarnivalCplexOptions <- c("solverPath", "solver", "alphaWeight", "betaWeight")
+requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "poolCap", 
+                          "poolIntensity", "poolReplace",
+                          "threads")
 
 defaultCplexCarnivalOptions <- function(solverPath=""){
     
@@ -46,6 +47,7 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          timelimit=3600, 
          alphaWeight=1, 
          betaWeight=0.2,
+         #TODO default value was 0 or 1?
          threads=1,
          cplexMemoryLimit=8192,
          cleanTmpFiles=TRUE,

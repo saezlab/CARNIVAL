@@ -19,8 +19,7 @@ checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNet
 preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork) {
   incorrectInteractionValue <- "Interactions column should contain either 1 or -1"
   
-  priorKnowledgeNetwork <- controlNodeIdentifiers(network = priorKnowledgeNetwork)
-  
+  priorKnowledgeNetwork <- correctNodeIdentifiersInNetwork(network = priorKnowledgeNetwork)
   priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
   priorKnowledgeNetwork$target = as.character(priorKnowledgeNetwork$target)
   
@@ -32,7 +31,7 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowled
   
   stopifnot( incorrectInteractionValue = all(unique(priorKnowledgeNetwork$interaction) %in% c(-1, 1)) )  
   
-  #renaming is done here; used during export of results of each solver (see export_result.R)
+  #this renaming is used during export of results of each solver (see export_result.R)
   colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
  
   return(priorKnowledgeNetwork)           

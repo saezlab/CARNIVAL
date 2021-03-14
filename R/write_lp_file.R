@@ -9,8 +9,6 @@ writeLPFile <- function(perturbations,
                         measurementsWeights, 
                         pathwayWeights, 
                         priorKnowledgeNetwork, 
-                        repIndex, 
-                        condition,
                         carnivalOptions) {
   
   options(scipen=999)
@@ -55,17 +53,11 @@ writeLPFile <- function(perturbations,
   
   message("Creating LP file...")
   
-  writeSolverFiles(condition=condition, repIndex=repIndex, oF=oF,
-                   allC=allC, bounds=bounds, binaries=binaries,
-                   generals=generals, 
-                   mipGAP=carnivalOptions$mipGap,
-                   poolrelGAP=carnivalOptions$poolrelGap, 
-                   poolReplace=carnivalOptions$poolReplace,
-                   limitPop=carnivalOptions$limitPop, 
-                   poolCap=carnivalOptions$poolCap,
-                   poolIntensity=carnivalOptions$poolIntensity, 
-                   timelimit=carnivalOptions$timelimit,
-                   threads=carnivalOptions$threads)
+  writeSolverFiles(oF = oF, allC = allC, 
+                   bounds = bounds, 
+                   binaries = binaries,
+                   generals = generals, 
+                   carnivalOptions = carnivalOptions)
   
   message("Done: Creating LP file.")
   

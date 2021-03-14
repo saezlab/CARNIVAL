@@ -6,26 +6,26 @@ clean_solver_files <- function(files=c("lp", "log", "txt"), folder="") {
   #TODO 
 }
 
-cleanupCARNIVAL <- function(condition=condition, repIndex=repIndex, keepLPFiles=FALSE){
+cleanupCARNIVAL <- function(keepLPFiles=FALSE){
   
-  if(!keepLPFiles & file.exists(paste0("testFile_", condition,"_", repIndex,".lp"))){
-    file.remove(paste0("testFile_", condition,"_", repIndex,".lp"))
+  if(!keepLPFiles & file.exists(paste0("testFile", ".lp"))){
+    file.remove(paste0("testFile", ".lp"))
   }
   
-  if(file.exists(paste0("results_cbc_", condition, "_", repIndex,".txt"))){
-    file.remove(paste0("results_cbc_", condition,"_", repIndex,".txt"))
+  if(file.exists(paste0("results_cbc", ".txt"))){
+    file.remove(paste0("results_cbc", ".txt"))
   }
   
-  if(file.exists(paste0("results_cplex_", condition, "_", repIndex, ".txt"))){
-    file.remove(paste0("results_cplex_", condition,"_", repIndex, ".txt"))
+  if(file.exists(paste0("results_cplex", ".txt"))){
+    file.remove(paste0("results_cplex", ".txt"))
   }
   
   if(file.exists("cplex.log")){
     file.remove("cplex.log")
   }
   
-  if(file.exists(paste0("cplexCommand_", condition,"_", repIndex, ".txt"))){
-    file.remove(paste0("cplexCommand_", condition,"_", repIndex, ".txt"))
+  if(file.exists(paste0("cplexCommand", ".txt"))){
+    file.remove(paste0("cplexCommand", ".txt"))
   }
   
   #TODO optimize

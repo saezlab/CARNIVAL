@@ -1,6 +1,9 @@
-## Warning message in case of unwanted symbols in node id's
+## Providing functions for fixing special characters in node identifiers
 ##
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020-2021
+
+specialRegExpCharactersToFix <- c("*", "+", "=")
+specialCharactersToFix <- c("-", "<", ">", "/", " ")
 
 collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames) {
   counter <- 0
@@ -16,36 +19,40 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
 }
 
 #TODO implement keeping names mapping
-controlNodeIdentifiers <- function( network = network,
-                                    replacementSymbol = "_",
-                                    verbose=FALSE,
-                                    keepMapping=FALSE ){
-  specialRegExpCharacters <- c("*", "+", "=")
-  substitutionCharacters <- c("-", "<", ">", "/", " ")
+correctIdentifiers <- function(nodesIds,
+                               replacementSymbol = "_",
+                               verbose=FALSE,
+                               keepMapping=FALSE ){
   
   preparedPattern <- paste0("\\", specialRegExpCharacters, collapse="|")
   preparedPattern <- paste0(c(preparedPattern, substitutionCharacters), collapse="|")
   
   if (verbose) {
-
-    namesWithSpecialCharactersSource <- gregexpr(pattern = preparedPattern, text = network$source) 
-    namesWithSpecialCharactersTarget <- gregexpr(pattern = preparedPattern, text = network$target) 
     
-    resSource <- collectSpecialCharactersNames(namesWithSpecialCharactersSource, network$source)
-    resTarget <- collectSpecialCharactersNames(namesWithSpecialCharactersTarget, network$target)
+    idsWithSpecialCharacters <- gregexpr(pattern = preparedPattern, text = nodesIds) 
     
-    allSpecialCharactersFound <- unique(unlist(resSource), unlist(resTarget))
+    resultsIds <- collectSpecialCharactersNames(idsWithSpecialCharacters, nodesIds)
     
-    allSubstitutedNamesSource <- names(resSource[lengths(resSource) != 0])
-    allSubstitutedNamesTarget <- names(resTarget[lengths(resTarget) != 0])
+    allSpecialCharactersFound <- unique(unlist(nodesIds))
+    allSubstitutedNamesTarget <- names(resultsIds[lengths(resultsIds) != 0])
     
-    warning("Your network contains node identifiers with characters ", 
+    warning("Provided nodes have identifiers with characters ", 
             paste0(allSpecialCharactersFound, sep=", "), " and they will
             be replaced with '_'")
   }  
+  
+  nodesIds <- gsub(pattern = preparedPattern, x = nodesIds, replacement = replacementSymbol)  
+  return(nodesIds) 
+  
+}
 
-  network$source <- gsub(pattern = preparedPattern, x = network$source, replacement = replacementSymbol)  
-  network$target <- gsub(pattern = preparedPattern, x = network$target, replacement = replacementSymbol)  
+correctNodeIdentifiersInNetwork <- function( network = network,
+                                    replacementSymbol = "_",
+                                    verbose=FALSE,
+                                    keepMapping=FALSE ){
+  
+  network$source <- correctIdentifiers(network$source, replacementSymbol, verbose, keepMapping)
+  network$target <- correctIdentifiers(network$target, replacementSymbol, verbose, keepMapping)
   
   return(network) 
 }

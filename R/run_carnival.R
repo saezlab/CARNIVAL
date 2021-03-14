@@ -80,37 +80,30 @@ runCarnival <- function( perturbations,
                          solver = supportedSolvers$lpSolve,
                          solverPath = "",
                          carnivalOptions = 
-                           defaultCplexCarnivalOptions(solverPath=solverPath) ) {
+                           defaultCplexCarnivalOptions(solverPath = solverPath) ) {
   
-  resultDataCheck <- checkData2( perturbations, 
-                                 measurements, 
-                                 priorKnowledgeNetwork,
-                                 pathwayWeights )
+  resultDataCheck <- checkData( perturbations, 
+                                measurements, 
+                                priorKnowledgeNetwork,
+                                pathwayWeights )
   
-  resultOptionsCheck <- checkInputs2(carnivalOptions)
-  
+  resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(condition = resultsChecks$condition, 
-                    repIndex = resultsChecks$repIndex, 
-                    carnivalOptions$keepLPFiles)  
+    cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
   }
 
   #TODO remove inputs/network in perturbation objects - it is not needed there
-  result <- solveCarnival( perturbations = resultsChecks$perturbations$inputs,
+  result <- solveCarnival( perturbations = resultsChecks$perturbations,
                            measurements = resultsChecks$measurements,
                            priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
                            pathwayWeights = resultsChecks$weights,
                            experimentalConditions = resultsChecks$exp,
-                           condition = resultsChecks$condition, 
-                           repIndex = resultsChecks$repIndex,
                            carnivalOptions = carnivalOptions )
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(condition = resultsChecks$condition, 
-                    repIndex = resultsChecks$repIndex, 
-                    carnivalOptions$keepLPFiles)  
+    cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
   }
   
   return(result)
@@ -121,6 +114,7 @@ run_inverse_carnival <- function(measurements,
                                  priorKnowledgeNetwork, 
                                  pathwayWeights,
                                  carnivalOptions = default_carnival_options()){
+  
 }
 
 #TODO Keeping for backward compatibility for the current version 
