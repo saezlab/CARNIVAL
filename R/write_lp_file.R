@@ -3,34 +3,34 @@
 ##
 ## Enio Gjerga, 2020
 
-writeLPFile <- function(perturbations, 
+writeLpFile <- function(perturbations, 
                         measurements, 
-                        measurementsSign, 
-                        measurementsWeights, 
                         pathwayWeights, 
                         priorKnowledgeNetwork, 
                         carnivalOptions) {
   
   options(scipen=999)
   
-  dataMatrix <- buildDataMatrix(data = measurements, 
-                                pknList = priorKnowledgeNetwork, 
-                                inputs = perturbations)
+  dataMatrix <- buildDataMatrix(measurements = measurements, 
+                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                perturbations = perturbations)
   
   variables <- create_variables_all(pknList = priorKnowledgeNetwork, 
                                     dataMatrix = dataMatrix)
   
-  oF <- write_objective_function_all(dataMatrix = dataMatrix,
+  measurementsWeights <- abs(measurements)
+  
+  objectiveFunction <- write_objective_function_all(dataMatrix = dataMatrix,
                                      variables = variables,
+                                     measurementsWeights = measurementsWeights,
                                      alphaWeight = carnivalOptions$alphaWeight,
                                      betaWeight = carnivalOptions$betaWeight, 
-                                     scores = pathwayWeights,
-                                     measWeights = measurementsWeights)
+                                     scores = pathwayWeights)
   
   message("Generating constraints for linear programming problem...")
-  bounds <- write_boundaries(variables = variables, oF=oF)
+  bounds <- write_boundaries(variables = variables, oF = objectiveFunction)
   binaries <- write_binaries(variables = variables)
-  generals <- write_generals(variables = variables, oF = oF)
+  generals <- write_generals(variables = variables, oF = objectiveFunction)
   c0 <- write_constraints_objFunction_all(variables = variables,
                                           dataMatrix = dataMatrix)
   
@@ -40,24 +40,27 @@ writeLPFile <- function(perturbations,
   c4 <- write_constraints_4_all(variables = variables)
   c5 <- write_constraints_5_all(variables = variables)
   c6 <- write_constraints_6(variables = variables, dataMatrix = dataMatrix,
-                            inputs = perturbations, pknList = priorKnowledgeNetwork)
+                           inputs = perturbations, pknList = priorKnowledgeNetwork)
   c7 <- write_constraints_7(variables = variables, dataMatrix = dataMatrix,
-                            inputs = perturbations, pknList = priorKnowledgeNetwork)
+                           inputs = perturbations, pknList = priorKnowledgeNetwork)
   c8 <- write_constraints_8(variables = variables, inputs = perturbations,
                             pknList = priorKnowledgeNetwork)
   
   c9 <- write_loop_constraints(variables = variables, pknList = priorKnowledgeNetwork,
-                               inputs = perturbations)
-  allC <- all_constraints_wLoop(c0 = c0, c1 = c1, c2 = c2, c3 = c3, c4 = c4,
-                                c5 = c5, c6 = c6, c7 = c7, c8 = c8, c9 = c9)
+                             inputs = perturbations)
+  allConstraints <- all_constraints_wLoop(c0 = c0, c1 = c1, c2 = c2, c3 = c3, c4 = c4,
+                               c5 = c5, c6 = c6, c7 = c7, c8 = c8, c9 = c9)
+  #allConstraints <- all_constraints_wLoop(c8 = c8)
+  
   
   message("Creating LP file...")
   
-  writeSolverFiles(oF = oF, allC = allC, 
-                   bounds = bounds, 
-                   binaries = binaries,
-                   generals = generals, 
-                   carnivalOptions = carnivalOptions)
+  writeSolverFile(objectiveFunction = objectiveFunction, 
+                  allConstraints = allConstraints,
+                  bounds = bounds, 
+                  binaries = binaries,
+                  generals = generals, 
+                  carnivalOptions = carnivalOptions)
   
   message("Done: Creating LP file.")
   

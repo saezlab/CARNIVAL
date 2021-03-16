@@ -4,10 +4,9 @@
 
 checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork){
   
-  incorrectDataTypeError <- "Network object should either be of matrix or data.frame class"
+  incorrectDataTypeError <- "Network object should either be of matrix or data.frame class."
   incorrectColumnsInNetworkError <- "Network object should have three columns: source node ('source'), interaction 
-                                      sign ('interaction') and target node('target')"
-  
+                                      sign ('interaction') and target node('target')."
   
   stopifnot(incorrectDataTypeError = is.data.frame(priorKnowledgeNetwork))
   stopifnot(incorrectColumnsInNetworkError = all( c("source","interaction", "target") %in% names(priorKnowledgeNetwork)))
@@ -17,7 +16,7 @@ checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNet
 }
 
 preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork) {
-  incorrectInteractionValue <- "Interactions column should contain either 1 or -1"
+  incorrectInteractionValue <- "Interactions column should contain either 1 or -1."
   
   priorKnowledgeNetwork <- correctNodeIdentifiersInNetwork(network = priorKnowledgeNetwork)
   priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
@@ -33,6 +32,6 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowled
   
   #this renaming is used during export of results of each solver (see export_result.R)
   colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
- 
+
   return(priorKnowledgeNetwork)           
 }

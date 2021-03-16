@@ -81,17 +81,19 @@ runCarnival <- function( perturbations,
                          solverPath = "",
                          carnivalOptions = 
                            defaultCplexCarnivalOptions(solverPath = solverPath) ) {
-  
-  resultDataCheck <- checkData( perturbations, 
-                                measurements, 
-                                priorKnowledgeNetwork,
-                                pathwayWeights )
+
+
+  resultDataCheck <- checkData( perturbations = perturbations, 
+                                measurements = measurements, 
+                                priorKnowledgeNetwork = priorKnowledgeNetwork,
+                                pathwayWeights = pathwayWeights )
   
   resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
+  print(resultDataCheck)
   
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
+    cleanupCARNIVAL(carnivalOptions$keepLPFiles)
   }
 
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
@@ -99,9 +101,9 @@ runCarnival <- function( perturbations,
                                     priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
                                     pathwayWeights = resultsChecks$weights,
                                     carnivalOptions = carnivalOptions )
-  
+
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
+    cleanupCARNIVAL(carnivalOptions$keepLPFiles)
   }
   
   return(result)
@@ -120,7 +122,7 @@ runCarnivalWithManualConstraints <- function() {
   
 }
 
-#TODO Keeping for backward compatibility for the current version 
+#For backward compatibility with previous API
 runCARNIVAL <- function(inputObj=NULL,
                         measObj=measObj,
                         netObj=netObj,

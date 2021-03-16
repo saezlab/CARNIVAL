@@ -86,7 +86,7 @@ checkCplexCarnivalOptions <- function(options) {
     )
   }
   
-  if (!all(requiredCplexOptions) %in% names(options)) {
+  if (!all(requiredCplexOptions %in% names(options))) {
     stop(
       "CARNIVAL cplex options should contain all required cplex options.
             See/use default_carnival_options() for references."
@@ -114,9 +114,9 @@ checkCplexCarnivalOptions <- function(options) {
   }
   
   invisible(
-    lapply(names(carnivalOptionsErrorMessages), function(x) {
+    lapply(names(carnivalOptionsErrorChecks), function(x) {
       value = unlist(options[x])
-      checkValue = carnivalOptionsErrorMessages[[x]]
+      checkValue = carnivalOptionsErrorChecks[[x]]
       
       # if there are several checks, apply all
       if (is.data.frame(checkValue)) {
@@ -127,9 +127,9 @@ checkCplexCarnivalOptions <- function(options) {
     })) 
   
   invisible(
-    lapply(names(cplexOptionsErrorMessages), function(x) {
+    lapply(names(cplexOptionsErrorChecks), function(x) {
       value = unlist(options[x])
-      checkValue = cplexOptionsErrorMessages[[x]]
+      checkValue = cplexOptionsErrorChecks[[x]]
       
       # if there are several checks, apply all
       if (is.data.frame(checkValue)) {

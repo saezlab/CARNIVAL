@@ -24,8 +24,8 @@ correctIdentifiers <- function(nodesIds,
                                verbose=FALSE,
                                keepMapping=FALSE ){
   
-  preparedPattern <- paste0("\\", specialRegExpCharacters, collapse="|")
-  preparedPattern <- paste0(c(preparedPattern, substitutionCharacters), collapse="|")
+  preparedPattern <- paste0("\\", specialRegExpCharactersToFix, collapse="|")
+  preparedPattern <- paste0(c(preparedPattern, specialCharactersToFix), collapse="|")
   
   if (verbose) {
     

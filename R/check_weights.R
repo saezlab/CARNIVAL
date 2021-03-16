@@ -11,18 +11,21 @@ checkWeights <- function(weights = weights,
                               You can use Carnival without weights (set to NULL by default)."
   incorrectValuesError <- "Error in provided weights values: should be between -1 and 1."
   
-  stopifnot(nullObjectError = !is.null(weights))
+  #TODO remove?
+  #stopifnot(nullObjectError = !is.null(weights))
    
-  colnames(weights) <- correctNodeIdentifies(colnames(weights))
+  names(weights) <- correctIdentifiers(names(weights))
   
   weightsNotInNetwork <- weights[!names(weights) %in% nodesPriorKnowledgeNetwork]
   weightsProcessed <- weights[names(weights) %in% nodesPriorKnowledgeNetwork] 
   
-  stopifnot(noMeasurementsInNetworkError = length(weightsNotInNetwork) != length(weightsProcessed))
+  stopifnot(noWeightsInNetworkError = length(weightsNotInNetwork) != length(weightsProcessed))
   stopifnot(incorrectValuesError = any(weights < 1 | weights >-1 ))
   
-  warning("These weight nodes are not in prior knowledge network and will be ignored: ", 
-          names(weightsNotInNetwork)) 
+  if ( length(weightsNotInNetwork) > 0 ) {
+    warning("These nodes are not in prior knowledge network and will be ignored: ", 
+          names(weightsNotInNetwork))    
+  } 
   
   return(weightsProcessed)
 }

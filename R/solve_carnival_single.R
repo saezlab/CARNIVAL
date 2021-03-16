@@ -12,23 +12,17 @@ solveCarnivalSingleRun <- function(perturbations,
   #Don't remove the line below, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
   
-  measurementsSign <- sign(measurements)
-  measurementsWeights <- abs(measurements)
-  
-  variables <- writeLPFile(perturbations, 
+  variables <- writeLpFile(perturbations, 
                            measurements, 
-                           measurementsSign, 
-                           measurementsWeights, 
                            pathwayWeights, 
                            priorKnowledgeNetwork, 
                            carnivalOptions)
   
-  
   message("Solving LP problem...")
   
   result <- c()
-  #TODO rewrite with dep inj? 
   if(carnivalOptions$solver == supportedSolvers$cplex){
+    writeCplexCommandFile(carnivalOptions)
     result <- solveWithCplex(carnivalOptions$solverPath,
                              carnivalOptions$dirName, 
                              variables,
@@ -37,15 +31,42 @@ solveCarnivalSingleRun <- function(perturbations,
                              measurements) 
     
   } else if(carnivalOptions$solver == supportedSolvers$cbc) {
-    #TODO add params
-    result <- solveWithCbc()
-  } else {
-    #TODO add params
-    result <- solveWithLpSolve()
+    result <- solveWithCbc(variables=variables, 
+                           carnivalOptions=carnivalOptions,
+                           pknList=priorKnowledgeNetwork, 
+                           inputObj=perturbations, 
+                           measurements=measurements)
+  } else { #default solver
+    result <- solveWithLpSolve(variables=variables, 
+                               measurements=measurements,
+                               inputObj=perturbations, 
+                               pknList=priorKnowledgeNetwork,
+                               dirName=carnivalOptions$dirName)
   }
+  
+  writeFigure(carnivalOptions$dirName, perturbations, measurements, result)
   
   return(result)
   
+}
+
+writeFigure <- function(dirName, inputObj, measurements, res) {
+  if (!is.null(res)) {
+    if(!is.null(dirName)){
+      if(dir.exists(dirName)){
+        WriteDOTfig(res=res,
+                    dir_name = dirName,
+                    inputs = inputObj,
+                    measurements = measObj,
+                    UP2GS = FALSE)
+      } else {
+        warning("Specified directory does not exist. DOT figure not saved.")
+      }
+    }
+  } else {
+    message("No result to be written")
+    return(NULL)
+  }
 }
 
 

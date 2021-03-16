@@ -62,6 +62,11 @@ write_constraints_8 <- function(variables=variables,
   
   ii=1
   ##
+  
+  #TODO tmp, remove after cleaning up for exp condition
+  inputs <- t(as.data.frame(inputs))
+  print(inputs)
+  
   cc1 <- paste0(
     variables[[ii]]$variables[variables[[ii]]$idxNodesUp], 
     " - ", 

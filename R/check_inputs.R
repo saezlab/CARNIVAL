@@ -10,35 +10,41 @@
 #' 
 
 #TODO for all check up functions, write a wrapper (similar to carnival options checks)
-checkData <- function( perturbations,
-                        measurements,
-                        priorKnowledgeNetwork, 
-                        pathwayWeights = NULL ) {
+checkData <- function( perturbations = perturbations,
+                       measurements = measurements,
+                       priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                       pathwayWeights = NULL ) {
 
   checkPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
   
-  measurementsProcessed = checkMeasurements(measurements = measurements, priorKnowledgeNetwork = priorKnowledgeNetwork)
-  perturbationsProcessed = checkPerturbations(perturbations = perturbations, priorKnowledgeNetwork = priorKnowledgeNetwork)
-  weightsProcessed = checkWeights(weights = pathwayWeights, priorKnowledgeNetwork = priorKnowledgeNetwork)
-
-  #TODO multiple experimental conditions are not going to be supported currently
-  #if(nrow(measurements) == 1){
-  experimentalConditions = "NULL"
-  #} else {
-      #experimental_conditions = seq_len(nrow(measObj))
-  #}
+  nodesPriorKnowledgeNetwork <- getPriorKnowledgeNetworkNodes(priorKnowledgeNetwork = priorKnowledgeNetworkProcessed)
+  
+  measurementsProcessed <- checkMeasurements(measurements = measurements, 
+                                            nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  
+  perturbationsProcessed <- checkPerturbations(perturbations = perturbations, 
+                                              nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  
+  weightsProcessed <- NULL
+  if ( !is.null(pathwayWeights) ) {
+    weightsProcessed = checkWeights(weights = pathwayWeights, 
+                                    nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  } 
   
   results <- list("priorKnowledgeNetwork" = priorKnowledgeNetworkProcessed, 
                   "measurements" = measurementsProcessed, 
                   "perturbations" = perturbationsProcessed, 
-                  "weights" = weightsProcessed, 
-                  #TODO multiple experimental conditions are not going to be supported currently
-                  "experimental_conditions" = experimentalConditions)
+                  "weights" = weightsProcessed)
   
   return(results)
   
 } 
+
+getPriorKnowledgeNetworkNodes <- function(priorKnowledgeNetwork = priorKnowledgeNetwork) {
+  allNodes <- c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2)
+  return( unique(allNodes) )
+}
 
 checkSolverInputs <- function(options){
   if (options$solver == supportedSolvers$cplex) {

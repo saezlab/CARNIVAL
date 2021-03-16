@@ -5,20 +5,25 @@
 checkMeasurements <- function(measurements = measurements, 
                               nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork) {
   
+
   nullObjectError <- "Please provide a valid measurement object."
   noMeasurementsInNetworkError <- "None of your measurements are in prior knowledge networks (PKN). 
                                    Check node identifiers in both measurements and PKN objects."
   
   stopifnot(nullObjectError = !is.null(measurements))
   
-  colnames(measurements) <- correctNodeIdentifies(colnames(measurements))
+  names(measurements) <- correctIdentifiers(names(measurements))
 
   measurementsNotInNetwork <- measurements[!names(measurements) %in% nodesPriorKnowledgeNetwork]
   measurementsProcessed <- measurements[names(measurements) %in% nodesPriorKnowledgeNetwork] 
+  #names(measurementsProcessed) <- colnames(measurements)[colnames(measurements) %in% nodesPriorKnowledgeNetwork] 
   
   stopifnot(noMeasurementsInNetworkError = length(measurementsNotInNetwork) != length(measurementsProcessed))
-  warning("These nodes are not in prior knowledge network and will be ignored: ", 
-          names(measurementsNotInNetwork)) 
+  if ( length(measurementsNotInNetwork) > 0 ) {
+    warning("These nodes are not in prior knowledge network and will be ignored: ", 
+            names(measurementsNotInNetwork))   
+  }
   
+  print(measurementsProcessed)
   return(measurementsProcessed)
 }

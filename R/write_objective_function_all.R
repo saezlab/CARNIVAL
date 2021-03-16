@@ -5,10 +5,10 @@
 
 write_objective_function_all <- function(dataMatrix = dataMatrix, 
                                          variables = variables, 
+                                         measurementsWeights = measurementsWeights, 
                                          alphaWeight = alphaWeight, 
                                          betaWeight = betaWeight, 
                                          scores = scores, 
-                                         measWeights = measWeights, 
                                          conditionIDX = conditionIDX ) {
   
   ## ======================================= ##
@@ -20,7 +20,7 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
                                        alphaWeight = alphaWeight, 
                                        betaWeight = betaWeight, 
                                        scores = scores, 
-                                       measWeights = measWeights, 
+                                       measurementsWeights = measurementsWeights, 
                                        conditionIDX = conditionIDX ){
     
     if(is.null(scores)){
@@ -40,15 +40,18 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
       
       allWeights <- rep(x = 0, length(measuredVar))
       
-      if(!is.null(measWeights)){
+      if(!is.null(measurementsWeights)){
         
-        weightedSpecies <- colnames(measWeights)
+        weightedSpecies <- colnames(measurementsWeights)
+        
+        print(measurementsWeights)
+        print(colnames(measurementsWeights))
         
         for(i in seq_len(length(weightedSpecies))){
           
           allWeights[which(which(variables$expNodesReduced==
                                    paste0("Species ", weightedSpecies[i]))==
-                             idxMeasured)] <- measWeights[i]
+                             idxMeasured)] <- measurementsWeights[i]
           
         }
         
@@ -101,15 +104,15 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
       
       allWeights <- rep(x = 0, length(measuredVar))
       
-      if(!is.null(measWeights)){
+      if(!is.null(measurementsWeights)){
         
-        weightedSpecies <- colnames(measWeights)
+        weightedSpecies <- colnames(measurementsWeights)
         
         for(i in seq_len(length(weightedSpecies))){
           
           allWeights[which(which(variables$expNodesReduced==
                                    paste0("Species ", weightedSpecies[i]))==
-                             idxMeasured)] <- measWeights[i]
+                             idxMeasured)] <- measurementsWeights[i]
           
         }
         
@@ -201,45 +204,37 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
   
   OF <- "Obj:\t "
   
-  if(!is.null(measWeights)){
-    
-    if(nrow(measWeights)!=nrow(dataMatrix$dataMatrix)){
-      
-      stop("Number of rows of the Measurements-Weights table should be the same 
-           as the number of conditions considered..")
-      
-    }
-    
-  }
-  
   for (i in seq_len(nrow(dataMatrix$dataMatrix))) {
     
     dM <- dataMatrix
     dM$dataMatrix <- as.matrix(t(dataMatrix$dataMatrix[i, ]))
     dM$dataMatrixSign <- as.matrix(t(dataMatrix$dataMatrixSign[i, ]))
     
-    if(!is.null(measWeights)){
-      mm <- as.matrix(measWeights[i, ,drop=FALSE])
-    } else {
-      mm <- NULL
-    }
+    mm <- as.matrix(t(measurementsWeights))
+    #TODO remove after full clean of i - experimental condition
+    #if(!is.null(measurementsWeights)){
+    #  mm <- as.matrix(measurementsWeights[i, ,drop=FALSE])
+    #} else {
+    #  mm <- NULL
+    #}
   
     var <- variables[[i]]
     if (i == 1) {
       OF <- paste0(OF, write_objective_function(dataMatrix = dM, 
                                                 variables = var, 
-                                                alphaWeight=alphaWeight, 
+                                                alphaWeight = alphaWeight, 
                                                 betaWeight = betaWeight,
-                                                scores=scores,measWeights = mm,
-                                                conditionIDX=i))
+                                                scores = scores,
+                                                measurementsWeights = mm,
+                                                conditionIDX = i))
     } else {
       OF <- paste0(OF, " + ",  write_objective_function(dataMatrix = dM, 
                                                         variables = var, 
-                                                        alphaWeight=alphaWeight, 
+                                                        alphaWeight = alphaWeight, 
                                                         betaWeight = betaWeight,
-                                                        scores=scores,
-                                                        measWeights = mm,
-                                                        conditionIDX=i))
+                                                        scores = scores,
+                                                        measurementsWeights = mm,
+                                                        conditionIDX = i))
     }
     
   }
