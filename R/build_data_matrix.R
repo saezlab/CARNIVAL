@@ -14,15 +14,11 @@
 #   allSpecies <- unique(c(as.character(priorKnowledgeNetwork$X1), 
 #                          as.character(priorKnowledgeNetwork$X3)))
 #   
-#   print(length(perturbations))
-#   
 #   #TODO optional param for inverse carnival
 #   perturbationsTs <- c()
 #   if(length(perturbations) > 0){
 #     perturbationsTs <- intersect(names(perturbations), allSpecies)
 #   }
-#   print("perturb ts")
-#   print(perturbationsTs)
 # 
 #   ds <- intersect(names(measurements), allSpecies)
 #   dn <- setdiff(allSpecies, ds)
@@ -72,9 +68,6 @@ buildDataMatrix <- function(measurements = measurements,
   data <- t(as.data.frame(measurements))
   inputs <- t(as.data.frame(perturbations))
   pknList <- priorKnowledgeNetwork 
-  print(data)
-  print(inputs)
-  print(pknList)
     
   colnames(pknList) <- c("X1", "X2", "X3")
   allSpecies <- unique(c(as.character(pknList$X1), as.character(pknList$X3)))

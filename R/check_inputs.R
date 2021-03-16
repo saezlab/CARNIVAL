@@ -27,6 +27,7 @@ checkData <- function( perturbations = perturbations,
                                               nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
   
   weightsProcessed <- NULL
+  
   if ( !is.null(pathwayWeights) ) {
     weightsProcessed = checkWeights(weights = pathwayWeights, 
                                     nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
@@ -50,7 +51,7 @@ checkSolverInputs <- function(options){
   if (options$solver == supportedSolvers$cplex) {
     checkCplexCarnivalOptions(options)  
   } else {
-    stop("Other solvers are not supported yet in the updated API")
+    stop("Other solvers are not supported (yet) in the updated API")
   }
 }
 

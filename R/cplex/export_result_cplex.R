@@ -253,8 +253,6 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
     
   }
   
-  # print(sifAll)
-  
   if(length(sifAll)==0){
     
     message("No network was generated for this setting..")

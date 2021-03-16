@@ -1,16 +1,12 @@
-## This code writes the list of constraints (7) of the ILP problem for all the
-## conditions.
+## This code writes the list of constraints (7) of the ILP problem for one condition.
 ##
 ##
 ## Enio Gjerga, 2020
 
-write_constraints_7 <- function(variables=variables,
-                                dataMatrix=dataMatrix,
-                                inputs = inputs,
-                                pknList = pknList) {
+write_constraints_7 <- function(variables = variables,
+                                dataMatrix = dataMatrix,
+                                priorKnowledgeNetwork = priorKnowledgeNetwork) {
 
-  ##library(igraph)
-  ##requireNamespace("igraph")
   constraints7 <- c()
 
   for(ii in seq_len(length(variables))){
@@ -18,7 +14,7 @@ write_constraints_7 <- function(variables=variables,
     source <- unique(variables[[ii]]$reactionSource)
     target <- unique(variables[[ii]]$reactionTarget)
 
-    gg <- igraph::graph_from_data_frame(d = pknList[, c(3, 1)])
+    gg <- igraph::graph_from_data_frame(d = priorKnowledgeNetwork[, c(3, 1)])
     adj <- igraph::get.adjacency(gg)
     adj <- as.matrix(adj)
 
@@ -63,7 +59,7 @@ write_constraints_7 <- function(variables=variables,
   source <- unique(variables[[ii]]$reactionSource)
   target <- unique(variables[[ii]]$reactionTarget)
   
-  gg <- igraph::graph_from_data_frame(d = pknList[, c(3, 1)])
+  gg <- igraph::graph_from_data_frame(d = priorKnowledgeNetwork[, c(3, 1)])
   adj <- igraph::get.adjacency(gg)
   adj <- as.matrix(adj)
   
@@ -96,8 +92,6 @@ write_constraints_7 <- function(variables=variables,
               colnames(adj)[which(adj[idx2[i], ]>0)],
               "=", rownames(adj)[idx2[i]],
               " in experiment ", ii))]), collapse = ""), " <= 0")
-    
-    ## constraints7 <- c(constraints7, cc)
     
   }
 

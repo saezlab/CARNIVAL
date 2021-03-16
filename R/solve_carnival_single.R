@@ -9,7 +9,7 @@ solveCarnivalSingleRun <- function(perturbations,
                                    carnivalOptions) {
   message("Writing constraints...")
   
-  #Don't remove the line below, it breaks cplex runs
+  #N.B. Don't remove the line below, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
   
   variables <- writeLpFile(perturbations, 
@@ -31,30 +31,29 @@ solveCarnivalSingleRun <- function(perturbations,
                              measurements) 
     
   } else if(carnivalOptions$solver == supportedSolvers$cbc) {
-    result <- solveWithCbc(variables=variables, 
-                           carnivalOptions=carnivalOptions,
-                           pknList=priorKnowledgeNetwork, 
-                           inputObj=perturbations, 
-                           measurements=measurements)
+    result <- solveWithCbc(variables = variables, 
+                           carnivalOptions = carnivalOptions,
+                           pknList = priorKnowledgeNetwork, 
+                           inputObj = perturbations, 
+                           measurements = measurements)
   } else { #default solver
-    result <- solveWithLpSolve(variables=variables, 
-                               measurements=measurements,
-                               inputObj=perturbations, 
-                               pknList=priorKnowledgeNetwork,
-                               dirName=carnivalOptions$dirName)
+    result <- solveWithLpSolve(variables = variables, 
+                               measurements = measurements,
+                               inputObj = perturbations, 
+                               pknList = priorKnowledgeNetwork,
+                               dirName = carnivalOptions$dirName)
   }
   
   writeFigure(carnivalOptions$dirName, perturbations, measurements, result)
-  
   return(result)
   
 }
 
-writeFigure <- function(dirName, inputObj, measurements, res) {
-  if (!is.null(res)) {
+writeFigure <- function(dirName, inputObj, measurements, result) {
+  if (!is.null(result)) {
     if(!is.null(dirName)){
       if(dir.exists(dirName)){
-        WriteDOTfig(res=res,
+        WriteDOTfig(result = result,
                     dir_name = dirName,
                     inputs = inputObj,
                     measurements = measObj,

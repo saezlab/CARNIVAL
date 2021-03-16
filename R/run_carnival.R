@@ -71,7 +71,7 @@
 #'
 
 #TODO make it possible to change just one/two params from here
-#TODO change default option to lpSolve later in carnival options
+#TODO change default carnivalOption to lpSolve before the merge with dev branch
 #TODO make a data structure containing all data in one
 runCarnival <- function( perturbations, 
                          measurements, 
@@ -90,7 +90,6 @@ runCarnival <- function( perturbations,
   
   resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
-  print(resultDataCheck)
   
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(carnivalOptions$keepLPFiles)
@@ -118,7 +117,15 @@ run_inverse_carnival <- function(measurements,
 }
 
 #TODO
-runCarnivalWithManualConstraints <- function() {
+runCarnivalWithManualConstraints <- function(perturbations, 
+                                             measurements, 
+                                             priorKnowledgeNetwork, 
+                                             pathwayWeights = NULL,
+                                             solver = supportedSolvers$lpSolve,
+                                             solverPath = "",
+                                             constraints = c(),
+                                             carnivalOptions = 
+                                               defaultCplexCarnivalOptions(solverPath = solverPath)) {
   
 }
 

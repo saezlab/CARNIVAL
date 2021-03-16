@@ -3,25 +3,26 @@
 ## 
 ## Enio Gjerga, 2020
 
-write_loop_constraints <- function(variables=variables, 
-                                   pknList=pknList, 
-                                   inputs=inputs) {
+write_loop_constraints <- function(variables = variables, 
+                                   perturbations = perturbations,
+                                   priorKnowledgeNetwork = priorKnowledgeNetwork) {
   
+  #TODO magic number? 
   M <- 101
   constraints1 <- c()
   constraints2 <- c()
   constraints3 <- c()
   constraints4 <- c()
   
-  if(length(which(pknList[, 3]%in%colnames(inputs)))==0){
+  if(length(which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations)))==0){
     
-    pkn <- pknList
+    pkn <- priorKnowledgeNetwork
     
   }
   
-  if(length(which(pknList[, 3]%in%colnames(inputs))) > 0){
+  if(length(which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations))) > 0){
     
-    pkn <- pknList[-which(pknList[, 3]%in%colnames(inputs)), ]
+    pkn <- priorKnowledgeNetwork[-which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations)), ]
     
   }
   
@@ -38,14 +39,14 @@ write_loop_constraints <- function(variables=variables,
           "ReactionDown ", pkn[, 1], "=", pkn[, 3], " in experiment ", ii))]
     
     ##
-    if(length(which(pknList[, 3]%in%colnames(inputs))) > 0){
+    if(length(which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations))) > 0){
       kk <- sapply(
         strsplit(
           variables[[ii]]$exp[variables[[ii]]$idxEdgesUp], 
           split = " "), function(x) x[2])[-which(
-            pknList[, 3]%in%colnames(inputs))]
+            priorKnowledgeNetwork[, 3]%in%colnames(perturbations))]
     }
-    if(length(which(pknList[, 3]%in%colnames(inputs))) == 0){
+    if(length(which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations))) == 0){
       kk <- sapply(
         strsplit(
           variables[[ii]]$exp[variables[[ii]]$idxEdgesUp], split = " "), 
@@ -58,14 +59,14 @@ write_loop_constraints <- function(variables=variables,
     constraints1 <- c(constraints1, cc)
     
     ##
-    if(length(which(pknList[, 3]%in%colnames(inputs))) > 0){
+    if(length(which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations))) > 0){
       kk <- sapply(
         strsplit(
           variables[[ii]]$exp[variables[[ii]]$idxEdgesDown], 
           split = " "), 
-        function(x) x[2])[-which(pknList[, 3]%in%colnames(inputs))]
+        function(x) x[2])[-which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations))]
     }
-    if(length(which(pknList[, 3]%in%colnames(inputs))) == 0){
+    if(length(which(priorKnowledgeNetwork[, 3]%in%colnames(perturbations))) == 0){
       kk <- sapply(
         strsplit(
           variables[[ii]]$exp[variables[[ii]]$idxEdgesDown], 

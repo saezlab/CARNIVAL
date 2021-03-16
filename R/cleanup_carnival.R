@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-clean_solver_files <- function(files=c("lp", "log", "txt"), folder="") {
+cleanSolverFiles <- function(files=c("lp", "log", "txt"), folder="") {
   #TODO 
 }
 

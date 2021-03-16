@@ -16,7 +16,6 @@ checkMeasurements <- function(measurements = measurements,
 
   measurementsNotInNetwork <- measurements[!names(measurements) %in% nodesPriorKnowledgeNetwork]
   measurementsProcessed <- measurements[names(measurements) %in% nodesPriorKnowledgeNetwork] 
-  #names(measurementsProcessed) <- colnames(measurements)[colnames(measurements) %in% nodesPriorKnowledgeNetwork] 
   
   stopifnot(noMeasurementsInNetworkError = length(measurementsNotInNetwork) != length(measurementsProcessed))
   if ( length(measurementsNotInNetwork) > 0 ) {
@@ -24,6 +23,5 @@ checkMeasurements <- function(measurements = measurements,
             names(measurementsNotInNetwork))   
   }
   
-  print(measurementsProcessed)
   return(measurementsProcessed)
 }

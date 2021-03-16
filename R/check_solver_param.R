@@ -132,6 +132,7 @@ checkCplexCarnivalOptions <- function(options) {
       checkValue = cplexOptionsErrorChecks[[x]]
       
       # if there are several checks, apply all
+      #TODO not sure why is this check for data.frame and not length of a vector?
       if (is.data.frame(checkValue)) {
         apply(checkValue, 1, checkGenericFunction, value)
       } else {

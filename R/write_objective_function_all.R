@@ -44,9 +44,6 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
         
         weightedSpecies <- colnames(measurementsWeights)
         
-        print(measurementsWeights)
-        print(colnames(measurementsWeights))
-        
         for(i in seq_len(length(weightedSpecies))){
           
           allWeights[which(which(variables$expNodesReduced==

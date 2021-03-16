@@ -174,8 +174,6 @@ create_variables_all <- function(pknList=pknList, dataMatrix=dataMatrix){
   }
 
   res <- list()
-  ## namesRes <- c()
-
   for(i in seq_len(nrow(dataMatrix$dataMatrix))){
 
     dM <- dataMatrix
@@ -184,8 +182,6 @@ create_variables_all <- function(pknList=pknList, dataMatrix=dataMatrix){
 
     res[[length(res)+1]] <- create_variables(pknList = pknList, dataMatrix = dM, 
                                              conditionIDX = i)
-
-    ## namesRes <- c(namesRes, paste0("Condition_", i))
 
   }
 
