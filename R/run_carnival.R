@@ -73,6 +73,7 @@
 #TODO make it possible to change just one/two params from here
 #TODO change default carnivalOption to lpSolve before the merge with dev branch
 #TODO make a data structure containing all data in one
+#TODO test run with params before it goes to full mode and returns some weird results
 runCarnival <- function( perturbations, 
                          measurements, 
                          priorKnowledgeNetwork, 
@@ -81,8 +82,7 @@ runCarnival <- function( perturbations,
                          solverPath = "",
                          carnivalOptions = 
                            defaultCplexCarnivalOptions(solverPath = solverPath) ) {
-
-
+  
   resultDataCheck <- checkData( perturbations = perturbations, 
                                 measurements = measurements, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork,
@@ -94,7 +94,7 @@ runCarnival <- function( perturbations,
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(carnivalOptions$keepLPFiles)
   }
-
+  
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
                                     measurements = resultsChecks$measurements,
                                     priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,

@@ -2,16 +2,17 @@
 ##
 ## Enio Gjerga, 2020
 
-solveCarnivalSingleRun <- function(perturbations, 
+solveCarnivalSingleRun <- function(variables,
+                                   perturbations, 
                                    measurements, 
                                    pathwayWeights, 
                                    priorKnowledgeNetwork, 
                                    carnivalOptions) {
-  message("Writing constraints...")
   
   #N.B. Don't remove the line below, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
   
+  #TODO should be in run carnival ? 
   variables <- writeLpFile(perturbations, 
                            measurements, 
                            pathwayWeights, 
@@ -19,7 +20,6 @@ solveCarnivalSingleRun <- function(perturbations,
                            carnivalOptions)
   
   message("Solving LP problem...")
-  
   result <- c()
   if(carnivalOptions$solver == supportedSolvers$cplex){
     writeCplexCommandFile(carnivalOptions)

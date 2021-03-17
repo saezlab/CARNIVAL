@@ -29,3 +29,26 @@ writeCplexCommandFile <- function(carnivalOptions){
   
   message("Done: writing cplex command file")
 }
+
+#TODO test
+#TODO check if file exists before writing
+writeCplexCommandFileFromJson <- function(carnivalOptions, 
+                                          jsonFileName = "parameters/cplex_parameters_cmd_file.json") {
+  message("Writing cplex command file")
+  
+  message("Loading parameters file for cplex command file:", jsonFileName)
+  cplexCommands <- fromJSON(file = jsonFileName)   
+  cplexCommandsFilename <- carnivalOptions$cplexCommandFilename 
+  
+  params <- lapply(seq(1:length(cplexCommands)), function(i) {
+    
+    parameterName <- names(cplexCommands[i])
+    if (parameterName == "") {
+      write(cplexCommands[[i]], cplexCommandsFilename, append=TRUE)
+    } else {
+      write(paste(cplexCommands[parameterName], carnivalOptions[parameterName]), 
+            cplexCommandsFilename, append=TRUE)
+    }
+  })
+  
+}

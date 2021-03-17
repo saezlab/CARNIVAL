@@ -1,0 +1,14 @@
+{
+	"lpFilename": "read", 
+	"mipGap": "set mip tolerances mipgap", 
+	"poolrelGap": "set mip pool relgap", 
+	"poolReplace": "set mip pool replace", 
+	"limitPop": "set mip limits populate", 
+	"poolCap": "set mip pool capacity", 
+	"poolIntensity": "set mip pool intensity",
+	"timelimit": "set timelimit",
+	"threads": "set threads", 
+	"": "populate", 
+	"resultsFile": "write results sol all", 
+	"": "quit"
+}

@@ -102,4 +102,10 @@ defaultLpSolveCarnivalOptions <- function() {
     return(options)
 }
 
+readParameters <- function(jsonFileName = "parameters/carnival_cplex_parameters.json") {
+  message("Loading parameters file for CARNIVAL:", jsonFileName)
+  parameters <- fromJSON(file = jsonFileName)  
+  return(parameters)
+}
+
 
