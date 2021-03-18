@@ -76,10 +76,12 @@ writeLpFile <- function(perturbations,
   message("Done: Creating LP file.")
   
   message("Saving parsed data")
+  
   writeParsedData(variables = variables, 
                   priorKnowledgeNetwork = priorKnowledgeNetwork, 
                   perturbations = perturbations,
-                  measurements = measurements)
+                  measurements = measurements, 
+                  carnivalOptions = carnivalOptions)
   
   return(variables)
 }
@@ -96,7 +98,7 @@ createConstraints <- function(variables, variablesTemp, dataMatrix, perturbation
                             "5"=write_constraints_5, 
                             "6"=write_constraints_6,
                             "7"=write_constraints_7,
-                            "8"write_constraints_8,
+                            "8"=write_constraints_8,
                             "9"=write_loop_constraints )
   
   constraintFunctionsParams <- c("0" = c(variablesTemp, dataMatrix), 

@@ -26,6 +26,9 @@ solveCarnivalSingleRun <- function(variables,
   #N.B. Don't remove the line below, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
   
+  runId <- createRunId()
+  carnivalOptions$runId <- runId
+  
   #TODO should be in run carnival ? 
   variables <- writeLpFile(perturbations, 
                            measurements, 
@@ -57,11 +60,13 @@ writeFigure <- function(dirName, inputObj, measurements, result) {
                     inputs = inputObj,
                     measurements = measObj,
                     UP2GS = FALSE)
+        }
+    }
   }
 }
 
     
-sendTaskTOSolver <- function(variables,
+sendTaskToSolver <- function(variables,
                              perturbations, 
                              measurements, 
                              pathwayWeights, 
@@ -69,10 +74,12 @@ sendTaskTOSolver <- function(variables,
                              carnivalOptions) {
   
   result <- c()
+  
   if(carnivalOptions$solver == supportedSolvers$cplex){
     writeCplexCommandFile(carnivalOptions)
     result <- solveWithCplex(carnivalOptions$solverPath,
                              carnivalOptions$dirName, 
+                             carnivalOptions$runId,
                              variables,
                              priorKnowledgeNetwork, 
                              perturbations, 
@@ -91,4 +98,11 @@ sendTaskTOSolver <- function(variables,
                                pknList = priorKnowledgeNetwork,
                                dirName = carnivalOptions$dirName)
   }
+}
+
+createRunId <- function() {
+  datetime <- format(Sys.time(), "t%H_%M_%Sd%d_%m_%Y")
+  salt <- sample(1:100, 1)
+  runId <- paste(datetime, salt, sep="n")
+  return(runId)
 }

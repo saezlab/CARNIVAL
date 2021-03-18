@@ -4,9 +4,9 @@ writeCplexCommandFile <- function(carnivalOptions){
   message("Writing cplex command file")
   
   ## write cplexCommand file
-  cplexCommand <- paste0("cplexCommand", ".txt")
+  cplexCommand <- paste0("cplexCommand", "_", carnivalOptions$runId, ".txt")
   
-  write(paste0("read testFile", ".lp"), 
+  write(paste0("read lpFile", "_", carnivalOptions$runId, ".lp"), 
         cplexCommand, append = TRUE)
   write(paste0("set mip tolerances mipgap ", carnivalOptions$mipGap), 
         cplexCommand, append = TRUE)
@@ -41,7 +41,6 @@ writeCplexCommandFileFromJson <- function(carnivalOptions,
   cplexCommandsFilename <- carnivalOptions$cplexCommandFilename 
   
   params <- lapply(seq(1:length(cplexCommands)), function(i) {
-    
     parameterName <- names(cplexCommands[i])
     if (parameterName == "") {
       write(cplexCommands[[i]], cplexCommandsFilename, append=TRUE)

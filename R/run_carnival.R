@@ -136,7 +136,7 @@ run_inverse_carnival <- function(measurements,
                                  priorKnowledgeNetwork, 
                                  pathwayWeights,
                                  carnivalOptions = default_carnival_options()){
-  
+  return(NULL)
 }
 
 #TODO
@@ -173,8 +173,6 @@ runCARNIVAL <- function(inputObj=NULL,
                         cplexMemoryLimit=8192,
                         cleanTmpFiles=TRUE,
                         dir_name=NULL) {
-  
-<<<<<<< HEAD
   solver <- match.arg(solver)
  
   opts = c(solverPath = solverPath,
@@ -198,44 +196,6 @@ runCARNIVAL <- function(inputObj=NULL,
                         priorKnowledgeNetwork = netObj, 
                         pathwayWeights = weightObj, 
                         carnivalOptions = opts)
-=======
-  res <- checkInputs(solverPath = solverPath,
-                     solver = solver, 
-                     timelimit = timelimit, mipGAP = mipGAP,
-                     poolrelGAP = poolrelGAP, limitPop = limitPop,
-                     poolCap = poolCap, poolIntensity = poolIntensity,
-                     poolReplace = poolReplace, alphaWeight = alphaWeight,
-                     betaWeight = betaWeight, dir_name = dir_name,
-                     threads = threads)
-  
-  resDataCheck <- checkData(netObj = netObj, measObj = measObj,
-                            inputObj = inputObj, weightObj = weightObj)
-  
-  res <- c(resDataCheck, res)
-  
-  if (clean_tmp_files) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
-  
-  result <- solveCARNIVAL(solverPath = solverPath, netObj = res$inputs$network,
-                         measObj = res$measurements,
-                         inputObj = res$inputs$inputs,
-                         weightObj = res$weights,
-                         timelimit = timelimit, mipGAP = mipGAP,
-                         poolrelGAP = poolrelGAP, limitPop = limitPop,
-                         poolCap = poolCap, poolIntensity = poolIntensity,
-                         poolReplace = poolReplace, alphaWeight = alphaWeight,
-                         betaWeight = betaWeight, dir_name = dir_name,
-                         solver = solver,
-                         threads = threads,
-                         clean_tmp_files = clean_tmp_files,
-                         experimental_conditions = res$exp,
-                         condition = res$condition, repIndex = res$repIndex)
-  
-  if (clean_tmp_files) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
->>>>>>> reading-from-lp-file
   
   return(result)
   

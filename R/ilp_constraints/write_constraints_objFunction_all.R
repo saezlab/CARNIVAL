@@ -25,8 +25,6 @@ writeConstraintsObjFunction <- function(variables = variables,
   cc1 <- rep("", length(measurements))
   cc2 <- rep("", length(measurements))
   
-  print(variables$variables)
-  print(variables$variables[idx2])
   cc1[idx2] <- paste0(variables$variables[idx2], " - absDiff", 
                       idx2, "_", conditionIDX, " <= 1")
   cc2[idx2] <- paste0(variables$variables[idx2], " + absDiff", idx2, "_", 

@@ -1,5 +1,6 @@
 solveWithCplex <- function(solverPath, 
                            dirName, 
+                           runId,
                            variables,
                            priorKnowledgeNetwork, 
                            perturbations, 
@@ -11,11 +12,11 @@ solveWithCplex <- function(solverPath,
   if (Sys.info()[1]=="Windows") {
     # TODO: implement logging on Win machine. 
     file.copy(from = solverPath,to = getwd())
-    system(paste0("cplex.exe -f cplexCommand", ".txt"))
+    system(paste0("cplex.exe -f cplexCommand", "_", runId, ".txt"))
     file.remove("cplex.exe")
   } else {
     system(paste0(solverPath,
-                  " -f cplexCommand", ".txt",
+                  " -f cplexCommand", "_", runId, ".txt",
                   " | tee ", cplex_log)) # send output to logfile and stdout
   }
   

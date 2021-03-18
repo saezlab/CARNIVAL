@@ -6,6 +6,7 @@ cleanSolverFiles <- function(files=c("lp", "log", "txt"), folder="") {
   #TODO 
 }
 
+#TODO update 
 cleanupCARNIVAL <- function(keepLPFiles=FALSE){
   
   if(!keepLPFiles & file.exists(paste0("testFile", ".lp"))){
@@ -28,13 +29,7 @@ cleanupCARNIVAL <- function(keepLPFiles=FALSE){
     file.remove(paste0("cplexCommand", ".txt"))
   }
   
-  #TODO optimize
-  allFiles <- list.files()
-  cloneFiles <- which(grepl(pattern = "clone", x = allFiles, fixed = TRUE))
-  if (length(cloneFiles) > 0) {
-    for (counter in seq_len(length(cloneFiles))) {
-      file.remove(allFiles[cloneFiles[counter]])
-    }
-  }
+  cloneFiles <- list.files(pattern = "$clone")
+  file.remove(cloneFiles)
   
 }
