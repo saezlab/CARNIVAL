@@ -2,6 +2,20 @@
 ##
 ## Enio Gjerga, 2020
 
+solveCarnivalSingleFromLp <- function(#lpFile = "", 
+                                      parsedDataFile = "",
+                                      carnivalOptions) {
+  load(parsedDataFile) 
+  result <- sendTaskToSolver(variables,
+                             perturbations, 
+                             measurements, 
+                             pathwayWeights, 
+                             priorKnowledgeNetwork, 
+                             carnivalOptions)
+  
+  return(result)
+}
+
 solveCarnivalSingleRun <- function(variables,
                                    perturbations, 
                                    measurements, 
@@ -19,7 +33,41 @@ solveCarnivalSingleRun <- function(variables,
                            priorKnowledgeNetwork, 
                            carnivalOptions)
   
+
   message("Solving LP problem...")
+  
+  result <- sendTaskToSolver(variables,
+                            perturbations, 
+                            measurements, 
+                            pathwayWeights, 
+                            priorKnowledgeNetwork, 
+                            carnivalOptions)
+  
+  writeFigure(carnivalOptions$dirName, perturbations, measurements, result)
+  return(result)
+  
+}
+
+writeFigure <- function(dirName, inputObj, measurements, result) {
+  if (!is.null(result)) {
+    if(!is.null(dirName)){
+      if(dir.exists(dirName)){
+        WriteDOTfig(result = result,
+                    dir_name = dirName,
+                    inputs = inputObj,
+                    measurements = measObj,
+                    UP2GS = FALSE)
+  }
+}
+
+    
+sendTaskTOSolver <- function(variables,
+                             perturbations, 
+                             measurements, 
+                             pathwayWeights, 
+                             priorKnowledgeNetwork, 
+                             carnivalOptions) {
+  
   result <- c()
   if(carnivalOptions$solver == supportedSolvers$cplex){
     writeCplexCommandFile(carnivalOptions)
@@ -43,29 +91,4 @@ solveCarnivalSingleRun <- function(variables,
                                pknList = priorKnowledgeNetwork,
                                dirName = carnivalOptions$dirName)
   }
-  
-  writeFigure(carnivalOptions$dirName, perturbations, measurements, result)
-  return(result)
-  
 }
-
-writeFigure <- function(dirName, inputObj, measurements, result) {
-  if (!is.null(result)) {
-    if(!is.null(dirName)){
-      if(dir.exists(dirName)){
-        WriteDOTfig(result = result,
-                    dir_name = dirName,
-                    inputs = inputObj,
-                    measurements = measObj,
-                    UP2GS = FALSE)
-      } else {
-        warning("Specified directory does not exist. DOT figure not saved.")
-      }
-    }
-  } else {
-    message("No result to be written")
-    return(NULL)
-  }
-}
-
-

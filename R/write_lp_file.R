@@ -74,7 +74,13 @@ writeLpFile <- function(perturbations,
                   carnivalOptions = carnivalOptions)
 
   message("Done: Creating LP file.")
-
+  
+  message("Saving parsed data")
+  writeParsedData(variables = variables, 
+                  priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                  perturbations = perturbations,
+                  measurements = measurements)
+  
   return(variables)
 }
 

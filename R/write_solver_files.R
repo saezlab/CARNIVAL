@@ -13,7 +13,7 @@ writeSolverFile <- function(objectiveFunction = objectiveFunction,
 
   lpFilename = paste0("testFile", ".lp")
   
-  #TODO c(...)
+  #TODO Olga c(...)
   
   write("enter Problem", lpFilename)
   write("", lpFilename, append = TRUE)
@@ -28,5 +28,13 @@ writeSolverFile <- function(objectiveFunction = objectiveFunction,
   write("Generals", lpFilename, append = TRUE)
   write(generals, lpFilename, append = TRUE)
   write("End", lpFilename, append = TRUE)
+}
+
+writeParsedData <- function ( variables = variables, 
+                              priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                              perturbations = perturbations,
+                              measurements = measurements,
+                              filename="parsedData.RData") {
+  save(variables, priorKnowledgeNetwork, perturbations, measurements, file=filename)
 }
 
