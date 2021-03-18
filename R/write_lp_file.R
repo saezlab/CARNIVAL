@@ -74,7 +74,6 @@ writeLpFile <- function(perturbations,
                   carnivalOptions = carnivalOptions)
 
   message("Done: Creating LP file.")
-  
   message("Saving parsed data")
   
   writeParsedData(variables = variables, 
@@ -84,6 +83,21 @@ writeLpFile <- function(perturbations,
                   carnivalOptions = carnivalOptions)
   
   return(variables)
+}
+
+#TODO
+prepareDataForLpFile <- function(measurements = measurements, 
+                                 priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                 perturbations = perturbations) {
+  
+  dataMatrix <- buildDataMatrix(measurements = measurements, 
+                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                perturbations = perturbations)
+  
+  variables <- create_variables_all(pknList = priorKnowledgeNetwork, 
+                                    dataMatrix = dataMatrix)
+  
+  return(c(dataMatrix, variables))
 }
 
 #TODO

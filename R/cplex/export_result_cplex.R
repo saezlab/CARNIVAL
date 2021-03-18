@@ -154,15 +154,16 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
                 variables[[conditionIDX]]$variables==edgesUp[kk1[i], 1])], 
               split = " ")[[1]][2], split = "=")[[1]][2]
         
-        
         if(round(as.numeric(edgesUp[kk1[i], 2]))==
            round(as.numeric(nodesUp[which(nodesUp[, 1]==
                                     variables[[conditionIDX]]$variables[which(
                                       variables[[conditionIDX]]$exp==paste0(
                                         "SpeciesUP ", tt, " in experiment ", 
                                         conditionIDX))]), 2]))){
+          selectedRow <- pknList[kk1[i], ]
+          selectedRow['Sign'] <- trimws(selectedRow['Sign'])
           
-          sif <- rbind(sif, pknList[kk1[i], ])
+          sif <- rbind(sif, unname(selectedRow))
           
         }
         
@@ -262,7 +263,7 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
     
     for(ii in seq_len(length(sifAll))){
       
-      if(ii ==1){
+      if(ii == 1){
         SIF <- sifAll[[ii]]
       } else {
         SIF <- unique(rbind(SIF, sifAll[[ii]]))
@@ -272,6 +273,7 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
     ##
     weightedSIF <- matrix(data = , nrow = nrow(SIF), ncol = 4)
     weightedSIF[, seq_len(3)] <- SIF
+    
     for(i in seq_len(nrow(SIF))){
       
       cnt <- 0
@@ -362,13 +364,13 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
       nodesAttributes[i, 5] <- 
         as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
       
-      if(nodesAttributes[i, 1]%in%colnames(measurements)){
+      if(nodesAttributes[i, 1] %in% names(measurements)){
         
         nodesAttributes[i, 6] <- "T"
         
       } else {
         
-        if(nodesAttributes[i, 1]%in%colnames(inputs)){
+        if(nodesAttributes[i, 1] %in% names(inputs)){
           
           nodesAttributes[i, 6] <- "S"
           

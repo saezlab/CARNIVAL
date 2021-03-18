@@ -95,8 +95,7 @@ buildDataMatrix <- function(measurements = measurements,
                                          set = setdiff(colnames(data), ds)))])
     
   }
-  else{
-    
+  else {
     dataMatrix[, seq(from = length(dn)+1, 
                      to = length(allSpecies), by = 1)] <- as.matrix(data)
     
