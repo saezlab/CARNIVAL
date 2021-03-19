@@ -6,12 +6,21 @@ solveCarnivalSingleFromLp <- function(#lpFile = "",
                                       parsedDataFile = "",
                                       carnivalOptions) {
   load(parsedDataFile) 
+  
   result <- sendTaskToSolver(variables,
                              perturbations, 
                              measurements, 
                              pathwayWeights, 
                              priorKnowledgeNetwork, 
                              carnivalOptions)
+  
+  if (!is.null(result)) {
+    WriteDOTfig(result = result,
+                dir_name = outputFolder,
+                inputs = perturbations,
+                measurements = measurements,
+                UP2GS = FALSE)
+  }
   
   return(result)
 }
@@ -36,9 +45,6 @@ solveCarnivalSingleRun <- function(variables,
                            priorKnowledgeNetwork, 
                            carnivalOptions)
   
-
-  message("Solving LP problem...")
-  
   result <- sendTaskToSolver(variables,
                             perturbations, 
                             measurements, 
@@ -46,25 +52,17 @@ solveCarnivalSingleRun <- function(variables,
                             priorKnowledgeNetwork, 
                             carnivalOptions)
   
-  writeFigure(carnivalOptions$dirName, perturbations, measurements, result)
-  return(result)
+  print(result)
+  #if (!is.null(result)) {
+  #  WriteDOTfig(result = result,
+  #              dir_name = outputFolder,
+  #              inputs = perturbations,
+  #              measurements = measurements,
+  #              UP2GS = FALSE)
+  #}
   
+  return(result)
 }
-
-writeFigure <- function(dirName, inputObj, measurements, result) {
-  if (!is.null(result)) {
-    if(!is.null(dirName)){
-      if(dir.exists(dirName)){
-        WriteDOTfig(result = result,
-                    dir_name = dirName,
-                    inputs = inputObj,
-                    measurements = measObj,
-                    UP2GS = FALSE)
-        }
-    }
-  }
-}
-
     
 sendTaskToSolver <- function(variables,
                              perturbations, 
@@ -73,11 +71,14 @@ sendTaskToSolver <- function(variables,
                              priorKnowledgeNetwork, 
                              carnivalOptions) {
   
+  message("Solving LP problem...")
   result <- c()
   
   if(carnivalOptions$solver == supportedSolvers$cplex){
-    writeCplexCommandFile(carnivalOptions)
+    cplexCommandFilename <- writeCplexCommandFile(carnivalOptions)
+    
     result <- solveWithCplex(carnivalOptions$solverPath,
+                             cplexCommandFilename,
                              carnivalOptions$dirName, 
                              carnivalOptions$runId,
                              variables,
@@ -100,9 +101,3 @@ sendTaskToSolver <- function(variables,
   }
 }
 
-createRunId <- function() {
-  datetime <- format(Sys.time(), "t%H_%M_%Sd%d_%m_%Y")
-  salt <- sample(1:100, 1)
-  runId <- paste(datetime, salt, sep="n")
-  return(runId)
-}

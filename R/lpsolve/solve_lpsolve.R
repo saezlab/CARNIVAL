@@ -14,9 +14,11 @@ solveWithLpSolve <- function(variables=variables,
                    binary.vec = lpForm$bins)$solution
   
   res <- exportResultLPSolve(variables = variables,
-                             pknList = pknList, inputs = inputObj,
+                             pknList = pknList, 
+                             inputs = inputObj,
                              measurements = measObj,
-                             lpSolution = lpSolution, mt = lpForm$mt,
+                             lpSolution = lpSolution, 
+                             mt = lpForm$mt,
                              conditionIDX = 1)
   return(res)
 }

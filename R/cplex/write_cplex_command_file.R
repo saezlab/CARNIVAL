@@ -2,32 +2,37 @@
 writeCplexCommandFile <- function(carnivalOptions){
 
   message("Writing cplex command file")
+  outputFolder <- carnivalOptions$outputFolder
   
   ## write cplexCommand file
-  cplexCommand <- paste0("cplexCommand", "_", carnivalOptions$runId, ".txt")
+  cplexCommandFilename <- paste0(outputFolder, "cplexCommand", "_", carnivalOptions$runId, ".txt")
   
-  write(paste0("read lpFile", "_", carnivalOptions$runId, ".lp"), 
-        cplexCommand, append = TRUE)
+  outputFolder <- carnivalOptions$outputFolder
+  lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
+  
+  write(paste0("read ", lpFilename), 
+        cplexCommandFilename, append = TRUE)
   write(paste0("set mip tolerances mipgap ", carnivalOptions$mipGap), 
-        cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
   write(paste0("set mip pool relgap ", carnivalOptions$poolrelGap), 
-        cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
   write(paste0("set mip pool replace ", carnivalOptions$poolReplace), 
-        cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
   write(paste0("set mip limits populate ", carnivalOptions$limitPop), 
-        cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
   write(paste0("set mip pool capacity ", carnivalOptions$poolCap), 
-        cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
   write(paste0("set mip pool intensity ", carnivalOptions$poolIntensity), 
-        cplexCommand, append = TRUE)
-  write(paste0("set timelimit ", carnivalOptions$timelimit), cplexCommand, append = TRUE)
-  write(paste0("set threads ", carnivalOptions$threads), cplexCommand, append = TRUE)
-  write("populate", cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
+  write(paste0("set timelimit ", carnivalOptions$timelimit), cplexCommandFilename, append = TRUE)
+  write(paste0("set threads ", carnivalOptions$threads), cplexCommandFilename, append = TRUE)
+  write("populate", cplexCommandFilename, append = TRUE)
   write(paste0("write results_cplex",".txt sol all"), 
-        cplexCommand, append = TRUE)
-  write("quit", cplexCommand, append = TRUE)
+        cplexCommandFilename, append = TRUE)
+  write("quit", cplexCommandFilename, append = TRUE)
   
   message("Done: writing cplex command file")
+  return(cplexCommandFilename)
 }
 
 #TODO test

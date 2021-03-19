@@ -82,6 +82,9 @@ runCarnival <- function( perturbations,
                          solverPath = "",
                          carnivalOptions = 
                            defaultCplexCarnivalOptions(solverPath = solverPath) ) {
+  message(" ") 
+  message("--- Start of the CARNIVAL pipeline ---")
+  message(" ") 
   
   resultDataCheck <- checkData( perturbations = perturbations, 
                                 measurements = measurements, 
@@ -90,10 +93,6 @@ runCarnival <- function( perturbations,
   
   resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
-  
-  if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(carnivalOptions$keepLPFiles)
-  }
   
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
                                     measurements = resultsChecks$measurements,
@@ -104,6 +103,11 @@ runCarnival <- function( perturbations,
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(carnivalOptions$keepLPFiles)
   }
+  
+  
+  message(" ") 
+  message("--- End of the CARNIVAL pipeline --- ")
+  message(" ")
   
   return(result)
 }
@@ -116,16 +120,13 @@ runCarnivalFromLp <- function(#lpFile="",
                                 defaultCplexCarnivalOptions(solverPath = solverPath)) {
   
   #TODO check carnival options 
-  if (clean_tmp_files) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
-  }
   
   result <- solveCarnivalSingleFromLp( #lpFile="",
                                       parsedDataFile="",
                                       carnivalOptions = carnivalOptions )
 
   if (clean_tmp_files) {
-    cleanupCARNIVAL(condition = res$condition, repIndex = res$repIndex)  
+    cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
   }
   
   return(result)
@@ -199,4 +200,11 @@ runCARNIVAL <- function(inputObj=NULL,
   
   return(result)
   
+}
+
+createRunId <- function() {
+  datetime <- format(Sys.time(), "t%H_%M_%Sd%d_%m_%Y")
+  salt <- sample(1:100, 1)
+  runId <- paste(datetime, salt, sep="n")
+  return(runId)
 }

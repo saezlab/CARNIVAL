@@ -44,12 +44,12 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
     options <- list(
          solverPath=solverPath,
          solver=supportedSolvers$cplex, 
+         lpFilename: "",
+         cplexCommandFilename: "",
          timelimit=3600, 
          alphaWeight=1, 
          betaWeight=0.2,
          #TODO default value was 0 or 1?
-         threads=1,
-         cplexMemoryLimit=8192,
          cleanTmpFiles=TRUE,
          keepLPFiles=TRUE,
          dirName=NULL
@@ -68,12 +68,14 @@ setCarnivalOptions <- function(options=NULL, ...) {
 
 suggestedCplexOptions <- function() {
   options <- list(
+    threads=1,
     mipGap = 0.05,
     poolrelGap = 0.0001,
     limitPop = 500,
     poolCap = 100,
     poolIntensity = 4,
-    poolReplace = 2
+    poolReplace = 2,
+    cplexMemoryLimit=8192
   )
   return(options)
 }
@@ -82,6 +84,7 @@ suggestedCplexOptions <- function() {
 #TODO careful with scientific notation, it is switched off at another place in the code (look up for scipen)
 defaultCplexOptions <- function() {
   options <- list(
+        threads=1,
         mipGap = 1e-04, 
         poolrelGap = 1e75,
         limitPop = 20,

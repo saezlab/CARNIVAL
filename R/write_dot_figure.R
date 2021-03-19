@@ -3,14 +3,16 @@
 ##
 ## Panuwat Trairatphisan, 2020
 
-WriteDOTfig <- function(res, idxModel=0, dir_name, 
-                        inputs, measurements, UP2GS=FALSE){
-
+WriteDOTfig <- function(result, dir_name, inputs, measurements, UP2GS=FALSE,
+                        idxModel=0){
+  
   if(!is.null(UP2GS)){UP2GStag <- ifelse (UP2GS,"GeneSymbol","Uniprot")}
-
+  res <- result
+  
   sif_input=NULL;act_input=NULL
   ## default case; if idxModel is not provided, plot the combined and average 
-  ## network
+  
+  ## network 
   if (sum(idxModel==0)>0) {
     sif_input <- res$weightedSIF
     act_input <- res$nodesAttributes
@@ -216,22 +218,10 @@ WriteDOTfig <- function(res, idxModel=0, dir_name,
     Dot_text <- c(Dot_text,"")
     Dot_text <- c(Dot_text,"")
     Dot_text <- c(Dot_text,"}")
-
-    ## if(!is.null(UP2GS)){
-    ##   dir.create(dir_name)
-    ##   fileConn <- file(paste0(dir_name,
-    ##                           "/ActivityNetwork_model_Nr",
-    ##                           idxModel[counter_mod],"_",UP2GStag,".dot"))
-    ## } else {
-    ##   dir.create(dir_name)
-    ##   fileConn <- file(paste0(dir_name,"/ActivityNetwork_model_Nr",
-    ##                           idxModel[counter_mod],".dot"))
-    ## }
-    fileConn <- file(paste0(dir_name,
-                            "/network_solution.dot"))
+    
+    fileConn <- file(paste0(dir_name, "/network_solution.dot"))
     writeLines(Dot_text,fileConn)
     close(fileConn)
-
   }
 
 }

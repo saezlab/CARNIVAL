@@ -10,12 +10,13 @@ writeSolverFile <- function(objectiveFunction = objectiveFunction,
                             carnivalOptions = carnivalOptions){
   
   ## write the .lp file
-
-  lpFilename = paste0("lpFile", "_", carnivalOptions$runId, ".lp")
+  outputFolder <- carnivalOptions$outputFolder
+  lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
   
   #TODO Bartosz and Olga: why do we need enter Problem here? 
-  write("enter Problem", lpFilename)
-  write("", lpFilename, append = TRUE)
+  #write("enter Problem", lpFilename)
+  #write("", lpFilename, append = TRUE)
+  
   write("Minimize", lpFilename, append = TRUE)
   write(objectiveFunction, lpFilename, append = TRUE)
   write("Subject To", lpFilename, append = TRUE)
@@ -36,7 +37,8 @@ writeParsedData <- function ( variables = variables,
                               carnivalOptions = carnivalOptions,
                               filename="parsedData.RData") {
   
-  filename <- paste0("parsedData_", carnivalOptions$runId, ".RData")
+  outputFolder <- carnivalOptions$outputFolder
+  filename <- paste0(outputFolder, "parsedData_", carnivalOptions$runId, ".RData")
   save(variables, priorKnowledgeNetwork, perturbations, measurements, file=filename)
 }
 

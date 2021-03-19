@@ -5,7 +5,8 @@
 
 exportResultCplex <- function(solutionFileName = solutionFileName, 
                               variables = variables, 
-                              conditionIDX = conditionIDX,
+                              #TODO this is a leftover from a loop (experimental condition), remove later!
+                              conditionIDX = 1,
                               pknList = pknList, 
                               inputs=inputs, 
                               measurements=measurement){
