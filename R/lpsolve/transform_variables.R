@@ -2,11 +2,11 @@
 ##
 ## Eio Gjerga, 2020
 
-transformVariables <- function(variables = variables, measObj = measObj){
+transformVariables <- function(variables = variables, measurements = measurements){
   
   vars1 <- variables[[1]][[1]]
   
-  measSpecies = colnames(measObj)
+  measSpecies = names(measurements)
   vars2 <- rep("", length(measSpecies))
   for(jj in seq_len(length(measSpecies))){
     idx = which(variables[[1]]$exp==paste0("Species ",

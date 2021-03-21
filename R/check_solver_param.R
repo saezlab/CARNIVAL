@@ -68,6 +68,7 @@ cplexOptionsErrorChecks <- list(
   
 )
 
+
 #TODO this function must be rewritten: separated to two, and other check for cbc and lpSolve should be added
 
 #' check_CARNIVAL_options

@@ -4,11 +4,10 @@
 
 transformBounds <- function(mt = mt, lpFile = lpFile){
   
-  idx1 <- which(lpFile$`enter Problem`=="Bounds")
-  idx2 <- which(lpFile$`enter Problem`=="Binaries")
+  idx1 <- which(lpFile=="Bounds")
+  idx2 <- which(lpFile=="Binaries")
   
-  constraintSet <- lpFile$`enter Problem`[seq(from = idx1+1, 
-                                              to = idx2-1, by = 1)]
+  constraintSet <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   
   f.con <- matrix(data = 0, nrow = 2*length(constraintSet), ncol = nrow(mt))
   ## f.dir <- c()
@@ -36,11 +35,6 @@ transformBounds <- function(mt = mt, lpFile = lpFile){
     cnt <- cnt + 1
     
   }
-  
-  ## ff <- list()
-  ## ff[[length(ff)+1]] <- f.con
-  ## ff[[length(ff)+1]] <- f.dir
-  ## ff[[length(ff)+1]] <- f.rhs
   
   ff <- vector(mode = "list", length = 3)
   names(ff) <- c("con", "dir", "rhs")

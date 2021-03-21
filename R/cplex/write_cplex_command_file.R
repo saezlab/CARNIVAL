@@ -4,11 +4,14 @@ writeCplexCommandFile <- function(carnivalOptions){
   message("Writing cplex command file")
   outputFolder <- carnivalOptions$outputFolder
   
+  #TODO create these filenames somewhere in one place
   ## write cplexCommand file
   cplexCommandFilename <- paste0(outputFolder, "cplexCommand", "_", carnivalOptions$runId, ".txt")
   
   outputFolder <- carnivalOptions$outputFolder
   lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
+  
+  resultCplexFile <-paste0(outputFolder, "result_cplex", "_", carnivalOptions$runId, ".txt")
   
   write(paste0("read ", lpFilename), 
         cplexCommandFilename, append = TRUE)
@@ -26,8 +29,10 @@ writeCplexCommandFile <- function(carnivalOptions){
         cplexCommandFilename, append = TRUE)
   write(paste0("set timelimit ", carnivalOptions$timelimit), cplexCommandFilename, append = TRUE)
   write(paste0("set threads ", carnivalOptions$threads), cplexCommandFilename, append = TRUE)
+  write(paste0("set output clonelog ", carnivalOptions$clonelog), cplexCommandFilename, append = TRUE)
+  write(paste0("set workdir ", carnivalOptions$workdir), cplexCommandFilename, append = TRUE)
   write("populate", cplexCommandFilename, append = TRUE)
-  write(paste0("write results_cplex",".txt sol all"), 
+  write(paste0("write ", resultCplexFile, " sol all"), 
         cplexCommandFilename, append = TRUE)
   write("quit", cplexCommandFilename, append = TRUE)
   

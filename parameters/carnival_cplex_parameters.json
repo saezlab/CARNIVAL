@@ -5,8 +5,10 @@
     "timelimit": 3600, 
     "alphaWeight": 1, 
     "betaWeight": 0.2,
-    "threads": 1,
-    "cplexMemoryLimit": 8192,
+    "threads": 0,
+	"clonelog": 1,
+	"workdir": "", 
+	"cplexMemoryLimit": 8192,
     "cleanTmpFiles": "TRUE",
     "keepLPFiles": "TRUE",
     "dirName": "NULL",
@@ -15,5 +17,5 @@
     "limitPop": 500,
     "poolCap": 100,
     "poolIntensity": 4,
-    "poolReplace": 2
+    "poolReplace": 2,
 }

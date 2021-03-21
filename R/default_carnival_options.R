@@ -42,21 +42,38 @@ requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "pool
 defaultCplexCarnivalOptions <- function(solverPath=""){
     
     options <- list(
-         solverPath=solverPath,
-         solver=supportedSolvers$cplex, 
-         lpFilename: "",
-         cplexCommandFilename: "",
-         timelimit=3600, 
-         alphaWeight=1, 
-         betaWeight=0.2,
+         solverPath = solverPath,
+         solver = supportedSolvers$cplex, 
+         lpFilename = "",
+         cplexCommandFilename = "",
+         outputFolder = "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests/testruns/",
+         timelimit = 3600, 
+         alphaWeight = 1, 
+         betaWeight = 0.2,
          #TODO default value was 0 or 1?
-         cleanTmpFiles=TRUE,
-         keepLPFiles=TRUE,
-         dirName=NULL
+         cleanTmpFiles = TRUE,
+         keepLPFiles = TRUE,
+         dirName = NULL
     )
     
     options <- c(options, suggestedCplexOptions())
     return(options)
+}
+
+defaultLpSolveCarnivalOptions <- function(){
+  
+  options <- list(
+    solver = supportedSolvers$lpSolve, 
+    lpFilename = "",
+    outputFolder = "",
+    alphaWeight = 1, 
+    betaWeight = 0.2,
+    #TODO default value was 0 or 1?
+    cleanTmpFiles = TRUE,
+    keepLPFiles = TRUE
+  )
+
+  return(options)
 }
 
 #TODO write a function that will accept any options from the defined list 
@@ -68,7 +85,9 @@ setCarnivalOptions <- function(options=NULL, ...) {
 
 suggestedCplexOptions <- function() {
   options <- list(
-    threads=1,
+    threads = 1,
+    clonelog = -1,
+    workdir = "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests/testruns/",
     mipGap = 0.05,
     poolrelGap = 0.0001,
     limitPop = 500,
@@ -92,16 +111,6 @@ defaultCplexOptions <- function() {
         poolIntensity = 0,
         poolReplace = 0
     )
-    return(options)
-}
-
-#TODO what other params are needed here
-defaultLpSolveCarnivalOptions <- function() {
-    
-  options <- list(
-        solver=supportedSolvers$lpSolve
-    )
-    
     return(options)
 }
 

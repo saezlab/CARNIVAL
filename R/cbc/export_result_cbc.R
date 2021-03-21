@@ -233,27 +233,15 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
   }
   
   if(length(sifAll)==0){
-    
     message("No network was generated for this setting..")
-    
-    RES <- NULL
-    
-    return(RES)
-    
+    return(NULL)
   } else {
-    
     for(ii in seq_len(length(sifAll))){
-      
       if(ii ==1){
-        
         SIF <- sifAll[[ii]]
-        
       } else {
-        
         SIF <- unique(rbind(SIF, sifAll[[ii]]))
-        
       }
-      
     }
     
     ##
@@ -370,16 +358,13 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
     
     colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
                                    "DownAct", "AvgAct", "NodeType")
+  
+    result <- c("weightedSIF" = weightedSIF, 
+                    "nodesAttributes" = nodesAttributes,
+                    "sifAll" = sifAll, 
+                    "attributesAll" = nodesActAll)
     
-    RES <- list()
-    RES[[length(RES)+1]] <- weightedSIF
-    RES[[length(RES)+1]] <- nodesAttributes
-    RES[[length(RES)+1]] <- sifAll
-    RES[[length(RES)+1]] <- nodesActAll
-    
-    names(RES) <- c("weightedSIF", "nodesAttributes","sifAll","attributesAll")
-    
-    return(RES)
+    return(result)
     
   }
   

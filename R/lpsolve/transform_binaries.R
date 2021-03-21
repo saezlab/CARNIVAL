@@ -4,15 +4,13 @@
 
 transformBinaries <- function(mt = mt, lpFile = lpFile){
   
-  idx1 <- which(lpFile$`enter Problem`=="Binaries")
-  idx2 <- which(lpFile$`enter Problem`=="Generals")
+  idx1 <- which(lpFile=="Binaries")
+  idx2 <- which(lpFile=="Generals")
   
-  constraintSet <- lpFile$`enter Problem`[seq(from = idx1+1, 
-                                              to = idx2-1, by = 1)]
+  constraintSet <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   
-  f.con <- matrix(data = 0, nrow = 2*length(constraintSet), ncol = nrow(mt))
-  ## f.dir <- c()
-  ## f.rhs <- c()
+  f.con <- matrix(data = 0, nrow = 2 * length(constraintSet), ncol = nrow(mt))
+
   f.dir <- rep("", length(constraintSet)*2)
   f.rhs <- rep("", length(constraintSet)*2)
   

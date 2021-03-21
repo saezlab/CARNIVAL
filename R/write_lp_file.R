@@ -27,6 +27,7 @@ writeLpFile <- function(perturbations,
                                      alphaWeight = carnivalOptions$alphaWeight,
                                      betaWeight = carnivalOptions$betaWeight, 
                                      scores = pathwayWeights)
+  print(objectiveFunction)
   
   message("Generating constraints for linear programming problem...")
   
@@ -97,7 +98,8 @@ prepareDataForLpFile <- function(measurements = measurements,
   variables <- create_variables_all(pknList = priorKnowledgeNetwork, 
                                     dataMatrix = dataMatrix)
   
-  return(c(dataMatrix, variables))
+  #return(c(dataMatrix, variables))
+  return(variables)
 }
 
 #TODO

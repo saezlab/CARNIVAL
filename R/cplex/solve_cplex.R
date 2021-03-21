@@ -2,6 +2,7 @@ solveWithCplex <- function(solverPath,
                            cplexCommandFilename,
                            dirName, 
                            runId,
+                           outputFolder,
                            variables,
                            priorKnowledgeNetwork, 
                            perturbations, 
@@ -27,20 +28,22 @@ solveWithCplex <- function(solverPath,
   result <- list()
   
   if (file.exists(paste0("results_cplex.txt"))) {
-    result <- exportResultCplex(solutionFileName = paste0("results_cplex.txt"),
-                             variables = variables, 
-                             pknList = priorKnowledgeNetwork, 
-                             inputs = perturbations,
-                             measurements = measurements)
+    #TODO create these filesnames in one place
+    resultCplexFile <- paste0(outputFolder, "result_cplex", "_", runId, ".txt")
+    result <- exportResultCplex(solutionFileName = resultCplexFile,
+                                variables = variables, 
+                                pknList = priorKnowledgeNetwork, 
+                                inputs = perturbations,
+                                measurements = measurements)
   }
   
   # add log to results
   if(!is.null(result) && file.exists(cplexLog)){
     cplex_out <- parse_CPLEX_log(cplexLog)
     result$diagnostics <- cplex_out
-  }#} else if (!is.null(result)) {
-  #  result$diagnostics <- list()
-  #}
+  } else {
+    result$diagnostics <- list()
+  }
   
   return(result)
 }

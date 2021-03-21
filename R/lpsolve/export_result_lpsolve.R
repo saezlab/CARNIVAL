@@ -5,9 +5,10 @@
 
 exportResultLPSolve <- function(variables = variables, 
                                 conditionIDX = conditionIDX,
-                                pknList = pknList, inputs=inputs, 
-                                measurements=measurements, 
-                                lpSolution=lpSolution, mt=mt){
+                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                perturbations = perturbations, 
+                                measurements = measurements, 
+                                lpSolution = lpSolution, mt=mt){
   
   solMatrix <- mt
   solMatrix[, 2] <- lpSolution
@@ -119,9 +120,9 @@ exportResultLPSolve <- function(variables = variables,
     
     # Writing SIF and DOT files
     
-    pknList <- as.matrix(pknList)
+    priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)
     sif <- matrix(data = "", nrow = 1, ncol = 3)
-    colnames(sif) <- colnames(pknList)
+    colnames(sif) <- colnames(priorKnowledgeNetwork)
     
     kk1 <- as.numeric(which(edgesUp[, 2] == 1))
     if(length(kk1) > 0){
@@ -149,7 +150,7 @@ exportResultLPSolve <- function(variables = variables,
                                                     " in experiment ", 
                                                     conditionIDX))]), 2])){
           
-          sif <- rbind(sif, pknList[kk1[i], ])
+          sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
         }
         
@@ -181,7 +182,7 @@ exportResultLPSolve <- function(variables = variables,
                                                     " in experiment ", 
                                                     conditionIDX))]), 2])){
           
-          sif <- rbind(sif, pknList[kk1[i], ])
+          sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
         }
         
@@ -239,27 +240,16 @@ exportResultLPSolve <- function(variables = variables,
   }
   
   if(length(sifAll)==0){
-    
     message("No network was generated for this setting..")
-    
-    RES <- NULL
-    
-    return(RES)
-    
+    result <- NULL
+    return(result)
   } else {
-    
     for(ii in seq_len(length(sifAll))){
-      
       if(ii ==1){
-        
         SIF <- sifAll[[ii]]
-        
       } else {
-        
         SIF <- unique(rbind(SIF, sifAll[[ii]]))
-        
       }
-      
     }
     
     ##
@@ -281,13 +271,9 @@ exportResultLPSolve <- function(variables = variables,
           idx2 <- intersect(idxSign, idx1)
           
           if(length(idx2) > 0){
-            
             cnt <- cnt + 1
-            
           }
-          
         }
-        
       }
       
       weightedSIF[i, 4] <- as.character(cnt*100/length(sifAll))
@@ -354,13 +340,13 @@ exportResultLPSolve <- function(variables = variables,
       nodesAttributes[i, 5] <- 
         as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
       
-      if(nodesAttributes[i, 1]%in%colnames(measurements)){
+      if(nodesAttributes[i, 1] %in% names(measurements)){
         
         nodesAttributes[i, 6] <- "T"
         
       } else {
         
-        if(nodesAttributes[i, 1]%in%colnames(inputs)){
+        if(nodesAttributes[i, 1] %in% names(perturbations)){
           
           nodesAttributes[i, 6] <- "S"
           
@@ -377,15 +363,10 @@ exportResultLPSolve <- function(variables = variables,
     colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
                                    "DownAct", "AvgAct", "NodeType")
     
-    RES <- list()
-    RES[[length(RES)+1]] <- weightedSIF
-    RES[[length(RES)+1]] <- nodesAttributes
-    RES[[length(RES)+1]] <- sifAll
-    RES[[length(RES)+1]] <- nodesActAll
+    result <- c("weightedSIF" = weightedSIF, "nodesAttributes" = nodesAttributes,
+                "sifAll" = sifAll,"attributesAll" = nodesActAll)
     
-    names(RES) <- c("weightedSIF", "nodesAttributes","sifAll","attributesAll")
-    
-    return(RES)
+    return(result)
     
   }
   

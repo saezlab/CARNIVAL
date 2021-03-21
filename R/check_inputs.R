@@ -42,8 +42,11 @@ getPriorKnowledgeNetworkNodes <- function(priorKnowledgeNetwork = priorKnowledge
 checkSolverInputs <- function(options){
   if (options$solver == supportedSolvers$cplex) {
     checkCplexCarnivalOptions(options)  
+  } else if (options$solver == supportedSolvers$lpSolve) {
+    #TODO
+    message("No checks for inputs for lpSolve needed")
   } else {
-    stop("Other solvers are not supported (yet) in the updated API")
+    stop("Other solvers (except lpSolve and cplex) are not supported (yet) in the updated API")
   }
 }
 

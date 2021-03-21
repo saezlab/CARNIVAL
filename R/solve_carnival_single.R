@@ -52,7 +52,7 @@ solveCarnivalSingleRun <- function(variables,
                             priorKnowledgeNetwork, 
                             carnivalOptions)
   
-  print(result)
+  #TODO results with diagnostics is never null, think how to implement it better
   #if (!is.null(result)) {
   #  WriteDOTfig(result = result,
   #              dir_name = outputFolder,
@@ -81,6 +81,7 @@ sendTaskToSolver <- function(variables,
                              cplexCommandFilename,
                              carnivalOptions$dirName, 
                              carnivalOptions$runId,
+                             carnivalOptions$outputFolder,
                              variables,
                              priorKnowledgeNetwork, 
                              perturbations, 
@@ -95,9 +96,9 @@ sendTaskToSolver <- function(variables,
   } else { #default solver
     result <- solveWithLpSolve(variables = variables, 
                                measurements = measurements,
-                               inputObj = perturbations, 
-                               pknList = priorKnowledgeNetwork,
-                               dirName = carnivalOptions$dirName)
+                               perturbations = perturbations, 
+                               priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                               carnivalOptions = carnivalOptions)
   }
 }
 
