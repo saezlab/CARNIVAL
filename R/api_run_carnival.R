@@ -94,6 +94,9 @@ runCarnival <- function( perturbations,
   resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
   
+  runId <- createRunId()
+  carnivalOptions$runId <- runId
+  
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
                                     measurements = resultsChecks$measurements,
                                     priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
@@ -200,11 +203,6 @@ runCARNIVAL <- function(inputObj=NULL,
   
   return(result)
   
-}
+} 
 
-createRunId <- function() {
-  datetime <- format(Sys.time(), "t%H_%M_%Sd%d_%m_%Y")
-  salt <- sample(1:100, 1)
-  runId <- paste(datetime, salt, sep="n")
-  return(runId)
-}
+

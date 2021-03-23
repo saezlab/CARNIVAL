@@ -2,9 +2,7 @@
 title: "Contextualizing large scale signalling networks from expression footprints with CARNIVAL"
 author: "Enio Gjerga"
 date: "`r Sys.Date()`"
-output: 
-  rmarkdown::html_vignette
-  rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{narray Usage Examples}
   %\VignetteEngine{knitr::rmarkdown}
@@ -126,7 +124,7 @@ Toy example for the stdCARNIVAL pipeline:
 ```{r}
 library(CARNIVAL)
 
-load(file = system.file("toy_inputs_ex1.RData",
+load(file = system.file("toy_perturbations_ex1.RData",
                         package="CARNIVAL"))
 load(file = system.file("toy_measurements_ex1.RData",
                         package="CARNIVAL"))
@@ -137,33 +135,43 @@ load(file = system.file("toy_network_ex1.RData",
 dir.create("example1")
 
 # lpSolve
-result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
-                     netObj = toy_network_ex1)
+#result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+#                     netObj = toy_network_ex1)
 ```
 which generates the following output:
 ```{r}
-print(result)
+#print(result)
 ```
 The output from CARNIVAL can be saved in `Rds` format like so:
 ```{r}
-saveRDS(result, "example1/network_solution.Rds")
+#saveRDS(result, "example1/network_solution.Rds")
 ```
 
 By adding specifying the input for `dir_name` flag, the file 
 `network_solution.dot` is saved in the specified directory. 
 For example:
 ```{r}
-result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
-                     netObj = toy_network_ex1, dir_name = "example1")
+solverPath <- "/Applications/CPLEX_Studio1210/cplex/bin/x86-64_osx/cplex"
+result <- runCarnival(perturbations=toy_perturbations_ex1, 
+                    measurements=toy_measurements_ex1,
+                    priorKnowledgeNetwork = toy_network_ex1,
+                    solver = supportedSolvers$cplex, 
+                    solverPath = solverPath)
+
+#result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+#                     netObj = toy_network_ex1, dir_name = "example1")
 ```
 which produces `network_solution.dot` file in the current working directory. 
 This file, in turn, can be visualised using a software from 
 [graphviz](https://graphviz.org) suite of tools. For example, using `dot`:
 ```{bash}
-dot example1/network_solution.dot -T pdf > example1/network_solution.pdf
+#dot example1/network_solution.dot -T pdf > example1/network_solution.pdf
 ```
 
-![Network solution to toy example 1](example1/network_solution.pdf)
+```
+#TODO remove quotes when fixing this
+#![Network solution to toy example 1](example1/network_solution.pdf)
+```
 
 Toy Example - 2
 ---------------
@@ -181,25 +189,29 @@ load(file = system.file("toy_network_ex2.RData",
 dir.create("example2")
 
 # lpSolve
-result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
+#result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
 ```
 which generates the following output:
 ```{r}
-print(result)
+#print(result)
 ```
 As in the previous example, by adding `dir_name` flag, CARNIVAL exports `dot` 
 file of the solution network in `network_solution.dot` file:
 ```{r}
-result = runCARNIVAL(measObj = toy_measurements_ex2, 
-                     netObj = toy_network_ex2, 
-                     dir_name = "example2")
+
+#result = runCARNIVAL(measObj = toy_measurements_ex2, 
+#                     netObj = toy_network_ex2, 
+#                     dir_name = "example2")
 ```
 which can be visualised in the same manner as previous example:
 ```{bash}
-dot example2/network_solution.dot -T pdf > example2/network_solution.pdf
+#dot example2/network_solution.dot -T pdf > example2/network_solution.pdf
 ```
 
-![Network solution to toy example 2](example2/network_solution.pdf)
+```
+#TODO remove the quotes when fixing vignette
+#![Network solution to toy example 2](example2/network_solution.pdf)
+```
 
 R version information
 ---------------------

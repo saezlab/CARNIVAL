@@ -4,13 +4,14 @@
 ## Enio gjerga, 2020
 
 exportResultLPSolve <- function(variables = variables, 
-                                conditionIDX = conditionIDX,
+                                conditionIDX = 1,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork, 
                                 perturbations = perturbations, 
                                 measurements = measurements, 
-                                lpSolution = lpSolution, mt=mt){
+                                lpSolution = lpSolution, 
+                                matrix = matrxi){
   
-  solMatrix <- mt
+  solMatrix <- matrix
   solMatrix[, 2] <- lpSolution
   colnames(solMatrix) <- c("name", "var")
   solMatrix <- as.data.frame(solMatrix)
@@ -40,7 +41,7 @@ exportResultLPSolve <- function(variables = variables,
       variables[[conditionIDX]]$idxEdgesDown])
   
   indeces <- c(idxNodes, idxNodesUp, idxNodesDown, idxEdgesUp, idxEdgesDown)
-  
+
   solMatrix = as.matrix(solMatrix)
   
   for(ii in seq(from = 2, to = ncol(solMatrix), by = 1)){
@@ -68,19 +69,18 @@ exportResultLPSolve <- function(variables = variables,
     
     nodes[, 1] <- vars[idxNodes]
     nodes[, 2] <- as.numeric(values[idxNodes])
-    # nodes[which(nodes[, 2]>0), 2] <- 1
+    
     nodesUp[, 1] <- vars[idxNodesUp]
     nodesUp[, 2] <- as.numeric(values[idxNodesUp])
-    # nodesUp[which(nodesUp[, 2]>0), 2] <- 1
+    
     nodesDown[, 1] <- vars[idxNodesDown]
     nodesDown[, 2] <- as.numeric(values[idxNodesDown])
-    # nodesDown[which(nodesDown[, 2]>0), 2] <- 1
+    
     edgesUp[, 1] <- vars[idxEdgesUp]
     edgesUp[, 2] <- as.numeric(values[idxEdgesUp])
-    # edgesUp[which(edgesUp[, 2]>0), 2] <- 1
+    
     edgesDown[, 1] <- vars[idxEdgesDown]
     edgesDown[, 2] <- as.numeric(values[idxEdgesDown])
-    # edgesDown[which(edgesDown[, 2]>0), 2] <- 1
     
     nodes <- matrix(data = "", nrow = length(idxNodes), ncol = 2)
     nodesUp <- matrix(data = "", nrow = length(idxNodesUp), ncol = 2)
@@ -107,9 +107,7 @@ exportResultLPSolve <- function(variables = variables,
     edgesDown[, 2] <- as.numeric(values[idxEdgesDown])
     
     if(!is(edgesDown, "matrix")){
-      
       edgesDown <- as.matrix(t(edgesDown))
-      
     }
     
     if(!is(edgesUp, "matrix")){
@@ -119,7 +117,6 @@ exportResultLPSolve <- function(variables = variables,
     }
     
     # Writing SIF and DOT files
-    
     priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)
     sif <- matrix(data = "", nrow = 1, ncol = 3)
     colnames(sif) <- colnames(priorKnowledgeNetwork)
@@ -341,33 +338,22 @@ exportResultLPSolve <- function(variables = variables,
         as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
       
       if(nodesAttributes[i, 1] %in% names(measurements)){
-        
         nodesAttributes[i, 6] <- "T"
-        
       } else {
-        
         if(nodesAttributes[i, 1] %in% names(perturbations)){
-          
           nodesAttributes[i, 6] <- "S"
-          
         } else {
-          
           nodesAttributes[i, 6] <- ""
-          
         }
-        
       }
-      
     }
     
     colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
                                    "DownAct", "AvgAct", "NodeType")
     
-    result <- c("weightedSIF" = weightedSIF, "nodesAttributes" = nodesAttributes,
+    result <- list("weightedSIF" = weightedSIF, "nodesAttributes" = nodesAttributes,
                 "sifAll" = sifAll,"attributesAll" = nodesActAll)
     
     return(result)
-    
   }
-  
 }

@@ -1,10 +1,10 @@
 #TODO add docs
 #TODO params
-solveWithCbc <- function(variables=variables, 
-                         carnivalOptions=carnivalOptions,
-                         pknList=pknList, 
-                         inputObj=inputObj, 
-                         measurements=measurements) {
+solveWithCbc <- function(variables = variables, 
+                         carnivalOptions = carnivalOptions,
+                         priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                         perturbations = perturbations, 
+                         measurements = measurements) {
   
   resFile = paste0("results_cbc", ".txt")
   

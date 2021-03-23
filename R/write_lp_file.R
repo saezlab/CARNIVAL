@@ -27,7 +27,6 @@ writeLpFile <- function(perturbations,
                                      alphaWeight = carnivalOptions$alphaWeight,
                                      betaWeight = carnivalOptions$betaWeight, 
                                      scores = pathwayWeights)
-  print(objectiveFunction)
   
   message("Generating constraints for linear programming problem...")
   

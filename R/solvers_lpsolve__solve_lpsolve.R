@@ -6,7 +6,8 @@ solveWithLpSolve <- function(variables = variables,
                              priorKnowledgeNetwork = priorKnowledgeNetwork, 
                              carnivalOptions) {
   
-  lpForm <- prepareLPMatrixSingle(variables = variables, measurements = measurements, 
+  lpForm <- prepareLPMatrixSingle(variables = variables, 
+                                  measurements = measurements, 
                                   carnivalOptions = carnivalOptions)
   
   lpSolution <- lp(direction = "min", objective.in = lpForm$obj, 
@@ -15,11 +16,10 @@ solveWithLpSolve <- function(variables = variables,
                    binary.vec = lpForm$bins)$solution
   
   result <- exportResultLPSolve(variables = variables,
-                             priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                             perturbations = perturbations,
-                             measurements = measurements,
-                             lpSolution = lpSolution, 
-                             mt = lpForm$mt,
-                             conditionIDX = 1)
+                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                perturbations = perturbations,
+                                measurements = measurements,
+                                lpSolution = lpSolution, 
+                                matrix = lpForm$mt)
   return(result)
 }
