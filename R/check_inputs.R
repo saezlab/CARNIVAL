@@ -45,6 +45,9 @@ checkSolverInputs <- function(options){
   } else if (options$solver == supportedSolvers$lpSolve) {
     #TODO
     message("No checks for inputs for lpSolve needed")
+  } else if (options$solver == supportedSolvers$cbc){
+    #TODO
+    message("No checks for inputs for cbc needed")
   } else {
     stop("Other solvers (except lpSolve and cplex) are not supported (yet) in the updated API")
   }

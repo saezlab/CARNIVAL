@@ -19,5 +19,5 @@
     "limitPop": 500,
     "poolCap": 100,
     "poolIntensity": 4,
-    "poolReplace": 2, 
+    "poolReplace": 2
 }

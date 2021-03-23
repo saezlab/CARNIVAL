@@ -33,7 +33,7 @@
 #' @export
 #' 
 
-supportedSolvers <- list(cplex="cplex", cbc="cbc", lpSolve="lpSolve")
+supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
 requiredCarnivalCplexOptions <- c("solverPath", "solver", "alphaWeight", "betaWeight")
 requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "poolCap", 
                           "poolIntensity", "poolReplace",
@@ -46,8 +46,7 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          solver = supportedSolvers$cplex, 
          lpFilename = "",
          cplexCommandFilename = "",
-         outputFolder = "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests/testruns/",
-         timelimit = 3600, 
+         outputFolder = "",
          alphaWeight = 1, 
          betaWeight = 0.2,
          #TODO default value was 0 or 1?
@@ -56,7 +55,7 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          dirName = NULL
     )
     
-    options <- c(options, suggestedCplexOptions())
+    options <- c(options, suggestedCplexSpecificOptions())
     return(options)
 }
 
@@ -68,12 +67,71 @@ defaultLpSolveCarnivalOptions <- function(){
     outputFolder = "",
     alphaWeight = 1, 
     betaWeight = 0.2,
-    #TODO default value was 0 or 1?
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE
   )
 
   return(options)
+}
+
+
+defaultCbcSolveCarnivalOptions <- function(solverPath=""){
+  options <- list(
+    solver = supportedSolvers$cbc, 
+    solverPath = solverPath,
+    lpFilename = "",
+    outputFolder = "",
+    alphaWeight = 1, 
+    betaWeight = 0.2,
+    cleanTmpFiles = TRUE,
+    keepLPFiles = TRUE
+  )
+  
+  options <- c(options, suggesteCbcSpecificOptions())
+  return(options)
+}
+
+suggestedCplexSpecificOptions <- function() {
+  
+  options <- list(
+    threads = 1,
+    clonelog = -1,
+    workdir = "",
+    mipGap = 0.05,
+    timelimit = 3600, 
+    poolrelGap = 0.0001,
+    limitPop = 500,
+    poolCap = 100,
+    poolIntensity = 4,
+    poolReplace = 2,
+    cplexMemoryLimit=8192
+  )
+  
+  return(options)
+}
+
+suggesteCbcSpecificOptions <- function() {
+  options <- list(
+    timelimit = 3600, 
+    poolrelGap = 0.0001
+  )
+  return(options)
+}
+
+#TODO options list from the cplex itself
+#TODO careful with scientific notation, it is switched off at another place in the code (look up for scipen)
+defaultCplexSpecificOptions <- function() {
+  options <- list(
+        threads=1,
+        mipGap = 1e-04, 
+        poolrelGap = 1e75,
+        limitPop = 20,
+        poolCap = 2.1e9,
+        poolIntensity = 0,
+        poolReplace = 0
+        #TODO timelimit
+    )
+    return(options)
 }
 
 #TODO write a function that will accept any options from the defined list 
@@ -83,38 +141,8 @@ setCarnivalOptions <- function(options=NULL, ...) {
   return(options)
 }
 
-suggestedCplexOptions <- function() {
-  options <- list(
-    threads = 1,
-    clonelog = -1,
-    workdir = "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests/testruns/",
-    mipGap = 0.05,
-    poolrelGap = 0.0001,
-    limitPop = 500,
-    poolCap = 100,
-    poolIntensity = 4,
-    poolReplace = 2,
-    cplexMemoryLimit=8192
-  )
-  return(options)
-}
-
-#TODO options list from the cplex itself
-#TODO careful with scientific notation, it is switched off at another place in the code (look up for scipen)
-defaultCplexOptions <- function() {
-  options <- list(
-        threads=1,
-        mipGap = 1e-04, 
-        poolrelGap = 1e75,
-        limitPop = 20,
-        poolCap = 2.1e9,
-        poolIntensity = 0,
-        poolReplace = 0
-    )
-    return(options)
-}
-
 readParameters <- function(jsonFileName = "parameters/carnival_cplex_parameters.json") {
+  #TODO check for package rjson
   message("Loading parameters file for CARNIVAL:", jsonFileName)
   parameters <- fromJSON(file = jsonFileName)  
   return(parameters)

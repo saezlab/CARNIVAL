@@ -3,10 +3,12 @@
 ##
 ## Enio Gjerga, 2020
 
-exportResultCBC <- function(solutionFileName = SolutionFileName, 
-                            variables = variables, conditionIDX = conditionIDX,
-                            pknList = pknList, inputs=inputs, 
-                            measurements=measurements){
+exportResultCbc <- function(solutionFileName = SolutionFileName, 
+                            variables = variables, 
+                            conditionIDX = 1,
+                            priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                            perturbations = perturbations, 
+                            measurements = measurements){
   
   solMatrix = read_csv(solutionFileName)
   
@@ -61,19 +63,18 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
     
     nodes[, 1] <- vars[idxNodes]
     nodes[, 2] <- as.numeric(values[idxNodes])
-    # nodes[which(nodes[, 2]>0), 2] <- 1
+    
     nodesUp[, 1] <- vars[idxNodesUp]
     nodesUp[, 2] <- as.numeric(values[idxNodesUp])
-    # nodesUp[which(nodesUp[, 2]>0), 2] <- 1
+    
     nodesDown[, 1] <- vars[idxNodesDown]
     nodesDown[, 2] <- as.numeric(values[idxNodesDown])
-    # nodesDown[which(nodesDown[, 2]>0), 2] <- 1
+    
     edgesUp[, 1] <- vars[idxEdgesUp]
     edgesUp[, 2] <- as.numeric(values[idxEdgesUp])
-    # edgesUp[which(edgesUp[, 2]>0), 2] <- 1
+  
     edgesDown[, 1] <- vars[idxEdgesDown]
     edgesDown[, 2] <- as.numeric(values[idxEdgesDown])
-    # edgesDown[which(edgesDown[, 2]>0), 2] <- 1
     
     nodes <- matrix(data = "", nrow = length(idxNodes), ncol = 2)
     nodesUp <- matrix(data = "", nrow = length(idxNodesUp), ncol = 2)
@@ -100,22 +101,18 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
     edgesDown[, 2] <- as.numeric(values[idxEdgesDown])
     
     if(!is(edgesDown, "matrix")){
-      
       edgesDown <- as.matrix(t(edgesDown))
-      
     }
     
     if(!is(edgesUp, "matrix")){
-      
       edgesUp <- as.matrix(t(edgesUp))
-      
     }
     
-    # Writing SIF and DOT files
+    # Writing SIF and DOT file
     
-    pknList <- as.matrix(pknList)
+    priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)
     sif <- matrix(data = "", nrow = 1, ncol = 3)
-    colnames(sif) <- colnames(pknList)
+    colnames(sif) <- colnames(priorKnowledgeNetwork)
     
     kk1 <- as.numeric(which(edgesUp[, 2] >= 0.99))
     if(length(kk1) > 0){
@@ -143,7 +140,7 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
                                                     " in experiment ", 
                                                     conditionIDX))]), 2]))){
           
-          sif <- rbind(sif, pknList[kk1[i], ])
+          sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
         }
         
@@ -175,7 +172,7 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
                                                     " in experiment ", 
                                                     conditionIDX))]), 2]))){
           
-          sif <- rbind(sif, pknList[kk1[i], ])
+          sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
         }
         
@@ -342,7 +339,7 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
         
       } else {
         
-        if(nodesAttributes[i, 1]%in%colnames(inputs)){
+        if(nodesAttributes[i, 1] %in% names(perturbations)){
           
           nodesAttributes[i, 6] <- "S"
           
@@ -359,10 +356,10 @@ exportResultCBC <- function(solutionFileName = SolutionFileName,
     colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
                                    "DownAct", "AvgAct", "NodeType")
   
-    result <- c("weightedSIF" = weightedSIF, 
-                    "nodesAttributes" = nodesAttributes,
-                    "sifAll" = sifAll, 
-                    "attributesAll" = nodesActAll)
+    result <- list("weightedSIF" = weightedSIF, 
+                   "nodesAttributes" = nodesAttributes,
+                   "sifAll" = sifAll, 
+                   "attributesAll" = nodesActAll)
     
     return(result)
     

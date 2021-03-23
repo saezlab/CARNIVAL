@@ -6,21 +6,22 @@ solveWithCbc <- function(variables = variables,
                          perturbations = perturbations, 
                          measurements = measurements) {
   
-  resFile = paste0("results_cbc", ".txt")
+  outputFolder <- carnivalOptions$outputFolder
+  resultsFile <- paste0(outputFolder, "results_cbc", "_", carnivalOptions$runId, ".txt")
+  lpFile <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId,".lp")
   
-  cbc_command <- paste0(carnivalOptions$solverPath, " testFile", 
-                        ".lp -seconds ", carnivalOptions$timelimit,
+  cbc_command <- paste0(carnivalOptions$solverPath, " ", lpFile, 
+                        " -seconds ", carnivalOptions$timelimit,
                         " -ratio ", carnivalOptions$poolrelGap, 
-                        " solve printi csv solu ", resFile)
-  
+                        " solve printi csv solu ", resultsFile)
+ 
   system(cbc_command)
   
-  res <- exportResultCBC(solutionFileName = resFile, 
-                        variables = variables, 
-                        conditionIDX = 1,
-                        pknList = pknList, 
-                        inputs = inputObj, 
-                        measurements = measurements)
+  result <- exportResultCbc(solutionFileName = resultsFile, 
+                            variables = variables, 
+                            priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                            perturbations = perturbations, 
+                            measurements = measurements)
 
-  return(res)
+  return(result)
 }

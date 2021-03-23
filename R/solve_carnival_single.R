@@ -87,8 +87,8 @@ sendTaskToSolver <- function(variables,
   } else if(carnivalOptions$solver == supportedSolvers$cbc) {
     result <- solveWithCbc(variables = variables, 
                            carnivalOptions = carnivalOptions,
-                           pknList = priorKnowledgeNetwork, 
-                           inputObj = perturbations, 
+                           priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                           perturbations = perturbations, 
                            measurements = measurements)
   } else { #default solver
     result <- solveWithLpSolve(variables = variables, 
