@@ -97,6 +97,9 @@ runCarnival <- function( perturbations,
   runId <- createRunId()
   carnivalOptions$runId <- runId
   
+  filenames <- createFilenames(carnivalOptions)
+  carnivalOptions$filenames <- filenames
+  
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
                                     measurements = resultsChecks$measurements,
                                     priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,

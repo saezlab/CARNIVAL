@@ -77,7 +77,6 @@ buildDataMatrix <- function(measurements = measurements,
   }
   
   ds <- intersect(colnames(data), allSpecies)
-  
   dn <- setdiff(allSpecies, ds)
   
   dataMatrix <- matrix(0, nrow = nrow(data), ncol = length(allSpecies))
@@ -94,9 +93,8 @@ buildDataMatrix <- function(measurements = measurements,
       as.matrix(data[, -which(is.element(el = colnames(data), 
                                          set = setdiff(colnames(data), ds)))])
     
-  }
-  else {
-    dataMatrix[, seq(from = length(dn)+1, 
+  } else {
+    dataMatrix[, seq(from = length(dn) + 1, 
                      to = length(allSpecies), by = 1)] <- as.matrix(data)
     
   }
@@ -104,11 +102,12 @@ buildDataMatrix <- function(measurements = measurements,
   dataMatrixSign <- sign(dataMatrix)
   
   dnID <- seq_len(length(dn))
-  dsID <- seq(from = length(dn)+1, to = length(allSpecies), by = 1)
+  dsID <- seq(from = length(dn) + 1, to = length(allSpecies), by = 1)
   tsID <- which(is.element(el = c(dn, ds), set = ts))
   
-  res <- list(dataMatrix=dataMatrix, dataMatrixSign=dataMatrixSign, dnID=dnID, 
-              dsID=dsID, tsID=tsID, species=c(dn, ds))
+  res <- list(dataMatrix = dataMatrix, dataMatrixSign = dataMatrixSign, 
+              dnID = dnID, dsID = dsID, tsID = tsID, 
+              species = c(dn, ds))
   
   return(res)
   

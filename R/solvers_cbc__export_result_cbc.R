@@ -333,7 +333,7 @@ exportResultCbc <- function(solutionFileName = SolutionFileName,
       nodesAttributes[i, 5] <- 
         as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
       
-      if(nodesAttributes[i, 1]%in%colnames(measurements)){
+      if(nodesAttributes[i, 1] %in% names(measurements)){
         
         nodesAttributes[i, 6] <- "T"
         

@@ -2,16 +2,10 @@
 writeCplexCommandFile <- function(carnivalOptions){
 
   message("Writing cplex command file")
-  outputFolder <- carnivalOptions$outputFolder
   
-  #TODO create these filenames somewhere in one place
-  ## write cplexCommand file
-  cplexCommandFilename <- paste0(outputFolder, "cplexCommand", "_", carnivalOptions$runId, ".txt")
-  
-  outputFolder <- carnivalOptions$outputFolder
-  lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
-  
-  resultCplexFile <-paste0(outputFolder, "result_cplex", "_", carnivalOptions$runId, ".txt")
+  lpFilename <- carnivalOptions$filenames$lpFilename
+  resultCplexFile <- carnivalOptions$filenames$resultFile
+  cplexCommandFilename <- carnivalOptions$filenames$cplexCommandFile
   
   write(paste0("read ", lpFilename), 
         cplexCommandFilename, append = TRUE)

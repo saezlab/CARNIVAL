@@ -27,13 +27,13 @@ solveWithCplex <- function(solverPath,
   message("Saving results...")
   result <- list()
   
-  if (file.exists(paste0("results_cplex.txt"))) {
+  if (file.exists(carnivalOptions$filenames$resultFile)) {
     #TODO create these filesnames in one place
-    resultCplexFile <- paste0(outputFolder, "result_cplex", "_", runId, ".txt")
-    result <- exportResultCplex(solutionFileName = resultCplexFile,
+    resultFile <- arnivalOptions$filenames$resultFile
+    result <- exportResultCplex(solutionFileName = resultFile,
                                 variables = variables, 
-                                pknList = priorKnowledgeNetwork, 
-                                inputs = perturbations,
+                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                perturbations = perturbations,
                                 measurements = measurements)
   }
   

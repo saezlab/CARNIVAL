@@ -30,9 +30,13 @@ writeLpFile <- function(perturbations,
   
   message("Generating constraints for linear programming problem...")
   
-  bounds <- write_boundaries(variables = variables, oF = objectiveFunction)
+  bounds <- write_boundaries(variables = variables, 
+                             objectiveFunction = objectiveFunction)
+  
   binaries <- write_binaries(variables = variables)
-  generals <- write_generals(variables = variables, oF = objectiveFunction)
+  
+  generals <- write_generals(variables = variables, 
+                             objectiveFunction = objectiveFunction)
   
   #TODO line exists to fix the current implementation inside constraints. Will be removed when 
   #each of the constraint fixed (several experimental conditions removed)

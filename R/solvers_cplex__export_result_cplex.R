@@ -7,9 +7,9 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
                               variables = variables, 
                               #TODO this is a leftover from a loop (experimental condition), remove later!
                               conditionIDX = 1,
-                              pknList = pknList, 
-                              inputs=inputs, 
-                              measurements=measurement){
+                              priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                              perturbations = perturbations, 
+                              measurements = measurement){
   
   solution <- read.delim(file = solutionFileName)
   solution[, 1] <- as.character(solution[, 1])
@@ -133,9 +133,9 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
     
     # Writing SIF and DOT files
     
-    pknList <- as.matrix(pknList)
+    priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)
     sif <- matrix(data = "", nrow = 1, ncol = 3)
-    colnames(sif) <- colnames(pknList)
+    colnames(sif) <- colnames(priorKnowledgeNetwork)
     
     kk1 <- as.numeric(which(edgesUp[, 2] >= 0.99))
     if(length(kk1) > 0){
@@ -161,7 +161,7 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
                                       variables[[conditionIDX]]$exp==paste0(
                                         "SpeciesUP ", tt, " in experiment ", 
                                         conditionIDX))]), 2]))){
-          selectedRow <- pknList[kk1[i], ]
+          selectedRow <- priorKnowledgeNetwork[kk1[i], ]
           selectedRow['Sign'] <- trimws(selectedRow['Sign'])
           
           sif <- rbind(sif, unname(selectedRow))
@@ -196,7 +196,7 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
                                                      " in experiment ", 
                                                      conditionIDX))]), 2]))){
           
-          sif <- rbind(sif, pknList[kk1[i], ])
+          sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
         }
         
@@ -371,12 +371,9 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
         
       } else {
         
-        if(nodesAttributes[i, 1] %in% names(inputs)){
-          
+        if(nodesAttributes[i, 1] %in% names(perturbations)){
           nodesAttributes[i, 6] <- "S"
-          
         } else {
-          
           nodesAttributes[i, 6] <- ""
           
         }
@@ -388,16 +385,12 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
     colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
                                    "DownAct", "AvgAct", "NodeType")
     
-    result <- list()
-    result[[length(result)+1]] <- weightedSIF
-    result[[length(result)+1]] <- nodesAttributes
-    result[[length(result)+1]] <- sifAll
-    result[[length(result)+1]] <- nodesActAll
-    
-    names(result) <- c("weightedSIF", "nodesAttributes", "sifAll", "attributesAll")
+    result <- list("weightedSIF" = weightedSIF, 
+                   "nodesAttributes" = nodesAttributes,
+                   "sifAll" = sifAll, 
+                   "attributesAll" = nodesActAll)
     
     return(result)
-    
   }
   
 }

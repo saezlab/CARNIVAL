@@ -8,13 +8,11 @@ prepareLPMatrixSingle <- function(variables = variables,
   
   mt <- transformVariables(variables = variables, measurements = measurements)
   
-  outputFolder <- carnivalOptions$outputFolder
-  lpFile <- readr::read_csv(file = paste0(outputFolder, "lpFile", "_", carnivalOptions$runId,".lp"), 
+  lpFile <- readr::read_csv(file = carnivalOptions$filenames$lpFilename, 
                             col_names = F)
   lpFile <- lpFile[[1]]
   
   f.obj <- transformObjectiveFunction(mt = mt, lpFile = lpFile)
-  print(f.obj)
   
   ff1 <- transformConstraints(mt = mt, lpFile = lpFile)
   ff2 <- transformBounds(mt = mt, lpFile = lpFile)
@@ -41,9 +39,9 @@ prepareLPMatrixSingle <- function(variables = variables,
   }
   
   res <-  list("mt"= mt, "obj" = f.obj, 
-           "con" = f.con, "dir" = f.dir, 
-           "rhs" = f.rhs, "bins" = bins, 
-           "ints" = ints)
+              "con" = f.con, "dir" = f.dir, 
+              "rhs" = f.rhs, "bins" = bins, 
+              "ints" = ints)
   print(res$obj)
 
   return(res)
