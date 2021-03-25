@@ -3,13 +3,16 @@
 ##
 ## Panuwat Trairatphisan, 2020
 
-WriteDOTfig <- function(result, dir_name, inputs, measurements, UP2GS=FALSE,
-                        idxModel=0){
+writeDotFigure <- function(result, dir_name, inputs, measurements, UP2GS=FALSE,
+                           idxModel=0){
   
-  if(!is.null(UP2GS)){UP2GStag <- ifelse (UP2GS,"GeneSymbol","Uniprot")}
+  if(!is.null(UP2GS)) {
+    UP2GStag <- ifelse (UP2GS,"GeneSymbol","Uniprot")
+  }
   res <- result
   
-  sif_input=NULL;act_input=NULL
+  sif_input=NULL; 
+  act_input=NULL
   ## default case; if idxModel is not provided, plot the combined and average 
   
   ## network 
@@ -144,7 +147,7 @@ WriteDOTfig <- function(result, dir_name, inputs, measurements, UP2GS=FALSE,
       }
     }
 
-    AllMeas <- colnames(measurements)
+    AllMeas <- names(measurements)
     if(!is.null(UP2GS)){
       if (UP2GS) {
         IDmap <- 

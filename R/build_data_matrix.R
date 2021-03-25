@@ -72,8 +72,10 @@ buildDataMatrix <- function(measurements = measurements,
   colnames(pknList) <- c("X1", "X2", "X3")
   allSpecies <- unique(c(as.character(pknList$X1), as.character(pknList$X3)))
   
-  if(ncol(inputs) > 0){
+  if(!is.null(inputs) && ncol(inputs) > 0){
     ts <- intersect(colnames(inputs), allSpecies)
+  } else if (is.null(inputs)) {
+    ts <- allSpecies[allSpecies == "Perturbation"]
   }
   
   ds <- intersect(colnames(data), allSpecies)
@@ -105,7 +107,8 @@ buildDataMatrix <- function(measurements = measurements,
   dsID <- seq(from = length(dn) + 1, to = length(allSpecies), by = 1)
   tsID <- which(is.element(el = c(dn, ds), set = ts))
   
-  res <- list(dataMatrix = dataMatrix, dataMatrixSign = dataMatrixSign, 
+  res <- list(dataMatrix = dataMatrix, 
+              dataMatrixSign = dataMatrixSign, 
               dnID = dnID, dsID = dsID, tsID = tsID, 
               species = c(dn, ds))
   

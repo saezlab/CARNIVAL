@@ -3,21 +3,26 @@
 ## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
 
 #TODO for all check up functions, write a wrapper (similar to carnival options checks)
-checkData <- function( perturbations = perturbations,
-                       measurements = measurements,
+checkData <- function( measurements = measurements,
                        priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                       perturbations = perturbations,
                        pathwayWeights = NULL ) {
 
   checkPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
-  priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
   
+  priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
   nodesPriorKnowledgeNetwork <- getPriorKnowledgeNetworkNodes(priorKnowledgeNetworkProcessed)
   
-  measurementsProcessed <- checkMeasurements(measurements = measurements, 
-                                            nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  if (is.null(perturbations)) {
+    priorKnowledgeNetworkProcessed <- addPerturbationNodes(priorKnowledgeNetworkProcessed)
+    perturbationsProcessed <- NULL
+  } else {
+    perturbationsProcessed <- checkPerturbations(perturbations = perturbations, 
+                                                 nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  }
   
-  perturbationsProcessed <- checkPerturbations(perturbations = perturbations, 
-                                              nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  measurementsProcessed <- checkMeasurements(measurements = measurements, 
+                                             nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
   
   weightsProcessed <- NULL
   if ( !is.null(pathwayWeights) ) {

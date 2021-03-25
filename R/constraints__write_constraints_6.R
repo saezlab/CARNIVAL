@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-write_constraints_6 <- function(variables = variables,
+createConstraints_6 <- function(variables = variables,
                                 dataMatrix = dataMatrix,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
   
@@ -39,7 +39,7 @@ write_constraints_6 <- function(variables = variables,
         variables$exp==paste0(
           "SpeciesUP ",
           rownames(adj)[idx2[i]],
-          " in experiment ", ii))],
+          " in experiment 1"))],
       paste(
         paste0(
           " - ",

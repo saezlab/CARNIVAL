@@ -204,7 +204,7 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
       
     }
     
-    if (nrow(sif)==2) {
+    if (nrow(sif) == 2) {
       ## If there is only one interaction (plus one empty line)
       ## convert it to matrix, remove empty line, and convert back to matrix 
       ## for exporting

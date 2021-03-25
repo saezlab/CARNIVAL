@@ -3,13 +3,13 @@
 ##
 ## Enio Gjerga, 2020
 
-write_objective_function_all <- function(dataMatrix = dataMatrix, 
+createObjectiveFunctionAll <- function(dataMatrix = dataMatrix, 
                                          variables = variables, 
                                          measurementsWeights = measurementsWeights, 
                                          alphaWeight = alphaWeight, 
                                          betaWeight = betaWeight, 
                                          scores = scores, 
-                                         conditionIDX = conditionIDX ) {
+                                         conditionIDX = 1 ) {
   
   ## ======================================= ##
   ## === Load write_objective_function.R === ##
@@ -21,7 +21,7 @@ write_objective_function_all <- function(dataMatrix = dataMatrix,
                                        betaWeight = betaWeight, 
                                        scores = scores, 
                                        measurementsWeights = measurementsWeights, 
-                                       conditionIDX = conditionIDX ){
+                                       conditionIDX = 1 ){
     
     if(is.null(scores)){
       

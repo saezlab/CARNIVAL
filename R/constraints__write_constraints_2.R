@@ -3,7 +3,7 @@
 ## 
 ## Enio Gjerga, 2020
 
-write_constraints_2 <- function(variables=variables, 
+createConstraints_2 <- function(variables=variables, 
                                 conditionIDX=1){
   
   constraints1 <- rep("", length(variables$idxEdgesDown))
@@ -52,7 +52,7 @@ write_constraints_2 <- function(variables=variables,
   
 }
 
-write_constraints_2_v2_1 <- function(variables = variables){
+createConstraints_2_v2_1 <- function(variables = variables){
   
   selectEdgesUp <- function(idx) {
     gsub(gsub(variables$exp[idx], 

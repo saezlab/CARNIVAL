@@ -3,7 +3,7 @@
 ##
 ## Enio Gjerga, 2020
 
-write_constraints_3 <- function(variables = variables) {
+createConstraints_3 <- function(variables = variables) {
   
   constraints3 <- paste0(
     variables$variables[variables$idxEdgesUp], 

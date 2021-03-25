@@ -27,8 +27,8 @@ checkPerturbations <- function(perturbations = perturbations,
   return(perturbationsProcessed)
 }
 
-checkPerturbationsForInverseCarnival <- function() {
-  #TODO leftover from invCARNIVAL, use it later. 
-  #MappedPertNode <- AddPerturbationNode(network = as.matrix(netObj))
+#TODO add also "normal" checks
+checkPerturbationsForInverseCarnival <- function(priorKnowledgeNetwork) {
+ 
   return(NULL)
 }

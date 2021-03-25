@@ -12,59 +12,59 @@ writeLpFile <- function(perturbations,
   message("Writing constraints...")
   options(scipen=999)
   
-  dataMatrix <- buildDataMatrix(measurements = measurements, 
-                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                                perturbations = perturbations)
-  
-  variables <- create_variables_all(pknList = priorKnowledgeNetwork, 
-                                    dataMatrix = dataMatrix)
+  internalDataRepresentation <- createInternalDataRepresentation( measurements = measurements, 
+                                    priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                    perturbations = perturbations)
+  dataMatrix <- internalDataRepresentation[[1]]
+  variables <- internalDataRepresentation[[2]]
   
   measurementsWeights <- abs(measurements)
   
-  objectiveFunction <- write_objective_function_all(dataMatrix = dataMatrix,
-                                     variables = variables,
-                                     measurementsWeights = measurementsWeights,
-                                     alphaWeight = carnivalOptions$alphaWeight,
-                                     betaWeight = carnivalOptions$betaWeight, 
-                                     scores = pathwayWeights)
+  objectiveFunction <- createObjectiveFunctionAll(dataMatrix = dataMatrix,
+                                                  variables = variables,
+                                                  measurementsWeights = measurementsWeights,
+                                                  alphaWeight = carnivalOptions$alphaWeight,
+                                                  betaWeight = carnivalOptions$betaWeight, 
+                                                  scores = pathwayWeights)
   
   message("Generating constraints for linear programming problem...")
-  
-  bounds <- write_boundaries(variables = variables, 
-                             objectiveFunction = objectiveFunction)
-  
-  binaries <- write_binaries(variables = variables)
-  
-  generals <- write_generals(variables = variables, 
-                             objectiveFunction = objectiveFunction)
   
   #TODO line exists to fix the current implementation inside constraints. Will be removed when 
   #each of the constraint fixed (several experimental conditions removed)
   variablesTemp <- variables[[1]]
+  
+  bounds <- createBoundaries(variables = variablesTemp, 
+                             objectiveFunction = objectiveFunction)
+  
+  binaries <- createBinaries(variables = variablesTemp)
+  
+  generals <- createGenerals(variables = variablesTemp, 
+                             objectiveFunction = objectiveFunction)
 
   c0 <- writeConstraintsObjFunction(variables = variablesTemp,
                                     dataMatrix = dataMatrix)
 
-  c1 <- write_constraints_1(variables = variablesTemp)
-  c2 <- write_constraints_2(variables = variablesTemp)
-  c3 <- write_constraints_3(variables = variablesTemp)
-  c4 <- write_constraints_4(variables = variablesTemp)
-  c5 <- write_constraints_5(variables = variablesTemp)
+  c1 <- createConstraints_1(variables = variablesTemp)
+  c2 <- createConstraints_2(variables = variablesTemp)
+  c3 <- createConstraints_3(variables = variablesTemp)
+  c4 <- createConstraints_4(variables = variablesTemp)
+  c5 <- createConstraints_5(variables = variablesTemp)
 
-  c6 <- write_constraints_6(variables = variables, dataMatrix = dataMatrix,
+  c6 <- createConstraints_6(variables = variablesTemp, dataMatrix = dataMatrix,
                             priorKnowledgeNetwork = priorKnowledgeNetwork)
-  c7 <- write_constraints_7(variables = variables, dataMatrix = dataMatrix,
+  c7 <- createConstraints_7(variables = variablesTemp, dataMatrix = dataMatrix,
                             priorKnowledgeNetwork = priorKnowledgeNetwork)
-  c8 <- write_constraints_8(variables = variables, perturbations = perturbations,
+  c8 <- createConstraints_8(variables = variablesTemp, perturbations = perturbations,
                             priorKnowledgeNetwork = priorKnowledgeNetwork)
 
-  c9 <- write_loop_constraints(variables = variables, perturbations = perturbations,
+  c9 <- write_loop_constraints(variables = variablesTemp, perturbations = perturbations,
                                priorKnowledgeNetwork = priorKnowledgeNetwork)
   
   #TODO
   #createConstraints(variables, variablesTemp, dataMatrix, perturbations, 
-  #                  priorKnowledgeNetwork) 
+  #                  priorKnowledgeNetwork)
   
+  #c0, c1, c2, c3, c4, c5, c6, c7, c8, c9
   allConstraints <- c(c0, c1, c2, c3, c4, c5, c6, c7, c8, c9)
   allConstraints <- concatenateConstraints(allConstraints)
   
@@ -103,6 +103,20 @@ prepareDataForLpFile <- function(measurements = measurements,
   
   #return(c(dataMatrix, variables))
   return(variables)
+}
+
+createInternalDataRepresentation <- function(measurements = measurements, 
+                                             priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                             perturbations = perturbations){
+  
+  dataMatrix <- buildDataMatrix(measurements = measurements, 
+                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
+                                perturbations = perturbations)
+  
+  variables <- create_variables_all(pknList = priorKnowledgeNetwork, 
+                                    dataMatrix = dataMatrix)
+  
+  return(list("dataMatrix" = dataMatrix, "variables" = variables))
 }
 
 #TODO
@@ -149,4 +163,8 @@ callConstraintsFunctions <- function(constraintFunction, ...) {
 #TODO 
 writeLpFileWithConstraints <- function(...){
   
+}
+
+testFunc <- function(){
+  return(list("1" = "123", "2" = "234"))
 }

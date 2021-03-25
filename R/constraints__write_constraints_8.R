@@ -2,12 +2,12 @@
 ## 
 ## Enio Gjerga, 2020
 
-write_constraints_8 <- function(variables = variables, 
+createConstraints_8 <- function(variables = variables, 
                                 perturbations = perturbations, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork){
   
   #TODO tmp, remove after cleaning up for exp condition
-  perturbations <- t(as.data.frame(perturbations))
+  #perturbations <- t(as.data.frame(perturbations))
   
   cc1 <- paste0(
     variables$variables[variables$idxNodesUp], 

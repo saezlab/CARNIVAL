@@ -44,18 +44,18 @@
 #'                         package="CARNIVAL"))
 #'
 #' ## lpSolve
-#' res1 = runCARNIVAL(perturbations = toy_inputs_ex1, 
+#' res1 = runCarnival(perturbations = toy_inputs_ex1, 
 #'                    measurements = toy_measurements_ex1,
 #'                    priorKnowledgeNetwork = toy_network_ex1)
 #'
 #' ## cbc
-#' res2 = runCARNIVAL(perturbations = toy_inputs_ex1, 
+#' res2 = runCarnival(perturbations = toy_inputs_ex1, 
 #'                    measurements = toy_measurements_ex1,
 #'                    priorKnowledgeNetwork = toy_network_ex1, 
 #'                    solver = supportedSolvers$cbc)
 #'
 #' ## cplex
-#' res3 = runCARNIVAL(perturbations = toy_inputs_ex1, 
+#' res3 = runCarnival(perturbations = toy_inputs_ex1, 
 #'                    measurements = toy_measurements_ex1,
 #'                    priorKnowledgeNetwork = toy_network_ex1, 
 #'                    solver = supportedSolver$cplex,
@@ -84,7 +84,7 @@ runCarnival <- function( perturbations,
                            defaultCplexCarnivalOptions(solverPath = solverPath) ) {
   message(" ") 
   message("--- Start of the CARNIVAL pipeline ---")
-  message(" ") 
+  message("Carnival flavour: vanilla") 
   
   resultDataCheck <- checkData( perturbations = perturbations, 
                                 measurements = measurements, 
@@ -97,8 +97,10 @@ runCarnival <- function( perturbations,
   runId <- createRunId()
   carnivalOptions$runId <- runId
   
+  print(carnivalOptions)
   filenames <- createFilenames(carnivalOptions)
   carnivalOptions$filenames <- filenames
+  print(carnivalOptions$filenames)
   
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
                                     measurements = resultsChecks$measurements,
@@ -123,7 +125,7 @@ runCarnivalFromLp <- function(#lpFile="",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
                               carnivalOptions = 
-                                defaultCplexCarnivalOptions(solverPath = solverPath)) {
+                                ddefaultCplexCarnivalOptions(solverPath = solverPath)) {
   
   #TODO check carnival options 
   
@@ -139,10 +141,45 @@ runCarnivalFromLp <- function(#lpFile="",
 }
 
 #TODO 
-run_inverse_carnival <- function(measurements, 
-                                 priorKnowledgeNetwork, 
-                                 pathwayWeights,
-                                 carnivalOptions = default_carnival_options()){
+runInverseCarnival <- function(measurements, 
+                               priorKnowledgeNetwork, 
+                               pathwayWeights,
+                               solverPath = solverPath,
+                               carnivalOptions = 
+                                 defaultCplexCarnivalOptions(solverPath = solverPath)()){
+  message(" ") 
+  message("--- Start of the CARNIVAL pipeline ---")
+  message("Carnival flavour: inverse") 
+  
+  resultDataCheck <- checkData( measurements = measurements, 
+                                priorKnowledgeNetwork = priorKnowledgeNetwork,
+                                pathwayWeights = pathwayWeights )
+  
+  resultOptionsCheck <- checkSolverInputs(carnivalOptions)
+  resultsChecks <- c(resultDataCheck, resultOptionsCheck)
+  
+  runId <- createRunId()
+  carnivalOptions$runId <- runId
+  
+  filenames <- createFilenames(carnivalOptions)
+  carnivalOptions$filenames <- filenames
+  
+  result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
+                                    measurements = resultsChecks$measurements,
+                                    priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
+                                    pathwayWeights = resultsChecks$weights,
+                                    carnivalOptions = carnivalOptions )
+  
+  if (carnivalOptions$cleanTmpFiles) {
+    cleanupCARNIVAL(carnivalOptions$keepLPFiles)
+  }
+  
+  
+  message(" ") 
+  message("--- End of the CARNIVAL pipeline --- ")
+  message(" ")
+  
+  return(result)
   return(NULL)
 }
 

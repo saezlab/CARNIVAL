@@ -2,16 +2,16 @@
 ##
 ## Enio Gjerga, 2020
 
-write_generals <- function(variables = variables, objectiveFunction = objectiveFunction){
+createGenerals <- function(variables = variables, objectiveFunction = objectiveFunction){
 
   generals <- c(paste0("\t", 
-                       variables[[1]]$variables[variables[[1]]$idxNodes]),
+                       variables$variables[variables$idxNodes]),
                 paste0("\t", 
-                       variables[[1]]$variables[variables[[1]]$idxB]),
+                       variables$variables[variables$idxB]),
                 paste0("\t",
                        unique(strsplit(objectiveFunction, split = " ")[[1]][grep(
                          pattern = "absDiff", 
-                         x = strsplit(oF, split = " ")[[1]])])))
+                         x = strsplit(objectiveFunction, split = " ")[[1]])])))
   
   return(generals)
   

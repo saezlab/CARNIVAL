@@ -96,7 +96,7 @@ suggestedCplexSpecificOptions <- function() {
   options <- list(
     threads = 1,
     clonelog = -1,
-    workdir = "",
+    workdir = ".",
     mipGap = 0.05,
     timelimit = 3600, 
     poolrelGap = 0.0001,

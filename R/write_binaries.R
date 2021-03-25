@@ -2,37 +2,12 @@
 ## 
 ## Enio Gjerga, 2020
 
-write_binaries <- function(variables=variables){
+createBinaries <- function(variables = variables){
   
-  # binaries <- c()
-  # 
-  # for(i in seq_len(length(variables))){
-  #   
-  #   binaries <- c(binaries, 
-  #                 paste0("\t", 
-  #                        variables[[i]]$variables[variables[[i]]$idxNodesUp]))
-  #   binaries <- c(binaries, 
-  #                 paste0("\t", 
-  #                        variables[[i]]$variables[variables[[i]]$idxNodesDown]))
-  #   binaries <- c(binaries, 
-  #                 paste0("\t", 
-  #                        variables[[i]]$variables[variables[[i]]$idxEdgesUp]))
-  #   binaries <- c(binaries, 
-  #                 paste0("\t", 
-  #                        variables[[i]]$variables[variables[[i]]$idxEdgesDown]))
-  #   
-  # }
-  
-  i = 1
-  
-  cc1 <- paste0("\t", 
-                     variables[[i]]$variables[variables[[i]]$idxNodesUp])
-  cc2 <- paste0("\t", 
-                     variables[[i]]$variables[variables[[i]]$idxNodesDown])
-  cc3 <- paste0("\t", 
-                     variables[[i]]$variables[variables[[i]]$idxEdgesUp])
-  cc4 <- paste0("\t", 
-                     variables[[i]]$variables[variables[[i]]$idxEdgesDown])
+  cc1 <- paste0("\t", variables$variables[variables$idxNodesUp])
+  cc2 <- paste0("\t", variables$variables[variables$idxNodesDown])
+  cc3 <- paste0("\t", variables$variables[variables$idxEdgesUp])
+  cc4 <- paste0("\t", variables$variables[variables$idxEdgesDown])
   
   return(c(cc1, cc2, cc3, cc4))
   

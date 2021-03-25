@@ -3,7 +3,7 @@
 ##
 ## Enio Gjerga, 2020
 
-write_constraints_7 <- function(variables = variables,
+createConstraints_7 <- function(variables = variables,
                                 dataMatrix = dataMatrix,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
 

@@ -11,18 +11,25 @@ createFilenames <- function(carnivalOptions) {
   lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
   parsedData <- paste0(outputFolder, "parsedData_", carnivalOptions$runId, ".RData")
   resultFile <- paste0(outputFolder, "result", "_", carnivalOptions$runId, ".txt")
-  
-  return(list("lpFilename" = lpFilename, "parsedData" = parsedData, 
-              "resultFile" = resultFile))
-}
 
-createSolverSpecificFiles <- function(carnivalOptions) {
-  if( carnivalOptions$solver == supportedSolvers$cplex ) {
-    cplexCommandFile <- paste0(outputFolder, "cplexCommand", "_", carnivalOptions$runId, ".txt")
-    carnivalOptions$filenames <- c(carnivalOptions$filenames, "cplexCommandFile" = cplexCommandFile)
+  filenames <- list("lpFilename" = lpFilename, "parsedData" = parsedData, 
+                    "resultFile" = resultFile)
+  
+  if(carnivalOptions$solver == supportedSolvers$cplex) {
+    filenames <- createSolverSpecificFiles(carnivalOptions, filenames)
   }
   
-  return(carnivalOptions$filenames)
+  return(filenames)
+}
+
+createSolverSpecificFiles <- function(carnivalOptions, filenames) {
+  outputFolder <- carnivalOptions$outputFolder
+  if( carnivalOptions$solver == supportedSolvers$cplex ) {
+    cplexCommandFile <- paste0(outputFolder, "cplexCommand", "_", carnivalOptions$runId, ".txt")
+    filenames <- c(filenames, "cplexCommandFile" = cplexCommandFile)
+  }
+  
+  return(filenames)
 }
 
 #TODO Olga

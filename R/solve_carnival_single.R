@@ -6,7 +6,6 @@ solveCarnivalSingleFromLp <- function(#lpFile = "",
                                       parsedDataFile = "",
                                       carnivalOptions) {
   load(parsedDataFile) 
-  
   result <- sendTaskToSolver(variables,
                              perturbations, 
                              measurements, 
@@ -51,7 +50,7 @@ solveCarnivalSingleRun <- function(variables,
   
   #TODO results with diagnostics is never null, think how to implement it better
   #if (!is.null(result)) {
-  #  WriteDOTfig(result = result,
+  #  writeDotFigure(result = result,
   #              dir_name = outputFolder,
   #              inputs = perturbations,
   #              measurements = measurements,
@@ -74,11 +73,13 @@ sendTaskToSolver <- function(variables,
   if(carnivalOptions$solver == supportedSolvers$cplex){
     cplexCommandFilename <- writeCplexCommandFile(carnivalOptions)
     
+    #TODO change params, send only options here
     result <- solveWithCplex(carnivalOptions$solverPath,
                              cplexCommandFilename,
                              carnivalOptions$dirName, 
                              carnivalOptions$runId,
                              carnivalOptions$outputFolder,
+                             carnivalOptions,
                              variables,
                              priorKnowledgeNetwork, 
                              perturbations, 

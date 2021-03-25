@@ -3,6 +3,7 @@ solveWithCplex <- function(solverPath,
                            dirName, 
                            runId,
                            outputFolder,
+                           carnivalOptions,
                            variables,
                            priorKnowledgeNetwork, 
                            perturbations, 
@@ -29,7 +30,7 @@ solveWithCplex <- function(solverPath,
   
   if (file.exists(carnivalOptions$filenames$resultFile)) {
     #TODO create these filesnames in one place
-    resultFile <- arnivalOptions$filenames$resultFile
+    resultFile <- carnivalOptions$filenames$resultFile
     result <- exportResultCplex(solutionFileName = resultFile,
                                 variables = variables, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork, 

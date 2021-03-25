@@ -3,7 +3,7 @@
 ## 
 ## Enio Gjerga, 2020
 
-write_constraints_4 <- function(variables=variables, 
+createConstraints_4 <- function(variables=variables, 
                                 conditionIDX=1) {
   
   constraints4 <- rep("", length(variables$idxEdgesUp))
