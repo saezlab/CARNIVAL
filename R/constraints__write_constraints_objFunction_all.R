@@ -9,15 +9,10 @@
 ## === Load write_constraints_objFunction.R === ##
 ## ============================================ ##
 
-writeConstraintsObjFunction <- function(variables = variables, 
-                                        dataMatrix = dataMatrix, 
-                                        conditionIDX = 1){
+writeConstraintsObjectiveFunction <- function(variables = variables, 
+                                              dataVector = dataVector){
   
-  dM <- dataMatrix
-  dM$dataMatrix <- as.matrix(t(dataMatrix$dataMatrix[conditionIDX, ]))
-  dM$dataMatrixSign <- as.matrix(t(dataMatrix$dataMatrixSign[conditionIDX, ]))
-  
-  measurements <- as.vector(t(dM$dataMatrixSign))
+  measurements <- dataVector$dataVectorSign
   
   idx2 <- which(measurements == 1)
   idx3 <- which(measurements == -1)
@@ -26,14 +21,11 @@ writeConstraintsObjFunction <- function(variables = variables,
   cc2 <- rep("", length(measurements))
   
   cc1[idx2] <- paste0(variables$variables[idx2], " - absDiff", 
-                      idx2, "_", conditionIDX, " <= 1")
-  cc2[idx2] <- paste0(variables$variables[idx2], " + absDiff", idx2, "_", 
-                      conditionIDX, " >= 1")
+                      idx2, " <= 1")
+  cc2[idx2] <- paste0(variables$variables[idx2], " + absDiff", idx2, " >= 1")
   
-  cc1[idx3] <- paste0(variables$variables[idx3], " - absDiff", idx3, "_", 
-                      conditionIDX, " <= -1")
-  cc2[idx3] <- paste0(variables$variables[idx3], " + absDiff", idx3, "_", 
-                      conditionIDX, " >= -1")
+  cc1[idx3] <- paste0(variables$variables[idx3], " - absDiff", idx3, " <= -1")
+  cc2[idx3] <- paste0(variables$variables[idx3], " + absDiff", idx3, " >= -1")
   
   constraints0 <- c(cc1, cc2)
   

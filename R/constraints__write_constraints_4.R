@@ -3,8 +3,7 @@
 ## 
 ## Enio Gjerga, 2020
 
-createConstraints_4 <- function(variables=variables, 
-                                conditionIDX=1) {
+createConstraints_4 <- function(variables=variables) {
   
   constraints4 <- rep("", length(variables$idxEdgesUp))
   
@@ -19,18 +18,11 @@ createConstraints_4 <- function(variables=variables,
         "Species ",
         unlist(
           strsplit(
-            gsub(
               gsub(
                 variables$exp[variables$idxEdgesUp[idx1]], 
                 pattern = "ReactionUp ", 
                 replacement = ""), 
-              pattern = paste0(
-                " in experiment ", 
-                conditionIDX), 
-              replacement = ""), 
-            split = "="))[c(TRUE, FALSE)],
-        " in experiment ", 
-        conditionIDX), 
+              split = "="))[c(TRUE, FALSE)]), 
       variables$exp)], 
     " - ",
     variables$uTable[match(
@@ -45,18 +37,11 @@ createConstraints_4 <- function(variables=variables,
         "Species ",
         unlist(
           strsplit(
-            gsub(
               gsub(
                 variables$exp[variables$idxEdgesUp[idx2]], 
                 pattern = "ReactionUp ", 
-                replacement = ""), 
-              pattern = paste0(
-                " in experiment ", 
-                conditionIDX), 
-              replacement = ""), 
-            split = "="))[c(TRUE, FALSE)],
-        " in experiment ", 
-        conditionIDX), 
+                replacement = ""),
+              split = "="))[c(TRUE, FALSE)]), 
       variables$exp)], 
     " - ",
     variables$uTable[match(

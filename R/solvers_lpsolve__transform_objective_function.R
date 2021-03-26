@@ -7,10 +7,8 @@ transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
   matrixProblem <- matrix(data = , nrow = 1, ncol = nrow(mt))
   idx <- which(grepl(pattern = "Obj:", x = lpFile))
   
-  print(lpFile)
-  print(idx)
   problem <- as.character(lpFile[idx])
-  print(problem)
+
   problem <- gsub(pattern = "Obj:\t ", replacement = "", x = problem, 
                   fixed = TRUE)
   
@@ -37,7 +35,6 @@ transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
   
   f.obj = rep(0, nrow(mt))
   f.obj[idx] <- coefficients
-  print(f.obj)
   
   return(f.obj)
 }

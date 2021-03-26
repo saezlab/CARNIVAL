@@ -10,8 +10,7 @@ transformVariables <- function(variables = variables, measurements = measurement
   vars2 <- rep("", length(measSpecies))
   for(jj in seq_len(length(measSpecies))){
     idx = which(variables[[1]]$exp==paste0("Species ",
-                                            measSpecies[jj],
-                                            " in experiment ", 1))
+                                            measSpecies[jj]))
     vars2[jj] <- paste0("absDiff", idx, "_", 1)
   }
   

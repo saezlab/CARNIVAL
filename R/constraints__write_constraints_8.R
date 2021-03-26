@@ -6,9 +6,6 @@ createConstraints_8 <- function(variables = variables,
                                 perturbations = perturbations, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork){
   
-  #TODO tmp, remove after cleaning up for exp condition
-  #perturbations <- t(as.data.frame(perturbations))
-  
   cc1 <- paste0(
     variables$variables[variables$idxNodesUp], 
     " - ", 
@@ -16,30 +13,30 @@ createConstraints_8 <- function(variables = variables,
     " + ", variables$variables[variables$idxB], 
     " - ", variables$variables[variables$idxNodes], " = 0")
   
-  kk <- paste0("Species ", names(perturbations), " in experiment 1")
+  kk <- paste0("Species ", names(perturbations))
   cc2 <- paste0(
     variables$variables[variables$idxB[which(
       !(variables$exp[variables$idxNodes] %in% kk))]], " = 0")
 
-  kk <- paste0("Species ", names(perturbations), " in experiment 1")
+  kk <- paste0("Species ", names(perturbations))
   cc3 <- c()
   for(jj in seq_len(length(kk))){
     cName <- strsplit(x = kk[jj], split = " ")[[1]][2]
     cc3 <- c(cc3, paste0(
       variables$variables[which(
         variables$exp == paste0(
-          "Species ", cName, " in experiment 1"))], " = ", perturbations[jj]))
+          "Species ", cName))], " = ", perturbations[jj]))
   }
  
   cc4 <- c()
   if (length(
     setdiff(
       as.character(priorKnowledgeNetwork[, 1]), 
-      as.character(priorKnowledgeNetwork[, 3])))>0) {
+      as.character(priorKnowledgeNetwork[, 3]))) > 0) {
     kk <- paste0(
       "Species ", 
       setdiff(as.character(priorKnowledgeNetwork[, 1]), 
-              as.character(priorKnowledgeNetwork[, 3])), " in experiment 1")
+              as.character(priorKnowledgeNetwork[, 3])))
     cc4 <- paste0(
       variables$variables[variables$idxNodes[which(
         variables$exp[variables$idxNodes] %in% kk)]], " - ", 

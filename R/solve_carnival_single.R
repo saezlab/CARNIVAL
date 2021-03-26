@@ -34,7 +34,6 @@ solveCarnivalSingleRun <- function(variables,
   #N.B. Don't remove the line below, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
   
-  #TODO should be in run carnival ? 
   variables <- writeLpFile(perturbations, 
                            measurements, 
                            pathwayWeights, 

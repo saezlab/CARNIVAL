@@ -1,5 +1,4 @@
 #TODO add docs
-#TODO params
 solveWithCbc <- function(variables = variables, 
                          carnivalOptions = carnivalOptions,
                          priorKnowledgeNetwork = priorKnowledgeNetwork, 

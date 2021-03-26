@@ -4,7 +4,6 @@
 ## Enio Gjerga, 2020
 
 createConstraints_7 <- function(variables = variables,
-                                dataMatrix = dataMatrix,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
 
   constraints7 <- c()
@@ -25,7 +24,7 @@ createConstraints_7 <- function(variables = variables,
           variables$variables[which(
             variables$exp %in% paste0(
               "SpeciesDown ",
-              rownames(adj)[idx1], " in experiment 1"))], " <= 0"))
+              rownames(adj)[idx1]))], " <= 0"))
   }
   
   for(i in seq_len(length(idx2))){
@@ -34,7 +33,7 @@ createConstraints_7 <- function(variables = variables,
       variables$variables[which(
         variables$exp==paste0(
           "SpeciesDown ",
-          rownames(adj)[idx2[i]], " in experiment 1"))],
+          rownames(adj)[idx2[i]]))],
       paste(
         paste0(
           " - ",
@@ -42,8 +41,7 @@ createConstraints_7 <- function(variables = variables,
             variables$exp %in% paste0(
               "ReactionDown ",
               colnames(adj)[which(adj[idx2[i], ]>0)],
-              "=", rownames(adj)[idx2[i]],
-              " in experiment 1"))]), collapse = ""), " <= 0")
+              "=", rownames(adj)[idx2[i]]))]), collapse = ""), " <= 0")
     
     constraints7 <- c(constraints7, cc)
     
@@ -66,7 +64,7 @@ createConstraints_7 <- function(variables = variables,
           variables$variables[which(
             variables$exp %in% paste0(
               "SpeciesDown ",
-              rownames(adj)[idx1], " in experiment 1"))], " <= 0")
+              rownames(adj)[idx1]))], " <= 0")
   }
   
   cc2 <- rep("", length(idx2))
@@ -76,7 +74,7 @@ createConstraints_7 <- function(variables = variables,
       variables$variables[which(
         variables$exp==paste0(
           "SpeciesDown ",
-          rownames(adj)[idx2[i]], " in experiment 1"))],
+          rownames(adj)[idx2[i]]))],
       paste(
         paste0(
           " - ",
@@ -84,8 +82,7 @@ createConstraints_7 <- function(variables = variables,
             variables$exp %in% paste0(
               "ReactionDown ",
               colnames(adj)[which(adj[idx2[i], ]>0)],
-              "=", rownames(adj)[idx2[i]],
-              " in experiment 1"))]), collapse = ""), " <= 0")
+              "=", rownames(adj)[idx2[i]]))]), collapse = ""), " <= 0")
     
   }
 

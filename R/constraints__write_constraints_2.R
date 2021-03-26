@@ -3,71 +3,20 @@
 ## 
 ## Enio Gjerga, 2020
 
-createConstraints_2 <- function(variables=variables, 
-                                conditionIDX=1){
-  
-  constraints1 <- rep("", length(variables$idxEdgesDown))
-  
-  idx1 <- which(variables$signs==1)
-  idx2 <- which(variables$signs==-1)
-  
-  constraints1[idx1] <- paste0(
-    variables$variables[variables$idxEdgesDown[idx1]], 
-    " + ",
-    variables$variables[match(
-      paste0(
-        "Species ",
-        unlist(strsplit(
-          gsub(
-            gsub(
-              variables$exp[variables$idxEdgesDown[idx1]],
-              pattern = "ReactionDown ", 
-              replacement = ""), 
-            pattern = paste0(
-              " in experiment ", 
-              conditionIDX), 
-            replacement = ""), split = "="))[c(TRUE, FALSE)],
-        " in experiment ", conditionIDX), variables$exp)], " >= 0")
-  
-  constraints1[idx2] <- paste0(
-    variables$variables[variables$idxEdgesDown[idx2]], 
-    " - ",
-    variables$variables[match(
-      paste0(
-        "Species ",
-        unlist(strsplit(
-          gsub(
-            gsub(
-              variables$exp[variables$idxEdgesDown[idx2]], 
-              pattern = "ReactionDown ", 
-              replacement = ""), 
-            pattern = paste0(
-              " in experiment ", 
-              conditionIDX), 
-            replacement = ""), 
-          split = "="))[c(TRUE, FALSE)],
-        " in experiment ", conditionIDX), variables$exp)], " >= 0")
-  
-  return(constraints1)
-  
-}
-
-createConstraints_2_v2_1 <- function(variables = variables){
+createConstraints_2 <- function(variables = variables){
   
   selectEdgesUp <- function(idx) {
-    gsub(gsub(variables$exp[idx], 
+      gsub(variables$exp[idx], 
               pattern = "ReactionDown ", 
-              replacement = ""), 
-         pattern = " in experiment 1", 
-         replacement = "")
+              replacement = "")
   }
   
   findMatchingVariable <- function(selectedEdges) {
     variables$variables[match(
       paste0(
         "Species ",
-        unlist(strsplit(selectedEdges, split = "="))[c(TRUE, FALSE)],
-        " in experiment 1"), variables$exp)]
+        unlist(strsplit(selectedEdges, split = "="))[c(TRUE, FALSE)]), 
+      variables$exp)]
   }
   
   constraints1 <- rep("", length(variables$idxEdgesUp))
@@ -79,14 +28,14 @@ createConstraints_2_v2_1 <- function(variables = variables){
   idxEdgesDown2 <- variables$idxEdgesDown[idx2]
   
   selectedEdges1 <- selectEdgesUp(idxEdgesDown1)
-  selectedEdges2 <- selectEdgesUp(idxEdgesDown1)
+  selectedEdges2 <- selectEdgesUp(idxEdgesDown2)
   
-  constraints1[idx1] <- createConstraint( variables$variables[idxEdgesUp1], 
+  constraints1[idx1] <- createConstraint( variables$variables[idxEdgesDown1], 
                                           "+",
                                           findMatchingVariable(selectedEdges1), 
                                           ">=", 0)
   
-  constraints1[idx2] <- createConstraint( variables$variables[idxEdgesUp2], 
+  constraints1[idx2] <- createConstraint( variables$variables[idxEdgesDown2], 
                                           "-",
                                           findMatchingVariable(selectedEdges2), 
                                           ">=", 0)

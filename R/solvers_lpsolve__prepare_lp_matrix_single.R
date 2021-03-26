@@ -42,7 +42,6 @@ prepareLPMatrixSingle <- function(variables = variables,
               "con" = f.con, "dir" = f.dir, 
               "rhs" = f.rhs, "bins" = bins, 
               "ints" = ints)
-  print(res$obj)
 
   return(res)
   

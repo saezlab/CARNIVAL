@@ -82,7 +82,7 @@ runCarnival <- function( perturbations,
                          solverPath = "",
                          carnivalOptions = 
                            defaultCplexCarnivalOptions(solverPath = solverPath) ) {
-  message(" ") 
+  
   message("--- Start of the CARNIVAL pipeline ---")
   message("Carnival flavour: vanilla") 
   
@@ -94,14 +94,9 @@ runCarnival <- function( perturbations,
   resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
   
-  runId <- createRunId()
-  carnivalOptions$runId <- runId
-  
-  print(carnivalOptions)
-  filenames <- createFilenames(carnivalOptions)
-  carnivalOptions$filenames <- filenames
-  print(carnivalOptions$filenames)
-  
+  #TODO
+  carnivalOptions <- collectMetaInfo(carnivalOptions)
+
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
                                     measurements = resultsChecks$measurements,
                                     priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
@@ -111,7 +106,6 @@ runCarnival <- function( perturbations,
   if (carnivalOptions$cleanTmpFiles) {
     cleanupCARNIVAL(carnivalOptions$keepLPFiles)
   }
-  
   
   message(" ") 
   message("--- End of the CARNIVAL pipeline --- ")
@@ -140,11 +134,11 @@ runCarnivalFromLp <- function(#lpFile="",
   return(result)
 }
 
-#TODO 
 runInverseCarnival <- function(measurements, 
                                priorKnowledgeNetwork, 
-                               pathwayWeights,
+                               pathwayWeights = NULL,
                                solverPath = solverPath,
+                               solver = supportedSolvers$lpSolve,
                                carnivalOptions = 
                                  defaultCplexCarnivalOptions(solverPath = solverPath)()){
   message(" ") 
@@ -180,7 +174,6 @@ runInverseCarnival <- function(measurements,
   message(" ")
   
   return(result)
-  return(NULL)
 }
 
 #TODO

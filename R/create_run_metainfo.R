@@ -1,3 +1,19 @@
+availableFlavours <- list(vanilla = "vanilla", fromLp = "fromLp")
+
+collectMetaInfo <- function(carnivalOptions) {
+  runId <- createRunId()
+  carnivalOptions$runId <- runId
+  
+  filenames <- createFilenames(carnivalOptions)
+  carnivalOptions$filenames <- filenames
+  
+  #TODO add finishing time
+  carnivalOptions$startTime <- getTime()
+  carnivalOptions$flavour <- availableFlavours$vanilla
+  
+  return(carnivalOptions)
+}
+
 createRunId <- function() {
   datetime <- format(Sys.time(), "t%H_%M_%Sd%d_%m_%Y")
   salt <- sample(1:100, 1)
@@ -32,8 +48,9 @@ createSolverSpecificFiles <- function(carnivalOptions, filenames) {
   return(filenames)
 }
 
-#TODO Olga
-trackTime <- function() {
-  return(NULL)
+getTime <- function() {
+  time <- Sys.time()
+  return(time)
 }
+
  

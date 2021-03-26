@@ -8,7 +8,6 @@ cleanSolverFiles <- function(files=c("lp", "log", "txt"), folder="") {
 
 #TODO update 
 cleanupCARNIVAL <- function(keepLPFiles=FALSE){
-  print("I am here")
   if(!keepLPFiles & file.exists(paste0("testFile", ".lp"))){
     file.remove(paste0("testFile", ".lp"))
   }

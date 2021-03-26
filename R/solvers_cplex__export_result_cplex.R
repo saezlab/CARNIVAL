@@ -5,8 +5,6 @@
 
 exportResultCplex <- function(solutionFileName = solutionFileName, 
                               variables = variables, 
-                              #TODO this is a leftover from a loop (experimental condition), remove later!
-                              conditionIDX = 1,
                               priorKnowledgeNetwork = priorKnowledgeNetwork, 
                               perturbations = perturbations, 
                               measurements = measurement){
@@ -43,21 +41,21 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
   
   idxNodes <- 
     which(
-      vars%in%variables[[conditionIDX]]$variables[
-        variables[[conditionIDX]]$idxNodes])
+      vars %in% variables$variables[
+        variables$idxNodes])
   idxNodesUp <- 
     which(
-      vars%in%variables[[conditionIDX]]$variables[
-        variables[[conditionIDX]]$idxNodesUp])
+      vars %in% variables$variables[
+        variables$idxNodesUp])
   idxNodesDown <- 
-    which(vars%in%variables[[conditionIDX]]$variables[
-      variables[[conditionIDX]]$idxNodesDown])
+    which(vars %in% variables$variables[
+      variables$idxNodesDown])
   idxEdgesUp <- 
-    which(vars%in%variables[[conditionIDX]]$variables[
-      variables[[conditionIDX]]$idxEdgesUp])
+    which(vars %in% variables$variables[
+      variables$idxEdgesUp])
   idxEdgesDown <- 
-    which(vars%in%variables[[conditionIDX]]$variables[
-      variables[[conditionIDX]]$idxEdgesDown])
+    which(vars %in% variables$variables[
+      variables$idxEdgesDown])
   
   indeces <- c(idxNodes, idxNodesUp, idxNodesDown, idxEdgesUp, idxEdgesDown)
   
@@ -145,22 +143,21 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
         ss <- 
           strsplit(
             strsplit(
-              variables[[conditionIDX]]$exp[which(
-                variables[[conditionIDX]]$variables==edgesUp[kk1[i], 1])], 
+              variables$exp[which(
+                variables$variables==edgesUp[kk1[i], 1])], 
               split = " ")[[1]][2], split = "=")[[1]][1]
         tt <- 
           strsplit(
             strsplit(
-              variables[[conditionIDX]]$exp[which(
-                variables[[conditionIDX]]$variables==edgesUp[kk1[i], 1])], 
+              variables$exp[which(
+                variables$variables==edgesUp[kk1[i], 1])], 
               split = " ")[[1]][2], split = "=")[[1]][2]
         
         if(round(as.numeric(edgesUp[kk1[i], 2]))==
            round(as.numeric(nodesUp[which(nodesUp[, 1]==
-                                    variables[[conditionIDX]]$variables[which(
-                                      variables[[conditionIDX]]$exp==paste0(
-                                        "SpeciesUP ", tt, " in experiment ", 
-                                        conditionIDX))]), 2]))){
+                                    variables$variables[which(
+                                      variables$exp==paste0(
+                                        "SpeciesUP ", tt))]), 2]))){
           selectedRow <- priorKnowledgeNetwork[kk1[i], ]
           selectedRow['Sign'] <- trimws(selectedRow['Sign'])
           
@@ -180,21 +177,19 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
         
         ss <- strsplit(
           strsplit(
-            variables[[conditionIDX]]$exp[which(
-              variables[[conditionIDX]]$variables==edgesDown[kk1[i], 1])], 
+            variables$exp[which(
+              variables$variables==edgesDown[kk1[i], 1])], 
             split = " ")[[1]][2], split = "=")[[1]][1]
         tt <- strsplit(
           strsplit(
-            variables[[conditionIDX]]$exp[which(
-              variables[[conditionIDX]]$variables==edgesDown[kk1[i], 1])], 
+            variables$exp[which(
+              variables$variables==edgesDown[kk1[i], 1])], 
             split = " ")[[1]][2], split = "=")[[1]][2]
         
         if(round(as.numeric(edgesDown[kk1[i], 2]))==
            round(as.numeric(nodesDown[which(
-             nodesDown[, 1]==variables[[conditionIDX]]$variables[which(
-               variables[[conditionIDX]]$exp==paste0("SpeciesDown ", tt, 
-                                                     " in experiment ", 
-                                                     conditionIDX))]), 2]))){
+             nodesDown[, 1]==variables$variables[which(
+               variables$exp==paste0("SpeciesDown ", tt))]), 2]))){
           
           sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
@@ -237,8 +232,8 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
         
         activityNodes[i, 1] <- 
           strsplit(
-            variables[[conditionIDX]]$exp[which(
-              variables[[conditionIDX]]$variables==nodesAct[idx[i], 1])], 
+            variables$exp[which(
+              variables$variables==nodesAct[idx[i], 1])], 
             split = " ")[[1]][2]
         
       }
@@ -315,7 +310,7 @@ exportResultCplex <- function(solutionFileName = solutionFileName,
     }
     
     nodesNames <- c()
-    var <- variables[[conditionIDX]]
+    var <- variables
     for(ii in seq_len(length(nodesVar))){
       
       nodesNames <- c(nodesNames, 

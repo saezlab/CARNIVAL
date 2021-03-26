@@ -26,11 +26,11 @@ write_loop_constraints <- function(variables = variables,
     variables$variables[which(
       variables$exp%in%paste0(
         "ReactionUp ", 
-        pkn[, 1], "=", pkn[, 3], " in experiment 1"))]
+        pkn[, 1], "=", pkn[, 3]))]
   reactionsDown <- 
     variables$variables[which(
       variables$exp%in%paste0(
-        "ReactionDown ", pkn[, 1], "=", pkn[, 3], " in experiment 1"))]
+        "ReactionDown ", pkn[, 1], "=", pkn[, 3]))]
   
   ##
   if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) > 0){

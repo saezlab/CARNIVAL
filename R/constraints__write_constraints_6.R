@@ -3,7 +3,6 @@
 ## Enio Gjerga, 2020
 
 createConstraints_6 <- function(variables = variables,
-                                dataMatrix = dataMatrix,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
   
   source <- unique(variables$reactionSource)
@@ -13,18 +12,18 @@ createConstraints_6 <- function(variables = variables,
   adj <- igraph::get.adjacency(gg)
   adj <- as.matrix(adj)
   
-  idx1 <- which(rowSums(adj)==0)
+  idx1 <- which(rowSums(adj) == 0)
   idx2 <- setdiff(seq_len(nrow(adj)), idx1)
   
   cc1 <- NULL
-  if(length(idx1)>0){
+  
+  if( length(idx1) > 0 ){
     
     cc1 <-
       paste0(variables$variables[which(
           variables$exp %in% paste0(
             "SpeciesUP ",
-            rownames(adj)[idx1],
-            " in experiment 1"))], " <= 0")
+            rownames(adj)[idx1]))], " <= 0")
     
   } else {
     cc1 <- NULL
@@ -36,10 +35,9 @@ createConstraints_6 <- function(variables = variables,
     
     cc2[i] <- paste0(
       variables$variables[which(
-        variables$exp==paste0(
+        variables$exp == paste0(
           "SpeciesUP ",
-          rownames(adj)[idx2[i]],
-          " in experiment 1"))],
+          rownames(adj)[idx2[i]]))],
       paste(
         paste0(
           " - ",
@@ -48,8 +46,7 @@ createConstraints_6 <- function(variables = variables,
               "ReactionUp ",
               colnames(adj)[which(adj[idx2[i], ]>0)],
               "=",
-              rownames(adj)[idx2[i]],
-              " in experiment 1"))]), collapse = ""), " <= 0")
+              rownames(adj)[idx2[i]]))]), collapse = ""), " <= 0")
     
   }
 
