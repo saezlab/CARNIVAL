@@ -1,9 +1,7 @@
 #TODO add docs
 solveWithCbc <- function(variables = variables, 
                          carnivalOptions = carnivalOptions,
-                         priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                         perturbations = perturbations, 
-                         measurements = measurements) {
+                         dataPreprocessed) {
   
   resultFile <- carnivalOptions$filenames$resultFile
   lpFile <- carnivalOptions$filenames$lpFilename
@@ -15,11 +13,12 @@ solveWithCbc <- function(variables = variables,
  
   system(cbc_command)
   
-  result <- exportResultCbc(solutionFileName = resultFile, 
-                            variables = variables, 
-                            priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                            perturbations = perturbations, 
-                            measurements = measurements)
+  solutionFileName <- carnivalOptions$filenames$resultFile
+  solMatrix <- read_csv(solutionFileName)
+  
+  return(solution)
+}
 
-  return(result)
+getSolutionMatrixCbc <- function(solution) {
+  return(solution)
 }

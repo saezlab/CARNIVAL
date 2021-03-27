@@ -4,11 +4,11 @@
 ## Enio Gjerga, 2020
 
 createObjectiveFunction <- function(dataVector = dataVector, 
-                                        variables = variables, 
-                                        measurementsWeights = measurementsWeights, 
-                                        alphaWeight = alphaWeight, 
-                                        betaWeight = betaWeight, 
-                                        scores = scores) {
+                                    variables = variables, 
+                                    measurementsWeights = measurementsWeights, 
+                                    alphaWeight = alphaWeight, 
+                                    betaWeight = betaWeight, 
+                                    scores = scores) {
   
   
   objectiveFunctionStart <- "Obj:\t "

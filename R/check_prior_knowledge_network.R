@@ -32,6 +32,10 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowled
   
   #this renaming is used during export of results of each solver (see export_result.R)
   colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
-
+  
+  
+  #N.B. Don't remove the line below, it breaks cplex runs
+  priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
+  
   return(priorKnowledgeNetwork)           
 }

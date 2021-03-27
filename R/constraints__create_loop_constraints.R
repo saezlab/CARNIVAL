@@ -3,7 +3,7 @@
 ## 
 ## Enio Gjerga, 2020
 
-write_loop_constraints <- function(variables = variables, 
+createLoopConstraints <- function(variables = variables, 
                                    perturbations = perturbations,
                                    priorKnowledgeNetwork = priorKnowledgeNetwork) {
   

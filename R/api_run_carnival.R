@@ -86,26 +86,18 @@ runCarnival <- function( perturbations,
   message("--- Start of the CARNIVAL pipeline ---")
   message("Carnival flavour: vanilla") 
   
-  resultDataCheck <- checkData( perturbations = perturbations, 
-                                measurements = measurements, 
-                                priorKnowledgeNetwork = priorKnowledgeNetwork,
-                                pathwayWeights = pathwayWeights )
+  dataPreprocessed <- checkData( perturbations = perturbations, 
+                                 measurements = measurements, 
+                                 priorKnowledgeNetwork = priorKnowledgeNetwork,
+                                 pathwayWeights = pathwayWeights )
   
-  resultOptionsCheck <- checkSolverInputs(carnivalOptions)
-  resultsChecks <- c(resultDataCheck, resultOptionsCheck)
-  
+  checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
-
-  result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
-                                    measurements = resultsChecks$measurements,
-                                    priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
-                                    pathwayWeights = resultsChecks$weights,
-                                    carnivalOptions = carnivalOptions )
-
-  if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(carnivalOptions)
-  }
   
+  result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
+                                    carnivalOptions = carnivalOptions )
+  cleanupCARNIVAL(carnivalOptions)
+
   message(" ") 
   message("--- End of the CARNIVAL pipeline --- ")
   message(" ")

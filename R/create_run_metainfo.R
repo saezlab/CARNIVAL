@@ -3,14 +3,14 @@ availableFlavours <- list(vanilla = "vanilla", fromLp = "fromLp")
 collectMetaInfo <- function(carnivalOptions) {
   runId <- createRunId()
   carnivalOptions$runId <- runId
-  
+
   filenames <- createFilenames(carnivalOptions)
   carnivalOptions$filenames <- filenames
-  
+
   #TODO add finishing time
   carnivalOptions$startTime <- getTime()
   carnivalOptions$flavour <- availableFlavours$vanilla
-  
+
   return(carnivalOptions)
 }
 
@@ -28,13 +28,13 @@ createFilenames <- function(carnivalOptions) {
   parsedData <- paste0(outputFolder, "parsedData_", carnivalOptions$runId, ".RData")
   resultFile <- paste0(outputFolder, "result", "_", carnivalOptions$runId, ".txt")
 
-  filenames <- list("lpFilename" = lpFilename, "parsedData" = parsedData, 
+  filenames <- list("lpFilename" = lpFilename, "parsedData" = parsedData,
                     "resultFile" = resultFile)
-  
+
   if(carnivalOptions$solver == supportedSolvers$cplex) {
     filenames <- createSolverSpecificFiles(carnivalOptions, filenames)
   }
-  
+
   return(filenames)
 }
 
@@ -42,9 +42,11 @@ createSolverSpecificFiles <- function(carnivalOptions, filenames) {
   outputFolder <- carnivalOptions$outputFolder
   if( carnivalOptions$solver == supportedSolvers$cplex ) {
     cplexCommandFile <- paste0(outputFolder, "cplexCommand", "_", carnivalOptions$runId, ".txt")
-    filenames <- c(filenames, "cplexCommandFile" = cplexCommandFile)
+    cplexLog <- paste0(outputFolder, "cplexLog", "_", carnivalOptions$runId, ".txt")
+    filenames <- c(filenames, "cplexCommandFile" = cplexCommandFile,
+                              "cplexLog" = cplexLog)
   }
-  
+
   return(filenames)
 }
 
@@ -52,5 +54,3 @@ getTime <- function() {
   time <- Sys.time()
   return(time)
 }
-
- 

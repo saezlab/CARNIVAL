@@ -1,50 +1,44 @@
 ## Extract and export the optimisation results from the cplex solution file 
-## (XML) as files and variables for further plotting functions - lpSolve
+## (XML) as files and variables for further plotting functions - CBC
 ##
-## Enio gjerga, 2020
+## Enio Gjerga, 2020
 
-exportResultLPSolve <- function(variables = variables, 
-                                priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                                perturbations = perturbations, 
-                                measurements = measurements, 
-                                lpSolution = lpSolution, 
-                                matrix = matrxi){
+exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
+                                           variables = variables, 
+                                           dataPreprocessed = dataPreprocessed){
   
-  solMatrix <- matrix
-  solMatrix[, 2] <- lpSolution
-  colnames(solMatrix) <- c("name", "var")
-  solMatrix <- as.data.frame(solMatrix)
-  solMatrix$name <- as.character(solMatrix$name)
-  solMatrix$var <- as.character(solMatrix$var)
+  priorKnowledgeNetwork <- dataPreprocessed$priorKnowledgeNetwork
+  perturbations <- dataPreprocessed$perturbations
+  measurements <- dataPreprocessed$measurement
   
-  vars <- solMatrix$name
+  #TODO for lpSolve and cbc this is like the string below
+  #vars <- solMatrix$name
+  vars <- rownames(solMatrix)
+  internalVariables <- variables$variables
   
   sifAll <- list()
   nodesAll <- list()
   nodesActAll <- list()
   
   idxNodes <- 
-    which(vars %in% variables$variables[
-      variables$idxNodes])
+    which(vars %in% internalVariables[variables$idxNodes])
   idxNodesUp <- 
-    which(vars %in% variables$variables[
-      variables$idxNodesUp])
+    which(vars %in% internalVariables[variables$idxNodesUp])
   idxNodesDown <- 
-    which(vars %in% variables$variables[
-      variables$idxNodesDown])
+    which(vars %in% internalVariables[variables$idxNodesDown])
   idxEdgesUp <- 
-    which(vars %in% variables$variables[
-      variables$idxEdgesUp])
+    which(vars %in% internalVariables[variables$idxEdgesUp])
   idxEdgesDown <- 
-    which(vars %in% variables$variables[
-      variables$idxEdgesDown])
+    which(vars %in% internalVariables[variables$idxEdgesDown])
   
   indeces <- c(idxNodes, idxNodesUp, idxNodesDown, idxEdgesUp, idxEdgesDown)
-
+  
   solMatrix = as.matrix(solMatrix)
   
-  for(ii in seq(from = 2, to = ncol(solMatrix), by = 1)){
+  #TODO for lpSolve and cbc this line is below
+  #for(ii in seq(from = 2, to = ncol(solMatrix), by = 1)){
     
+  for (ii in seq_len(ncol(solMatrix))) {
     values <- solMatrix[, ii]
     
     valNodes <- as.numeric(values[idxNodes])
@@ -110,17 +104,16 @@ exportResultLPSolve <- function(variables = variables,
     }
     
     if(!is(edgesUp, "matrix")){
-      
       edgesUp <- as.matrix(t(edgesUp))
-      
     }
     
-    # Writing SIF and DOT files
+    # Writing SIF and DOT file
+    
     priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)
     sif <- matrix(data = "", nrow = 1, ncol = 3)
     colnames(sif) <- colnames(priorKnowledgeNetwork)
     
-    kk1 <- as.numeric(which(edgesUp[, 2] == 1))
+    kk1 <- as.numeric(which(edgesUp[, 2] >= 0.99))
     if(length(kk1) > 0){
       
       for(i in seq_len(length(kk1))){
@@ -129,20 +122,20 @@ exportResultLPSolve <- function(variables = variables,
           strsplit(
             strsplit(
               variables$exp[which(
-                variables$variables==edgesUp[kk1[i], 1])], 
+                internalVariables == edgesUp[kk1[i], 1])], 
               split = " ")[[1]][2], split = "=")[[1]][1]
         tt <- 
           strsplit(
             strsplit(
               variables$exp[which(
-                variables$variables==edgesUp[kk1[i], 1])], 
+                internalVariables == edgesUp[kk1[i], 1])], 
               split = " ")[[1]][2], split = "=")[[1]][2]
         
         
-        if(as.numeric(edgesUp[kk1[i], 2])==as.numeric(
+        if(round(as.numeric(edgesUp[kk1[i], 2])) == round(as.numeric(
           nodesUp[which(
-            nodesUp[, 1]==variables$variables[which(
-              variables$exp==paste0("SpeciesUP ", tt))]), 2])){
+            nodesUp[, 1] == internalVariables[which(
+              variables$exp == paste0("SpeciesUP ", tt))]), 2]))){
           
           sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
@@ -153,7 +146,7 @@ exportResultLPSolve <- function(variables = variables,
     }
     
     
-    kk1 <- as.numeric(which(edgesDown[, 2] == 1))
+    kk1 <- as.numeric(which(edgesDown[, 2] >= 0.99))
     if(length(kk1) > 0){
       
       for(i in seq_len(length(kk1))){
@@ -161,18 +154,18 @@ exportResultLPSolve <- function(variables = variables,
         ss <- 
           strsplit(strsplit(
             variables$exp[which(
-              variables$variables==edgesDown[kk1[i], 1])], 
+              internalVariables == edgesDown[kk1[i], 1])], 
             split = " ")[[1]][2], split = "=")[[1]][1]
         tt <- 
           strsplit(strsplit(
             variables$exp[which(
-              variables$variables==edgesDown[kk1[i], 1])], 
+              internalVariables == edgesDown[kk1[i], 1])], 
             split = " ")[[1]][2], split = "=")[[1]][2]
         
-        if(as.numeric(edgesDown[kk1[i], 2])==as.numeric(
+        if(round(as.numeric(edgesDown[kk1[i], 2])) == round(as.numeric(
           nodesDown[which(
-            nodesDown[, 1]==variables$variables[which(
-              variables$exp==paste0("SpeciesDown ", tt))]), 2])){
+            nodesDown[, 1] == internalVariables[which(
+              variables$exp == paste0("SpeciesDown ", tt))]), 2]))){
           
           sif <- rbind(sif, priorKnowledgeNetwork[kk1[i], ])
           
@@ -182,7 +175,7 @@ exportResultLPSolve <- function(variables = variables,
       
     }
     
-    if (nrow(sif)==2) {
+    if (nrow(sif) == 2) {
       ## If there is only one interaction (plus one empty line)
       ## convert it to matrix, remove empty line, and convert back to matrix 
       ## for exporting
@@ -195,7 +188,7 @@ exportResultLPSolve <- function(variables = variables,
       sif <- sif[-1,] ## simply remove an empty line
     }
     
-    if (nrow(sif)==0) {
+    if (nrow(sif) == 0) {
       sif <- NULL
     }
     
@@ -215,13 +208,13 @@ exportResultLPSolve <- function(variables = variables,
         
         activityNodes[i, 1] <- 
           strsplit(variables$exp[which(
-            variables$variables==nodesAct[idx[i], 1])], 
+            internalVariables == nodesAct[idx[i], 1])], 
             split = " ")[[1]][2]
         
       }
       colnames(activityNodes) <- c("Nodes","Activity")
       
-    } else if (length(idx)==0) {
+    } else if (length(idx) == 0) {
       activityNodes = "All node activities are 0"
     }
     
@@ -231,13 +224,12 @@ exportResultLPSolve <- function(variables = variables,
     
   }
   
-  if(length(sifAll)==0){
+  if(length(sifAll) == 0){
     message("No network was generated for this setting..")
-    result <- NULL
-    return(result)
+    return(NULL)
   } else {
     for(ii in seq_len(length(sifAll))){
-      if(ii ==1){
+      if(ii == 1){
         SIF <- sifAll[[ii]]
       } else {
         SIF <- unique(rbind(SIF, sifAll[[ii]]))
@@ -253,9 +245,9 @@ exportResultLPSolve <- function(variables = variables,
       
       for(j in seq_len(length(sifAll))){
         
-        idxNode1 <- which(sifAll[[j]][, 1]==SIF[i, 1])
-        idxSign <- which(sifAll[[j]][, 2]==SIF[i, 2])
-        idxNode2 <- which(sifAll[[j]][, 3]==SIF[i, 3])
+        idxNode1 <- which(sifAll[[j]][, 1] == SIF[i, 1])
+        idxSign <- which(sifAll[[j]][, 2] == SIF[i, 2])
+        idxNode2 <- which(sifAll[[j]][, 3] == SIF[i, 3])
         
         idx1 <- intersect(idxNode1, idxNode2)
         if(length(idx1) > 0){
@@ -263,9 +255,13 @@ exportResultLPSolve <- function(variables = variables,
           idx2 <- intersect(idxSign, idx1)
           
           if(length(idx2) > 0){
+            
             cnt <- cnt + 1
+            
           }
+          
         }
+        
       }
       
       weightedSIF[i, 4] <- as.character(cnt*100/length(sifAll))
@@ -273,6 +269,8 @@ exportResultLPSolve <- function(variables = variables,
     }
     
     colnames(weightedSIF) <- c("Node1", "Sign", "Node2", "Weight")
+    #TODO fix an extra space
+    #weightedSIF$Sign <- as.numeric(weightedSIF$Sign)
     
     ##
     nodesVar <- c()
@@ -288,7 +286,7 @@ exportResultLPSolve <- function(variables = variables,
       
       nodesNames <- c(nodesNames, 
                       strsplit(x = var$exp[which(
-                        var$variables==nodesVar[ii])], split = " ")[[1]][2])
+                        var$variables == nodesVar[ii])], split = " ")[[1]][2])
       
     }
     
@@ -304,21 +302,21 @@ exportResultLPSolve <- function(variables = variables,
         
         currVar <- nodesVar[i]
         
-        idx <- which(nodesAll[[j]][, 1]==currVar)
+        idx <- which(nodesAll[[j]][, 1] == currVar)
         
-        if(round(as.numeric(nodesAll[[j]][idx, 2]))==0){
+        if(round(as.numeric(nodesAll[[j]][idx, 2])) == 0){
           
           zeroCnt <- zeroCnt + 1
           
         }
         
-        if(round(as.numeric(nodesAll[[j]][idx, 2]))==1){
+        if(round(as.numeric(nodesAll[[j]][idx, 2])) == 1){
           
           upCnt <- upCnt + 1
           
         }
         
-        if(round(as.numeric(nodesAll[[j]][idx, 2]))==-1){
+        if(round(as.numeric(nodesAll[[j]][idx, 2])) == -1){
           
           downCnt <- downCnt + 1
           
@@ -333,22 +331,35 @@ exportResultLPSolve <- function(variables = variables,
         as.character((zeroCnt*0+upCnt*1+downCnt*(-1))*100/length(nodesAll))
       
       if(nodesAttributes[i, 1] %in% names(measurements)){
+        
         nodesAttributes[i, 6] <- "T"
+        
       } else {
+        
         if(nodesAttributes[i, 1] %in% names(perturbations)){
+          
           nodesAttributes[i, 6] <- "S"
+          
         } else {
+          
           nodesAttributes[i, 6] <- ""
+          
         }
+        
       }
+      
     }
     
     colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
                                    "DownAct", "AvgAct", "NodeType")
     
-    result <- list("weightedSIF" = weightedSIF, "nodesAttributes" = nodesAttributes,
-                "sifAll" = sifAll,"attributesAll" = nodesActAll)
+    result <- list("weightedSIF" = weightedSIF, 
+                   "nodesAttributes" = nodesAttributes,
+                   "sifAll" = sifAll, 
+                   "attributesAll" = nodesActAll)
     
     return(result)
+    
   }
+  
 }
