@@ -91,13 +91,14 @@ prepareDataForLpFile <- function(measurements = measurements,
                                  priorKnowledgeNetwork = priorKnowledgeNetwork, 
                                  perturbations = perturbations) {
   
-  dataVector <- builddataVector(measurements = measurements, 
+  dataVector <- buildDataVector(measurements = measurements, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork, 
                                 perturbations = perturbations)
   
   variables <- create_variables_all(pknList = priorKnowledgeNetwork, 
                                     dataVector = dataVector)
   
+  #TODO 
   #return(c(dataVector, variables))
   return(variables)
 }

@@ -5,7 +5,8 @@
 
 createConstraints_7 <- function(variables = variables,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
-
+  
+  vars <- variables$variables
   constraints7 <- c()
   source <- unique(variables$reactionSource)
   target <- unique(variables$reactionTarget)
@@ -21,7 +22,7 @@ createConstraints_7 <- function(variables = variables,
     constraints7 <-
       c(constraints7,
         paste0(
-          variables$variables[which(
+          vars[which(
             variables$exp %in% paste0(
               "SpeciesDown ",
               rownames(adj)[idx1]))], " <= 0"))
@@ -30,14 +31,14 @@ createConstraints_7 <- function(variables = variables,
   for(i in seq_len(length(idx2))){
     
     cc <- paste0(
-      variables$variables[which(
+      vars[which(
         variables$exp==paste0(
           "SpeciesDown ",
           rownames(adj)[idx2[i]]))],
       paste(
         paste0(
           " - ",
-          variables$variables[which(
+          vars[which(
             variables$exp %in% paste0(
               "ReactionDown ",
               colnames(adj)[which(adj[idx2[i], ]>0)],
@@ -61,7 +62,7 @@ createConstraints_7 <- function(variables = variables,
   if (length(idx1)>0) {
     cc1 <-
       paste0(
-          variables$variables[which(
+          vars[which(
             variables$exp %in% paste0(
               "SpeciesDown ",
               rownames(adj)[idx1]))], " <= 0")
@@ -71,14 +72,14 @@ createConstraints_7 <- function(variables = variables,
   for(i in seq_len(length(idx2))){
     
     cc2[i] <- paste0(
-      variables$variables[which(
+      vars[which(
         variables$exp==paste0(
           "SpeciesDown ",
           rownames(adj)[idx2[i]]))],
       paste(
         paste0(
           " - ",
-          variables$variables[which(
+          vars[which(
             variables$exp %in% paste0(
               "ReactionDown ",
               colnames(adj)[which(adj[idx2[i], ]>0)],

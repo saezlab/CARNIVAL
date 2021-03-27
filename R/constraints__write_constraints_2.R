@@ -5,18 +5,18 @@
 
 createConstraints_2 <- function(variables = variables){
   
-  selectEdgesUp <- function(idx) {
-      gsub(variables$exp[idx], 
-              pattern = "ReactionDown ", 
-              replacement = "")
+  vars <- variables$variables
+  
+  selectEdges <- function(idx, reactionType) {
+    gsub(variables$exp[idx], 
+         pattern = reactionType, 
+         replacement = "")
   }
   
   findMatchingVariable <- function(selectedEdges) {
-    variables$variables[match(
-      paste0(
-        "Species ",
-        unlist(strsplit(selectedEdges, split = "="))[c(TRUE, FALSE)]), 
-      variables$exp)]
+    nodesFromEdge <- unlist(strsplit(selectedEdges, split = "="))
+    varsToFind <- paste0("Species ", nodesFromEdge)[c(TRUE, FALSE)]
+    vars[match(varsToFind, variables$exp)]
   }
   
   constraints1 <- rep("", length(variables$idxEdgesUp))
@@ -27,15 +27,15 @@ createConstraints_2 <- function(variables = variables){
   idxEdgesDown1 <- variables$idxEdgesDown[idx1]
   idxEdgesDown2 <- variables$idxEdgesDown[idx2]
   
-  selectedEdges1 <- selectEdgesUp(idxEdgesDown1)
-  selectedEdges2 <- selectEdgesUp(idxEdgesDown2)
+  selectedEdges1 <- selectEdges(idxEdgesDown1, "ReactionDown ")
+  selectedEdges2 <- selectEdges(idxEdgesDown2, "ReactionDown ")
   
-  constraints1[idx1] <- createConstraint( variables$variables[idxEdgesDown1], 
+  constraints1[idx1] <- createConstraint( vars[idxEdgesDown1], 
                                           "+",
                                           findMatchingVariable(selectedEdges1), 
                                           ">=", 0)
   
-  constraints1[idx2] <- createConstraint( variables$variables[idxEdgesDown2], 
+  constraints1[idx2] <- createConstraint( vars[idxEdgesDown2], 
                                           "-",
                                           findMatchingVariable(selectedEdges2), 
                                           ">=", 0)

@@ -5,15 +5,18 @@
 
 createConstraints_4 <- function(variables=variables) {
   
+  vars <- variables$variables
   constraints4 <- rep("", length(variables$idxEdgesUp))
   
   idx1 <- which(variables$signs==1)
   idx2 <- which(variables$signs==-1)
   
   constraints4[idx1] <- paste0(
-    variables$variables[variables$idxEdgesUp[idx1]], 
+    vars[variables$idxEdgesUp[idx1]], 
     " - ",
-    variables$variables[match(
+    findMatchingVariable
+    
+    vars[match(
       paste0(
         "Species ",
         unlist(
@@ -26,13 +29,13 @@ createConstraints_4 <- function(variables=variables) {
       variables$exp)], 
     " - ",
     variables$uTable[match(
-      variables$variables[variables$idxEdgesUp[idx1]], 
+      vars[variables$idxEdgesUp[idx1]], 
       variables$uTable[, 1]), 2], " <= 0")
   
   constraints4[idx2] <- paste0(
-    variables$variables[variables$idxEdgesUp[idx2]], 
+    vars[variables$idxEdgesUp[idx2]], 
     " + ",
-    variables$variables[match(
+    vars[match(
       paste0(
         "Species ",
         unlist(
@@ -45,7 +48,7 @@ createConstraints_4 <- function(variables=variables) {
       variables$exp)], 
     " - ",
     variables$uTable[match(
-      variables$variables[variables$idxEdgesUp[idx2]], 
+      vars[variables$idxEdgesUp[idx2]], 
       variables$uTable[, 1]), 2], " <= 0")
   
   return(constraints4)
