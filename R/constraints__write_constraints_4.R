@@ -14,8 +14,6 @@ createConstraints_4 <- function(variables=variables) {
   constraints4[idx1] <- paste0(
     vars[variables$idxEdgesUp[idx1]], 
     " - ",
-    findMatchingVariable
-    
     vars[match(
       paste0(
         "Species ",

@@ -71,7 +71,7 @@
 #'
 
 #TODO make it possible to change just one/two params from here
-#TODO change default carnivalOption to lpSolve before the merge with dev branch
+#TODO change default carnivalOption to lpSolve before the bioconductor commit
 #TODO make a data structure containing all data in one
 #TODO test run with params before it goes to full mode and returns some weird results
 runCarnival <- function( perturbations, 
@@ -94,7 +94,6 @@ runCarnival <- function( perturbations,
   resultOptionsCheck <- checkSolverInputs(carnivalOptions)
   resultsChecks <- c(resultDataCheck, resultOptionsCheck)
   
-  #TODO
   carnivalOptions <- collectMetaInfo(carnivalOptions)
 
   result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
@@ -104,7 +103,7 @@ runCarnival <- function( perturbations,
                                     carnivalOptions = carnivalOptions )
 
   if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(carnivalOptions$keepLPFiles)
+    cleanupCARNIVAL(carnivalOptions)
   }
   
   message(" ") 

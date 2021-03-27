@@ -2,33 +2,39 @@
 ##
 ## Enio Gjerga, 2020
 
-cleanSolverFiles <- function(files=c("lp", "log", "txt"), folder="") {
-  #TODO 
-}
-
 #TODO update 
-cleanupCARNIVAL <- function(keepLPFiles=FALSE){
-  if(!keepLPFiles & file.exists(paste0("testFile", ".lp"))){
-    file.remove(paste0("testFile", ".lp"))
+cleanupCARNIVAL <- function(carnivalOptions){
+  
+  message("Cleaning intermediate files")
+  
+  lpFile <- carnivalOptions$filenames$lpFilename 
+  resultFile <- carnivalOptions$filenames$resultFile
+  keepLpFiles <- carnivalOptions$keepLPFiles
+  
+  if(!keepLpFiles & file.exists(lpFile)){
+    file.remove(lpFile)
   }
   
-  if(file.exists(paste0("results_cbc", ".txt"))){
-    file.remove(paste0("results_cbc", ".txt"))
+  if(file.exists(resultFile)){
+    file.remove(resultFile)
   }
   
-  if(file.exists(paste0("results_cplex", ".txt"))){
-    file.remove(paste0("results_cplex", ".txt"))
+  if (carnivalOptions$solver == supportedSolvers$cplex) {
+    workdir <- carnivalOptions$workdir
+    cplexCommandFile <- carnivalOptions$filenames$cplexCommandFile
+    
+    if(file.exists("cplex.log")){
+      file.remove("cplex.log")
+    }
+    
+    if(file.exists(cplexCommandFile)){
+      file.remove(cplexCommandFile)
+    }
+    
+    cloneFiles <- list.files(path = workdir, pattern = "$clone")
+    file.remove(cloneFiles)
   }
   
-  if(file.exists("cplex.log")){
-    file.remove("cplex.log")
-  }
-  
-  if(file.exists(paste0("cplexCommand", ".txt"))){
-    file.remove(paste0("cplexCommand", ".txt"))
-  }
-  
-  cloneFiles <- list.files(pattern = "$clone")
-  file.remove(cloneFiles)
+  message("Done: cleaning")
   
 }
