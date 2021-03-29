@@ -70,10 +70,6 @@
 #'@export
 #'
 
-#TODO make it possible to change just one/two params from here
-#TODO change default carnivalOption to lpSolve before the bioconductor commit
-#TODO make a data structure containing all data in one
-#TODO test run with params before it goes to full mode and returns some weird results
 runCarnival <- function( perturbations, 
                          measurements, 
                          priorKnowledgeNetwork, 
@@ -81,7 +77,7 @@ runCarnival <- function( perturbations,
                          solver = supportedSolvers$lpSolve,
                          solverPath = "",
                          carnivalOptions = 
-                           defaultCplexCarnivalOptions(solverPath = solverPath) ) {
+                           defaultLpSolveCarnivalOptions()) {
   
   message("--- Start of the CARNIVAL pipeline ---")
   message("Carnival flavour: vanilla") 
@@ -96,7 +92,7 @@ runCarnival <- function( perturbations,
   
   result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
                                     carnivalOptions = carnivalOptions )
-  cleanupCARNIVAL(carnivalOptions)
+  cleanupCarnival(carnivalOptions)
 
   message(" ") 
   message("--- End of the CARNIVAL pipeline --- ")
@@ -110,17 +106,16 @@ runCarnivalFromLp <- function(#lpFile="",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
                               carnivalOptions = 
-                                ddefaultCplexCarnivalOptions(solverPath = solverPath)) {
+                                defaultLpSolveCarnivalOptions()) {
   
-  #TODO check carnival options 
+  message("--- Start of the CARNIVAL pipeline ---")
+  message("Carnival flavour: vanilla")  
   
   result <- solveCarnivalSingleFromLp( #lpFile="",
                                       parsedDataFile="",
                                       carnivalOptions = carnivalOptions )
 
-  if (clean_tmp_files) {
-    cleanupCARNIVAL(carnivalOptions$keepLPFiles)  
-  }
+  cleanupCarnival(carnivalOptions)
   
   return(result)
 }
@@ -136,29 +131,17 @@ runInverseCarnival <- function(measurements,
   message("--- Start of the CARNIVAL pipeline ---")
   message("Carnival flavour: inverse") 
   
-  resultDataCheck <- checkData( measurements = measurements, 
-                                priorKnowledgeNetwork = priorKnowledgeNetwork,
-                                pathwayWeights = pathwayWeights )
+  dataPreprocessed <- checkData( perturbations = perturbations, 
+                                 measurements = measurements, 
+                                 priorKnowledgeNetwork = priorKnowledgeNetwork,
+                                 pathwayWeights = pathwayWeights )
   
-  resultOptionsCheck <- checkSolverInputs(carnivalOptions)
-  resultsChecks <- c(resultDataCheck, resultOptionsCheck)
+  checkSolverInputs(carnivalOptions)
+  carnivalOptions <- collectMetaInfo(carnivalOptions)
   
-  runId <- createRunId()
-  carnivalOptions$runId <- runId
-  
-  filenames <- createFilenames(carnivalOptions)
-  carnivalOptions$filenames <- filenames
-  
-  result <- solveCarnivalSingleRun( perturbations = resultsChecks$perturbations,
-                                    measurements = resultsChecks$measurements,
-                                    priorKnowledgeNetwork = resultsChecks$priorKnowledgeNetwork,
-                                    pathwayWeights = resultsChecks$weights,
+  result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
                                     carnivalOptions = carnivalOptions )
-  
-  if (carnivalOptions$cleanTmpFiles) {
-    cleanupCARNIVAL(carnivalOptions$keepLPFiles)
-  }
-  
+  cleanupCarnival(carnivalOptions)
   
   message(" ") 
   message("--- End of the CARNIVAL pipeline --- ")
@@ -167,7 +150,6 @@ runInverseCarnival <- function(measurements,
   return(result)
 }
 
-#TODO
 runCarnivalWithManualConstraints <- function(perturbations, 
                                              measurements, 
                                              priorKnowledgeNetwork, 
@@ -176,7 +158,8 @@ runCarnivalWithManualConstraints <- function(perturbations,
                                              solverPath = "",
                                              constraints = c(),
                                              carnivalOptions = 
-                                               defaultCplexCarnivalOptions(solverPath = solverPath)) {
+                                               defaultLpSolveCarnivalOptions()) {
+  stop("Function is not implemented yet.")
   return(NULL)
 }
 

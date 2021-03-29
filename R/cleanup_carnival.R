@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-cleanupCARNIVAL <- function(carnivalOptions){
+cleanupCarnival <- function(carnivalOptions){
 
   if (carnivalOptions$cleanTmpFiles) {
     message("Cleaning intermediate files")

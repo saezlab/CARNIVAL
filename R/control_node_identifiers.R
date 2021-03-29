@@ -18,11 +18,10 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
   return(res)
 }
 
-#TODO implement keeping names mapping
 correctIdentifiers <- function(nodesIds,
                                replacementSymbol = "_",
-                               verbose=FALSE,
-                               keepMapping=FALSE ){
+                               verbose = FALSE,
+                               keepMapping = FALSE ){
   
   preparedPattern <- paste0("\\", specialRegExpCharactersToFix, collapse="|")
   preparedPattern <- paste0(c(preparedPattern, specialCharactersToFix), collapse="|")
@@ -48,8 +47,8 @@ correctIdentifiers <- function(nodesIds,
 
 correctNodeIdentifiersInNetwork <- function( network = network,
                                     replacementSymbol = "_",
-                                    verbose=FALSE,
-                                    keepMapping=FALSE ){
+                                    verbose = FALSE,
+                                    keepMapping = FALSE ){
   
   network$source <- correctIdentifiers(network$source, replacementSymbol, verbose, keepMapping)
   network$target <- correctIdentifiers(network$target, replacementSymbol, verbose, keepMapping)

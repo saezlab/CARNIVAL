@@ -7,7 +7,6 @@ collectMetaInfo <- function(carnivalOptions) {
   filenames <- createFilenames(carnivalOptions)
   carnivalOptions$filenames <- filenames
 
-  #TODO add finishing time
   carnivalOptions$startTime <- getTime()
   carnivalOptions$flavour <- availableFlavours$vanilla
 

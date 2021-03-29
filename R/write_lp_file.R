@@ -5,10 +5,7 @@
 
 createLpFormulation <- function( internalDataRepresentation, 
                                  dataPreprocessed,
-                                 carnivalOptions#,
-                                 #TODO
-                                 #constraints = defaultListConstraints()) {
-                                ){
+                                 carnivalOptions) {
   
   message("Writing constraints...")
   options(scipen=999)

@@ -10,9 +10,6 @@ checkWeights <- function(weights = weights,
                               Check node identifiers in both weights and PKN objects. 
                               You can use Carnival without weights (set to NULL by default)."
   incorrectValuesError <- "Error in provided weights values: should be between -1 and 1."
-  
-  #TODO remove?
-  #stopifnot(nullObjectError = !is.null(weights))
    
   names(weights) <- correctIdentifiers(names(weights))
   

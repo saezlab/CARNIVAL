@@ -27,8 +27,3 @@ checkPerturbations <- function(perturbations = perturbations,
   return(perturbationsProcessed)
 }
 
-#TODO add also "normal" checks
-checkPerturbationsForInverseCarnival <- function(priorKnowledgeNetwork) {
- 
-  return(NULL)
-}

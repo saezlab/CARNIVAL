@@ -1,5 +1,3 @@
-#TODO add docs
-#TODO params
 solveWithLpSolve <- function(variables = variables, 
                              carnivalOptions,
                              dataPreprocessed) {

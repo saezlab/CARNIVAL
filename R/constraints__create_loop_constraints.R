@@ -3,11 +3,10 @@
 ## 
 ## Enio Gjerga, 2020
 
-createLoopConstraints <- function(variables = variables, 
+createLoopConstraints <- function( variables = variables, 
                                    perturbations = perturbations,
                                    priorKnowledgeNetwork = priorKnowledgeNetwork) {
   
-  #TODO magic number? 
   M <- 101
   constraints1 <- c()
   constraints2 <- c()

@@ -2,7 +2,6 @@
 ##
 ## Enio Gjerga, 2020
 
-#TODO 
 supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
                                               "getSolutionMatrix" = getSolutionMatrixCplex,
                                               "export" = exportIlpSolutionResultFromXml, 
@@ -41,7 +40,7 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
                    carnivalOptions )
   
   lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, carnivalOptions )
-  #TODO
+
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
                   allConstraints = lpFormulation$allConstraints,
                   bounds = lpFormulation$bounds,

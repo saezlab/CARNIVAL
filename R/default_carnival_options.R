@@ -49,7 +49,6 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          outputFolder = "",
          alphaWeight = 1, 
          betaWeight = 0.2,
-         #TODO default value was 0 or 1?
          cleanTmpFiles = TRUE,
          keepLPFiles = TRUE,
          dirName = NULL
@@ -118,8 +117,9 @@ suggesteCbcSpecificOptions <- function() {
   return(options)
 }
 
-#TODO options list from the cplex itself
-#TODO careful with scientific notation, it is switched off at another place in the code (look up for scipen)
+
+#TODO N.B. careful with scientific notation, it is switched off at another place in the code 
+# (look up for scipen)
 defaultCplexSpecificOptions <- function() {
   options <- list(
         threads=1,
@@ -128,24 +128,20 @@ defaultCplexSpecificOptions <- function() {
         limitPop = 20,
         poolCap = 2.1e9,
         poolIntensity = 0,
-        poolReplace = 0
-        #TODO timelimit
+        poolReplace = 0,
+        timelimit = 1e+75
     )
     return(options)
 }
 
-#TODO write a function that will accept any options from the defined list 
-#TODO write another function that will accept any options outside of the defined list
-setCarnivalOptions <- function(options=NULL, ...) {
-  options <- c(options, ...)
-  return(options)
-}
-
 readParameters <- function(jsonFileName = "parameters/carnival_cplex_parameters.json") {
-  #TODO check for package rjson
-  message("Loading parameters file for CARNIVAL:", jsonFileName)
-  parameters <- fromJSON(file = jsonFileName)  
-  return(parameters)
+  if ("rjson" %in% (.packages())) {
+    message("Loading parameters file for CARNIVAL:", jsonFileName)
+    parameters <- fromJSON(file = jsonFileName)  
+    return(parameters)  
+  } else {
+    stop("Cannot read parameters from json: rjson package should be installed and loaded.")
+  }
 }
 
 

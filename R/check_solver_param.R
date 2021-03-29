@@ -1,6 +1,5 @@
 
 carnivalOptionsErrorChecks <- list(
-  #TODO solver and solverPath checks are not tested
   #solver =       data.frame( func = c("!is.null", "`%in%`")
   #                           param = c("", "supportedSolvers")
   #                           message = paste0("Error in solver paramter: invalid value provided, you can used only", 
@@ -69,8 +68,6 @@ cplexOptionsErrorChecks <- list(
 )
 
 
-#TODO this function must be rewritten: separated to two, and other check for cbc and lpSolve should be added
-
 #' check_CARNIVAL_options
 #' 
 #' checks options provided for CARNIVAL
@@ -133,7 +130,6 @@ checkCplexCarnivalOptions <- function(options) {
       checkValue = cplexOptionsErrorChecks[[x]]
       
       # if there are several checks, apply all
-      #TODO not sure why is this check for data.frame and not length of a vector?
       if (is.data.frame(checkValue)) {
         apply(checkValue, 1, checkGenericFunction, value)
       } else {

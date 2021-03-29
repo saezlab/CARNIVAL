@@ -1,4 +1,3 @@
-#TODO add docs
 solveWithCbc <- function(variables = variables, 
                          carnivalOptions = carnivalOptions,
                          dataPreprocessed) {

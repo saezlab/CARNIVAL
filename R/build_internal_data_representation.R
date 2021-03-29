@@ -30,7 +30,6 @@ buildDataVector <- function(measurements = measurements,
   dsNames <- paste0("DS:", ds)
   names(dataVector) <- c(dnNames, dsNames)
   
-  #TODO refactor
   if(length(which(is.element(el = names(measurements), 
                              set = setdiff(names(measurements), ds)))) > 0) {
     

@@ -34,8 +34,6 @@ writeCplexCommandFile <- function(carnivalOptions){
   return(cplexCommandFilename)
 }
 
-#TODO test
-#TODO check if file exists before writing
 writeCplexCommandFileFromJson <- function(carnivalOptions, 
                                           jsonFileName = "parameters/cplex_parameters_cmd_file.json") {
   message("Writing cplex command file")
