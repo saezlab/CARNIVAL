@@ -45,23 +45,19 @@ createConstraints_1 <- function(variables = variables){
 }
 
 createConstraints_1_newIntRep <- function(variables, priorKnowledgeNetwork) {
-  activations <- priorKnowledgeNetwork[priorKnowledgeNetwork$Sign == 1, ]
+  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
   
-  t1 <- merge(activations, variables$nodesDf, by.x="Node1", by.y="nodes")
-  t2 <- merge(t1, variables$nodesDf, by.x="Node2", by.y="nodes")
+  edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
+  sourceNodes <- edgesUpActivation$nodesVars
   
-  var1Act <- t2$nodesVars.y
-  var2Act <- t2$nodesVars.x
+  constraints_1 <- createConstraint(edgesUpActivation$edgesUpVars, "-", 
+                                    sourceNodes, ">=", 0) 
   
-  constraints_1 <- createConstraint(var1Act, "-", var2Act, ">=", 0) 
+  edgesUpInhibition <- variablesMerged[variablesMerged$Sign == -1, ]
+  sourceNodes <- edgesUpInhibition$nodesVars
   
-  inhibition <- priorKnowledgeNetwork[priorKnowledgeNetwork$Sign == -1, ]
-  t1 <- merge(inhibition, variables$nodesDf, by.x="Node1", by.y="nodes")
-  t2 <- merge(t1, variables$nodesDf, by.x="Node2", by.y="nodes")
-  var1Inh <- t2$nodesVars.y
-  var2Inh <- t2$nodesVars.x
-  
-  constraints_1 <- c(constraints_1, createConstraint(var1Inh, "+", var2Inh, ">=", 0))
+  constraints_1 <- c(constraints_1, createConstraint(edgesUpInhibition$edgesUpVars, "+", 
+                                                     sourceNodes, ">=", 0))
   return(constraints_1)
 }
 

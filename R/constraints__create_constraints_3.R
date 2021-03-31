@@ -14,3 +14,10 @@ createConstraints_3 <- function(variables = variables) {
   return(constraints3)
   
 }
+
+createConstraints_2_newIntRep <- function(variables = variables) {
+  c3 <- createConstraint(variables$edgesDf$edgesUpVars, "+", 
+                         variables$edgesDf$edgesDownVars, " <=", 1)
+
+  return(c3)
+}

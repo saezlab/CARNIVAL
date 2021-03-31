@@ -43,3 +43,20 @@ createConstraints_2 <- function(variables = variables){
   return(constraints1)
   
 }
+
+createConstraints_2_newIntRep <- function(variables, priorKnowledgeNetwork) {
+  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
+  
+  edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
+  sourceNodes <- edgesUpActivation$nodesVars
+  
+  constraints_2 <- createConstraint(edgesUpActivation$edgesDownVars, "+", 
+                                    sourceNodes, ">=", 0) 
+  
+  edgesUpInhibition <- variablesMerged[variablesMerged$Sign == -1, ]
+  sourceNodes <- edgesUpInhibition$nodesVars
+  
+  constraints_2 <- c(constraints_2, createConstraint(edgesUpInhibition$edgesDownVars, "-", 
+                                                     sourceNodes, ">=", 0))
+  return(constraints_2)
+}

@@ -65,6 +65,12 @@ createLpFormulation <- function( internalDataRepresentation,
   return(lpProblemFormed)
 }
 
+
+createConstraintFreeForm <- function(...) {
+  constraint <- paste(...)  
+  return(constraint)
+}
+
 createConstraint <- function(variable1, sign, variable2, inequality, rightPart) { 
   constraint <- paste(variable1, sign, variable2, inequality, rightPart, sep = " ")  
   return(constraint)

@@ -143,44 +143,67 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
 }
 
 #TODO 
-#This can be fully rewritten in the internal representation 
+#This can be fully rewritten in the internal representation. It will make dataVector absolete too.  
 #list(nodesVariables = "", EdgesVariables="", distanceVariables="", bVariables = "", uTable = "")
 # where 
 # nodesVariables is a dataframe containing: 
 # PKN_names Nodes NodesUp NodesDown 
 # EdgesVariables is a dataframe combined with PKN 
 # PKN$1 PKN$2 PKN$3 Edges EdgesUp EdgesDown
+# utable is the list of all variables for edges in a form of matrix
 
 createVariablesForIlpProblem <- function(dataProcessed) {
   perturbations <- dataProcessed$perturbations
   measurements <- dataProcessed$measurements
   priorKnowledgeNetwork <- dataProcessed$priorKnowledgeNetwork
-  print(priorKnowledgeNetwork)
   
-  nodesPrefix <- "n"
+  nodesDf <- createNodesVariables(priorKnowledgeNetwork)
+  edgesDf <- createEdgesVariables(priorKnowledgeNetwork, startingIdx=19)
+ 
+  return(list("nodesDf" = nodesDf, "edgesDf" = edgesDf))
+}
+
+createNodesVariables <- function(priorKnowledgeNetwork, 
+                                 prefixes=c("nodes" = "n", "nodesUp" = "nU", 
+                                            "nodesDown" = "nD")) {
+  nodes <- unique(c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2))
+  # create nodes variables
+  nodesPrefix <- "xb"
+  #nodesPrefix <- "n"
   nodesUpPrefix <- "nU"
   nodesDownPrefix <- "nD"
   
-  nodes <- unique(c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2))
-  print(length(nodes))
-  print(nodes)
-  idxNodes <- seq(from = 1, to = length(nodes), by = 1)
-  nodesVars <- paste0(nodesPrefix, idxNodes)
-  nodesUpVars <- paste0(nodesUpPrefix, idxNodes)
-  nodesDownVars <- paste0(nodesDownPrefix, idxNodes)
+  idxNodes <- seq(from = 1, to = 3 * length(nodes), by = 1)
+  nodesVars <- paste0(nodesPrefix, idxNodes[1 : length(nodes)])
+  nodesUpVars <- paste0(nodesPrefix, idxNodes[(length(nodes) + 1) : ( 2 * length(nodes))])
+  nodesDownVars <- paste0(nodesPrefix, idxNodes[(2 * length(nodes) + 1) : (3 * length(nodes))])
+  #nodesUpVars <- paste0(nodesUpPrefix, idxNodes)
+  #nodesDownVars <- paste0(nodesDownPrefix, idxNodes)
   
   nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars)
+  nodesDf <- as.data.frame(nodesDf)
   
-  edgesUpPrefix <- "eU"
-  edgesDownPrefix <- "eD"
-  
-  idxEdges <- seq(from = 1, to = length(priorKnowledgeNetwork$Node1), by = 1)
-  edgesUpVars <- paste0(edgesUpPrefix, idxEdges)
-  edgesDownVars <- paste0(edgesDownPrefix, idxEdges)
-  
-  priorKnowledgeNetwork <- cbind(priorKnowledgeNetwork, edgesUpVars, edgesDownVars)
-  
-  return(list(nodesDf, priorKnowledgeNetwork))
+  return(nodesDf)
 }
 
-
+createEdgesVariables <- function(priorKnowledgeNetwork, prefixes = c("edgeUp" = "eU", 
+                                                                     "edgeDown" = "eD"),
+                                 startingIdx = 0) {
+  # create edges variables
+  edgesPrefixes <- "xb"
+  #edgesUpPrefix <- "eU"
+  #edgesDownPrefix <- "eD"
+  
+  idxEdges <- seq(from = startingIdx, to = startingIdx + 2 * length(priorKnowledgeNetwork$Node1))
+  
+  #idxEdges <- seq(from = 1, to = length(priorKnowledgeNetwork$Node1), by = 1)
+  edgesUpVars <- paste0(edgesPrefixes, idxEdges[1 : length(priorKnowledgeNetwork$Node1)])
+  edgesDownVars <- paste0(edgesPrefixes, idxEdges[(length(priorKnowledgeNetwork$Node1) + 1) : 
+                                                  (2 * length(priorKnowledgeNetwork$Node1))])
+  
+  #edgesUpVars <- paste0(edgesUpPrefix, idxEdges)
+  #edgesDownVars <- paste0(edgesDownPrefix, idxEdges)
+  
+  edgesDf <- cbind(priorKnowledgeNetwork, edgesUpVars, edgesDownVars)
+  return(edgesDf)
+}

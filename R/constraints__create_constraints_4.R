@@ -52,3 +52,26 @@ createConstraints_4 <- function(variables=variables) {
   return(constraints4)
   
 }
+
+createConstraints_4_newIntRep <- function(variables, priorKnowledgeNetwork) {
+  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
+  
+  edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
+  sourceNodes <- edgesUpActivation$nodesVars
+  
+  constraints_4 <- createConstraintFreeForm(edgesUpActivation$edgesUpVars, "-", 
+                                            sourceNodes, 
+                                            "-", 
+                                            edgesUpActivation$edgesDownVars,
+                                            "<=", 0) 
+  
+  edgesUpInhibition <- variablesMerged[variablesMerged$Sign == -1, ]
+  sourceNodes <- edgesUpInhibition$nodesVars
+  
+  constraints_4 <- c(constraints_4, createConstraintFreeForm(edgesUpInhibition$edgesUpVars, "+",
+                                                              sourceNodes, 
+                                                              "-", 
+                                                              edgesUpInhibition$edgesDownVars,
+                                                              "<=", 0))
+  return(constraints_4)
+}
