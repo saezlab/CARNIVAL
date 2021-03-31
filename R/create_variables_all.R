@@ -50,12 +50,11 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
                                  dataLength, by = 1))
   
   edgesDown <- paste0("xb", seq(from = length(nodesALL) +
-                                  nrowsPkn *
-                                  dataLength + 1, 
+                                       nrowsPkn *
+                                       dataLength + 1, 
                                 to = length(nodesALL) +
-                                  nrowsPkn *
-                                  dataLength + nrowsPkn *
-                                  dataLength, by = 1))
+                                     2 * nrowsPkn *
+                                     dataLength, by = 1))
   
   expEdgesUp <- paste0("ReactionUp ", as.character(priorKnowledgeNetwork$X1), "=", 
                        as.character(priorKnowledgeNetwork$X3))
@@ -104,7 +103,7 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
                                               function(x) x[2]))
   
   
-  #Matching table for u variables
+  # Matching table for u variables
   uTable <- matrix(data = , nrow = length(idxEdgesUp), ncol = 2)
   uTable[, 1] <- c(nodesALL, edgesALL, varB, dist)[idxEdgesUp]
   uTable[, 2] <- c(nodesALL, edgesALL, varB, dist)[idxEdgesDown]
@@ -131,12 +130,57 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
               idxB = seq(from = length(c(nodesALL, edgesALL)) + 1, 
                          to = length(c(nodesALL, edgesALL)) + length(varB), 
                          by = 1),
+              
               idxDist = seq(from = length(c(nodesALL, edgesALL)) +
                               length(varB) + 1, 
                             to = length(c(nodesALL, edgesALL)) +
                               length(varB) + length(dist), 
                             by = 1), 
+              
               uTable = uTable)
   
   return(res)
 }
+
+#TODO 
+#This can be fully rewritten in the internal representation 
+#list(nodesVariables = "", EdgesVariables="", distanceVariables="", bVariables = "", uTable = "")
+# where 
+# nodesVariables is a dataframe containing: 
+# PKN_names Nodes NodesUp NodesDown 
+# EdgesVariables is a dataframe combined with PKN 
+# PKN$1 PKN$2 PKN$3 Edges EdgesUp EdgesDown
+
+createVariablesForIlpProblem <- function(dataProcessed) {
+  perturbations <- dataProcessed$perturbations
+  measurements <- dataProcessed$measurements
+  priorKnowledgeNetwork <- dataProcessed$priorKnowledgeNetwork
+  print(priorKnowledgeNetwork)
+  
+  nodesPrefix <- "n"
+  nodesUpPrefix <- "nU"
+  nodesDownPrefix <- "nD"
+  
+  nodes <- unique(c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2))
+  print(length(nodes))
+  print(nodes)
+  idxNodes <- seq(from = 1, to = length(nodes), by = 1)
+  nodesVars <- paste0(nodesPrefix, idxNodes)
+  nodesUpVars <- paste0(nodesUpPrefix, idxNodes)
+  nodesDownVars <- paste0(nodesDownPrefix, idxNodes)
+  
+  nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars)
+  
+  edgesUpPrefix <- "eU"
+  edgesDownPrefix <- "eD"
+  
+  idxEdges <- seq(from = 1, to = length(priorKnowledgeNetwork$Node1), by = 1)
+  edgesUpVars <- paste0(edgesUpPrefix, idxEdges)
+  edgesDownVars <- paste0(edgesDownPrefix, idxEdges)
+  
+  priorKnowledgeNetwork <- cbind(priorKnowledgeNetwork, edgesUpVars, edgesDownVars)
+  
+  return(list(nodesDf, priorKnowledgeNetwork))
+}
+
+

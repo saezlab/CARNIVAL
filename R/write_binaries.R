@@ -12,3 +12,10 @@ createBinaries <- function(variables = variables){
   return(c(cc1, cc2, cc3, cc4))
   
 }
+
+createBinaries_NewIntRep <- function(variables = variables) {
+  binaries <- paste(variables$nodesDf$nodesUpVars, variables$nodesDf$nodesDownVars,
+                    variables$edgesVar$edgesUpVars, variables$edgesVar$edgesDownVars,
+                    sep = "\t")
+  return(binaries)
+}

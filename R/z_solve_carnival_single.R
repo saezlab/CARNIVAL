@@ -13,7 +13,7 @@ supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex,
                                   
                                   "lpSolve" = c("solve" = solveWithLpSolve, 
                                                 "getSolutionMatrix" = getSolutionMatrixLpSolve,
-                                                "export" = exportIlpSolutionResultFromXml))
+                                                "export" = exportIlpSolutionResultFromXml)) 
 
 solveCarnivalSingleFromLp <- function(#lpFile = "", 
                                       parsedDataFile = "",

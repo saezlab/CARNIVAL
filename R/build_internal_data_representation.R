@@ -19,41 +19,34 @@ buildDataVector <- function(measurements = measurements,
     ts <- allSpecies[allSpecies == "Perturbation"]
   }
   
-  #species with measurements
-  ds <- intersect(names(measurements), allSpecies)
-  #species without measurements 
-  dn <- setdiff(allSpecies, ds)
+  speciesMeasured <- intersect(names(measurements), allSpecies)
+  speciesMeasuredNotInPkn <- setdiff(names(measurements), allSpecies)
+  speciesUnmeasured <- setdiff(allSpecies, speciesMeasured)
   
   dataVector <- rep(0, length(allSpecies))
   
-  dnNames <- paste0("DN:", dn)
-  dsNames <- paste0("DS:", ds)
+  dnNames <- paste0("DN:", speciesUnmeasured)
+  dsNames <- paste0("DS:", speciesMeasured)
   names(dataVector) <- c(dnNames, dsNames)
   
-  if(length(which(is.element(el = names(measurements), 
-                             set = setdiff(names(measurements), ds)))) > 0) {
-    
-    dataVector[seq(from = length(dn) + 1, to = length(allSpecies), by = 1)] <- 
-      measurements[-which(is.element(el = names(measurements), 
-                                     set = setdiff(names(measurements), ds)))]
-    
-  } else {
-    dataVector[seq(from = length(dn) + 1, 
-                   to = length(allSpecies), by = 1)] <- measurements
-  }
+  indices <- seq(from = length(speciesUnmeasured) + 1, to = length(allSpecies), by = 1)
+  
+  #save only the measurements that are present in prior knowledge network
+  dataVector[indices] <- measurements[names(measurements) %in% speciesMeasured]
   
   dataVectorSign <- sign(dataVector)
   
-  dnID <- seq_len(length(dn))
-  dsID <- seq(from = length(dn) + 1, to = length(allSpecies), by = 1)
-  tsID <- which(is.element(el = c(dn, ds), set = ts))
+  dnID <- seq_len(length(speciesUnmeasured))
+  dsID <- seq(from = length(speciesUnmeasured) + 1, to = length(allSpecies), by = 1)
+  tsID <- which(is.element(el = c(speciesUnmeasured, speciesMeasured), set = ts))
   
   result <- list(dataVector = dataVector, 
                  dataVectorSign = dataVectorSign, 
-                 dnID = dnID, dsID = dsID, 
+                 dnID = dnID, 
+                 dsID = dsID, 
                  tsID = tsID, 
-                 species = c(dn, ds))
+                 species = c(speciesUnmeasured, speciesMeasured))
   
   return(result)
-  
+
 }

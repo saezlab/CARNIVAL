@@ -3,7 +3,7 @@
 ## 
 ## Enio Gjerga, 2020
 
-createConstraints_1<- function(variables = variables){
+createConstraints_1 <- function(variables = variables){
   
   selectEdges <- function(idx, reactionType) {
     gsub(variables$exp[idx], 
@@ -42,5 +42,26 @@ createConstraints_1<- function(variables = variables){
   
   return(constraints1)
   
+}
+
+createConstraints_1_newIntRep <- function(variables, priorKnowledgeNetwork) {
+  activations <- priorKnowledgeNetwork[priorKnowledgeNetwork$Sign == 1, ]
+  
+  t1 <- merge(activations, variables$nodesDf, by.x="Node1", by.y="nodes")
+  t2 <- merge(t1, variables$nodesDf, by.x="Node2", by.y="nodes")
+  
+  var1Act <- t2$nodesVars.y
+  var2Act <- t2$nodesVars.x
+  
+  constraints_1 <- createConstraint(var1Act, "-", var2Act, ">=", 0) 
+  
+  inhibition <- priorKnowledgeNetwork[priorKnowledgeNetwork$Sign == -1, ]
+  t1 <- merge(inhibition, variables$nodesDf, by.x="Node1", by.y="nodes")
+  t2 <- merge(t1, variables$nodesDf, by.x="Node2", by.y="nodes")
+  var1Inh <- t2$nodesVars.y
+  var2Inh <- t2$nodesVars.x
+  
+  constraints_1 <- c(constraints_1, createConstraint(var1Inh, "+", var2Inh, ">=", 0))
+  return(constraints_1)
 }
 

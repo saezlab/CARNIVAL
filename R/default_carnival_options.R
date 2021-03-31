@@ -119,7 +119,7 @@ suggesteCbcSpecificOptions <- function() {
 
 
 #TODO N.B. careful with scientific notation, it is switched off at another place in the code 
-# (look up for scipen)
+# (look up for scipen) - options(scipen = 0) to switch it on
 defaultCplexSpecificOptions <- function() {
   options <- list(
         threads=1,
