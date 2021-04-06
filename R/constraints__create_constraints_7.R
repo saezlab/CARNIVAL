@@ -67,14 +67,14 @@ createConstraints_7_newIntRep <- function(variables, priorKnowledgeNetwork) {
   
   lapply(unique(variablesMergedTwoNodes$Node2), function(x) {
     allIncomingEdges <- variablesMergedTwoNodes[variablesMergedTwoNodes$Node2 == x, ]
-    edgesVars <- paste0(" - ", allIncomingEdges$edgesDownVars)
     nodeVar <- unique(allIncomingEdges$nodesDownVars.y)
-    temp <- c(nodeVar, edgesVars)
-    temp <- paste(temp, collapse='')
+    edgesVars <- paste0(" - ", allIncomingEdges$edgesDownVars)
+    constraintLeft <- c(nodeVar, edgesVars)
+    constraintLeft <- paste(constraintLeft, collapse='')
     
-    constraints_7 <<- c(constraints_7, createConstraintFreeForm(temp, "<=", 0))
+    constraints_7 <<- c(constraints_7, createConstraintFreeForm(constraintLeft, "<=", 0))
     
   })
   
-  return(constraints_6)
+  return(constraints_7)
 }

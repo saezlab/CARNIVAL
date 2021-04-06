@@ -165,22 +165,25 @@ createVariablesForIlpProblem <- function(dataProcessed) {
 
 createNodesVariables <- function(priorKnowledgeNetwork, 
                                  prefixes=c("nodes" = "n", "nodesUp" = "nU", 
-                                            "nodesDown" = "nD")) {
+                                            "nodesDown" = "nD", "nodesAct" = "nA")) {
   nodes <- unique(c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2))
   # create nodes variables
   nodesPrefix <- "xb"
   #nodesPrefix <- "n"
   nodesUpPrefix <- "nU"
   nodesDownPrefix <- "nD"
+  nodesActivationStatePrefix <- "B"
   
   idxNodes <- seq(from = 1, to = 3 * length(nodes), by = 1)
   nodesVars <- paste0(nodesPrefix, idxNodes[1 : length(nodes)])
   nodesUpVars <- paste0(nodesPrefix, idxNodes[(length(nodes) + 1) : ( 2 * length(nodes))])
   nodesDownVars <- paste0(nodesPrefix, idxNodes[(2 * length(nodes) + 1) : (3 * length(nodes))])
+  nodesActStateVars <- paste0(nodesActivationStatePrefix, "_", nodes)
   #nodesUpVars <- paste0(nodesUpPrefix, idxNodes)
   #nodesDownVars <- paste0(nodesDownPrefix, idxNodes)
+  #nodesActivationState <- paste0(nodesActivationStatePrefix, idxNodes)
   
-  nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars)
+  nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars, nodesActStateVars)
   nodesDf <- as.data.frame(nodesDf)
   
   return(nodesDf)
