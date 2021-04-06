@@ -144,7 +144,7 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
 
 #TODO 
 #This can be fully rewritten in the internal representation. It will make dataVector absolete too.  
-#list(nodesVariables = "", EdgesVariables="", distanceVariables="", bVariables = "", uTable = "")
+#list(nodesVariables = "",  edgesVariables="", distanceVariables="", bVariables = "", uTable = "")
 # where 
 # nodesVariables is a dataframe containing: 
 # PKN_names Nodes NodesUp NodesDown 
