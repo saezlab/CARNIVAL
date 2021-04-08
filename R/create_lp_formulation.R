@@ -88,19 +88,15 @@ createLpFormulation_newIntRep <- function( internalDataRepresentation,
 
   c0 <- createConstraintsMeasuredNodes_newIntRep(variables = variables)
   
-  c1 <- createConstraints_1_newIntRep(variables, priorKnowledgeNetwork)
-  c2 <- createConstraints_2_newIntRep(variables, priorKnowledgeNetwork)
+  c1 <- createConstraints_1_2_newIntRep(variables, priorKnowledgeNetwork)
   c3 <- createConstraints_3_newIntRep(variables = variables)
   
-  c4 <- createConstraints_4_newIntRep(variables, priorKnowledgeNetwork)
-  c5 <- createConstraints_5_newIntRep(variables, priorKnowledgeNetwork)
-  
-  c6 <- createConstraints_6_newIntRep(variables, priorKnowledgeNetwork)
-  c7 <- createConstraints_7_newIntRep(variables, priorKnowledgeNetwork)
+  c4 <- createConstraints_4_5_newIntRep(variables, priorKnowledgeNetwork)
+  c6 <- createConstraints_6_7_newIntRep(variables, priorKnowledgeNetwork)
   
   c8 <- createConstraints_8_newIntRep(variables, 
-                            perturbations = dataPreprocessed$perturbations,
-                            priorKnowledgeNetwork)
+                                      perturbations = dataPreprocessed$perturbations,
+                                      priorKnowledgeNetwork)
   
   c9 <- createLoopConstraints(variables = variables, 
                               perturbations = dataPreprocessed$perturbations,

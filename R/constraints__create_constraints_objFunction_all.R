@@ -4,35 +4,6 @@
 ## 
 ## Enio Gjerga, 2020
 
-
-## ============================================ ##
-## === Load write_constraints_objFunction.R === ##
-## ============================================ ##
-
-createConstraintsObjectiveFunction <- function(variables = variables, 
-                                               dataVector = dataVector){
-  
-  measurements <- dataVector$dataVectorSign
-  
-  idx2 <- which(measurements == 1)
-  idx3 <- which(measurements == -1)
-  
-  cc1 <- rep("", length(measurements))
-  cc2 <- rep("", length(measurements))
-  
-  cc1[idx2] <- paste0(variables$variables[idx2], " - absDiff", 
-                      idx2, " <= 1")
-  cc2[idx2] <- paste0(variables$variables[idx2], " + absDiff", idx2, " >= 1")
-  
-  cc1[idx3] <- paste0(variables$variables[idx3], " - absDiff", idx3, " <= -1")
-  cc2[idx3] <- paste0(variables$variables[idx3], " + absDiff", idx3, " >= -1")
-  
-  constraints0 <- c(cc1, cc2)
-  
-  return(constraints0[-which(constraints0=="")])
-  
-} 
-
 createConstraintsMeasuredNodes_newIntRep(variables = variables) {
   positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]
   negativeMeasurements <- variables$measurementsDf[variables$measurementsDf$value < 0, ]
