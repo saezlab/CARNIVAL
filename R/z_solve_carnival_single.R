@@ -64,6 +64,40 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
   return(result)
 }
 
+
+solveCarnivalSingleRun_newIntRep <- function( dataPreprocessed,
+                                              carnivalOptions ) {
+  
+  intDataRepresentation <- createInternalDataRepresentation_newIntRep( measurements = dataPreprocessed$measurements, 
+                                                            priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
+                                                            perturbations = dataPreprocessed$perturbations )
+  writeParsedData( variables, dataPreprocessed, carnivalOptions )
+  
+  lpFormulation <- createLpFormulation_newIntRep( intDataRepresentation, 
+                                                  dataPreprocessed, carnivalOptions )
+  
+  writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
+                  allConstraints = lpFormulation$allConstraints,
+                  bounds = lpFormulation$bounds,
+                  binaries = lpFormulation$binaries,
+                  generals = lpFormulation$generals,
+                  carnivalOptions = carnivalOptions)
+  
+  result <- sendTaskToSolver( variables = intDataRep[[2]],
+                              dataPreprocessed, 
+                              carnivalOptions )
+  
+  #TODO results with diagnostics is never null, think how to implement it better
+  #if (!is.null(result)) {
+  #  writeDotFigure(result = result,
+  #              dir_name = outputFolder,
+  #              inputs = perturbations,
+  #              measurements = measurements,
+  #              UP2GS = FALSE)
+  #}
+  
+  return(result)
+}
     
 sendTaskToSolver <- function( variables,
                               dataPreprocessed, 
@@ -103,6 +137,11 @@ createInternalDataRepresentation <- function( measurements = measurements,
   return(list("dataVector" = dataVector, "variables" = variables))
 }
 
+createInternalDataRepresentation_newIntRep <- function( dataPreprocessed ) {
+  variables <- createVariablesForIlpProblem(dataPreprocessed)
+  
+  return(variables)
+}
 
 writeParsedData <- function ( variables = variables, 
                               dataPreprocessed = dataPreprocessed, 
