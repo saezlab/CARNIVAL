@@ -1,6 +1,6 @@
-createConstraints_6_newIntRep <- function(variables, priorKnowledgeNetwork) {
+createConstraints_6_7_newIntRep <- function(variables, constraintName = c("c6", "c7")) {
   
-  parentNodes <- setdiff(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2)
+  parentNodes <- setdiff(variables$edgesDf$Node1, variables$edgesDf$Node2)
   
   variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
   parentNodesEdges <- variablesMerged[variablesMerged$Node1 %in% parentNodes, ]
@@ -34,6 +34,8 @@ createConstraints_6_newIntRep <- function(variables, priorKnowledgeNetwork) {
     
   })
   
-  return(list("c6"=constraints_6, "c7"=constraint7))
+  constraints6_7 <- list("c6" = constraints_6, "c7" = constraints_7)
+  names(constraints6_7) <- constraintName
+  return(constraints6_7)
 }
 

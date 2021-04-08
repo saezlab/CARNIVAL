@@ -3,9 +3,8 @@
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-#TODO merge constraint 1 and 2 
-
-createConstraints_1_2_newIntRep <- function(variables, priorKnowledgeNetwork) {
+createConstraints_1_2_newIntRep <- function(variables, constraintName = c("c1", "c2")) {
+  
   variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
   
   edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
@@ -25,11 +24,18 @@ createConstraints_1_2_newIntRep <- function(variables, priorKnowledgeNetwork) {
   constraints_2 <- c(constraints_2, createConstraint(edgesUpInhibition$edgesDownVars, "-", 
                                                      sourceNodes, ">=", 0))
   
-  return(list("c1"=constraints_1, "c2" = constraint_2))
+  constraints1_2 <- list(constraints_1, constraints_2)
+  names(constraints1_2) <- constraintName
+  return(constraints1_2)
 }
 
-createConstraints_3_newIntRep <- function(variables = variables) {
-  constraints3 <- createConstraint(variables$edgesDf$edgesUpVars, "+", 
-                                   variables$edgesDf$edgesDownVars, "<=", 1)
+createConstraints_3_newIntRep <- function(variables = variables,
+                                          constraintName = "c3") {
   
-  return(constraints3)
+  constraints_3 <- createConstraint(variables$edgesDf$edgesUpVars, "+", 
+                                   variables$edgesDf$edgesDownVars, "<=", 1)
+
+  constraints_3 <- list(constraints_3)
+  names(constraints_3) <- constraintName
+  return(constraints_3)
+}

@@ -1,5 +1,5 @@
 
-createConstraints_4_5_newIntRep <- function(variables, priorKnowledgeNetwork) {
+createConstraints_4_5_newIntRep <- function(variables, constraintName = c("c4", "c5")) {
   variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
   
   edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
@@ -32,6 +32,9 @@ createConstraints_4_5_newIntRep <- function(variables, priorKnowledgeNetwork) {
                                                              "-", 
                                                              edgesUpInhibition$edgesUpVars,
                                                              "<=", 0))
-  return(list("c4"=constraints_4, "c5"=constraints_5))
+  
+  constraint4_5 <- list("c4" = constraints_4, "c5" = constraints_5)
+  names(constraint4_5) <- constraintName
+  return(constraint4_5)
 }
 

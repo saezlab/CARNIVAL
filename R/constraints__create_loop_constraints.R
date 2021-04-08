@@ -1,79 +1,28 @@
 ## This function writes the constraints preventing self-activation of nodes in 
 ## the network due to positive feedback loops.
 ## 
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020-2021
 
-createLoopConstraints <- function( variables = variables, 
-                                   perturbations = perturbations,
-                                   priorKnowledgeNetwork = priorKnowledgeNetwork) {
+createLoopConstraints_newIntRep <- function(variables, constraintName = "c9") {
+  distanceConstrant <- 100
+  distanceConstrantForConstraint <- 101
+
+  variablesMergedNode1 <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes") 
+  variablesMergedNode2 <- merge(variablesMergedNode1, variables$nodesDf, by.x="Node2", by.y="nodes") 
   
-  M <- 101
-  constraints1 <- c()
-  constraints2 <- c()
-  constraints3 <- c()
-  constraints4 <- c()
+  cLoop <- createConstraintFreeForm(distanceConstrantForConstraint, 
+                                    variablesMergedNode2$edgesUpVars, "+", 
+                                    variablesMergedNode2$nodesDistanceVars.x, "-",
+                                    variablesMergedNode2$nodesDistanceVars.y, "<=", 
+                                    distanceConstrant)
   
-  if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) == 0){
-    pkn <- priorKnowledgeNetwork
-  }
+  cLoop <- c(cLoop, createConstraintFreeForm(distanceConstrantForConstraint, 
+                                             variablesMergedNode2$edgesDownVars, "+", 
+                                             variablesMergedNode2$nodesDistanceVars.x, "-",
+                                             variablesMergedNode2$nodesDistanceVars.y, "<=", 
+                                             distanceConstrant))
   
-  if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) > 0){
-    pkn <- priorKnowledgeNetwork[-which(priorKnowledgeNetwork[, 3] %in% names(perturbations)), ]
-  }
-  
-  reactionsUp <- 
-    variables$variables[which(
-      variables$exp%in%paste0(
-        "ReactionUp ", 
-        pkn[, 1], "=", pkn[, 3]))]
-  reactionsDown <- 
-    variables$variables[which(
-      variables$exp%in%paste0(
-        "ReactionDown ", pkn[, 1], "=", pkn[, 3]))]
-  
-  ##
-  if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) > 0){
-    kk <- sapply(
-      strsplit(
-        variables$exp[variables$idxEdgesUp], 
-        split = " "), function(x) x[2])[-which(
-          priorKnowledgeNetwork[, 3] %in% names(perturbations))]
-  }
-  if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) == 0){
-    kk <- sapply(
-      strsplit(
-        variables$exp[variables$idxEdgesUp], split = " "), 
-      function(x) x[2])
-  }
-  cc <- paste0(M, " ", reactionsUp, " + dist_", 
-               sapply(strsplit(kk, split = "="), function(x) x[1]), 
-               " - dist_", sapply(strsplit(kk, split = "="), 
-                                  function(x) x[2]), " <= ", M-1)
-  constraints1 <- c(constraints1, cc)
-  
-  ##
-  if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) > 0){
-    kk <- sapply(
-      strsplit(
-        variables$exp[variables$idxEdgesDown], 
-        split = " "), 
-      function(x) x[2])[-which(priorKnowledgeNetwork[, 3] %in% names(perturbations))]
-  }
-  
-  if(length(which(priorKnowledgeNetwork[, 3] %in% names(perturbations))) == 0){
-    kk <- sapply(
-      strsplit(
-        variables$exp[variables$idxEdgesDown], 
-        split = " "), function(x) x[2])
-  }
-  
-  cc <- paste0(M, " ", reactionsDown, " + dist_", 
-               sapply(strsplit(kk, split = "="), 
-                      function(x) x[1]), " - dist_", 
-               sapply(strsplit(kk, split = "="), 
-                      function(x) x[2]), " <= ", M-1)
-  constraints2 <- c(constraints2, cc)
-  
-  return(c(constraints1, constraints2))
-  
+  cLoop <- list(cLoop)
+  names(cLoop) <- constraintName
+  return(cLoop)
 }

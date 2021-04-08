@@ -30,16 +30,25 @@ solveCarnivalSingleFromLp <- function(#lpFile = "",
 }
 
 solveCarnivalSingleRun <- function( dataPreprocessed,
-                                    carnivalOptions ) {
+                                    carnivalOptions, 
+                                    newDataRepresentation = F) {
   
-  intDataRep <- createInternalDataRepresentation( measurements = dataPreprocessed$measurements, 
-                                                  priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                                  perturbations = dataPreprocessed$perturbations )
-  writeParsedData( variables = intDataRep[[2]], 
-                   dataPreprocessed, 
-                   carnivalOptions )
-  
-  lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, carnivalOptions )
+  if(!newDataRepresentation) {
+    intDataRep <- createInternalDataRepresentation( measurements = dataPreprocessed$measurements, 
+                                                    priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
+                                                    perturbations = dataPreprocessed$perturbations )
+    writeParsedData( variables = intDataRep[[2]], 
+                     dataPreprocessed, 
+                     carnivalOptions )
+    
+    lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, carnivalOptions )
+  } else {
+    variables <- createVariablesForIlpProblem(dataPreprocessed)
+    writeParsedData( variables, dataPreprocessed, carnivalOptions )
+    lpFormulation <- createLpFormulation_newIntRep( variables, dataPreprocessed, 
+                                                    carnivalOptions )
+    
+  }
 
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
                   allConstraints = lpFormulation$allConstraints,
@@ -67,14 +76,6 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
 
 solveCarnivalSingleRun_newIntRep <- function( dataPreprocessed,
                                               carnivalOptions ) {
-  
-  intDataRepresentation <- createInternalDataRepresentation_newIntRep( measurements = dataPreprocessed$measurements, 
-                                                            priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                                            perturbations = dataPreprocessed$perturbations )
-  writeParsedData( variables, dataPreprocessed, carnivalOptions )
-  
-  lpFormulation <- createLpFormulation_newIntRep( intDataRepresentation, 
-                                                  dataPreprocessed, carnivalOptions )
   
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
                   allConstraints = lpFormulation$allConstraints,
@@ -123,6 +124,7 @@ sendTaskToSolver <- function( variables,
   return(result)
 }
 
+
 createInternalDataRepresentation <- function( measurements = measurements, 
                                               priorKnowledgeNetwork = priorKnowledgeNetwork, 
                                               perturbations = perturbations ) {
@@ -137,11 +139,6 @@ createInternalDataRepresentation <- function( measurements = measurements,
   return(list("dataVector" = dataVector, "variables" = variables))
 }
 
-createInternalDataRepresentation_newIntRep <- function( dataPreprocessed ) {
-  variables <- createVariablesForIlpProblem(dataPreprocessed)
-  
-  return(variables)
-}
 
 writeParsedData <- function ( variables = variables, 
                               dataPreprocessed = dataPreprocessed, 

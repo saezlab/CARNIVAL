@@ -66,43 +66,33 @@ createLpFormulation <- function( internalDataRepresentation,
 }
 
 createLpFormulation_newIntRep <- function( internalDataRepresentation, 
-                                            dataPreprocessed,
-                                            carnivalOptions) {
+                                           dataPreprocessed,
+                                           carnivalOptions ) {
   
   message("Writing constraints...")
   options(scipen=999)
   
   variables <- internalDataRepresentation
   objectiveFunction <- createObjectiveFunction_newIntRep ( variables = variables,
-                                                          alphaWeight = carnivalOptions$alphaWeight,
-                                                          betaWeight = carnivalOptions$betaWeight,
-                                                          scores = dataPreprocessed$pathwayWeights )
+                                                           alphaWeight = carnivalOptions$alphaWeight,
+                                                           betaWeight = carnivalOptions$betaWeight,
+                                                           pathwaysScores = dataPreprocessed$pathwayWeights )
   
   message("Generating constraints for linear programming problem...")
   
-  bounds <- createBoundaries_newIntRep (variables = variables)
+  bounds <- createBoundaries_newIntRep(variables = variables)
   binaries <- createBinaries_newIntRep(variables = variables)
   generals <- createGenerals_newIntRep(variables = variables)
-  
-  priorKnowledgeNetwork <- dataPreprocessed$priorKnowledgeNetwork)
 
-  c0 <- createConstraintsMeasuredNodes_newIntRep(variables = variables)
+  c0 <- createConstraintsMeasuredNodes_newIntRep(variables)
+  c1_2 <- createConstraints_1_2_newIntRep(variables)
+  c3 <- createConstraints_3_newIntRep(variables)
+  c4_5 <- createConstraints_4_5_newIntRep(variables)
+  c6_7 <- createConstraints_6_7_newIntRep(variables)
+  c8 <- createConstraints_8_newIntRep(variables, perturbations = dataPreprocessed$perturbations)
+  c9 <- createLoopConstraints_newIntRep(variables)
   
-  c1 <- createConstraints_1_2_newIntRep(variables, priorKnowledgeNetwork)
-  c3 <- createConstraints_3_newIntRep(variables = variables)
-  
-  c4 <- createConstraints_4_5_newIntRep(variables, priorKnowledgeNetwork)
-  c6 <- createConstraints_6_7_newIntRep(variables, priorKnowledgeNetwork)
-  
-  c8 <- createConstraints_8_newIntRep(variables, 
-                                      perturbations = dataPreprocessed$perturbations,
-                                      priorKnowledgeNetwork)
-  
-  c9 <- createLoopConstraints(variables = variables, 
-                              perturbations = dataPreprocessed$perturbations,
-                              priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork)
-  
-  allConstraints <- list(c0, c1, c2, c3, c4, c5, c6, c7, c8, c9)
+  allConstraints <- c(c0, c1_2, c3, c4_5, c6_7, c8, c9)
   
   allConstraints <- concatenateConstraints(unlist(allConstraints))
   
@@ -114,7 +104,6 @@ createLpFormulation_newIntRep <- function( internalDataRepresentation,
   
   return(lpProblemFormed)
 }
-
 
 
 createConstraintFreeForm <- function(...) {

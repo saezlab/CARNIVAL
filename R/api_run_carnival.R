@@ -76,6 +76,7 @@ runCarnival <- function( perturbations,
                          pathwayWeights = NULL,
                          solver = supportedSolvers$lpSolve,
                          solverPath = "",
+                         newDataRepresentation = F, #will be removed in the next version
                          carnivalOptions = 
                            defaultLpSolveCarnivalOptions()) {
   
@@ -91,7 +92,9 @@ runCarnival <- function( perturbations,
   carnivalOptions <- collectMetaInfo(carnivalOptions)
   
   result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
-                                    carnivalOptions = carnivalOptions )
+                                    carnivalOptions = carnivalOptions, 
+                                    newDataRepresentation)  
+  
   cleanupCarnival(carnivalOptions)
 
   message(" ") 
@@ -112,7 +115,7 @@ runCarnivalFromLp <- function(#lpFile="",
   message("Carnival flavour: vanilla")  
   
   result <- solveCarnivalSingleFromLp( #lpFile="",
-                                      parsedDataFile="",
+                                      parsedDataFile = "",
                                       carnivalOptions = carnivalOptions )
 
   cleanupCarnival(carnivalOptions)

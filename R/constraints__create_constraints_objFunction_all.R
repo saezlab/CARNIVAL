@@ -4,7 +4,8 @@
 ## 
 ## Enio Gjerga, 2020
 
-createConstraintsMeasuredNodes_newIntRep(variables = variables) {
+createConstraintsMeasuredNodes_newIntRep <- function(variables = variables,
+                                                     constraintName = "c0") {
   positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]
   negativeMeasurements <- variables$measurementsDf[variables$measurementsDf$value < 0, ]
   
@@ -27,5 +28,7 @@ createConstraintsMeasuredNodes_newIntRep(variables = variables) {
                              ">=", -1)
   }
   
-  return(c(cOf1, cOf2))
+  cOf <- list( c(cOf1, cOf2) )
+  names(cOf) <- constraintName
+  return( cOf )
 } 
