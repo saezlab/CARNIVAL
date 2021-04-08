@@ -33,49 +33,16 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
                                     carnivalOptions, 
                                     newDataRepresentation = F) {
   
-  if(!newDataRepresentation) {
-    intDataRep <- createInternalDataRepresentation( measurements = dataPreprocessed$measurements, 
-                                                    priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                                    perturbations = dataPreprocessed$perturbations )
-    writeParsedData( variables = intDataRep[[2]], 
-                     dataPreprocessed, 
-                     carnivalOptions )
-    
-    lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, carnivalOptions )
+  intDataRep <- createInternalDataRepresentation( dataPreprocessed, newDataRepresentation )
+  writeParsedData( intDataRep, dataPreprocessed, carnivalOptions )
+  
+  if(newDataRepresentation) {
+    lpFormulation <- createLpFormulation_newIntRep( intDataRep, dataPreprocessed, 
+                                                    carnivalOptions )    
   } else {
-    variables <- createVariablesForIlpProblem(dataPreprocessed)
-    writeParsedData( variables, dataPreprocessed, carnivalOptions )
-    lpFormulation <- createLpFormulation_newIntRep( variables, dataPreprocessed, 
+    lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, 
                                                     carnivalOptions )
-    
   }
-
-  writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
-                  allConstraints = lpFormulation$allConstraints,
-                  bounds = lpFormulation$bounds,
-                  binaries = lpFormulation$binaries,
-                  generals = lpFormulation$generals,
-                  carnivalOptions = carnivalOptions)
-  
-  result <- sendTaskToSolver( variables = intDataRep[[2]],
-                              dataPreprocessed, 
-                              carnivalOptions )
-  
-  #TODO results with diagnostics is never null, think how to implement it better
-  #if (!is.null(result)) {
-  #  writeDotFigure(result = result,
-  #              dir_name = outputFolder,
-  #              inputs = perturbations,
-  #              measurements = measurements,
-  #              UP2GS = FALSE)
-  #}
-  
-  return(result)
-}
-
-
-solveCarnivalSingleRun_newIntRep <- function( dataPreprocessed,
-                                              carnivalOptions ) {
   
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
                   allConstraints = lpFormulation$allConstraints,
@@ -99,7 +66,7 @@ solveCarnivalSingleRun_newIntRep <- function( dataPreprocessed,
   
   return(result)
 }
-    
+
 sendTaskToSolver <- function( variables,
                               dataPreprocessed, 
                               carnivalOptions ) {
@@ -113,9 +80,10 @@ sendTaskToSolver <- function( variables,
                                         dataPreprocessed )
   
   solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
-  result <- solversFunctions$export( solMatrix = solutionMatrix, 
-                                     variables = variables, 
-                                     dataPreprocessed )
+  print(solutionMatrix)
+  #result <- solversFunctions$export( solMatrix = solutionMatrix, 
+  #                                   variables = variables, 
+  #                                   dataPreprocessed )
   
   if (carnivalOptions$solver == supportedSolvers$cplex) {
     result <- solversFunctions$saveDiagnostics(result, carnivalOptions)
@@ -125,18 +93,19 @@ sendTaskToSolver <- function( variables,
 }
 
 
-createInternalDataRepresentation <- function( measurements = measurements, 
-                                              priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                                              perturbations = perturbations ) {
-  
-  dataVector<- buildDataVector(measurements = measurements, 
-                               priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                               perturbations = perturbations)
-  
-  variables <- createVariables(priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                               dataVector = dataVector)
-  
-  return(list("dataVector" = dataVector, "variables" = variables))
+createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresentation = F ) {
+  if (newDataRepresentation) {
+    varialbes <- createVariablesForIlpProblem(dataPreprocessed)
+    return(variables)
+  } else {
+    dataVector<- buildDataVector(measurements = dataPreprocessed$measurements, 
+                                 priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
+                                 perturbations = dataPreprocessed$perturbations)
+    
+    variables <- createVariables(priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
+                                 dataVector = dataPreprocessed$dataVector)
+    return(list("dataVector" = dataVector, "variables" = variables))
+  }
 }
 
 

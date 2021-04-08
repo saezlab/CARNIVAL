@@ -93,8 +93,7 @@ runCarnival <- function( perturbations,
   
   result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
                                     carnivalOptions = carnivalOptions, 
-                                    newDataRepresentation)  
-  
+                                    newDataRepresentation )  
   cleanupCarnival(carnivalOptions)
 
   message(" ") 

@@ -363,3 +363,24 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
   }
   
 }
+
+exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables, 
+                                                dataPreprocessed) {
+  #TODO
+  
+  for (i in seq_len(ncol(solMatrix))) {
+    values <- solutionMatrix[, i] 
+    
+    
+  }
+  networkResults <- c("Node1", "Sign", "Node2", "Weight")
+  
+  colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
+                                 "DownAct", "AvgAct", "NodeType")
+  
+  result <- list("weightedSIF" = weightedSIF, 
+                 "nodesAttributes" = nodesAttributes,
+                 "sifAll" = sifAll, 
+                 "attributesAll" = nodesActAll) 
+  
+}
