@@ -41,3 +41,27 @@ createBoundaries <- function(variables = variables,
   return(c(cc1, cc2, cc3, cc4, cc5, cc6, cc7, cc8, cc9))
   
 }
+
+createBoundary <- function(lowLimit, variable, upperLimit) {
+ boundary <- paste0("\t", lowLimit, " <= ", variables$variables[variables$idxB], 
+         " <= ", upperLimit)
+ return(boundary)
+}
+
+createBoundaries_newIntRep <- function(variables){
+  distanceConstant <- 100 
+  
+  b1 <- createBoundary(-1, variables$nodesDf$nodes, 1)
+  b2 <- createBoundary(-1, variables$nodesDf$nodesUpVars, 1)
+  b3 <- createBoundary(-1, variables$nodesDf$nodesDownVars, 1)
+  
+  b4 <- createBoundary(0, variables$edgesDf$edgesUpVars, 1)
+  b5 <- createBoundary(0, variables$edgesDf$edgesDownVars, 1)
+  
+  b6 <- createBoundary(0, variables$measurementsDf$measurementsVars, 2)
+  b7 <- createBoundary(-1, variables$nodesDf$nodesActStateVars, 1)
+  
+  b8 <- createBoundary(0, variables$nodesDf$nodesDistanceVars, distanceConstant)
+  
+  return(c(b1, b2, b3, b4, b5, b6, b7, b8))
+}

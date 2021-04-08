@@ -16,3 +16,9 @@ createGenerals <- function(variables = variables, objectiveFunction = objectiveF
   return(generals)
   
 }
+
+createGenerals_newIntRep <- function(variables = variables) {
+  generals <- paste(c(variables$nodesDf$nodesVars, 
+                      variables$nodesDf$nodesActStateVars,
+                      variables$measurementsDf$absDifference), sep="\t")
+}

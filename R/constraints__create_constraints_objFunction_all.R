@@ -9,8 +9,8 @@
 ## === Load write_constraints_objFunction.R === ##
 ## ============================================ ##
 
-writeConstraintsObjectiveFunction <- function(variables = variables, 
-                                              dataVector = dataVector){
+createConstraintsObjectiveFunction <- function(variables = variables, 
+                                               dataVector = dataVector){
   
   measurements <- dataVector$dataVectorSign
   
@@ -31,4 +31,30 @@ writeConstraintsObjectiveFunction <- function(variables = variables,
   
   return(constraints0[-which(constraints0=="")])
   
+} 
+
+createConstraintsMeasuredNodes_newIntRep(variables = variables) {
+  positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]
+  negativeMeasurements <- variables$measurementsDf[variables$measurementsDf$value < 0, ]
+  
+  if( dim(positiveMeasurements)[1] > 0 ) {
+    cOf1 <<- createConstraint(positiveMeasurements$nodesVars, "-", 
+                              positiveMeasurements$measurementsVars,
+                              "<=", 1)
+    cOf2 <<- createConstraint(positiveMeasurements$nodesVars, "+", 
+                              positiveMeasurements$measurementsVars,
+                               ">=", 1)
+   
+  }
+  
+  if( dim(negativeMeasurements)[1] > 0 ) {
+    cOf1 <<- createConstraint(negativeMeasurements$nodesVars, "-", 
+                              negativeMeasurements$measurementsVars,
+                             "<=", -1)
+    cOf2 <<- createConstraint(negativeMeasurements$nodesVars, "+", 
+                              negativeMeasurements$measurementsVars,
+                             ">=", -1)
+  }
+  
+  return(c(cOf1, cOf2))
 } 

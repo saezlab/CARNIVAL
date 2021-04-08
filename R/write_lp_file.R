@@ -31,8 +31,8 @@ createLpFormulation <- function( internalDataRepresentation,
   generals <- createGenerals(variables = variables, 
                              objectiveFunction = objectiveFunction)
 
-  c0 <- writeConstraintsObjectiveFunction(variables = variables,
-                                          dataVector = dataVector)
+  c0 <- createConstraintsObjectiveFunction(variables = variables,
+                                           dataVector = dataVector)
 
   c1 <- createConstraints_1(variables = variables)
   c2 <- createConstraints_2(variables = variables)

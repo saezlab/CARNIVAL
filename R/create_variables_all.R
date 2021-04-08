@@ -144,7 +144,7 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
 
 #TODO 
 #This can be fully rewritten in the internal representation. It will make dataVector absolete too.  
-#list(nodesVariables = "",  edgesVariables="", distanceVariables="", bVariables = "", uTable = "")
+#list(nodesVariables = "",  edgesVariables="", distanceVariables="")
 # where 
 # nodesVariables is a dataframe containing: 
 # PKN_names Nodes NodesUp NodesDown 
@@ -159,8 +159,10 @@ createVariablesForIlpProblem <- function(dataProcessed) {
   
   nodesDf <- createNodesVariables(priorKnowledgeNetwork)
   edgesDf <- createEdgesVariables(priorKnowledgeNetwork, startingIdx=19)
+  measurementsDf <- createMeasurementsVariables(measurements, nodesDf, priorKnowledgeNetwork)
  
-  return(list("nodesDf" = nodesDf, "edgesDf" = edgesDf))
+  return(list("nodesDf" = nodesDf, "edgesDf" = edgesDf, 
+              "measurementsDf" = measurementsDf))
 }
 
 createNodesVariables <- function(priorKnowledgeNetwork, 
@@ -173,17 +175,19 @@ createNodesVariables <- function(priorKnowledgeNetwork,
   nodesUpPrefix <- "nU"
   nodesDownPrefix <- "nD"
   nodesActivationStatePrefix <- "B"
+  nodesDistancePrefix <- "dist"
   
   idxNodes <- seq(from = 1, to = 3 * length(nodes), by = 1)
   nodesVars <- paste0(nodesPrefix, idxNodes[1 : length(nodes)])
   nodesUpVars <- paste0(nodesPrefix, idxNodes[(length(nodes) + 1) : ( 2 * length(nodes))])
   nodesDownVars <- paste0(nodesPrefix, idxNodes[(2 * length(nodes) + 1) : (3 * length(nodes))])
   nodesActStateVars <- paste0(nodesActivationStatePrefix, "_", nodes)
+  nodesDistanceVars <- paste0(nodesDistancePrefix, "_", nodes)
   #nodesUpVars <- paste0(nodesUpPrefix, idxNodes)
   #nodesDownVars <- paste0(nodesDownPrefix, idxNodes)
   #nodesActivationState <- paste0(nodesActivationStatePrefix, idxNodes)
   
-  nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars, nodesActStateVars)
+  nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars, nodesActStateVars, nodesDistanceVars)
   nodesDf <- as.data.frame(nodesDf)
   
   return(nodesDf)
@@ -210,3 +214,28 @@ createEdgesVariables <- function(priorKnowledgeNetwork, prefixes = c("edgeUp" = 
   edgesDf <- cbind(priorKnowledgeNetwork, edgesUpVars, edgesDownVars)
   return(edgesDf)
 }
+
+#TODO no backward compatibility (yet)
+createMeasurementsVariables <- function(measurements, nodesDf, priorKnowledgeNetwork) {
+  nodes <- c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2)
+  measurements <- measurements[names(measurements) %in% nodes]
+  
+  idxNodes <- seq(from = 1, to = length(measurements), by = 1)
+  #measurementsAbsDifferencePrefix <- "aD"
+  measurementsAbsDifferencePrefix <- "absDiff"
+  
+  measurementsVars <- paste0(measurementsAbsDifferencePrefix, idxNodes)
+  measurementsVars <- cbind("nodes" = names(measurements), 
+                            "value" = measurements, 
+                            measurementsVars)
+  
+  measurementsVars <- as.data.frame(measurementsVars)
+  
+  #add nodes variables here for convenience in constraint generation
+  nodesVars <- nodesDf[nodesDf$nodes %in% measurementsVars$nodes, 
+                       c('nodes', 'nodesVars')]
+  measurementsVars <- merge(measurementsVars, nodesVars)
+  
+  return(measurementsVars)
+}
+
