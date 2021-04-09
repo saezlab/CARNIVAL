@@ -3,7 +3,7 @@
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-createConstraints_1_2_newIntRep <- function(variables, constraintName = c("c1", "c2")) {
+createConstraints_1_2_v2 <- function(variables, constraintName = c("c1", "c2")) {
   
   variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
   
@@ -29,7 +29,7 @@ createConstraints_1_2_newIntRep <- function(variables, constraintName = c("c1", 
   return(constraints1_2)
 }
 
-createConstraints_3_newIntRep <- function(variables = variables,
+createConstraints_3_v2 <- function(variables = variables,
                                           constraintName = "c3") {
   
   constraints_3 <- createConstraint(variables$edgesDf$edgesUpVars, "+", 

@@ -1,19 +1,19 @@
 ## Solving CARNIVAL problem 
 ##
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020-2021
 
 supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
                                               "getSolutionMatrix" = getSolutionMatrixCplex,
-                                              "export" = exportIlpSolutionResultFromXml, 
+                                              "export" = exportIlpSolutionFromSolutionMatrix, 
                                               "saveDiagnostics" = saveDiagnosticsCplex),
                                   
                                   "cbc" =   c("solve" = solveWithCbc, 
                                               "getSolutionMatrix" = getSolutionMatrixCbc, 
-                                              "export" = exportIlpSolutionResultFromXml), 
+                                              "export" = exportIlpSolutionFromSolutionMatrix), 
                                   
                                   "lpSolve" = c("solve" = solveWithLpSolve, 
                                                 "getSolutionMatrix" = getSolutionMatrixLpSolve,
-                                                "export" = exportIlpSolutionResultFromXml)) 
+                                                "export" = exportIlpSolutionFromSolutionMatrix)) 
 
 solveCarnivalSingleFromLp <- function(#lpFile = "", 
                                       parsedDataFile = "",
@@ -37,11 +37,13 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
   writeParsedData( intDataRep, dataPreprocessed, carnivalOptions )
   
   if(newDataRepresentation) {
-    lpFormulation <- createLpFormulation_newIntRep( intDataRep, dataPreprocessed, 
-                                                    carnivalOptions )    
+    lpFormulation <- createLpFormulation_v2( intDataRep, dataPreprocessed, 
+                                                    carnivalOptions )
+    variables <- intDataRep 
   } else {
     lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, 
                                                     carnivalOptions )
+    variables <- intDataRep[[2]]
   }
   
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
@@ -51,9 +53,8 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
                   generals = lpFormulation$generals,
                   carnivalOptions = carnivalOptions)
   
-  result <- sendTaskToSolver( variables = intDataRep[[2]],
-                              dataPreprocessed, 
-                              carnivalOptions )
+  solutionMatrix <- sendTaskToSolver( variables,dataPreprocessed, carnivalOptions )
+  result <- processSolution( solutionMatrix, variables, carnivalOptions )
   
   #TODO results with diagnostics is never null, think how to implement it better
   #if (!is.null(result)) {
@@ -80,15 +81,28 @@ sendTaskToSolver <- function( variables,
                                         dataPreprocessed )
   
   solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
-  print(solutionMatrix)
-  #result <- solversFunctions$export( solMatrix = solutionMatrix, 
-  #                                   variables = variables, 
-  #                                   dataPreprocessed )
+  message("Done: Solving LP problem.")
+  
+  return(solutionMatrix)
+}
+
+
+processSolution <- function(solutionMatrix, 
+                            variables,
+                            carnivalOptions) {
+  message("Exporting solution matrix...")
+  solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
+  
+  result <- solversFunctions$export( solutionMatrix = solutionMatrix, 
+                                     variables = variables, 
+                                     dataPreprocessed )
   
   if (carnivalOptions$solver == supportedSolvers$cplex) {
     result <- solversFunctions$saveDiagnostics(result, carnivalOptions)
   } 
   
+  print(result)
+  message("Done: exporting solution matrix.")
   return(result)
 }
 
@@ -97,6 +111,7 @@ createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresent
   if (newDataRepresentation) {
     varialbes <- createVariablesForIlpProblem(dataPreprocessed)
     return(variables)
+    
   } else {
     dataVector<- buildDataVector(measurements = dataPreprocessed$measurements, 
                                  priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
@@ -121,6 +136,5 @@ writeParsedData <- function ( variables = variables,
        dataPreprocessed,
        file = parsedDataFilename)
 }
-
 
 

@@ -1,5 +1,5 @@
 
-createConstraints_4_5_newIntRep <- function(variables, constraintName = c("c4", "c5")) {
+createConstraints_4_5_v2 <- function(variables, constraintName = c("c4", "c5")) {
   variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
   
   edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]

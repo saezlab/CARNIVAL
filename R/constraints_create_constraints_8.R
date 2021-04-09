@@ -1,4 +1,4 @@
-createConstraints_8_newIntRep <- function(variables, perturbations, constraintName) {
+createConstraints_8_v2 <- function(variables, perturbations, constraintName) {
   constraint_8 <- c()
   
   # "Sync" all predicted states values with perturbation data 

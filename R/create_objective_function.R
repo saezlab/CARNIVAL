@@ -3,10 +3,10 @@
 ##
 ## Enio Gjerga, 2020
 
-createObjectiveFunction_newIntRep <- function( variables = variables, 
-                                               alphaWeight = alphaWeight, 
-                                               betaWeight = betaWeight, 
-                                               pathwaysScores = pathwaysScores) {
+createObjectiveFunction_v2<- function( variables = variables, 
+                                       alphaWeight = alphaWeight, 
+                                       betaWeight = betaWeight, 
+                                       pathwaysScores = pathwaysScores) {
   objectiveFunction <- "Obj:\t "
   
   if(is.null(pathwaysScores)){

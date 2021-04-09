@@ -1,8 +1,3 @@
-## Extract and export the optimisation results from the cplex solution file 
-## (XML) as files and variables for further plotting functions - CBC
-##
-## Enio Gjerga, 2020
-
 exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
                                            variables = variables, 
                                            dataPreprocessed = dataPreprocessed){
@@ -37,7 +32,7 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
   
   #TODO for lpSolve and cbc this line is below
   #for(ii in seq(from = 2, to = ncol(solMatrix), by = 1)){
-    
+  
   for (ii in seq_len(ncol(solMatrix))) {
     values <- solMatrix[, ii]
     
@@ -361,26 +356,5 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
     return(result)
     
   }
-  
-}
-
-exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables, 
-                                                dataPreprocessed) {
-  #TODO
-  
-  for (i in seq_len(ncol(solMatrix))) {
-    values <- solutionMatrix[, i] 
-    
-    
-  }
-  networkResults <- c("Node1", "Sign", "Node2", "Weight")
-  
-  colnames(nodesAttributes) <- c("Node", "ZeroAct", "UpAct", 
-                                 "DownAct", "AvgAct", "NodeType")
-  
-  result <- list("weightedSIF" = weightedSIF, 
-                 "nodesAttributes" = nodesAttributes,
-                 "sifAll" = sifAll, 
-                 "attributesAll" = nodesActAll) 
   
 }

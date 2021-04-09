@@ -3,7 +3,7 @@
 ##
 ## Enio Gjerga, 2020
 
-createLpFormulation_newIntRep <- function( internalDataRepresentation, 
+createLpFormulation_v2 <- function( internalDataRepresentation, 
                                            dataPreprocessed,
                                            carnivalOptions ) {
   
@@ -11,24 +11,24 @@ createLpFormulation_newIntRep <- function( internalDataRepresentation,
   options(scipen=999)
   
   variables <- internalDataRepresentation
-  objectiveFunction <- createObjectiveFunction_newIntRep ( variables = variables,
-                                                           alphaWeight = carnivalOptions$alphaWeight,
-                                                           betaWeight = carnivalOptions$betaWeight,
-                                                           pathwaysScores = dataPreprocessed$pathwayWeights )
+  objectiveFunction <- createObjectiveFunction_v2 ( variables = variables,
+                                                    alphaWeight = carnivalOptions$alphaWeight,
+                                                    betaWeight = carnivalOptions$betaWeight,
+                                                    pathwaysScores = dataPreprocessed$pathwayWeights )
   
   message("Generating constraints for linear programming problem...")
   
-  bounds <- createBoundaries_newIntRep(variables = variables)
-  binaries <- createBinaries_newIntRep(variables = variables)
-  generals <- createGenerals_newIntRep(variables = variables)
+  bounds <- createBoundaries_v2(variables)
+  binaries <- createBinaries_v2(variables)
+  generals <- createGenerals_v2(variables)
 
-  c0 <- createConstraintsMeasuredNodes_newIntRep(variables)
-  c1_2 <- createConstraints_1_2_newIntRep(variables)
-  c3 <- createConstraints_3_newIntRep(variables)
-  c4_5 <- createConstraints_4_5_newIntRep(variables)
-  c6_7 <- createConstraints_6_7_newIntRep(variables)
-  c8 <- createConstraints_8_newIntRep(variables, perturbations = dataPreprocessed$perturbations)
-  c9 <- createLoopConstraints_newIntRep(variables)
+  c0 <- createConstraintsMeasurements_v2(variables)
+  c1_2 <- createConstraints_1_2_v2(variables)
+  c3 <- createConstraints_3_v2(variables)
+  c4_5 <- createConstraints_4_5_v2(variables)
+  c6_7 <- createConstraints_6_7_v2(variables)
+  c8 <- createConstraints_8_v2(variables, perturbations = dataPreprocessed$perturbations)
+  c9 <- createLoopConstraints_v2(variables)
   
   allConstraints <- c(c0, c1_2, c3, c4_5, c6_7, c8, c9)
   
@@ -48,7 +48,7 @@ createBoundary <- function(lowLimit, variable, upperLimit) {
   return(boundary)
 }
 
-createBoundaries_newIntRep <- function(variables){
+createBoundaries_v2 <- function(variables){
   distanceConstant <- 100 
   
   b1 <- createBoundary(-1, variables$nodesDf$nodesVars, 1)
@@ -67,7 +67,7 @@ createBoundaries_newIntRep <- function(variables){
   return(c(b1, b2, b3, b4, b5, b6, b7, b8))
 }
 
-createBinaries_newIntRep <- function(variables = variables) {
+createBinaries_v2 <- function(variables = variables) {
   binaries <- paste(c(variables$nodesDf$nodesUpVars, variables$nodesDf$nodesDownVars,
                       variables$edgesDf$edgesUpVars, variables$edgesDf$edgesDownVars),
                     sep = "\t")
@@ -75,12 +75,12 @@ createBinaries_newIntRep <- function(variables = variables) {
 }
 
 
-createGenerals_newIntRep <- function(variables = variables) {
+createGenerals_v2 <- function(variables = variables) {
   generals <- paste(c(variables$nodesDf$nodesVars, 
                       variables$nodesDf$nodesActStateVars,
                       variables$measurementsDf$absDifference), sep="\t")
 }
-
+ 
 defaultListConstraints <- function() {
   defaultListConstrains <- c("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9")
   return(defaultListConstrains)

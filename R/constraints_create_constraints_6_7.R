@@ -1,4 +1,4 @@
-createConstraints_6_7_newIntRep <- function(variables, constraintName = c("c6", "c7")) {
+createConstraints_6_7_v2 <- function(variables, constraintName = c("c6", "c7")) {
   
   parentNodes <- setdiff(variables$edgesDf$Node1, variables$edgesDf$Node2)
   

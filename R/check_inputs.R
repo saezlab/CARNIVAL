@@ -7,7 +7,7 @@ checkData <- function( measurements = measurements,
                        perturbations = perturbations,
                        pathwayWeights = NULL ) {
 
-  checkPriorKnowledgeNetwork(priorKnowledgeNetwork = priorKnowledgeNetwork)
+  checkPriorKnowledgeNetwork(priorKnowledgeNetwork)
   
   priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
   nodesPriorKnowledgeNetwork <- getPriorKnowledgeNetworkNodes(priorKnowledgeNetworkProcessed)

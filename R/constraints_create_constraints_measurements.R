@@ -4,7 +4,7 @@
 ## 
 ## Enio Gjerga, 2020
 
-createConstraintsMeasuredNodes_newIntRep <- function(variables = variables,
+createConstraintsMeasurements_v2 <- function(variables = variables,
                                                      constraintName = "c0") {
   positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]
   negativeMeasurements <- variables$measurementsDf[variables$measurementsDf$value < 0, ]

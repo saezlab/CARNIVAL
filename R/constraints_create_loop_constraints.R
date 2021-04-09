@@ -3,7 +3,7 @@
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-createLoopConstraints_newIntRep <- function(variables, constraintName = "c9") {
+createLoopConstraints_v2 <- function(variables, constraintName = "c9") {
   distanceConstrant <- 100
   distanceConstrantForConstraint <- 101
 
