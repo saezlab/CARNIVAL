@@ -17,7 +17,7 @@
 #'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 #'Sign of the interaction (Sign), the Target of the interaction (Node2) and the
 #'weight of the interaction (Weight) which shows how often an interaction
-#'appears across the various solutions.
+#'appears across all solutions.
 #'
 #'2. nodesAttributes: A table with 6 columns containing information about
 #'infered protein activity states and attributes. It contains the Protein IDs
@@ -25,10 +25,10 @@
 #'solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
 #'(AvgAct); and the node attribute (measured, target, inferred).
 #'
-#'3. sifAll: A list of separate network solutions
+#'3. sifAll: A list of separate network solutions.
 #'
-#'4. attributesAll: A list of separate inferred node activities across the
-#'various solutions.
+#'4. attributesAll: A list of separate inferred node activities in each
+#' solution.
 #'
 #'5. diagnostics: reports the convergence of optimization and reason of 
 #' the termination. Only for CPLEX solver. 
@@ -70,6 +70,38 @@
 #'@export
 #'
 
+prerunCarnival <- function(perturbations, 
+                           measurements, 
+                           priorKnowledgeNetwork, 
+                           pathwayWeights = NULL,
+                           solver = supportedSolvers$lpSolve,
+                           solverPath = "",
+                           newDataRepresentation = F, #will be removed in the next version
+                           carnivalOptions = 
+                             defaultLpSolveCarnivalOptions()) {
+  message("--- Start of the CARNIVAL pipeline ---")
+  message("Carnival flavour: prerun") 
+  
+  dataPreprocessed <- checkData( perturbations = perturbations, 
+                                 measurements = measurements, 
+                                 priorKnowledgeNetwork = priorKnowledgeNetwork,
+                                 pathwayWeights = pathwayWeights )
+  
+  checkSolverInputs(carnivalOptions)
+  carnivalOptions <- collectMetaInfo(carnivalOptions)
+  
+  results <- prepareForCarnivalRun (dataPreprocessed = dataPreprocessed,
+                                    carnivalOptions = carnivalOptions, 
+                                    newDataRepresentation)
+  
+  cleanupCarnival(carnivalOptions)
+  message(" ") 
+  message("--- End of the CARNIVAL pipeline --- ")
+  message(" ")
+  
+  return(results)
+}
+
 runCarnival <- function( perturbations, 
                          measurements, 
                          priorKnowledgeNetwork, 
@@ -91,9 +123,9 @@ runCarnival <- function( perturbations,
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
   
-  result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
-                                    carnivalOptions = carnivalOptions, 
-                                    newDataRepresentation )  
+  result <- solveCarnival( dataPreprocessed,
+                           carnivalOptions, 
+                           newDataRepresentation )  
   cleanupCarnival(carnivalOptions)
 
   message(" ") 
@@ -103,8 +135,8 @@ runCarnival <- function( perturbations,
   return(result)
 }
 
-runCarnivalFromLp <- function(#lpFile="",
-                              parsedDataFile="",
+runCarnivalFromLp <- function(lpFile = "",
+                              parsedDataFile = "",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
                               carnivalOptions = 
@@ -112,11 +144,12 @@ runCarnivalFromLp <- function(#lpFile="",
   
   message("--- Start of the CARNIVAL pipeline ---")
   message("Carnival flavour: vanilla")  
+  checkSolverInputs(carnivalOptions)
+  carnivalOptions <- collectMetaInfo(carnivalOptions)
   
-  result <- solveCarnivalSingleFromLp( #lpFile="",
-                                      parsedDataFile = "",
-                                      carnivalOptions = carnivalOptions )
-
+  result <- solveCarnivalFromLp( lpFile = "",
+                                 parsedDataFile = "",
+                                 carnivalOptions = carnivalOptions )
   cleanupCarnival(carnivalOptions)
   
   return(result)
@@ -141,8 +174,7 @@ runInverseCarnival <- function(measurements,
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
   
-  result <- solveCarnivalSingleRun( dataPreprocessed = dataPreprocessed,
-                                    carnivalOptions = carnivalOptions )
+  result <- solveCarnival( dataPreprocessed, carnivalOptions )
   cleanupCarnival(carnivalOptions)
   
   message(" ") 
