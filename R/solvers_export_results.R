@@ -7,7 +7,8 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix,
                                                 variables, 
                                                 dataPreprocessed) {
   
-  summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables)
+  nSolutions <- dim(solutionMatrix)[[2]]
+  summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables, nSolutions)
   
   allSolutions <- list()
   allAttributes <- list()
@@ -39,7 +40,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix,
   
   #TODO perturbations are handled differently? 
   #TODO divide all values to N of solutions
-  nodesAttributes <- getSummaryNodesAttributes(solutionMatrix, variables)
+  nodesAttributes <- getSummaryNodesAttributes(solutionMatrix, variables, nSolutions)
   
   result <- list("weightedSIF" = summarisedSolution, 
                  "nodesAttributes" = nodesAttributes,
@@ -47,7 +48,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix,
                  "attributesAll" = allAttributes) 
 }
 
-getWeightedCollapsedSolution <- function(solutionMatrix, variables) {
+getWeightedCollapsedSolution <- function(solutionMatrix, variables, nSolutions) {
   solutionMatrix <- as.data.frame(solutionMatrix)
   
   weights <- apply(solutionMatrix, 1, function(x) {
@@ -59,6 +60,8 @@ getWeightedCollapsedSolution <- function(solutionMatrix, variables) {
   weights <- as.data.frame(weights)
   weights <- cbind(weights, row.names(weights))
   names(weights) <- c("Weight", "variables")
+  
+  edgesVars <- c(variables$edgesDf$edgesUpVars, variables$edgesDf$edgesDownVars)
   
   sol1 <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesWeights , ]
   sol2 <- variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesWeights , ]
@@ -72,10 +75,12 @@ getWeightedCollapsedSolution <- function(solutionMatrix, variables) {
   sol <- rbind(sol1, sol2)
   sol <- sol[c("Node1", "Sign", "Node2", "Weight")]
   
+  sol$Weight <- (sol$Weight / nSolutions) * 100
+  
   return(sol)
 }
 
-getSummaryNodesAttributes <- function(solutionMatrix, variables) {
+getSummaryNodesAttributes <- function(solutionMatrix, variables, nSolutions) {
   solutionMatrix <- as.data.frame(solutionMatrix)
   
   nodesVars <- c(variables$nodesDf$nodesVars, variables$nodesDf$nodesUpVars, 
@@ -94,23 +99,13 @@ getSummaryNodesAttributes <- function(solutionMatrix, variables) {
   nodesSolution <- cbind(nodesSolution, row.names(nodesSolution))
   names(nodesSolution) <- c("Activity", "Node")
   
-  nodesUpSolution <- summaryNodes[names(summaryNodes) %in% variables$nodesDf$nodesUpVars]
-  nodesUpSolution <- as.data.frame(nodesUpSolution)
-  nodesUpSolution <- cbind(nodesUpSolution, row.names(nodesUpSolution))
-  names(nodesUpSolution) <- c("Up", "Node")
+  nodesSolution$ZeroAct <- ( as.numeric(!nodesSolution$Activity) / nSolutions ) * 100
+  nodesSolution$UpAct <- ( as.numeric(nodesSolution$Activity == 1) / nSolutions ) * 100
+  nodesSolution$DownAct <- ( as.numeric(nodesSolution$Activity == -1) / nSolutions ) * 100
+  nodesSolution$AvgAct <- nodesSolution$UpAct - nodesSolution$DownAct
   
-  nodesDownSolution <- summaryNodes[names(summaryNodes) %in% variables$nodesDf$nodesDownVars]
-  nodesDownSolution <- as.data.frame(nodesDownSolution)
-  nodesDownSolution <- cbind(nodesDownSolution, row.names(nodesDownSolution))
-  names(nodesDownSolution) <- c("Down", "Node")
+  nodesSolution <- merge(variables$nodesDf, nodesSolution, by.x = "nodesVars", by.y = "Node")
+  nodesSolution <- nodesSolution[, c("nodes", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesType")]
   
-  s1 <- merge(variables$nodesDf, nodesSolution, by.x="nodesVars", by.y="Node")
-  s2 <- merge(variables$nodesDf, nodesUpSolution, by.x="nodesUpVars", by.y="Node")
-  s3 <- merge(variables$nodesDf, nodesDownSolution, by.x="nodesDownVars", by.y="Node")
-  
-  sAttributes <- merge(s1, s2, by="nodes")
-  sAttributes <- merge(sAttributes, s3)
-  sAttributes <- sAttributes[c("nodes", "Activity", "Up", "Down")]
-  
-  return(sAttributes)
+  return(nodesSolution)
 }

@@ -9,7 +9,7 @@ createVariablesForIlpProblem <- function(dataProcessed) {
   measurements <- dataProcessed$measurements
   priorKnowledgeNetwork <- dataProcessed$priorKnowledgeNetwork
   
-  nodesDf <- createNodesVariables(priorKnowledgeNetwork)
+  nodesDf <- createNodesVariables(priorKnowledgeNetwork, perturbations, measurements)
   edgesDf <- createEdgesVariables(priorKnowledgeNetwork) 
   measurementsDf <- createMeasurementsVariables(measurements, nodesDf, priorKnowledgeNetwork)
  
@@ -17,16 +17,21 @@ createVariablesForIlpProblem <- function(dataProcessed) {
               "measurementsDf" = measurementsDf))
 }
 
-createNodesVariables <- function(priorKnowledgeNetwork, backwardCompatibility=F,
+createNodesVariables <- function(priorKnowledgeNetwork, 
+                                 perturbations, measurements, 
+                                 backwardCompatibility=F,
                                  prefixes=c("nodes" = "n", "nodesUp" = "nU", 
                                             "nodesDown" = "nD", 
                                             "nodesActivationState" = "nAc",
                                             "nodesDistance" = "nDs")) {
   nodes <- unique(c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2))
-
+  
   if (backwardCompatibility) {
     #this will generate the variable names that were previously used in the ILP file (CARNIVAL v1)
     nodesPrefix <- "xb"
+    nodesActivationStatePrefix <- "B"
+    nodesDistancePrefix <- "dist"
+      
     idxNodes <- seq(from = 1, to = 3 * length(nodes), by = 1)
     nodesVars <- paste0(nodesPrefix, idxNodes[1 : length(nodes)], "_1")
     nodesUpVars <- paste0(nodesPrefix, idxNodes[(length(nodes) + 1) : ( 2 * length(nodes))], "_1")
@@ -47,6 +52,10 @@ createNodesVariables <- function(priorKnowledgeNetwork, backwardCompatibility=F,
   nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars, 
                    nodesActStateVars, nodesDistanceVars)
   nodesDf <- as.data.frame(nodesDf)
+  
+  nodesDf$nodesType <- ""
+  nodesDf[nodesDf$nodes %in% names(perturbations), "nodesType"] <- "P"
+  nodesDf[nodesDf$nodes %in% names(measurements), "nodesType"] <- "M"
   
   return(nodesDf)
 }
