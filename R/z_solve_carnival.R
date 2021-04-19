@@ -15,35 +15,31 @@ supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex,
                                                 "getSolutionMatrix" = getSolutionMatrixLpSolve,
                                                 "export" = exportIlpSolutionFromSolutionMatrix)) 
 
-solveCarnivalSingleFromLp <- function(#lpFile = "", 
-                                      parsedDataFile = "",
-                                      carnivalOptions) {
-  load(parsedDataFile) 
-  dataPreprocessed$measurements <- measurements
-  dataPreprocessed$priorKnowledgeNetwork <- priorKnowledgeNetwork
-  dataPreprocessed$perturbations <- perturbations
-  
-  result <- solveCarnivalSingleRun( dataPreprocessed,
-                                    carnivalOptions )
-  
-  return(result)
-}
 
-solveCarnivalSingleRun <- function( dataPreprocessed,
-                                    carnivalOptions, 
-                                    newDataRepresentation = F) {
+prepareForCarnivalRun <- function(dataPreprocessed,
+                                  carnivalOptions, 
+                                  newDataRepresentation = F) {
   
   intDataRep <- createInternalDataRepresentation( dataPreprocessed, newDataRepresentation )
   writeParsedData( intDataRep, dataPreprocessed, carnivalOptions )
   
   if(newDataRepresentation) {
     lpFormulation <- createLpFormulation_v2( intDataRep, dataPreprocessed, 
-                                                    carnivalOptions )
+                                             carnivalOptions )
     variables <- intDataRep 
+    
+    if(carnivalOptions$solver == supportedSolvers$lpSolve) {
+      stop("Runs of LpSolve with new data representation are not supported yet. Please use newDataRepresentation=T for lpSolve.")
+    }
+    
   } else {
     lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, 
-                                                    carnivalOptions )
+                                          carnivalOptions )
     variables <- intDataRep[[2]]
+    
+    if(carnivalOptions$solver == supportedSolvers$lpSolve) {
+      variables <- transformVariables(varialbes, dataPreprocessed$measurements)
+    }
   }
   
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
@@ -53,7 +49,32 @@ solveCarnivalSingleRun <- function( dataPreprocessed,
                   generals = lpFormulation$generals,
                   carnivalOptions = carnivalOptions)
   
-  solutionMatrix <- sendTaskToSolver( variables,dataPreprocessed, carnivalOptions )
+  return(variables)
+}
+
+
+solveCarnivalFromLp <- function(lpFile = "", 
+                                parsedDataFile = "",
+                                carnivalOptions) {
+  load(parsedDataFile) 
+  dataPreprocessed$measurements <- measurements
+  dataPreprocessed$priorKnowledgeNetwork <- priorKnowledgeNetwork
+  dataPreprocessed$perturbations <- perturbations
+  dataPreprocessed$weights <- weights
+  
+  carnivalOptions$lpFilename <- lpFile
+  solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
+  result <- processSolution( solutionMatrix, variables, carnivalOptions )
+  
+  return(result)
+}
+
+solveCarnival <- function( dataPreprocessed,
+                           carnivalOptions, 
+                           newDataRepresentation = F) {
+  
+  variables <- prepareForCarnivalRun(dataPreprocessed, carnivalOptions, newDataRepresentation)
+  solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
   result <- processSolution( solutionMatrix, variables, carnivalOptions )
   
   #TODO results with diagnostics is never null, think how to implement it better
@@ -76,12 +97,16 @@ sendTaskToSolver <- function( variables,
   
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
+  #TODO remove variables, we don't need them for everything except lpSolver
   lpSolution <- solversFunctions$solve( variables = variables, 
                                         carnivalOptions = carnivalOptions,
                                         dataPreprocessed )
   
-  solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
   message("Done: Solving LP problem.")
+  
+  message("Writing the solution matrix")
+  solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
+  message("Done: Writing the solution matrix")
   
   return(solutionMatrix)
 }
@@ -109,20 +134,19 @@ processSolution <- function(solutionMatrix,
 
 createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresentation = F ) {
   if (newDataRepresentation) {
-    varialbes <- createVariablesForIlpProblem(dataPreprocessed)
+    variables <- createVariablesForIlpProblem(dataPreprocessed)
     return(variables)
     
   } else {
-    dataVector<- buildDataVector(measurements = dataPreprocessed$measurements, 
-                                 priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                 perturbations = dataPreprocessed$perturbations)
+    dataVector <- buildDataVector(measurements = dataPreprocessed$measurements, 
+                                  priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
+                                  perturbations = dataPreprocessed$perturbations)
     
     variables <- createVariables(priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                 dataVector = dataPreprocessed$dataVector)
+                                 dataVector = dataVector)
     return(list("dataVector" = dataVector, "variables" = variables))
   }
 }
-
 
 writeParsedData <- function ( variables = variables, 
                               dataPreprocessed = dataPreprocessed, 
@@ -136,5 +160,3 @@ writeParsedData <- function ( variables = variables,
        dataPreprocessed,
        file = parsedDataFilename)
 }
-
-
