@@ -9,11 +9,6 @@ carnivalOptionsErrorChecks <- list(
   #                        param = c("", ""),
   #                        message = "Error: Invalid path to solver provided.")
   
-  alphaWeight =   data.frame(func = "is.numeric", 
-                             param = "",
-                             message = "Error in Objective Function, alphaWeight: Please set a weight for 
-                             mismatch penalty (penalty will be
-                             applied only when the weight of measurement is not defined)"),
   
   betaWeight =    data.frame(func = "is.numeric", 
                              param = "",

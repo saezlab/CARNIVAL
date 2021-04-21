@@ -1,3 +1,7 @@
+## This code writes the list of constraints (6) and (7) of the ILP problem. 
+## 
+## Enio Gjerga, Olga Ivanova 2020-2021
+
 createConstraints_6_7_v2 <- function(variables, constraintName = c("c6", "c7")) {
   
   parentNodes <- setdiff(variables$edgesDf$Node1, variables$edgesDf$Node2)

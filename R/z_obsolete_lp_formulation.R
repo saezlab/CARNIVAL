@@ -1,3 +1,6 @@
+## Obsolete code kept here for backward compatibility for v.2.1. 
+## Planned to be removed in v.3
+
 createLpFormulation <- function( internalDataRepresentation, 
                                  dataPreprocessed,
                                  carnivalOptions) {

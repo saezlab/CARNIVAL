@@ -3,7 +3,6 @@
     "lpFilename": "",
     "cplexCommandFilename": "",
     "timelimit": 3600, 
-    "alphaWeight": 1, 
     "betaWeight": 0.2,
     "threads": 0,
 	"clonelog": 1,

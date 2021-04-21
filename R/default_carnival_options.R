@@ -1,3 +1,9 @@
+supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
+requiredCarnivalCplexOptions <- c("solverPath", "solver", "betaWeight")
+requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "poolCap", 
+                          "poolIntensity", "poolReplace",
+                          "threads")
+
 #' default_CARNIVAL_options
 #' 
 #' generates default CARNIVAL options.  
@@ -19,8 +25,6 @@
 #'pool of solution (default: 100)
 #'@param poolIntensity CPLEX parameter: Intensity of solution searching
 #'(0,1,2,3,4 - default: 4)
-#'@param alphaWeight Objective function: weight for mismatch penalty (default:
-#'1 - will only be applied once measurement file only contains discrete values)
 #'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
 #'@param threads CPLEX parameter: Number of threads to use
 #'default: 0 for maximum number possible threads on system
@@ -32,13 +36,6 @@
 #' see the documentation on \code{\link{CARNIVAL::runCARNIVAL}}.
 #' @export
 #' 
-
-supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
-requiredCarnivalCplexOptions <- c("solverPath", "solver", "alphaWeight", "betaWeight")
-requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "poolCap", 
-                          "poolIntensity", "poolReplace",
-                          "threads")
-
 defaultCplexCarnivalOptions <- function(solverPath=""){
     
     options <- list(
@@ -47,7 +44,6 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
          lpFilename = "",
          cplexCommandFilename = "",
          outputFolder = "",
-         alphaWeight = 3.5, 
          betaWeight = 0.2,
          cleanTmpFiles = TRUE,
          keepLPFiles = TRUE,
@@ -64,7 +60,6 @@ defaultLpSolveCarnivalOptions <- function(){
     solver = supportedSolvers$lpSolve, 
     lpFilename = "",
     outputFolder = "",
-    alphaWeight = 1, 
     betaWeight = 0.2,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE
@@ -80,7 +75,6 @@ defaultCbcSolveCarnivalOptions <- function(solverPath=""){
     solverPath = solverPath,
     lpFilename = "",
     outputFolder = "",
-    alphaWeight = 1, 
     betaWeight = 0.2,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE
