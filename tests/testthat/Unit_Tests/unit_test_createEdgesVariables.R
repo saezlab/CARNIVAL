@@ -31,5 +31,26 @@ EdgesVariables_expected <- data.frame(Node1=c("Node1", "Node2", "Node3", "Node3"
 test_that("Comparison of the results", {
   expect_equal(NodesVariables_expected, NodesVariables)
 })
-                                      
+              
+### Run function
+
+EdgesVariables <- createEdgesVariables(priorKnowledgeNetwork_1, c("edgeUp" = "EU", 
+                                                                  "edgeDown" = "ED"))
+
+
+### Expected Result
+
+EdgesVariables_expected <- data.frame(Node1=c("Node1", "Node2", "Node3", "Node3", "Node4"), 
+                                      Sign=c(1,1,-1,-1,1), 
+                                      Node2=c("Node4", "Node4", "Node1", "Node2", "Node5"), 
+                                      edgesUpVars=c("EU1", "EU2", "EU3", "EU4", "EU5"), 
+                                      edgesDownVars=c("ED1", "ED2", "ED3", "ED4", "ED5"))
+
+### Test
+
+test_that("Comparison of the results", {
+  expect_equal(NodesVariables_expected, NodesVariables)
+})
+
+
                                       

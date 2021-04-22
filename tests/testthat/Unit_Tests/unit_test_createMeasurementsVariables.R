@@ -46,4 +46,3 @@ MeasurementsVariables_expected <- data.frame(nodes=c("Node5"),
 test_that("Comparison of the results", {
   expect_equal(MeasurementsVariables_expected, MeasurementsVariables)
 })
-
