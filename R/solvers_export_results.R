@@ -1,11 +1,9 @@
-## Extract and export the optimisation results from the cplex solution file 
-## (XML) as files and variables for further plotting functions - CBC
+## Extract and export the optimisation results from the solution matrix.
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, 
-                                                variables, 
-                                                dataPreprocessed) {
+                                                variables) {
   
   nSolutions <- dim(solutionMatrix)[[2]]
   summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables, nSolutions)

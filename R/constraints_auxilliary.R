@@ -16,7 +16,6 @@ concatenateConstraints <- function(constraintsText){
   return(allConstraints)
 }
 
-
 createConstraintFreeForm <- function(...) {
   constraint <- paste(...)  
   return(constraint)

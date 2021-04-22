@@ -30,7 +30,7 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
   
   indeces <- c(idxNodes, idxNodesUp, idxNodesDown, idxEdgesUp, idxEdgesDown)
   
-  solMatrix = as.matrix(solMatrix)
+  solMatrix <- as.matrix(solMatrix)
   
   #TODO for lpSolve and cbc this line is below
   #for(ii in seq(from = 2, to = ncol(solMatrix), by = 1)){
@@ -104,8 +104,7 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
       edgesUp <- as.matrix(t(edgesUp))
     }
     
-    # Writing SIF and DOT file
-    
+    # Writing network results
     priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)
     sif <- matrix(data = "", nrow = 1, ncol = 3)
     colnames(sif) <- colnames(priorKnowledgeNetwork)

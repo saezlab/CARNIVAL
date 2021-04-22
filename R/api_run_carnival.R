@@ -1,7 +1,7 @@
 #'\code{prerunCarnival}
 #'
-#'@details Tranforms input data into lp file and .Rdata file. These files can be reused to run CARNIVAL
-#'without preprocessing step. 
+#'@details Prepare the input data for the run: tranforms data into lp file and .Rdata file. 
+#'These files can be reused to run CARNIVAL without preprocessing step using runCarnivalFromLp(..)
 #'@param perturbations (optional, if inverse CARNIVAL flavour is used further) vector of targets of perturbations.  
 #'@param measurements vector of the measurements (i.e. DoRothEA/VIPER normalised
 #'enrichment scores) 
@@ -47,7 +47,7 @@ prerunCarnival <- function(perturbations,
 
 #'\code{runCarnival}
 #'
-#'@details Runs full CARNIVAL pipeline, vanilla/classic flavour.
+#'@details Runs full CARNIVAL pipeline, vanilla(classic) flavour.
 #' 
 #'@param perturbations vector of targets of perturbations.  
 #'@param measurements vector of the measurements (i.e. DoRothEA/VIPER normalised
@@ -56,7 +56,6 @@ prerunCarnival <- function(perturbations,
 #'@param pathwayWeights (optional) vector of the additional weights: e.g. PROGENy pathway
 #'score or measured protein activities.
 #'
-#'#'@return data frame of all variables for ILP formulation.
 #'#'@return The function will return a list of results containing:
 #'1. weightedSIF: A table with 4 columns containing the combined network
 #'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
@@ -118,15 +117,10 @@ runCarnival <- function( perturbations,
 #'
 #'@details Runs CARNIVAL pipeline with preparsed data - lp file and Rdata file containing variables for ILP formulation.
 #' 
-#'@param perturbations vector of targets of perturbations.  
-#'@param measurements vector of the measurements (i.e. DoRothEA/VIPER normalised
-#'enrichment scores) 
-#'@param priorKnowledgeNetwork data frame of the prior knowledge network
-#'@param pathwayWeights (optional) vector of the additional weights: e.g. PROGENy pathway
-#'score or measured protein activities.
+#'@param lpFile full path to .lp file
+#'@param parsedDataFile full path to preprocessed .RData file
 #'
-#'#'@return data frame of all variables for ILP formulation.
-#'#'@return The function will return a list of results containing:
+# The function will return a list of results containing:
 #'1. weightedSIF: A table with 4 columns containing the combined network
 #'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 #'Sign of the interaction (Sign), the Target of the interaction (Node2) and the
@@ -154,6 +148,7 @@ runCarnivalFromLp <- function(lpFile = "",
                               parsedDataFile = "",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
+                              newDataRepresentation = F,
                               carnivalOptions = 
                                 defaultLpSolveCarnivalOptions()) {
   
@@ -162,14 +157,46 @@ runCarnivalFromLp <- function(lpFile = "",
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
   
-  result <- solveCarnivalFromLp( lpFile = "",
-                                 parsedDataFile = "",
+  result <- solveCarnivalFromLp( lpFile = lpFile,
+                                 parsedDataFile = parsedDataFile,
+                                 newDataRepresentation = newDataRepresentation,
                                  carnivalOptions = carnivalOptions )
   cleanupCarnival(carnivalOptions)
   
   return(result)
 }
 
+#'\code{runInverseCarnival}
+#'
+#'@details Runs CARNIVAL pipeline with preparsed data - lp file and Rdata file containing variables for ILP formulation.
+#' 
+#'@param lpFile full path to .lp file
+#'@param parsedDataFile full path to preprocessed .RData file
+#'
+# The function will return a list of results containing:
+#'1. weightedSIF: A table with 4 columns containing the combined network
+#'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
+#'Sign of the interaction (Sign), the Target of the interaction (Node2) and the
+#'weight of the interaction (Weight) which shows how often an interaction
+#'appears across all solutions.
+#'
+#'2. nodesAttributes: A table with 6 columns containing information about
+#'infered protein activity states and attributes. It contains the Protein IDs
+#'(Node); how often this node has taken an activity of 0, 1 and -1 across the
+#'solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
+#'(AvgAct); and the node attribute (measured, target, inferred).
+#'
+#'3. sifAll: A list of separate network solutions.
+#'
+#'4. attributesAll: A list of separate inferred node activities in each
+#' solution.
+#'
+#'5. diagnostics: reports the convergence of optimization and reason of 
+#' the termination. Only for CPLEX solver. 
+#'
+#'@author Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}
+#'
+#'@export
 runInverseCarnival <- function(measurements, 
                                priorKnowledgeNetwork, 
                                pathwayWeights = NULL,
