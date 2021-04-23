@@ -11,7 +11,7 @@
 
 test_that("testing CPLEX parser", {
     N_tests <- length(cplex_test_log_list)
-    parsed_logs <- lapply(cplex_test_log_list,parse_CPLEX_log)
+    parsed_logs <- lapply(cplex_test_log_list, parse_CPLEX_log)
     
     expect_equal(length(parsed_logs), N_tests)
 })

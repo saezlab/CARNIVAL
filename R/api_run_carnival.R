@@ -19,7 +19,6 @@ prerunCarnival <- function(perturbations,
                            pathwayWeights = NULL,
                            solver = supportedSolvers$lpSolve,
                            solverPath = "",
-                           newDataRepresentation = F, #will be removed in the next version
                            carnivalOptions = 
                              defaultLpSolveCarnivalOptions()) {
   message("--- Start of the CARNIVAL pipeline ---")
@@ -34,8 +33,7 @@ prerunCarnival <- function(perturbations,
   carnivalOptions <- collectMetaInfo(carnivalOptions)
   
   results <- prepareForCarnivalRun (dataPreprocessed = dataPreprocessed,
-                                    carnivalOptions = carnivalOptions, 
-                                    newDataRepresentation)
+                                    carnivalOptions = carnivalOptions)
   
   cleanupCarnival(carnivalOptions)
   message(" ") 
@@ -86,7 +84,6 @@ runCarnival <- function( perturbations,
                          pathwayWeights = NULL,
                          solver = supportedSolvers$lpSolve,
                          solverPath = "",
-                         newDataRepresentation = F, #will be removed in the next version
                          carnivalOptions = 
                            defaultLpSolveCarnivalOptions()) {
   
@@ -148,7 +145,6 @@ runCarnivalFromLp <- function(lpFile = "",
                               parsedDataFile = "",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
-                              newDataRepresentation = F,
                               carnivalOptions = 
                                 defaultLpSolveCarnivalOptions()) {
   
@@ -158,8 +154,7 @@ runCarnivalFromLp <- function(lpFile = "",
   carnivalOptions <- collectMetaInfo(carnivalOptions)
   
   result <- solveCarnivalFromLp( lpFile = lpFile,
-                                 parsedDataFile = parsedDataFile,
-                                 newDataRepresentation = newDataRepresentation,
+                                 parsedDataFile = parsedDataFile, 
                                  carnivalOptions = carnivalOptions )
   cleanupCarnival(carnivalOptions)
   
