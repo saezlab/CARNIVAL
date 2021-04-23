@@ -1,5 +1,7 @@
 # CARNIVAL <img src="man/figures/logo.png" align="right" height="139">
 
+[![Build Status](https://travis-ci.org/saezlab/CARNIVAL.svg?branch=master)](https://travis-ci.org/saezlab/CARNIVAL) 
+
 <!-- badges: start -->
 <!-- badges: end -->
 
