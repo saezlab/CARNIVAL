@@ -20,4 +20,6 @@ after_success:
   - Rscript -e 'covr::codecov()'
 notifications:
   email:
-    on_failure: ivanovaos.09@gmail.com
+    recipients:
+	- ivanovaos.09@gmail.com
+    on_failure: always
