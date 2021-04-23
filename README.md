@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 <!-- badges: end -->
+[![Build Status](https://travis-ci.org/saezlab/CARNIVAL.svg?branch=devel_2_1)](https://travis-ci.org/saezlab/CARNIVAL)
 
 ## Overview
 CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
