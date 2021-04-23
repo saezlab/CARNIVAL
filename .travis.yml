@@ -11,9 +11,11 @@ r_packages:
 os:
   - linux
   - osx
-apt_packages:
+r_packages:
   - igraph
   - readr
+  - dplyr
+  - stringr
 after_success:
   - Rscript -e 'covr::codecov()'
 notifications:
