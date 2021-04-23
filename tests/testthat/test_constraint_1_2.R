@@ -32,8 +32,7 @@ test_that("Constraint 2 check:", {
 })
 
 
-set.seed(100)
-dummyData <- createDummyVariablesMixed(5)
+dummyData <- createDummyVariablesMixed(nNode = 5, seed = 100)
 constraint1_expected <- c("eU1 + n1 >= 0", "eU2 - n2 >= 0", "eU4 + n4 >= 0","eU3 + n2 >= 0")
 constraint2_expected <- c("eD1 - n1 >= 0", "eD2 + n2 >= 0", "eD4 - n4 >= 0","eD3 - n2 >= 0")
 constraint <- createConstraints_1_2_v2(variables = dummyData)
@@ -49,8 +48,7 @@ test_that("Comparison of the results", {
 })
 
 
-set.seed(400)
-dummyData <- createDummyVariablesMixed(5)
+dummyData <- createDummyVariablesMixed(nNode = 5, seed = 400)
 constraint1_expected <- c("eU4 - n4 >= 0","eU1 - n1 >= 0", "eU2 + n2 >= 0", "eU3 - n2 >= 0")
 constraint2_expected <- c("eD4 + n4 >= 0","eD1 + n1 >= 0", "eD2 - n2 >= 0", "eD3 + n2 >= 0")
 constraint <- createConstraints_1_2_v2(variables = dummyData)

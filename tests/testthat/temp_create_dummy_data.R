@@ -33,26 +33,26 @@ save(priorKnowledgeNetwork_1, file = "PKN_1")
 
 #### Create Expected Output 1 ####
 
-Constraint_1_1 <- c(createConstraint("eU1", "-", "n1", ">=", "0"),
+constraint_1_1 <- c(createConstraint("eU1", "-", "n1", ">=", "0"),
                     createConstraint("eU2", "-", "n2", ">=", "0"),
                     createConstraint("eU5", "-", "n4", ">=", "0"),
                     createConstraint("eU3", "+", "n3", ">=", "0"),
                     createConstraint("eU4", "+", "n3", ">=", "0"))
 
-Constraint_2_1 <- c(createConstraint("eD1", "+", "n1", ">=", "0"),
+constraint_2_1 <- c(createConstraint("eD1", "+", "n1", ">=", "0"),
                     createConstraint("eD2", "+", "n2", ">=", "0"),
                     createConstraint("eD5", "+", "n4", ">=", "0"),
                     createConstraint("eD3", "-", "n3", ">=", "0"),
                     createConstraint("eD4", "-", "n3", ">=", "0"))
 
-Output_1 = rbind(Constraint_1_1, Constraint_2_1)
+output_1 = rbind(Constraint_1_1, Constraint_2_1)
 save(Output_1, file = "Dummy_Outputs_1.RData")
 
 #### Create Dummy Data 2 ####
 
 #Set Amount of nodes
 #Always use this vector of names to make sure all names are the same
-nodenames = c(paste("Node", seq(1,7), sep = ""))
+nodenames = c(paste("Node", seq(1, 7), sep = ""))
 
 
 perturbations_2 = c(1,-1, 1, 1) 
