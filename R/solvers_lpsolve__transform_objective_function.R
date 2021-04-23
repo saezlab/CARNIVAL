@@ -8,7 +8,6 @@ transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
   idx <- which(grepl(pattern = "Obj:", x = lpFile))
   
   problem <- as.character(lpFile[idx])
-
   problem <- gsub(pattern = "Obj:\t ", replacement = "", x = problem, 
                   fixed = TRUE)
   
@@ -20,7 +19,7 @@ transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
             x = problem, split = "+ ", fixed = TRUE)[[1]], 
           split = " ", fixed = TRUE), "[[", 1)))
   
-  varID <- as.character(
+  varId <- as.character(
     unlist(
       lapply(
         strsplit(
@@ -28,12 +27,12 @@ transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
             x = problem, split = "+ ", fixed = TRUE)[[1]], 
           split = " ", fixed = TRUE), "[[", 2)))
   
-  idx <- rep(NA, length(varID))
-  for(ii in seq_len(length(varID))) {
-    idx[ii] <- which(mt[, 1] == varID[ii])
+  idx <- rep(NA, length(varId))
+  for( ii in seq_len(length(varId)) ) {
+    idx[ii] <- which( mt[, 1] == varId[ii] )
   }
   
-  f.obj = rep(0, nrow(mt))
+  f.obj <- rep(0, nrow(mt))
   f.obj[idx] <- coefficients
   
   return(f.obj)

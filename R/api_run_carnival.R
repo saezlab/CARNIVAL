@@ -1,10 +1,10 @@
-#'\code{prerunCarnival}
+#'\code{generateLpFileCarnival}
 #'
-#'@details Prepare the input data for the run: tranforms data into lp file and .Rdata file. 
+#'@details Prepare the input data for the run: tranforms data into lp file and .Rdata file.
 #'These files can be reused to run CARNIVAL without preprocessing step using runCarnivalFromLp(..)
-#'@param perturbations (optional, if inverse CARNIVAL flavour is used further) vector of targets of perturbations.  
+#'@param perturbations (optional, if inverse CARNIVAL flavour is used further) vector of targets of perturbations.
 #'@param measurements vector of the measurements (i.e. DoRothEA/VIPER normalised
-#'enrichment scores) 
+#'enrichment scores)
 #'@param priorKnowledgeNetwork data frame of the prior knowledge network
 #'@param pathwayWeights (optional) vector of the additional weights: e.g. PROGENy pathway
 #'score or measured protein activities.
@@ -13,43 +13,43 @@
 #'
 #'@export
 #'
-prerunCarnival <- function(perturbations, 
-                           measurements, 
-                           priorKnowledgeNetwork, 
+generateLpFileCarnival <- function(perturbations,
+                           measurements,
+                           priorKnowledgeNetwork,
                            pathwayWeights = NULL,
                            solver = supportedSolvers$lpSolve,
                            solverPath = "",
-                           carnivalOptions = 
+                           carnivalOptions =
                              defaultLpSolveCarnivalOptions()) {
   message("--- Start of the CARNIVAL pipeline ---")
-  message("Carnival flavour: prerun") 
-  
-  dataPreprocessed <- checkData( perturbations = perturbations, 
-                                 measurements = measurements, 
+  message("Carnival flavour: LP generator ")
+
+  dataPreprocessed <- checkData( perturbations = perturbations,
+                                 measurements = measurements,
                                  priorKnowledgeNetwork = priorKnowledgeNetwork,
                                  pathwayWeights = pathwayWeights )
-  
+
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
-  
+
   results <- prepareForCarnivalRun (dataPreprocessed = dataPreprocessed,
                                     carnivalOptions = carnivalOptions)
-  
+
   cleanupCarnival(carnivalOptions)
-  message(" ") 
+  message(" ")
   message("--- End of the CARNIVAL pipeline --- ")
   message(" ")
-  
+
   return(results)
 }
 
 #'\code{runCarnival}
 #'
 #'@details Runs full CARNIVAL pipeline, vanilla(classic) flavour.
-#' 
-#'@param perturbations vector of targets of perturbations.  
+#'
+#'@param perturbations vector of targets of perturbations.
 #'@param measurements vector of the measurements (i.e. DoRothEA/VIPER normalised
-#'enrichment scores) 
+#'enrichment scores)
 #'@param priorKnowledgeNetwork data frame of the prior knowledge network
 #'@param pathwayWeights (optional) vector of the additional weights: e.g. PROGENy pathway
 #'score or measured protein activities.
@@ -72,48 +72,47 @@ prerunCarnival <- function(perturbations,
 #'4. attributesAll: A list of separate inferred node activities in each
 #' solution.
 #'
-#'5. diagnostics: reports the convergence of optimization and reason of 
-#' the termination. Only for CPLEX solver. 
+#'5. diagnostics: reports the convergence of optimization and reason of
+#' the termination. Only for CPLEX solver.
 #'
 #'@author Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}
 #'
 #'@export
-runCarnival <- function( perturbations, 
-                         measurements, 
-                         priorKnowledgeNetwork, 
+runCarnival <- function( perturbations,
+                         measurements,
+                         priorKnowledgeNetwork,
                          pathwayWeights = NULL,
                          solver = supportedSolvers$lpSolve,
                          solverPath = "",
-                         carnivalOptions = 
+                         carnivalOptions =
                            defaultLpSolveCarnivalOptions()) {
-  
+
   message("--- Start of the CARNIVAL pipeline ---")
-  message("Carnival flavour: vanilla") 
-  
-  dataPreprocessed <- checkData( perturbations = perturbations, 
-                                 measurements = measurements, 
+  message("Carnival flavour: vanilla")
+
+  dataPreprocessed <- checkData( perturbations = perturbations,
+                                 measurements = measurements,
                                  priorKnowledgeNetwork = priorKnowledgeNetwork,
                                  pathwayWeights = pathwayWeights )
-  
+
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
-  
+
   result <- solveCarnival( dataPreprocessed,
-                           carnivalOptions, 
-                           newDataRepresentation )  
+                           carnivalOptions )
   cleanupCarnival(carnivalOptions)
 
-  message(" ") 
+  message(" ")
   message("--- End of the CARNIVAL pipeline --- ")
   message(" ")
-  
+
   return(result)
 }
 
 #'\code{runCarnivalFromLp}
 #'
 #'@details Runs CARNIVAL pipeline with preparsed data - lp file and Rdata file containing variables for ILP formulation.
-#' 
+#'
 #'@param lpFile full path to .lp file
 #'@param parsedDataFile full path to preprocessed .RData file
 #'
@@ -135,8 +134,8 @@ runCarnival <- function( perturbations,
 #'4. attributesAll: A list of separate inferred node activities in each
 #' solution.
 #'
-#'5. diagnostics: reports the convergence of optimization and reason of 
-#' the termination. Only for CPLEX solver. 
+#'5. diagnostics: reports the convergence of optimization and reason of
+#' the termination. Only for CPLEX solver.
 #'
 #'@author Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}
 #'
@@ -145,26 +144,26 @@ runCarnivalFromLp <- function(lpFile = "",
                               parsedDataFile = "",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
-                              carnivalOptions = 
+                              carnivalOptions =
                                 defaultLpSolveCarnivalOptions()) {
-  
+
   message("--- Start of the CARNIVAL pipeline ---")
-  message("Carnival flavour: vanilla")  
+  message("Carnival flavour: vanilla")
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
-  
+
   result <- solveCarnivalFromLp( lpFile = lpFile,
-                                 parsedDataFile = parsedDataFile, 
+                                 parsedDataFile = parsedDataFile,
                                  carnivalOptions = carnivalOptions )
   cleanupCarnival(carnivalOptions)
-  
+
   return(result)
 }
 
 #'\code{runInverseCarnival}
 #'
 #'@details Runs CARNIVAL pipeline with preparsed data - lp file and Rdata file containing variables for ILP formulation.
-#' 
+#'
 #'@param lpFile full path to .lp file
 #'@param parsedDataFile full path to preprocessed .RData file
 #'
@@ -186,49 +185,49 @@ runCarnivalFromLp <- function(lpFile = "",
 #'4. attributesAll: A list of separate inferred node activities in each
 #' solution.
 #'
-#'5. diagnostics: reports the convergence of optimization and reason of 
-#' the termination. Only for CPLEX solver. 
+#'5. diagnostics: reports the convergence of optimization and reason of
+#' the termination. Only for CPLEX solver.
 #'
 #'@author Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}
 #'
 #'@export
-runInverseCarnival <- function(measurements, 
-                               priorKnowledgeNetwork, 
+runInverseCarnival <- function(measurements,
+                               priorKnowledgeNetwork,
                                pathwayWeights = NULL,
                                solverPath = solverPath,
                                solver = supportedSolvers$lpSolve,
-                               carnivalOptions = 
+                               carnivalOptions =
                                  defaultCplexCarnivalOptions(solverPath = solverPath)()){
-  message(" ") 
+  message(" ")
   message("--- Start of the CARNIVAL pipeline ---")
-  message("Carnival flavour: inverse") 
-  
-  dataPreprocessed <- checkData( perturbations = perturbations, 
-                                 measurements = measurements, 
+  message("Carnival flavour: inverse")
+
+  dataPreprocessed <- checkData( perturbations = perturbations,
+                                 measurements = measurements,
                                  priorKnowledgeNetwork = priorKnowledgeNetwork,
                                  pathwayWeights = pathwayWeights )
-  
+
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
-  
+
   result <- solveCarnival( dataPreprocessed, carnivalOptions )
   cleanupCarnival(carnivalOptions)
-  
-  message(" ") 
+
+  message(" ")
   message("--- End of the CARNIVAL pipeline --- ")
   message(" ")
-  
+
   return(result)
 }
 
-runCarnivalWithManualConstraints <- function(perturbations, 
-                                             measurements, 
-                                             priorKnowledgeNetwork, 
+runCarnivalWithManualConstraints <- function(perturbations,
+                                             measurements,
+                                             priorKnowledgeNetwork,
                                              pathwayWeights = NULL,
                                              solver = supportedSolvers$lpSolve,
                                              solverPath = "",
                                              constraints = c(),
-                                             carnivalOptions = 
+                                             carnivalOptions =
                                                defaultLpSolveCarnivalOptions()) {
   stop("Function is not implemented yet.")
   return(NULL)
@@ -237,8 +236,8 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'\code{runCARNIVAL}
 #'
 #'@details Run CARNIVAL pipeline using to the user-provided list of inputs or
-#'run CARNIVAL built-in examples. The function is an API from v1.2 of CARNIVAL 
-#' and is left for backward compatibility.  
+#'run CARNIVAL built-in examples. The function is an API from v1.2 of CARNIVAL
+#' and is left for backward compatibility.
 #'
 #'@param perturbations vector of targets of perturbation - optional
 #'or default set to NULL to run invCARNIVAL when inputs are not known.
@@ -267,8 +266,8 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'4. attributesAll: A list of separate inferred node activities in each
 #' solution.
 #'
-#'5. diagnostics: reports the convergence of optimization and reason of 
-#' the termination. Only for CPLEX solver. 
+#'5. diagnostics: reports the convergence of optimization and reason of
+#' the termination. Only for CPLEX solver.
 #'
 #'@author Enio Gjerga, 2020 \email{carnival.developers@gmail.com}
 #'
@@ -281,20 +280,20 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'                         package="CARNIVAL"))
 #'
 #' ## lpSolve
-#' res1 = runCarnival(perturbations = toy_inputs_ex1, 
+#' res1 = runCarnival(perturbations = toy_inputs_ex1,
 #'                    measurements = toy_measurements_ex1,
 #'                    priorKnowledgeNetwork = toy_network_ex1)
 #'
 #' ## cbc
-#' res2 = runCarnival(perturbations = toy_inputs_ex1, 
+#' res2 = runCarnival(perturbations = toy_inputs_ex1,
 #'                    measurements = toy_measurements_ex1,
-#'                    priorKnowledgeNetwork = toy_network_ex1, 
+#'                    priorKnowledgeNetwork = toy_network_ex1,
 #'                    solver = supportedSolvers$cbc)
 #'
 #' ## cplex
-#' res3 = runCarnival(perturbations = toy_inputs_ex1, 
+#' res3 = runCarnival(perturbations = toy_inputs_ex1,
 #'                    measurements = toy_measurements_ex1,
-#'                    priorKnowledgeNetwork = toy_network_ex1, 
+#'                    priorKnowledgeNetwork = toy_network_ex1,
 #'                    solver = supportedSolver$cplex,
 #'                    solverPath = "your_path/")
 #'
@@ -324,31 +323,29 @@ runCARNIVAL <- function(inputObj=NULL,
                         cleanTmpFiles=TRUE,
                         dir_name=NULL) {
   solver <- match.arg(solver)
- 
+
   opts = c(solverPath = solverPath,
-           solver = solver, 
+           solver = solver,
            timelimit = timelimit,
            mipGap = mipGAP,
            poolrelGap = poolrelGAP,
-           limitPop = limitPop, 
+           limitPop = limitPop,
            poolCap = poolCap,
            poolIntensity = poolIntensity,
            poolReplace = poolReplace,
-           alphaWeight = alphaWeight, 
+           alphaWeight = alphaWeight,
            betaWeight = betaWeight,
            threads = threads,
            cplexMemoryLimit = cplexMemoryLimit,
            cleanTmpFiles = cleanTmpFiles,
            dirName = dir_name)
-  
-  result <- runCarnival(perturbations = inputObj, 
-                        measurements = measObj, 
-                        priorKnowledgeNetwork = netObj, 
-                        pathwayWeights = weightObj, 
+
+  result <- runCarnival(perturbations = inputObj,
+                        measurements = measObj,
+                        priorKnowledgeNetwork = netObj,
+                        pathwayWeights = weightObj,
                         carnivalOptions = opts)
-  
+
   return(result)
-  
-} 
 
-
+}

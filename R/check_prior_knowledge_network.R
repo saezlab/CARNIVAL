@@ -2,7 +2,7 @@
 ##
 ##Enio Gjerga, 2020
 
-checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork){
+checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork){
   
   incorrectDataTypeError <- "Network object should either be of matrix or data.frame class."
   incorrectColumnsInNetworkError <- "Network object should have three columns: source node ('source'), interaction 
@@ -15,7 +15,7 @@ checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNet
   return(TRUE)
 }
 
-preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork = priorKnowledgeNetwork) {
+preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork) {
   incorrectInteractionValue <- "Interactions column should contain either 1 or -1."
   
   priorKnowledgeNetwork <- correctNodeIdentifiersInNetwork(network = priorKnowledgeNetwork)

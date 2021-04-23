@@ -4,8 +4,8 @@
 ## 
 ## Enio Gjerga, 2020
 
-createConstraintsMeasurements_v2 <- function(variables = variables,
-                                                     constraintName = "c0") {
+createConstraintsMeasurements_v2 <- function(variables, constraintName = "c0") {
+  
   positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]
   negativeMeasurements <- variables$measurementsDf[variables$measurementsDf$value < 0, ]
   

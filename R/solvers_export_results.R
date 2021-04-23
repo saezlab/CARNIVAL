@@ -2,8 +2,7 @@
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, 
-                                                variables) {
+exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
   nSolutions <- dim(solutionMatrix)[[2]]
   summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables, nSolutions)

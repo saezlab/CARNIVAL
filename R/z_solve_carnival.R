@@ -1,5 +1,5 @@
-## Solving CARNIVAL problem 
-##
+## Solving CARNIVAL problem. 
+## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
 supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
@@ -18,10 +18,8 @@ supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex,
 
 prepareForCarnivalRun <- function(dataPreprocessed,
                                   carnivalOptions, 
-                                  newDataRepresentation = F) {
-  
+                                  newDataRepresentation = T) {
   intDataRep <- createInternalDataRepresentation( dataPreprocessed, newDataRepresentation )
-  
   
   if(newDataRepresentation) {
     writeParsedData( intDataRep, dataPreprocessed, carnivalOptions )
@@ -57,7 +55,7 @@ prepareForCarnivalRun <- function(dataPreprocessed,
 
 solveCarnivalFromLp <- function(lpFile = "", 
                                 parsedDataFile = "",
-                                newDataRepresentation=F,
+                                newDataRepresentation = T,
                                 carnivalOptions) {
   load(parsedDataFile) 
   dataPreprocessed$measurements <- measurements
@@ -75,7 +73,7 @@ solveCarnivalFromLp <- function(lpFile = "",
 
 solveCarnival <- function( dataPreprocessed,
                            carnivalOptions, 
-                           newDataRepresentation = F) {
+                           newDataRepresentation = T) {
   
   variables <- prepareForCarnivalRun(dataPreprocessed, carnivalOptions, newDataRepresentation)
   solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
@@ -119,7 +117,7 @@ sendTaskToSolver <- function( variables,
 
 processSolution <- function(solutionMatrix, 
                             variables,
-                            newDataRepresentation=F,
+                            newDataRepresentation = T,
                             dataPreprocessed,
                             carnivalOptions) {
   
@@ -160,6 +158,7 @@ createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresent
     return(list("dataVector" = dataVector, "variables" = variables))
   }
 }
+
 
 writeParsedData <- function ( variables = variables, 
                               dataPreprocessed = dataPreprocessed, 

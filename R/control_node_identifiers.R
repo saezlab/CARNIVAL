@@ -9,7 +9,7 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
   counter <- 0
   res <- lapply(namesWithSpecialCharacters, function(x) {
     counter <<- counter + 1
-    if (x[1] != -1){
+    if (x[1] != -1) {
       substr(names[counter], x[1], x[1])  
     }
   })
@@ -18,10 +18,8 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
   return(res)
 }
 
-correctIdentifiers <- function(nodesIds,
-                               replacementSymbol = "_",
-                               verbose = FALSE,
-                               keepMapping = FALSE ){
+correctIdentifiers <- function(nodesIds, replacementSymbol = "_",
+                               verbose = FALSE, keepMapping = FALSE ){
   
   preparedPattern <- paste0("\\", specialRegExpCharactersToFix, collapse="|")
   preparedPattern <- paste0(c(preparedPattern, specialCharactersToFix), collapse="|")
@@ -45,10 +43,8 @@ correctIdentifiers <- function(nodesIds,
   
 }
 
-correctNodeIdentifiersInNetwork <- function( network = network,
-                                    replacementSymbol = "_",
-                                    verbose = FALSE,
-                                    keepMapping = FALSE ){
+correctNodeIdentifiersInNetwork <- function( network  replacementSymbol = "_", verbose = FALSE,
+                                             keepMapping = FALSE ){
   
   network$source <- correctIdentifiers(network$source, replacementSymbol, verbose, keepMapping)
   network$target <- correctIdentifiers(network$target, replacementSymbol, verbose, keepMapping)

@@ -1,6 +1,7 @@
-solveWithLpSolve <- function(variables = variables, 
-                             carnivalOptions,
-                             dataPreprocessed) {
+
+solveWithLpSolve <- function( variables = variables, 
+                              carnivalOptions,
+                              dataPreprocessed ) {
   
   lpForm <- prepareLPMatrixSingle(variables = variables, 
                                   measurements = measurements, 

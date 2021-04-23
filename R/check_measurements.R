@@ -1,11 +1,11 @@
 ## Checking the measurements provided, controlling the identifiers for special characters
-## Collecting and providing the IDs for measurements nodes that cannot be found in prior knowledge network
+## Collecting and providing the IDs for measurements nodes that cannot be found in prior knowledge
+## network
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-checkMeasurements <- function(measurements = measurements, 
-                              nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork) {
+checkMeasurements <- function(measurements
+                              nodesPriorKnowledgeNetwork) {
   
-
   nullObjectError <- "Please provide a valid measurement object."
   noMeasurementsInNetworkError <- "None of your measurements are in prior knowledge networks (PKN). 
                                    Check node identifiers in both measurements and PKN objects."

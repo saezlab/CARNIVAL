@@ -1,12 +1,8 @@
-## This code writes the objective function of the ILP problem for all the 
-## conditions.
+## This code writes the objective function of the ILP problem 
 ##
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020-2021
 
-createObjectiveFunction_v2<- function( variables = variables, 
-                                       alphaWeight = alphaWeight, 
-                                       betaWeight = betaWeight, 
-                                       pathwaysScores = pathwaysScores) {
+createObjectiveFunction_v2< - function(variables, alphaWeight, betaWeight, pathwaysScores) {
   objectiveFunction <- "Obj:\t "
   
   if(is.null(pathwaysScores)){

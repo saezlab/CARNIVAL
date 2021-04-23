@@ -6,7 +6,7 @@ prepareLPMatrixSingle <- function(variables = variables,
                                   measurements = measurements, 
                                   carnivalOptions = carnivalOptions){
   
-  mt <- transformVariables(variables = variables, measurements = measurements)
+  mt <- transformVariables_v2(variables = variables, measurements = measurements)
   
   lpFile <- readr::read_csv(file = carnivalOptions$filenames$lpFilename, 
                             col_names = F)
@@ -29,13 +29,14 @@ prepareLPMatrixSingle <- function(variables = variables,
   binaryVar <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   bins <- c()
   for(ii in seq_len(length(binaryVar))){
-    bins <- c(bins, which(mt[, 1]== binaryVar[ii]))
+    bins <- c(bins, which(mt[, 1] == binaryVar[ii]))
   }
   
   integerVar <- lpFile[seq(from = idx2+1, to = idx3-1, by = 1)]
   ints <- c()
+  
   for(ii in seq_len(length(integerVar))){
-    ints <- c(ints, which(mt[, 1]==integerVar[ii]))
+    ints <- c(ints, which(mt[, 1] == integerVar[ii]))
   }
   
   res <-  list("mt"= mt, "obj" = f.obj, 

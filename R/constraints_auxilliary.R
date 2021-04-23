@@ -21,7 +21,6 @@ createConstraintFreeForm <- function(...) {
   return(constraint)
 }
 
-
 createConstraint <- function(variable1, sign, variable2, inequality, rightPart) { 
   constraint <- paste(variable1, sign, variable2, inequality, rightPart, sep = " ")  
   return(constraint)

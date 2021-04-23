@@ -1,11 +1,11 @@
 ## Write a list of linear programming (LP) constraints into a file while will be
 ## read by interactive cplex solver to perform network optimisation.
 ##
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020-2021
 
 createLpFormulation_v2 <- function( internalDataRepresentation, 
-                                           dataPreprocessed,
-                                           carnivalOptions ) {
+                                    dataPreprocessed,
+                                    carnivalOptions ) {
   
   message("Writing constraints...")
   options(scipen=999)
@@ -67,7 +67,7 @@ createBoundaries_v2 <- function(variables){
   return(c(b1, b2, b3, b4, b5, b6, b7, b8))
 }
 
-createBinaries_v2 <- function(variables = variables) {
+createBinaries_v2 <- function(variables) {
   binaries <- paste(c(variables$nodesDf$nodesUpVars, variables$nodesDf$nodesDownVars,
                       variables$edgesDf$edgesUpVars, variables$edgesDf$edgesDownVars),
                     sep = "\t")
@@ -75,7 +75,7 @@ createBinaries_v2 <- function(variables = variables) {
 }
 
 
-createGenerals_v2 <- function(variables = variables) {
+createGenerals_v2 <- function(variables) {
   generals <- paste(c(variables$nodesDf$nodesVars, 
                       variables$nodesDf$nodesActStateVars,
                       variables$measurementsDf$absDifference), sep="\t")

@@ -2,8 +2,7 @@
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-checkWeights <- function(weights = weights, 
-                         nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork){
+checkWeights <- function(weights, nodesPriorKnowledgeNetwork){
   
   nullObjectError <- "Please provide a valid weights object."
   noWeightsInNetworkError <- "None of your weights nodes are in prior knowledge networks (PKN). 

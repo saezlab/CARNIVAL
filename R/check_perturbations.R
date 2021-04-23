@@ -2,8 +2,8 @@
 ##
 ## Enio Gjerga, 2020
 
-checkPerturbations <- function(perturbations = perturbations, 
-                               nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork) {
+checkPerturbations <- function(perturbations
+                               nodesPriorKnowledgeNetwork) {
 
   nullObjectError <- "No perturbations are provided. Please, use runInversedCarnival if you have no perturbation data."
   

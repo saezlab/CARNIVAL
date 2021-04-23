@@ -4,8 +4,8 @@
 
 transformBounds <- function(mt = mt, lpFile = lpFile){
   
-  idx1 <- which(lpFile=="Bounds")
-  idx2 <- which(lpFile=="Binaries")
+  idx1 <- which(lpFile == "Bounds")
+  idx2 <- which(lpFile == "Binaries")
   
   constraintSet <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   
@@ -20,12 +20,12 @@ transformBounds <- function(mt = mt, lpFile = lpFile){
     currConstraint <- strsplit(x = constraintSet[ii], split = " ", 
                                fixed = TRUE)[[1]]
     
-    f.con[cnt, which(mt[, 1]==currConstraint[3])] <- 1
+    f.con[cnt, which(mt[, 1] == currConstraint[3])] <- 1
   
     f.dir[cnt] <- ">="
     f.rhs[cnt] <-  currConstraint[1]
     cnt <- cnt + 1
-    f.con[cnt, which(mt[, 1]==currConstraint[3])] <- 1
+    f.con[cnt, which(mt[, 1] == currConstraint[3])] <- 1
     f.dir[cnt] <- "<="
     f.rhs[cnt] <-  currConstraint[5]
     cnt <- cnt + 1

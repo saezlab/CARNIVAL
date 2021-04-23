@@ -1,4 +1,4 @@
-#' parse carnival logs
+#' Parse carnival logs
 #' 
 #' parses the CPLEX log file and reads some basic information
 #' @param log path of log file resulted from a carnival run OR the content
@@ -7,14 +7,14 @@
 #' - `convergence` a table that contains information on the convergence of CPLEX 
 #' - `n_solutions` number of solutions found 
 #' - `objective` objective function value
-#' - `termination_reason`: reason of termination.
+#' - `termination_reason`: reason of termination
 #' @importFrom readr read_lines
 
 parse_CPLEX_log <- function(log){
     
-    if(length(log) == 1 && file.exists(log)){
+    if(length(log) == 1 && file.exists(log)) {
         lines <- readr::read_lines(log)    
-    }else(
+    } else (
         lines = log
     )
     
@@ -28,12 +28,12 @@ parse_CPLEX_log <- function(log){
     if(n_phases==0) {
         # for some very small cases there is no convergence reported. 
         parse_convergence = FALSE
-    } else{
+    } else {
         parse_convergence = TRUE
     }
     
     
-    if(parse_convergence){
+    if(parse_convergence) {
         convergence_text <- lines
         
         # detect table headers: 
@@ -59,7 +59,7 @@ parse_CPLEX_log <- function(log){
             if(!any(empty_lines > tbl_start)) {
                 interrupted = TRUE
                 tbl_end = length(convergence_text)
-            }else{
+            } else{
                 interrupted = FALSE
                 tbl_end <- empty_lines[empty_lines > tbl_start][[1]]-1
             }
@@ -73,18 +73,16 @@ parse_CPLEX_log <- function(log){
         phase_table <-  bind_rows(parsed_table)
         
         
-    }else{
+    } else {
         phase_table = empty_convergence()
     }
     ## process final part:
     
-    if(!interrupted){
+    if(!interrupted) {
         # number of solution
         solution_text <- grep("^Solution pool:",lines,value = TRUE)
         n_solutions =  regmatches(solution_text,regexpr("[0-9]+", solution_text)) %>%
             as.numeric()
-        
-        
         
         # termination
         termination_text <- grep("Populate - ",lines,value = TRUE)
@@ -94,7 +92,7 @@ parse_CPLEX_log <- function(log){
         
         objective = regmatches(termination_text,regexpr("=.*$", termination_text)) %>%
             substr(.,start = 2, stop = nchar(.)) %>% as.numeric()
-    }else{
+    } else {
         n_solutions = 0
         objective = as.numeric(NaN)
         termination_reason = "CPLEX was interrupted"
@@ -105,9 +103,6 @@ parse_CPLEX_log <- function(log){
                         objective = objective,
                         termination_reason = termination_reason)
 }
-
-
-
 
 
 parse_CPLEX_log_old <- function(log){
@@ -320,10 +315,3 @@ time_string_to_table <- function(time_text){
     return(result)
     
 }
-
-
-### Test
-# res = parse_CPLEX_log("./carnival_logs/carnival_logs/case_study_1/107.out")
-# res = parse_CPLEX_log(log_file = "./carnival_logs/carnival_logs/case_study_1/1.out")
-# 
-# files = list.files("./carnival_logs/carnival_logs/case_study_1/",pattern = "*.out",full.names = TRUE)

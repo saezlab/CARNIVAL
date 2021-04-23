@@ -137,7 +137,6 @@ checkCplexCarnivalOptions <- function(options) {
 }
 
 ### cbc
-
 cbcOptionsErrorChecks <- list(
   timelimit =     data.frame(func = "is.numeric",
                              param = "",
@@ -154,8 +153,7 @@ cbcOptionsErrorChecks <- list(
 
 
 
-
-checkcbcCarnivalOptions <- function(options) {
+checkCbcCarnivalOptions <- function(options) {
   
   if (!is.list(options))
     stop("CARNIVAL options should be a list")
@@ -217,9 +215,7 @@ checkcbcCarnivalOptions <- function(options) {
 
 
 ### lpSolve
-
-
-checklpSolveCarnivalOptions <- function(options) {
+checkLpSolveCarnivalOptions <- function(options) {
   
   if (!is.list(options))
     stop("CARNIVAL options should be a list")
