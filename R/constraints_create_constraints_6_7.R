@@ -10,8 +10,8 @@ createConstraints_6_7_v2 <- function(variables, constraintName = c("c6", "c7")) 
   parentNodesEdges <- variablesMerged[variablesMerged$Node1 %in% parentNodes, ]
   
   if ( length(parentNodes) > 0 ) {
-    constraints_6 <- createConstraintFreeForm( parentNodesEdges$nodesUpVars, "<=", 0) 
-    constraints_7 <- createConstraintFreeForm( parentNodesEdges$nodesDownVars, "<=", 0) 
+    constraints_6 <- createConstraintFreeForm(parentNodesEdges$nodesUpVars, "<=", 0) 
+    constraints_7 <- createConstraintFreeForm(parentNodesEdges$nodesDownVars, "<=", 0) 
   } else {
     constraints_6 <- c()
     constraints_7 <- c()

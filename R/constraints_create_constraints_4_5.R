@@ -8,7 +8,8 @@ createConstraints_4_5_v2 <- function(variables, constraintName = c("c4", "c5")) 
   constraints_5 <- c()
   
   edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
-  if(dim(edgesUpActivation)[1] > 0){sourceNodes <- edgesUpActivation$nodesVars
+  if(dim(edgesUpActivation)[1] > 0){
+    sourceNodes <- edgesUpActivation$nodesVars
   
   constraints_4 <- c(constraints_4, createConstraintFreeForm(edgesUpActivation$edgesUpVars, "-", 
                                             sourceNodes, 
@@ -24,9 +25,9 @@ createConstraints_4_5_v2 <- function(variables, constraintName = c("c4", "c5")) 
   }
   
   edgesUpInhibition <- variablesMerged[variablesMerged$Sign == -1, ]
+  
   if(dim(edgesUpInhibition)[1] > 0){
     sourceNodes <- edgesUpInhibition$nodesVars
-  
     constraints_4 <- c(constraints_4, createConstraintFreeForm(edgesUpInhibition$edgesUpVars, "+",
                                                              sourceNodes, 
                                                              "-", 
@@ -39,6 +40,7 @@ createConstraints_4_5_v2 <- function(variables, constraintName = c("c4", "c5")) 
                                                              edgesUpInhibition$edgesUpVars,
                                                              "<=", 0))
   }
+  
   constraint4_5 <- list("c4" = constraints_4, "c5" = constraints_5)
   names(constraint4_5) <- constraintName
   return(constraint4_5)

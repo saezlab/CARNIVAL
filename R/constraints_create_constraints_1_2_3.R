@@ -9,8 +9,9 @@ createConstraints_1_2_v2 <- function(variables, constraintName = c("c1", "c2")) 
   constraints_2 <- c()
   
   edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
-  if(dim(edgesUpActivation)[1] > 0){sourceNodes <- edgesUpActivation$nodesVars
-    
+  
+  if(dim(edgesUpActivation)[1] > 0){
+    sourceNodes <- edgesUpActivation$nodesVars
     constraints_1 <- c(constraints_1, createConstraint(edgesUpActivation$edgesUpVars, "-", 
                                       sourceNodes, ">=", 0))
     constraints_2 <- c(constraints_2, createConstraint(edgesUpActivation$edgesDownVars, "+", 
@@ -21,12 +22,12 @@ createConstraints_1_2_v2 <- function(variables, constraintName = c("c1", "c2")) 
   
   if(dim(edgesUpInhibition)[1] > 0){
     sourceNodes <- edgesUpInhibition$nodesVars
-  
     constraints_1 <- c(constraints_1, createConstraint(edgesUpInhibition$edgesUpVars, "+", 
                                                        sourceNodes, ">=", 0))
     constraints_2 <- c(constraints_2, createConstraint(edgesUpInhibition$edgesDownVars, "-", 
                                                        sourceNodes, ">=", 0))
   }
+  
   constraints1_2 <- list(constraints_1, constraints_2)
   names(constraints1_2) <- constraintName
   return(constraints1_2)

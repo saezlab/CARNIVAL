@@ -18,9 +18,10 @@ createConstraints_8_v2 <- function(variables, perturbations, constraintName=c("c
   # Defines activations state for unperturbed nodes
   unperturbedNodes <- variables$nodesDf[!variables$nodesDf$nodes %in% names(perturbations), ]
   lapply(unperturbedNodes$nodes, function(x) {
-
+    
     var <- variables$nodesDf[variables$nodesDf$nodes == x, ]$nodesActStateVars
     constraint_8 <<- c(constraint_8, createConstraintFreeForm(var, "=", 0))
+    
   })
 
   # Defines activation state for perturbation nodes

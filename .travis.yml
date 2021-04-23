@@ -18,8 +18,3 @@ r_packages:
   - stringr
 after_success:
   - Rscript -e 'covr::codecov()'
-notifications:
-  email:
-    recipients:
-	- ivanovaos.09@gmail.com
-    on_failure: always
