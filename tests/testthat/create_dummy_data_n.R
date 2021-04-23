@@ -25,9 +25,10 @@ createDummyVariablesSigned <- function(nNode = 3, sign = 1) {
 }
 
 
-createDummyVariablesMixed <- function(nNode = 3, seed = set.seed(100)) {
+createDummyVariablesMixed <- function(nNode = 3, seed = 100) {
   
   variables <- c()
+  set.seed(seed)
   
   variables$nodesDf <- data.frame(nodes=c(paste("node", seq(1,nNode), sep = "")), 
                                   nodesVars=c(paste("n", seq(1,nNode), sep = "")), 

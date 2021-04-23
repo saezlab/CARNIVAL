@@ -1,5 +1,3 @@
-library(testthat)
-
 # Dummy data with activation edges
 dummyData <- createDummyVariablesSigned(nNode = 3, sign = 1)
 constraint1_expected <- c("eU1 - n1 >= 0", "eU2 - n2 >= 0")
