@@ -1,103 +1,53 @@
-# Create Dummy Data
-
-setwd("/CARNIVAL/inst")
-
-#### Create Dummy Data 1 ####
-
-#Set Amount of nodes
-#Always use this vector of names to make sure all names are the same
-nodenames = c(paste("Node", seq(1,5), sep = ""))
-
-
-perturbations_1 = c(1,-1, 1) 
-names(perturbations_1) = c(nodenames[1], nodenames[2], nodenames[3])
-
-measurements_1 = c(5)
-names(measurements_1) = c(nodenames[5])
-
-priorKnowledgeNetwork_1 = matrix(c(nodenames[1], 1, nodenames[4], 
-                                   nodenames[2], 1, nodenames[4],
-                                   nodenames[3], -1, nodenames[1],
-                                   nodenames[3], -1, nodenames[2],
-                                   nodenames[4], 1, nodenames[5]), byrow = T, ncol = 3) %>% as.data.frame()
-colnames(priorKnowledgeNetwork_1) = c("source", "interaction", "target")
-
-Input_1 = prerunCarnival(perturbations = perturbations_1, 
-                         measurements = measurements_1,
-                         priorKnowledgeNetwork = priorKnowledgeNetwork_1,
-                         newDataRepresentation = T,
-                         solver = supportedSolvers$cplex, 
-                         solverPath = solverPath,
-                         carnivalOptions = carnivalOptions)
+#TODO add n edges, add n measurements
+createDummyVariablesSigned <- function(nNode = 3, sign = 1) {
+  variables <- c()
+  
+  variables$nodesDf <- data.frame( nodes=c(paste("node", seq(1, nNode), sep = "")), 
+                                   nodesVars=c(paste("n", seq(1, nNode), sep = "")), 
+                                   nodesUpVars = c(paste("nU", seq(1, nNode), sep = "")),
+                                   nodesDownVars = c(paste("nD", seq(1, nNode), sep = "")),
+                                   nodesActStateVars = c(paste("nAc", seq(1, nNode), sep = "")),
+                                   nodesDistanceVars = c(paste("nDs", seq(1, nNode), sep = "")),
+                                   nodesType = c("P", "", "M") )
+  
+  variables$edgesDf <- data.frame( Node1=c("node1", "node2"), 
+                                   Sign=c(rep(sign, 2)), 
+                                   Node2=c("node2", "node3"), 
+                                   edgesUpVars=c("eU1", "eU2"), 
+                                   edgesDownVars=c("eD1", "eD2") )
+  
+  #TODO randomize the values
+  variables$measurementsDf <- data.frame(nodes = "node3", 
+                                         value = 5, 
+                                         measurementsVars = "absDiff", 
+                                         nodesVars = "n3" )
+  return(variables)
+}
 
 
-
-save(perturbations_1, file = "PT_1.Rdata")
-save(measurements_1, file = "MS_1")
-save(priorKnowledgeNetwork_1, file = "PKN_1")
-
-#### Create Expected Output 1 ####
-
-Constraint_1_1 <- c(createConstraint("eU1", "-", "n1", ">=", "0"),
-                    createConstraint("eU2", "-", "n2", ">=", "0"),
-                    createConstraint("eU5", "-", "n4", ">=", "0"),
-                    createConstraint("eU3", "+", "n3", ">=", "0"),
-                    createConstraint("eU4", "+", "n3", ">=", "0"))
-
-Constraint_2_1 <- c(createConstraint("eD1", "+", "n1", ">=", "0"),
-                    createConstraint("eD2", "+", "n2", ">=", "0"),
-                    createConstraint("eD5", "+", "n4", ">=", "0"),
-                    createConstraint("eD3", "-", "n3", ">=", "0"),
-                    createConstraint("eD4", "-", "n3", ">=", "0"))
-
-Output_1 = rbind(Constraint_1_1, Constraint_2_1)
-save(Output_1, file = "Dummy_Outputs_1.RData")
-
-#### Create Dummy Data 2 ####
-
-#Set Amount of nodes
-#Always use this vector of names to make sure all names are the same
-nodenames = c(paste("Node", seq(1,7), sep = ""))
-
-
-perturbations_2 = c(1,-1, 1, 1) 
-names(perturbations_2) = c(nodenames[1], nodenames[2], nodenames[3], nodenames[4])
-
-measurements_2 = c(-1)
-names(measurements_2) = c(nodenames[7])
-
-priorKnowledgeNetwork_2 = matrix(c(nodenames[1], 1, nodenames[5], 
-                                   nodenames[2], 1, nodenames[5],
-                                   nodenames[2], -1, nodenames[6],
-                                   nodenames[3], 1, nodenames[6],
-                                   nodenames[3], -1, nodenames[5],
-                                   nodenames[4], -1, nodenames[6],
-                                   nodenames[6], 1, nodenames[7],
-                                   nodenames[5], 1, nodenames[7]), byrow = T, ncol = 3) %>% as.data.frame()
-colnames(priorKnowledgeNetwork_2) = c("source", "interaction", "target")
-
-save(perturbations_2, file = "PT_2")
-save(measurements_2, file = "MS_2")
-save(priorKnowledgeNetwork_2, file = "PKN_2")
-
-#### Create Expected Output 2 ####
-
-Constraint_1_2 <- c(createConstraint("eU1", "-", "n1", ">=", "0"),
-                    createConstraint("eU2", "-", "n2", ">=", "0"),
-                    createConstraint("eU3", "+", "n2", ">=", "0"),
-                    createConstraint("eU4", "-", "n3", ">=", "0"),
-                    createConstraint("eU5", "+", "n3", ">=", "0"),
-                    createConstraint("eU6", "+", "n4", ">=", "0"),
-                    createConstraint("eU7", "-", "n5", ">=", "0"),
-                    createConstraint("eU8", "-", "n6", ">=", "0"))
-
-Constraint_2_2 <- c(createConstraint("eD1", "+", "n1", ">=", "0"),
-                    createConstraint("eD2", "+", "n2", ">=", "0"),
-                    createConstraint("eD3", "-", "n2", ">=", "0"),
-                    createConstraint("eD4", "+", "n3", ">=", "0"),
-                    createConstraint("eD5", "-", "n3", ">=", "0"),
-                    createConstraint("eD6", "-", "n4", ">=", "0"),
-                    createConstraint("eD7", "+", "n5", ">=", "0"),
-                    createConstraint("eD8", "+", "n6", ">=", "0"))
-Output_2 = list(Constraint_1_2, Constraint_2_2)
-save(Output_2, file = "Dummy_Outputs_2.RData")
+createDummyVariablesMixed <- function(nNode = 3, seed = set.seed(100)) {
+  
+  variables <- c()
+  
+  variables$nodesDf <- data.frame(nodes=c(paste("node", seq(1,nNode), sep = "")), 
+                                  nodesVars=c(paste("n", seq(1,nNode), sep = "")), 
+                                  nodesUpVars = c(paste("nU", seq(1,nNode), sep = "")),
+                                  nodesDownVars = c(paste("nD", seq(1,nNode), sep = "")),
+                                  nodesActStateVars = c(paste("nAc", seq(1,nNode), sep = "")),
+                                  nodesDistanceStateVars = c(paste("nDs", seq(1,nNode), sep = "")),
+                                  nodesType = c("P", "", "M", "", "M"))
+  
+  variables$edgesDf <- data.frame(Node1=c("node1", "node2", "node2", "node4"), 
+                                  Sign=sample(c(1,-1), 4, replace = TRUE), 
+                                  Node2=c("node2", "node3", "node4", "node5"), 
+                                  edgesUpVars=c("eU1", "eU2", "eU3", "eU4"), 
+                                  edgesDownVars=c("eD1", "eD2", "eD3", "eD4")
+  )
+  
+  variables$measurementsDf <- data.frame(nodes = "node5", 
+                                         value = 5, 
+                                         measurementsVars = "absDiff", 
+                                         nodesVars = "n3" )
+  
+  return(variables)
+}
