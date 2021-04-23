@@ -67,6 +67,9 @@ cplexOptionsErrorChecks <- list(
 #' 
 #' checks options provided for CARNIVAL
 #' 
+
+### CPLEX
+
 checkCplexCarnivalOptions <- function(options) {
   
   if (!is.list(options))
@@ -131,4 +134,133 @@ checkCplexCarnivalOptions <- function(options) {
         checkGenericFunction(checkValue, value)
       }
     }))
+}
+
+### cbc
+
+cbcOptionsErrorChecks <- list(
+  timelimit =     data.frame(func = "is.numeric",
+                             param = "",
+                             message="Error in parameter timelimit: set a time limit for ILP optimisation in
+                             seconds, e.g. 3600"),
+  
+  
+  poolrelGap =    data.frame(func = "is.numeric", 
+                             param = "", 
+                             message = "Error in cbc parameter poolrelGap: set the allowed pool relative GAP parameter
+                                      or leave it as NULL for using cbc default value (1e75)")
+  
+)
+
+
+
+
+checkcbcCarnivalOptions <- function(options) {
+  
+  if (!is.list(options))
+    stop("CARNIVAL options should be a list")
+  
+  if (!all(requiredCarnivalCplexOptions %in% names(options))) {
+    stop(
+      "CARNIVAL options should contain all options.
+            See/use default_carnival_options() for references. "
+    )
+  }
+  
+  if (!all(requiredlpsolveOptions %in% names(options))) {
+    stop(
+      "CARNIVAL cbc options should contain all required cplex options.
+            See/use default_carnival_options() for references."
+    )
+  }
+  
+  checkGenericFunction <- function(x, value) {
+    functionToCall <- eval(parse(text = x['func']))
+    if (x['param'] == "") {
+      if (!functionToCall(value))
+        stop(x['message'])
+    } else {
+      param <- eval(parse(text = x['param']))
+      if (!functionToCall(value, param)) {
+        stop(x['message'])
+      }
+    }
+  }
+  
+  invisible(
+    lapply(names(carnivalOptionsErrorChecks), function(x) {
+      value = unlist(options[x])
+      checkValue = carnivalOptionsErrorChecks[[x]]
+      
+      # if there are several checks, apply all
+      if (is.data.frame(checkValue)) {
+        apply(checkValue, 1, checkGenericFunction, value)
+      } else {
+        checkGenericFunction(checkValue, value)
+      }
+    })) 
+  
+  invisible(
+    lapply(names(cbcOptionsErrorChecks), function(x) {
+      value = unlist(options[x])
+      checkValue = cplexOptionsErrorChecks[[x]]
+      
+      # if there are several checks, apply all
+      if (is.data.frame(checkValue)) {
+        apply(checkValue, 1, checkGenericFunction, value)
+      } else {
+        checkGenericFunction(checkValue, value)
+      }
+    }))
+  
+}
+
+
+### lpSolve
+
+
+checklpSolveCarnivalOptions <- function(options) {
+  
+  if (!is.list(options))
+    stop("CARNIVAL options should be a list")
+  
+  if (!all(requiredCarnivalCplexOptions %in% names(options))) {
+    stop(
+      "CARNIVAL options should contain all options.
+            See/use default_carnival_options() for references. "
+    )
+  }
+  
+  if (!all(requiredlpsolveOptions %in% names(options))) {
+    stop(
+      "CARNIVAL cbc options should contain all required cplex options.
+            See/use default_carnival_options() for references."
+    )
+  }
+  
+  checkGenericFunction <- function(x, value) {
+    functionToCall <- eval(parse(text = x['func']))
+    if (x['param'] == "") {
+      if (!functionToCall(value))
+        stop(x['message'])
+    } else {
+      param <- eval(parse(text = x['param']))
+      if (!functionToCall(value, param)) {
+        stop(x['message'])
+      }
+    }
+  }
+  
+  invisible(
+    lapply(names(carnivalOptionsErrorChecks), function(x) {
+      value = unlist(options[x])
+      checkValue = carnivalOptionsErrorChecks[[x]]
+      
+      # if there are several checks, apply all
+      if (is.data.frame(checkValue)) {
+        apply(checkValue, 1, checkGenericFunction, value)
+      } else {
+        checkGenericFunction(checkValue, value)
+      }
+    })) 
 }
