@@ -1,8 +1,13 @@
-## This function returns the data matrix containing the data for running CARNIVAL 
-## and a set of identifiers for Targets, Measured and Un-measured nodes.
-##
-## Enio Gjerga, 2020
+## Obsolete code kept here for backward compatibility for v.2.1. Planned to be removed in v.3
+## Functions to build internal data representation used in CARNIVAL v.1.2
+## The code was refactored but has the same logic as in v.1.2. 
+#TODO 
+## Changes: ...
 
+## Enio Gjerga, Olga Ivanova 2020-2021
+
+## Return the data matrix containing the data for running CARNIVAL 
+## and a set of identifiers for targets, measured and unmeasured nodes.
 buildDataVector <- function(measurements = measurements, 
                             priorKnowledgeNetwork = priorKnowledgeNetwork, 
                             perturbations = perturbations) {
@@ -51,7 +56,29 @@ buildDataVector <- function(measurements = measurements,
 
 }
 
+## Returns the identifiers of all the variables used in the ILP 
+## formulation together with an explanation about each of them. 
+## Full explanations:
+# variables - list of all variables for ILP problem 
+# exp - verbose explanation of each variable 
+# idxNodes - indices of variables corresponding to nodes in full variables list
+# idxNodesUp/idxNodesDown - indices of variables corresponding to nodes up/down-regulated in full variables list
+# idxEdgesUp/idxEdgesDown - indices of variables corresponding to edges up/down-regulated in full variables list
+# signs - signs of the edges provided in prior knowledge network
+# reactionSource/reactionTarget - nodes names from prior knowledge network with an outgoing/incoming edge
+# expNodesReduced - full list of nodes names in prior knowledge network
+# expNodesReducedUpSource/expNodesReducedDownSource - source nodes names from prior knowledge network 
+# expNodesReducedUpTarget/expNodesReducedDownTarget - target nodes names from prior knowledge network 
+# expEdgesReducedSource/expEdgesReducedTarget - list of sources/targets from $exp with verbose explnation
+# expNodesReducedUp/expNodesReducedDown - all nodes names 
+# idxB - indices of variables corresponding to B variables (see constraint 8 in Liu et al.) in full variables list
+# idxDist - indices of variables corresponding to distance variables in full variables list
+# uTable - prior knowledge network nodes translated to variables. Column 1 - source nodes; column 2 - target nodes
 
+# "Reduced" in variable names corresponded to measurements information combined with 
+# prior knowledge network, where nodes that are not present in prior knowledge network were removed
+# from the measurements data. Basically, it is always the same list of nodes as in PKN.
+# See buildDataVector(...) dataVector for information. 
 createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork, 
                             dataVector = dataVector){
   
@@ -80,8 +107,6 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
   expNodesReducedUpTarget <- as.character(priorKnowledgeNetwork$X3)
   expNodesReducedDownTarget <- as.character(priorKnowledgeNetwork$X3)
   
-  idxExperimentNodes <- length(expNodes)
-  
   nodesALL <- c(nodes, nodesUp, nodesDown)
   expNodesALL <- c(expNodes, expNodesUp, expNodesDown)
   
@@ -94,15 +119,12 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
   # edges
   edgesUp <- paste0("xb", seq(from = length(nodesALL) + 1, 
                               to = length(nodesALL) +
-                                nrowsPkn *
-                                dataLength, by = 1))
+                                nrowsPkn, by = 1))
   
   edgesDown <- paste0("xb", seq(from = length(nodesALL) +
-                                  nrowsPkn *
-                                  dataLength + 1, 
+                                  nrowsPkn + 1, 
                                 to = length(nodesALL) +
-                                  2 * nrowsPkn *
-                                  dataLength, by = 1))
+                                  2 * nrowsPkn, by = 1))
   
   expEdgesUp <- paste0("ReactionUp ", as.character(priorKnowledgeNetwork$X1), "=", 
                        as.character(priorKnowledgeNetwork$X3))
@@ -118,8 +140,6 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
   
   expNodesReducedUp <- priorKnowledgeNetwork$X1
   expNodesReducedDown <- priorKnowledgeNetwork$X3
-  
-  idxExperimentEdges <- length(expEdgesUp)
   
   edgesALL <- c(edgesUp, edgesDown)
   expEdgesALL <- c(expEdgesUp, expEdgesDown)
@@ -170,8 +190,6 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
               expNodesReducedUpTarget=expNodesReducedUpTarget,
               expEdgesReducedSource=expEdgesReducedSource, 
               expEdgesReducedTarget=expEdgesReducedTarget,
-              idxExperimentNodes=idxExperimentNodes, 
-              idxExperimentEdges=idxExperimentEdges,
               expNodesReducedUp=expNodesReducedUp, 
               expNodesReducedDown=expNodesReducedDown, 
               

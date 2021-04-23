@@ -1,5 +1,5 @@
-# The old contraints code, kept here for backward compatibility testing for v2.1. 
-# Aimed to be removed in v3.
+## Obsolete code kept here for backward compatibility for v.2.1. 
+# Planned to be removed in v.3
 
 createConstraintsObjectiveFunction <- function(variables = variables, 
                                                dataVector = dataVector){

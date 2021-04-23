@@ -1,6 +1,6 @@
 Package: CARNIVAL
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
-Version: 1.1.0
+Version: 2.1.0
 Authors@R: c(
     person(given = "Enio",
            family = "Gjerga",
@@ -25,7 +25,7 @@ Authors@R: c(
     person(given = "Attila",
            family = "Gabor",
            role = "ctb"),
-    person(given = "Olga", 
+    person(given = "Olga",
            family = "Ivanova",
            role = "cre",
            email = "olga.ivanova@bioquant.uni-heidelberg.de")
@@ -37,14 +37,7 @@ BugReports: https://github.com/saezlab/CARNIVAL/issues
 Depends:
     R (>= 4.0)
 Imports:
-    doParallel,
     readr,
-    viper,
-    dplyr,
-    AnnotationDbi,
-    Category,
-    ggplot2,
-    UniProt.ws,
     lpSolve,
     igraph
 biocViews: Transcriptomics, GeneExpression, Network
@@ -53,7 +46,7 @@ LazyData: true
 Encoding: UTF-8
 Suggests:
     knitr,
-    readxl,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    rjson
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

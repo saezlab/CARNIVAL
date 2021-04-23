@@ -28,6 +28,7 @@ Uniprot2GeneSymbol <- function(res){
       Unmapped <- c(Unmapped,res[[1]][counter,3])
     }
   }
+  
   # Common node activity
   for (counter in seq_len(length(res[[2]][,1]))) {
     if (length(IDmap[which(IDmap[,1] == res[[2]][counter,1]),3])>0) {
@@ -55,6 +56,7 @@ Uniprot2GeneSymbol <- function(res){
       }
     }
   }
+  
   # Individual node activity
   for (counter in seq_len(length(res[[4]]))) {
     for (counter2 in seq_len(length(res[[4]][[counter]][,1]))) {

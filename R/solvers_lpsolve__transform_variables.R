@@ -4,14 +4,13 @@
 
 transformVariables <- function(variables = variables, measurements = measurements){
   
-  vars1 <- variables[[1]][[1]]
-  
+  vars1 <- variables
   measSpecies = names(measurements)
-  vars2 <- rep("", length(measSpecies))
-  for(jj in seq_len(length(measSpecies))){
-    idx = which(variables[[1]]$exp==paste0("Species ",
-                                            measSpecies[jj]))
-    vars2[jj] <- paste0("absDiff", idx, "_", 1)
+  vars2 <- rep("", length(measurements))
+  
+  for(jj in seq_len(length(measurements))){
+    idx = which(variables$exp == paste0("Species ", measurements[jj]))
+    vars2[jj] <- paste0("absDiff", idx)
   }
   
   mappingTable = matrix(data = , nrow = length(c(vars1, vars2)), ncol = 2)

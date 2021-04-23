@@ -1,5 +1,4 @@
-## This code writes the list of constraints (1) of the ILP problem for one 
-## conditions.
+## This code writes the list of constraints (1), (2) and (3) of the ILP problem. 
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
@@ -37,7 +36,7 @@ createConstraints_3_v2 <- function(variables = variables,
                                           constraintName = "c3") {
   
   constraints_3 <- createConstraint(variables$edgesDf$edgesUpVars, "+", 
-                                   variables$edgesDf$edgesDownVars, "<=", 1)
+                                    variables$edgesDf$edgesDownVars, "<=", 1)
 
   constraints_3 <- list(constraints_3)
   names(constraints_3) <- constraintName

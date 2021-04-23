@@ -1,3 +1,7 @@
+## This code writes the list of constraints (8) of the ILP problem. 
+## 
+## Enio Gjerga, Olga Ivanova 2020-2021
+
 createConstraints_8_v2 <- function(variables, perturbations, constraintName) {
   constraint_8 <- c()
   

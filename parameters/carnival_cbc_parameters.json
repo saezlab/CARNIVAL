@@ -1,7 +1,6 @@
 {
     "solverPath": "solverPath",
     "lpFilename": "",
-    "alphaWeight": 1, 
     "betaWeight": 0.2,
     "timelimit": 3600, 
     "keepLPFiles": "TRUE",
