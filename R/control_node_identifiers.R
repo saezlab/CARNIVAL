@@ -43,7 +43,7 @@ correctIdentifiers <- function(nodesIds, replacementSymbol = "_",
   
 }
 
-correctNodeIdentifiersInNetwork <- function( network  replacementSymbol = "_", verbose = FALSE,
+correctNodeIdentifiersInNetwork <- function( network, replacementSymbol = "_", verbose = FALSE,
                                              keepMapping = FALSE ){
   
   network$source <- correctIdentifiers(network$source, replacementSymbol, verbose, keepMapping)

@@ -21,10 +21,8 @@ getSolutionMatrixLpSolve <- function(lpSolution) {
   
   solMatrix <- lpSolution[["lpForm"]]$matrix
   solMatrix[, 2] <- lpSolution[["lpSolutionResults"]]
-  colnames(solMatrix) <- c("name", "var")
-  solMatrix <- as.data.frame(solMatrix)
-  solMatrix$name <- as.character(solMatrix$name)
-  solMatrix$var <- as.character(solMatrix$var)
+  rownames(solMatrix) <- solMatrix[, 1] 
+  solMatrix <- as.matrix(solMatrix[, 2])
   
   return(solMatrix)
 }

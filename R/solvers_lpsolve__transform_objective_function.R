@@ -1,4 +1,4 @@
-## Vectorizing the objective function
+## Vectorizing the objective function.
 ##
 ## Enio Gjerga, 2020
 

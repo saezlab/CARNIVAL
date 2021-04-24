@@ -2,9 +2,9 @@
 ##
 ## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
 
-checkData <- function( measurements
-                       priorKnowledgeNetwork
-                       perturbations
+checkData <- function( measurements,
+                       priorKnowledgeNetwork,
+                       perturbations,
                        pathwayWeights = NULL ) {
 
   checkPriorKnowledgeNetwork(priorKnowledgeNetwork)

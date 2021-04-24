@@ -45,7 +45,7 @@ transformConstraints <- function(mt = mt, lpFile = lpFile){
           
         } else {
           
-          if(currConstraintSplit[idx1[cnt]-1] == "+"){
+          if(currConstraintSplit[idx1[cnt] - 1] == "+"){
             
             f.con[ii, which(mt[, 1] == currVar)] <- 1
             cnt <- cnt + 1

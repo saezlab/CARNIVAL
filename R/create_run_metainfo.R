@@ -23,7 +23,13 @@ createRunId <- function() {
 }
 
 createFilenames <- function(carnivalOptions) {
-  outputFolder <- carnivalOptions$outputFolder
+  #TODO add windows support with .Platform
+  if( carnivalOptions$outputFolder != "" ) {
+    outputFolder <- file.path(carnivalOptions$outputFolder, "")  
+  } else {
+    outputFolder <- file.path(getwd(), "")
+  }
+  
   lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
   parsedData <- paste0(outputFolder, "parsedData_", carnivalOptions$runId, ".RData")
   resultFile <- paste0(outputFolder, "result", "_", carnivalOptions$runId, ".txt")

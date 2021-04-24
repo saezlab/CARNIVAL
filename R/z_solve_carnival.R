@@ -27,10 +27,6 @@ prepareForCarnivalRun <- function(dataPreprocessed,
                                              carnivalOptions )
     variables <- intDataRep 
     
-    if(carnivalOptions$solver == supportedSolvers$lpSolve) {
-      stop("Runs of LpSolve with new data representation are not supported yet. Please use newDataRepresentation=T for lpSolve.")
-    }
-    
   } else {
     writeParsedData( intDataRep[[2]], dataPreprocessed, carnivalOptions )
     lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, 
@@ -104,7 +100,7 @@ sendTaskToSolver <- function( variables,
   lpSolution <- solversFunctions$solve( variables = variables, 
                                         carnivalOptions = carnivalOptions,
                                         dataPreprocessed )
-  
+  print(lpSolution)
   message("Done: Solving LP problem.")
   
   message("Writing the solution matrix")

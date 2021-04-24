@@ -3,8 +3,7 @@
 ## network
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-checkMeasurements <- function(measurements
-                              nodesPriorKnowledgeNetwork) {
+checkMeasurements <- function(measurements, nodesPriorKnowledgeNetwork) {
   
   nullObjectError <- "Please provide a valid measurement object."
   noMeasurementsInNetworkError <- "None of your measurements are in prior knowledge networks (PKN). 

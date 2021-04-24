@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-createObjectiveFunction_v2< - function(variables, alphaWeight, betaWeight, pathwaysScores) {
+createObjectiveFunction_v2 <- function(variables, alphaWeight, betaWeight, pathwaysScores) {
   objectiveFunction <- "Obj:\t "
   
   if(is.null(pathwaysScores)){

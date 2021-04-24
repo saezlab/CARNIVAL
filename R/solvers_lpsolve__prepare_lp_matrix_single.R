@@ -1,4 +1,4 @@
-## Returning LP matrix for one condition
+## Returning LP matrix for lpSolve.
 ##
 ## Enio Gjerga, 2020
 
@@ -39,7 +39,7 @@ prepareLPMatrixSingle <- function(variables = variables,
     ints <- c(ints, which(mt[, 1] == integerVar[ii]))
   }
   
-  res <-  list("mt"= mt, "obj" = f.obj, 
+  res <-  list("matrix"= mt, "obj" = f.obj, 
               "con" = f.con, "dir" = f.dir, 
               "rhs" = f.rhs, "bins" = bins, 
               "ints" = ints)

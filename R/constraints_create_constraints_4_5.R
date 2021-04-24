@@ -14,17 +14,17 @@ createConstraints_4_5_v2 <- function(variables, constraintName = c("c4", "c5")) 
   if(nrow(edgesUpActivation) > 0){
     sourceNodes <- edgesUpActivation$nodesVars
   
-    constraints_4 <<- createConstraintFreeForm(edgesUpActivation$edgesUpVars, "-", 
+    constraints_4 <- createConstraintFreeForm(edgesUpActivation$edgesUpVars, "-", 
                                                sourceNodes, 
                                                "-", 
                                                edgesUpActivation$edgesDownVars,
-                                               "<=", 0))
+                                               "<=", 0)
   
-    constraints_5 <<- createConstraintFreeForm(edgesUpActivation$edgesDownVars, "+", 
+    constraints_5 <- createConstraintFreeForm(edgesUpActivation$edgesDownVars, "+", 
                                                sourceNodes, 
                                                 "-", 
                                                 edgesUpActivation$edgesUpVars,
-                                                "<=", 0)) 
+                                                "<=", 0)
   }
   
   if(nrow(edgesUpInhibition) > 0){

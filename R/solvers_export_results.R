@@ -12,7 +12,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
   for (i in 1:ncol(solutionMatrix)) {
     
-    solMtx <- solutionMatrix[solutionMatrix > 0, i]
+    solMtx <- solutionMatrix[solutionMatrix[, i] > 0, i]
     namesSol <- names(solMtx)
     
     sol <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol | 
@@ -47,9 +47,10 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
 
 getWeightedCollapsedSolution <- function(solutionMatrix, variables, nSolutions) {
   solutionMatrix <- as.data.frame(solutionMatrix)
-  
+  print(solutionMatrix)
   weights <- apply(solutionMatrix, 1, function(x) {
     sum(as.numeric(as.character(x)))
+    #sum(as.numeric(x))
   })  
   
   weights <- weights[weights > 0]
