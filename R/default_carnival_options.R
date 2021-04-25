@@ -33,7 +33,7 @@ requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "pool
 #'
 #' 
 #' @return returns a list with all possible options implemented in CARNIVAL.
-#' see the documentation on \code{\link{CARNIVAL::runCARNIVAL}}.
+#' see the documentation on \code{\link{runCARNIVAL}}.
 #' @export
 #' 
 defaultCplexCarnivalOptions <- function(solverPath=""){

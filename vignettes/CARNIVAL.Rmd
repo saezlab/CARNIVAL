@@ -119,10 +119,10 @@ follows:
 
 Toy Example - 1
 ---------------
-Toy example for the stdCARNIVAL pipeline:
+Toy example for the CARNIVAL vanilla pipeline:
 
 ```{r}
-library(CARNIVAL)
+library(CARNIVAL) 
 
 load(file = system.file("toy_perturbations_ex1.RData",
                         package="CARNIVAL"))
@@ -132,33 +132,35 @@ load(file = system.file("toy_network_ex1.RData",
                         package="CARNIVAL"))
 
 # Output dir
-dir.create("example1")
+dir.create("example1", showWarnings = FALSE)
 
 # lpSolve
-#result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
-#                     netObj = toy_network_ex1)
+resultsLpSolve <- runVanillaCarnival( perturbations = toy_perturbations_ex1, 
+                               measurements = toy_measurements_ex1,
+                               priorKnowledgeNetwork = toy_network_ex1, 
+                               solver = supportedSolvers$lpSolve)
 ```
 which generates the following output:
 ```{r}
-#print(result)
+print(resultsLpSolve)
 ```
 The output from CARNIVAL can be saved in `Rds` format like so:
 ```{r}
-#saveRDS(result, "example1/network_solution.Rds")
+saveRDS(resultsLpSolve, "example1/network_solution.Rds")
 ```
 
 By adding specifying the input for `dir_name` flag, the file 
 `network_solution.dot` is saved in the specified directory. 
 For example:
 ```{r}
-solverPath <- "/Applications/CPLEX_Studio1210/cplex/bin/x86-64_osx/cplex"
-result <- runCarnival(perturbations=toy_perturbations_ex1, 
-                    measurements=toy_measurements_ex1,
-                    priorKnowledgeNetwork = toy_network_ex1,
-                    solver = supportedSolvers$cplex, 
-                    solverPath = solverPath)
+#solverPath <- "/Applications/CPLEX_Studio1210/cplex/bin/x86-64_osx/cplex"
+#result <- runVanillaCarnival(perturbations=toy_perturbations_ex1, 
+#                    measurements=toy_measurements_ex1,
+#                    priorKnowledgeNetwork = toy_network_ex1,
+#                    solver = supportedSolvers$cplex, 
+#                    solverPath = solverPath)
 
-#result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
+#result = runVanillaCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
 #                     netObj = toy_network_ex1, dir_name = "example1")
 ```
 which produces `network_solution.dot` file in the current working directory. 
@@ -186,9 +188,10 @@ load(file = system.file("toy_network_ex2.RData",
                         package="CARNIVAL"))
 
 # Output dir
-dir.create("example2")
+dir.create("example2", showWarnings = FALSE)
 
 # lpSolve
+
 #result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
 ```
 which generates the following output:
@@ -199,7 +202,7 @@ As in the previous example, by adding `dir_name` flag, CARNIVAL exports `dot`
 file of the solution network in `network_solution.dot` file:
 ```{r}
 
-#result = runCARNIVAL(measObj = toy_measurements_ex2, 
+#result = runVanillaCarnival(measObj = toy_measurements_ex2, 
 #                     netObj = toy_network_ex2, 
 #                     dir_name = "example2")
 ```

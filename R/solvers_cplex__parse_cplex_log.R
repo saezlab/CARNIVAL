@@ -2,7 +2,7 @@
 #' 
 #' parses the CPLEX log file and reads some basic information
 #' @param log path of log file resulted from a carnival run OR the content
-#' of this file read by \link{\code[readr]{read_lines}}.
+#' of this file read by \code{\link[readr]{read_lines}}.
 #' @return list variable with following fields:
 #' - `convergence` a table that contains information on the convergence of CPLEX 
 #' - `n_solutions` number of solutions found 

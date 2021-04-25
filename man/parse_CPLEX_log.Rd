@@ -2,20 +2,20 @@
 % Please edit documentation in R/solvers_cplex__parse_cplex_log.R
 \name{parse_CPLEX_log}
 \alias{parse_CPLEX_log}
-\title{parse carnival logs}
+\title{Parse carnival logs}
 \usage{
 parse_CPLEX_log(log)
 }
 \arguments{
 \item{log}{path of log file resulted from a carnival run OR the content
-of this file read by \link{\code[readr]{read_lines}}.}
+of this file read by \code{\link[readr]{read_lines}}.}
 }
 \value{
 list variable with following fields:
 - `convergence` a table that contains information on the convergence of CPLEX 
 - `n_solutions` number of solutions found 
 - `objective` objective function value
-- `termination_reason`: reason of termination.
+- `termination_reason`: reason of termination
 }
 \description{
 parses the CPLEX log file and reads some basic information

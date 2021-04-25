@@ -58,7 +58,7 @@ solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
 4. attributesAll: A list of separate inferred node activities in each
 solution.
 
-5. diagnostics: reports the convergence of optimization and reason of 
+5. diagnostics: reports the convergence of optimization and reason of
 the termination. Only for CPLEX solver.
 }
 \description{
@@ -66,7 +66,7 @@ the termination. Only for CPLEX solver.
 }
 \details{
 Run CARNIVAL pipeline using to the user-provided list of inputs or
-run CARNIVAL built-in examples. The function is an API from v1.2 of CARNIVAL 
+run CARNIVAL built-in examples. The function is an API from v1.2 of CARNIVAL
 and is left for backward compatibility.
 }
 \examples{
@@ -78,22 +78,6 @@ load(file = system.file("toy_network_ex1.RData",
                         package="CARNIVAL"))
 
 ## lpSolve
-res1 = runCarnival(perturbations = toy_inputs_ex1, 
-                   measurements = toy_measurements_ex1,
-                   priorKnowledgeNetwork = toy_network_ex1)
-
-## cbc
-res2 = runCarnival(perturbations = toy_inputs_ex1, 
-                   measurements = toy_measurements_ex1,
-                   priorKnowledgeNetwork = toy_network_ex1, 
-                   solver = supportedSolvers$cbc)
-
-## cplex
-res3 = runCarnival(perturbations = toy_inputs_ex1, 
-                   measurements = toy_measurements_ex1,
-                   priorKnowledgeNetwork = toy_network_ex1, 
-                   solver = supportedSolver$cplex,
-                   solverPath = "your_path/")
 
 }
 \author{

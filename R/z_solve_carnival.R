@@ -100,11 +100,11 @@ sendTaskToSolver <- function( variables,
   lpSolution <- solversFunctions$solve( variables = variables, 
                                         carnivalOptions = carnivalOptions,
                                         dataPreprocessed )
-  print(lpSolution)
   message("Done: Solving LP problem.")
   
   message("Writing the solution matrix")
   solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
+  print(solutionMatrix)
   message("Done: Writing the solution matrix")
   
   return(solutionMatrix)
@@ -121,13 +121,12 @@ processSolution <- function(solutionMatrix,
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
   if (newDataRepresentation) {
-    
     result <- solversFunctions$export( solutionMatrix = solutionMatrix, 
                                        variables = variables )
   } else {
-    result <- exportIlpSolutionResultFromXml(solMatrix = solutionMatrix, 
+    result <- exportIlpSolutionResultFromXml( solMatrix = solutionMatrix, 
                                               variables = variables, 
-                                              dataPreprocessed)
+                                              dataPreprocessed )
   }
   
   if (carnivalOptions$solver == supportedSolvers$cplex) {

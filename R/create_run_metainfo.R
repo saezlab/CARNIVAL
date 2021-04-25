@@ -1,5 +1,5 @@
 #TODO add this rather to api and then to docs
-#availableFlavours <- list(vanilla = "vanilla", fromLp = "fromLp")
+availableFlavours <- list(vanilla = "vanilla", fromLp = "fromLp")
 
 collectMetaInfo <- function(carnivalOptions) {
   runId <- createRunId()

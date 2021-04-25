@@ -39,7 +39,8 @@ Depends:
 Imports:
     readr,
     lpSolve,
-    igraph
+    igraph,
+    dplyr
 biocViews: Transcriptomics, GeneExpression, Network
 License: GPL-3 + file LICENSE
 LazyData: true
@@ -49,4 +50,4 @@ Suggests:
     testthat (>= 2.1.0),
     rjson
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

@@ -43,7 +43,7 @@ generateLpFileCarnival <- function(perturbations,
   return(results)
 }
 
-#'\code{runCarnival}
+#'\code{runVanillaCarnival}
 #'
 #'@details Runs full CARNIVAL pipeline, vanilla(classic) flavour.
 #'
@@ -78,7 +78,7 @@ generateLpFileCarnival <- function(perturbations,
 #'@author Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}
 #'
 #'@export
-runCarnival <- function( perturbations,
+runVanillaCarnival <- function( perturbations,
                          measurements,
                          priorKnowledgeNetwork,
                          pathwayWeights = NULL,
@@ -233,6 +233,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
   return(NULL)
 }
 
+#TODO examples!
 #'\code{runCARNIVAL}
 #'
 #'@details Run CARNIVAL pipeline using to the user-provided list of inputs or
@@ -280,22 +281,6 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'                         package="CARNIVAL"))
 #'
 #' ## lpSolve
-#' res1 = runCarnival(perturbations = toy_inputs_ex1,
-#'                    measurements = toy_measurements_ex1,
-#'                    priorKnowledgeNetwork = toy_network_ex1)
-#'
-#' ## cbc
-#' res2 = runCarnival(perturbations = toy_inputs_ex1,
-#'                    measurements = toy_measurements_ex1,
-#'                    priorKnowledgeNetwork = toy_network_ex1,
-#'                    solver = supportedSolvers$cbc)
-#'
-#' ## cplex
-#' res3 = runCarnival(perturbations = toy_inputs_ex1,
-#'                    measurements = toy_measurements_ex1,
-#'                    priorKnowledgeNetwork = toy_network_ex1,
-#'                    solver = supportedSolver$cplex,
-#'                    solverPath = "your_path/")
 #'
 #'@import readr
 #'@import lpSolve

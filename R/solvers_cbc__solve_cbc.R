@@ -11,11 +11,15 @@ solveWithCbc <- function( variables, dataPreprocessed, carnivalOptions) {
   system(cbc_command)
   
   solutionFileName <- carnivalOptions$filenames$resultFile
-  solMatrix <- read_csv(solutionFileName)
+  solMatrix <- read.csv2(solutionFileName, sep = ",")
   
-  return(solution)
+  return(solMatrix)
 }
 
-getSolutionMatrixCbc <- function(solution) {
-  return(solution)
+getSolutionMatrixCbc <- function(solutionMatrix) {
+  variablesNames <- solutionMatrix$name
+  solutionMatrix <- as.matrix(solutionMatrix$solution)
+  rownames(solutionMatrix) <- variablesNames
+  
+  return(solutionMatrix)
 }

@@ -1,9 +1,8 @@
 ## Transforming variables for lpSolve solver.
 ##
-## Eio Gjerga, 2020
+## Eio Gjerga, Olga Ivanova 2020-2021l
 
-transformVariables_v2 <- function(variables = variables, 
-                                  measurements = measurements){
+transformVariables_v2 <- function(variables, measurements){
   
   allVariables <- c( variables$nodesDf$nodesVars, 
                      variables$nodesDf$nodesUpVars,
@@ -22,8 +21,8 @@ transformVariables_v2 <- function(variables = variables,
   
 }
 
-transformVariables <- function(variables = variables, 
-                               measurements = measurements){
+#The function is obsolete, kept here for old data representation compatibility
+transformVariables <- function(variables, measurements = measurements){
   
   vars1 <- variables$variables
   measSpecies <- colnames(measurements)
