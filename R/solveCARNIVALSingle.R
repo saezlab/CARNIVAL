@@ -137,10 +137,16 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
       
       lpForm <- prepareLPMatrixSingle(variables = variables, measObj = measObj)
       
+      # lp solve assumes that all decision variables are positive. We should shift
+      # the problem to the positive plane. 
+      lpForm <- shift_constraint_space(lpForm)
+      
       lpSolution <- lp(direction = "min", objective.in = lpForm$obj, 
                        const.mat = lpForm$con, const.dir = lpForm$dir, 
-                       const.rhs = lpForm$rhs, int.vec = lpForm$ints, 
-                       binary.vec = lpForm$bins)$solution
+                       const.rhs = lpForm$rhs,all.int = TRUE)$solution
+      
+      # after solving the sustem: shift the solution bacl to the original space. 
+      lpSolution <- shift_constraint_space_back(lpSolution)
       
       res <- exportResult(cplexSolutionFileName = NULL, variables = variables,
                           pknList = pknList, inputs = inputObj,
@@ -172,3 +178,34 @@ solveCARNIVALSingle <- function(data = data, pknList = pknList,
   }
   
 }
+
+# shift_constraint_space
+# 
+# we shift all the variables and solve the problem for the transformed variable y. 
+# y = x + 1 , which means x = y-1 has to inserted
+#  obj   \alpha*x
+# s.t. C*x < rhs    
+#
+# becomes
+#
+#  obj   \alpha*y
+# s.t. C*(y-1) < rhs =>     C*y < rhs+C*1=rhs'
+# i.e. we have to transform the right hand side function
+shift_constraint_space <- function(lpForm,dist=1){
+  
+  rhs <- as.numeric(lpForm$rhs)
+  C <- lpForm$con
+  one = rep(dist,ncol(C))
+  
+  add = C%*%one
+  rhs = rhs + add
+  
+  lpForm$rhs = rhs
+  return(lpForm)
+  
+}
+# transform back the optimal solution. 
+shift_constraint_space_back <- function(xSol,dist=1){
+  xSol-dist 
+}
+
