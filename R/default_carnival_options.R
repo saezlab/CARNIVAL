@@ -1,8 +1,9 @@
+#' The list of supported solvers. 
 supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
 requiredCarnivalCplexOptions <- c("solverPath", "solver", "betaWeight")
-requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", "limitPop", "poolCap", 
-                          "poolIntensity", "poolReplace",
-                          "threads")
+requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", 
+                          "limitPop", "poolCap", "poolIntensity", 
+                          "poolReplace", "threads")
 
 #' default_CARNIVAL_options
 #' 
@@ -116,7 +117,7 @@ suggesteCbcSpecificOptions <- function() {
 # (look up for scipen) - options(scipen = 0) to switch it on
 defaultCplexSpecificOptions <- function() {
   options <- list(
-        threads=1,
+        threads = 1,
         mipGap = 1e-04, 
         poolrelGap = 1e75,
         limitPop = 20,

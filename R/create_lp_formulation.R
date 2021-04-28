@@ -7,16 +7,14 @@ createLpFormulation_v2 <- function( internalDataRepresentation,
                                     dataPreprocessed,
                                     carnivalOptions ) {
   
-  message("Writing constraints...")
+  message(getTime(), " Generating formulation for LP problem")
   options(scipen=999)
   
   variables <- internalDataRepresentation
   objectiveFunction <- createObjectiveFunction_v2 ( variables = variables,
                                                     alphaWeight = carnivalOptions$alphaWeight,
                                                     betaWeight = carnivalOptions$betaWeight,
-                                                    pathwaysScores = dataPreprocessed$pathwayWeights )
-  
-  message("Generating constraints for linear programming problem...")
+                                                    weights = dataPreprocessed$weights )
   
   bounds <- createBoundaries_v2(variables)
   binaries <- createBinaries_v2(variables)
@@ -39,6 +37,8 @@ createLpFormulation_v2 <- function( internalDataRepresentation,
                           "bounds" = bounds,
                           "binaries" = binaries,
                           "generals" = generals)
+  
+  message(getTime(), " Done: generating formulation for LP problem.")
   
   return(lpProblemFormed)
 }

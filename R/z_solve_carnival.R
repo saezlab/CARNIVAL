@@ -2,6 +2,7 @@
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
+#' Supported solver functions to run all solvers in an uniform way.
 supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
                                               "getSolutionMatrix" = getSolutionMatrixCplex,
                                               "export" = exportIlpSolutionFromSolutionMatrix, 
@@ -92,7 +93,7 @@ sendTaskToSolver <- function( variables,
                               dataPreprocessed, 
                               carnivalOptions ) {
   
-  message("Solving LP problem...")
+  message(getTime(), " Solving LP problem")
   
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
@@ -100,12 +101,11 @@ sendTaskToSolver <- function( variables,
   lpSolution <- solversFunctions$solve( variables = variables, 
                                         carnivalOptions = carnivalOptions,
                                         dataPreprocessed )
-  message("Done: Solving LP problem.")
+  message(getTime(), " Done: solving LP problem.")
   
-  message("Writing the solution matrix")
+  message(getTime()," Getting the solution matrix")
   solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
-  print(solutionMatrix)
-  message("Done: Writing the solution matrix")
+  message(getTime(), " Done: getting the solution matrix.")
   
   return(solutionMatrix)
 }
@@ -117,7 +117,7 @@ processSolution <- function(solutionMatrix,
                             dataPreprocessed,
                             carnivalOptions) {
   
-  message("Exporting solution matrix...")
+  message(getTime(), " Exporting solution matrix")
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
   if (newDataRepresentation) {
@@ -133,7 +133,7 @@ processSolution <- function(solutionMatrix,
     result <- solversFunctions$saveDiagnostics(result, carnivalOptions)
   } 
   
-  message("Done: exporting solution matrix.")
+  message(getTime(), " Done: exporting solution matrix.")
   return(result)
 }
 
@@ -166,4 +166,5 @@ writeParsedData <- function ( variables = variables,
   save(variables, 
        dataPreprocessed,
        file = parsedDataFilename)
+  message("Done: saving parsed data: ", parsedDataFilename)
 }

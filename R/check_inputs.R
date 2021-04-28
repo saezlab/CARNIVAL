@@ -2,11 +2,11 @@
 ##
 ## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
 
-checkData <- function( measurements,
+checkData <- function( perturbations,
+                       measurements,
                        priorKnowledgeNetwork,
-                       perturbations,
-                       pathwayWeights = NULL ) {
-
+                       weights = NULL ) {
+  
   checkPriorKnowledgeNetwork(priorKnowledgeNetwork)
   
   priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
@@ -14,19 +14,19 @@ checkData <- function( measurements,
   
   if (is.null(perturbations)) {
     priorKnowledgeNetworkProcessed <- addPerturbationNodes(priorKnowledgeNetworkProcessed)
+    message("Perturbations are not given, all parents nodes are added as potential perturbations.")
     perturbationsProcessed <- NULL
   } else {
-    perturbationsProcessed <- checkPerturbations(perturbations = perturbations, 
-                                                 nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+    perturbationsProcessed <- checkPerturbations(perturbations, 
+                                                 nodesPriorKnowledgeNetwork)
   }
   
-  measurementsProcessed <- checkMeasurements(measurements = measurements, 
-                                             nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  measurementsProcessed <- checkMeasurements(measurements, 
+                                             nodesPriorKnowledgeNetwork)
   
   weightsProcessed <- NULL
-  if ( !is.null(pathwayWeights) ) {
-    weightsProcessed = checkWeights(weights = pathwayWeights, 
-                                    nodesPriorKnowledgeNetwork = nodesPriorKnowledgeNetwork)
+  if ( !is.null(weights) ) {
+    weightsProcessed = checkWeights(weights, nodesPriorKnowledgeNetwork)
   } 
   
   results <- list("priorKnowledgeNetwork" = priorKnowledgeNetworkProcessed, 
@@ -47,8 +47,12 @@ checkSolverInputs <- function(options){
   if (options$solver == supportedSolvers$cplex) {
     checkCplexCarnivalOptions(options)  
   } else if (options$solver == supportedSolvers$lpSolve) {
+    #TODO
+    #checkLpSolveCarnivalOptions(options)
     message("No checks for inputs for lpSolve needed.")
   } else if (options$solver == supportedSolvers$cbc){
+    #TODO 
+    #checkCbcCarnivalOptions(options)
     message("No checks for inputs for cbc needed.")
   } else {
     stop("Other solvers (except lpSolve and cplex) are not supported (yet) in the updated API.")

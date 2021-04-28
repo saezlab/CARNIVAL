@@ -4,6 +4,8 @@
 ## Olga Ivanova 2021
 
 createVariablesForIlpProblem <- function(dataProcessed) {
+  message(getTime(), " Generating variables for lp problem")
+  
   perturbations <- dataProcessed$perturbations
   measurements <- dataProcessed$measurements
   priorKnowledgeNetwork <- dataProcessed$priorKnowledgeNetwork
@@ -12,6 +14,7 @@ createVariablesForIlpProblem <- function(dataProcessed) {
   edgesDf <- createEdgesVariables(priorKnowledgeNetwork) 
   measurementsDf <- createMeasurementsVariables(measurements, nodesDf, priorKnowledgeNetwork)
  
+  message(getTime(), " Done: generating variables for lp problem")
   return(list("nodesDf" = nodesDf, "edgesDf" = edgesDf, 
               "measurementsDf" = measurementsDf))
 }

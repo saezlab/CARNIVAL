@@ -46,9 +46,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
 }
 
 getWeightedCollapsedSolution <- function(solutionMatrix, variables, nSolutions) {
-  print(solutionMatrix)
   solutionMatrix <- as.data.frame(solutionMatrix)
-  print(solutionMatrix)
   
   weights <- apply(solutionMatrix, 1, function(x) {
     sum(as.numeric(as.character(x)))

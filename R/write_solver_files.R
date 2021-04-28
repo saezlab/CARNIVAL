@@ -8,11 +8,10 @@ writeSolverFile <- function(objectiveFunction = objectiveFunction,
                             binaries = binaries,
                             generals = generals, 
                             carnivalOptions = carnivalOptions){
-  message("Creating LP file...")
+  message("Saving LP file")
   
   ## write the .lp file
   lpFilename <- carnivalOptions$filenames$lpFilename
-  print(carnivalOptions$filenames)
   
   write("Minimize", lpFilename, append = TRUE)
   write(objectiveFunction, lpFilename, append = TRUE)
@@ -26,6 +25,6 @@ writeSolverFile <- function(objectiveFunction = objectiveFunction,
   write(generals, lpFilename, append = TRUE)
   write("End", lpFilename, append = TRUE)
   
-  message("Done: Creating LP file.")
+  message("Done: Saving LP file: ", carnivalOptions$filenames$lpFilename)
 }
 

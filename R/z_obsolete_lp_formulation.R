@@ -3,7 +3,7 @@
 
 createLpFormulation <- function( internalDataRepresentation, 
                                  dataPreprocessed,
-                                 carnivalOptions) {
+                                 carnivalOptions ) {
   
   message("Writing constraints...")
   options(scipen=999)
