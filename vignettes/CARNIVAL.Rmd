@@ -48,6 +48,8 @@ result, CARNIVAL derives a family of highest scoring networks which best explain
 the inferred TF activities. Continuous pathway and TF activities can be 
 additionally considered in the objective function.
 
+![Figure 1: CARNIVAL  pipeline](./vignettes_pictures/carnival_Overview.png =100x100)
+
 ILP solvers
 -----------
 CARNIVAL is an extension of the previously implemented Causal Reasoning 
@@ -120,12 +122,20 @@ follows:
 
 2. A small toy example where the inputs are not known (invCARNVAL)
 
+3. A small toy example where the inputs are known run with two functions (stdCARNIVAL)
+
+
+The Data of these toy examples looks as follows:
+
+* Two input Nodes I1 and I2 connected to the nodes N1 and N2 respectively
+* N1 and N2 are connected to both measured Nodes M1 and M2 
+* All connections beside I2 to N2 are activatory
+
 Toy Example - 1
 ---------------
 Toy example for the CARNIVAL standard pipeline:
 
 ```{r}
-library(CARNIVAL) 
 
 load(file = system.file("toy_inputs_ex1.RData",
                         package="CARNIVAL"))
@@ -135,23 +145,24 @@ load(file = system.file("toy_network_ex1.RData",
                         package="CARNIVAL"))
 
 # Output dir
-dir.create("example1", showWarnings = FALSE)
-carnivalOptions <- defaultCplexCarnivalOptions(solverPath = solverPath)
-carnivalOptions$outputFolder <- "example1"
-colnames(toy_network_ex1) <- c("source","interaction", "target")
+#dir.create("example1", showWarnings = FALSE)
+#carnivalOptions <- defaultCplexCarnivalOptions(solverPath = solverPath)
+#carnivalOptions$outputFolder <- "example1"
+
+#colnames(toy_network_ex1) <- c("source","interaction", "target")
 # lpSolve
-resultsLpSolve <- runVanillaCarnival( perturbations = toy_inputs_ex1, 
-                               measurements = toy_measurements_ex1,
-                               priorKnowledgeNetwork = toy_network_ex1, 
-                               solver = supportedSolvers$lpSolve)
+#resultsLpSolve <- runVanillaCarnival( perturbations = toy_inputs_ex1, 
+#                               measurements = toy_measurements_ex1,
+ #                              priorKnowledgeNetwork = toy_network_ex1, 
+  #                             solver = supportedSolvers$lpSolve)
 ```
 which generates the following output:
 ```{r}
-print(resultsLpSolve)
+# print(resultsLpSolve)
 ```
 The output from CARNIVAL can be saved in `Rds` format like so:
 ```{r}
-saveRDS(resultsLpSolve, "example1/network_solution.Rds")
+# saveRDS(resultsLpSolve, "example1/network_solution.Rds")
 ```
 
 By adding specifying the input for `dir_name` flag, the file 
@@ -185,7 +196,7 @@ Toy Example - 2
 Toy example for the CARNIVAL inverted pipeline:
 
 ```{r}
-library(CARNIVAL) # load CARNIVAL library
+ # load CARNIVAL library
 
 load(file = system.file("toy_measurements_ex2.RData",
                         package="CARNIVAL"))
@@ -194,8 +205,8 @@ load(file = system.file("toy_network_ex2.RData",
 
 # Output dir
 dir.create("example2", showWarnings = FALSE)
-carnivalOptions <- defaultCplexCarnivalOptions(solverPath = solverPath)
-carnivalOptions$outputFolder <- "example1"
+#carnivalOptions <- defaultCplexCarnivalOptions(solverPath = solverPath)
+#carnivalOptions$outputFolder <- "example1"
 
 # lpSolve
 
@@ -217,7 +228,7 @@ file of the solution network in `network_solution.dot` file:
 which can be visualised in the same manner as previous example:
 ```{bash}
 
-dot example2/network_solution.dot -T pdf > example2/network_solution.pdf
+# dot example2/network_solution.dot -T pdf > example2/network_solution.pdf
 ```
 
 ```
@@ -231,7 +242,6 @@ Toy example for the CARNIVAL standard pipeline with generateLPFileCarnival and r
 
 ```{r}
 
-library(CARNIVAL) 
 
 load(file = system.file("toy_inputs_ex1.RData",
                         package="CARNIVAL"))
@@ -242,34 +252,34 @@ load(file = system.file("toy_network_ex1.RData",
 
 # Output dir
 dir.create("example3", showWarnings = FALSE)
-carnivalOptions <- defaultCplexCarnivalOptions(solverPath = solverPath)
-carnivalOptions$outputFolder <- "example3"
-colnames(toy_network_ex1) <- c("source","interaction", "target")
+#carnivalOptions <- defaultCplexCarnivalOptions(solverPath = solverPath)
+#carnivalOptions$outputFolder <- "example3"
+#colnames(toy_network_ex1) <- c("source","interaction", "target")
 
 # lpSolve
-generateLpFileCarnival(perturbations = toy_perturbations_ex1,
-                                 measurements = toy_measurements_ex1, 
-                                 priorKnowledgeNetwork = toy_network_ex1, 
-                                 solver = supportedSolvers$cplex,
-                                 solverPath = solverPath,
-                                 carnivalOptions = carnivalOptions)
+# generateLpFileCarnival(perturbations = toy_perturbations_ex1,
+#                                 measurements = toy_measurements_ex1, 
+ #                                priorKnowledgeNetwork = toy_network_ex1, 
+  #                               solver = supportedSolvers$cplex,
+   #                              solverPath = solverPath,
+    #                             carnivalOptions = carnivalOptions)
 
 ```
 which writes two files, an Lp File and a parsed Data file. The next function takes  
 ```{r}
 
-resultsLpSolve <- runCarnivalFromLp(lpFile = "toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp",
-                              parsedDataFile = "toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData",
-                              solver = supportedSolvers$lpSolve,
-                              solverPath = "",
-                              carnivalOptions =
-                                defaultLpSolveCarnivalOptions())
+# resultsLpSolve <- runCarnivalFromLp(lpFile = "toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp",
+ #                             parsedDataFile = "toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData",
+  #                            solver = supportedSolvers$lpSolve,
+   #                           solverPath = "",
+    #                          carnivalOptions =
+     #                           defaultLpSolveCarnivalOptions())
 ```
 which generates the following output:
 
 ```{r}
 
-resultsLpSolve
+#resultsLpSolve
 ```
 
 ```
