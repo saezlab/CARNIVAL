@@ -55,11 +55,7 @@ solveCarnivalFromLp <- function(lpFile = "",
                                 newDataRepresentation = T,
                                 carnivalOptions) {
   load(parsedDataFile) 
-  dataPreprocessed$measurements <- measurements
-  dataPreprocessed$priorKnowledgeNetwork <- priorKnowledgeNetwork
-  dataPreprocessed$perturbations <- perturbations
-  dataPreprocessed$weights <- weights
-
+  
   carnivalOptions$filenames$lpFilename <- lpFile
   solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
   result <- processSolution( solutionMatrix, variables, newDataRepresentation, 
