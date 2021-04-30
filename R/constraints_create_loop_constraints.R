@@ -3,24 +3,27 @@
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-createLoopConstraints_v2 <- function(variables, constraintName = "c9") {
-  distanceConstrant <- 100
-  distanceConstrantForConstraint <- 101
+createLoopConstraints_v2 <- function(variables, constraintName = "c9", nodesType = c("perturbations" = "P", 
+                                                                                     "measured" = "M")) {
+  distanceConstant <- 100
+  distanceConstantForConstraint <- 101
 
   variablesMergedNode1 <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes") 
   variablesMergedNode2 <- merge(variablesMergedNode1, variables$nodesDf, by.x="Node2", by.y="nodes") 
   
-  cLoop <- createConstraintFreeForm(distanceConstrantForConstraint, 
+  variablesMergedNode2 <- variablesMergedNode2[variablesMergedNode2$nodesType.y != nodesType['perturbations'], ]
+  
+  cLoop <- createConstraintFreeForm(distanceConstantForConstraint, 
                                     variablesMergedNode2$edgesUpVars, "+", 
                                     variablesMergedNode2$nodesDistanceVars.x, "-",
                                     variablesMergedNode2$nodesDistanceVars.y, "<=", 
-                                    distanceConstrant)
+                                    distanceConstant)
   
-  cLoop <- c(cLoop, createConstraintFreeForm(distanceConstrantForConstraint, 
+  cLoop <- c(cLoop, createConstraintFreeForm(distanceConstantForConstraint, 
                                              variablesMergedNode2$edgesDownVars, "+", 
                                              variablesMergedNode2$nodesDistanceVars.x, "-",
                                              variablesMergedNode2$nodesDistanceVars.y, "<=", 
-                                             distanceConstrant))
+                                             distanceConstant))
   
   cLoop <- list(cLoop)
   names(cLoop) <- constraintName

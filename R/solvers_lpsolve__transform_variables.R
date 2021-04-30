@@ -22,7 +22,7 @@ transformVariables_v2 <- function(variables, measurements){
 }
 
 #The function is obsolete, kept here for old data representation compatibility
-transformVariables <- function(variables, measurements = measurements){
+transformVariables <- function(variables, measurements){
   
   vars1 <- variables$variables
   measSpecies <- colnames(measurements)

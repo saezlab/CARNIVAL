@@ -2,7 +2,8 @@
 # Planned to be removed in v.3
 
 createConstraintsObjectiveFunction <- function(variables = variables, 
-                                               dataVector = dataVector){
+                                               dataVector = dataVector, 
+                                               postfix="_1"){
   
   measurements <- dataVector$dataVectorSign
   
@@ -13,11 +14,11 @@ createConstraintsObjectiveFunction <- function(variables = variables,
   cc2 <- rep("", length(measurements))
   
   cc1[idx2] <- paste0(variables$variables[idx2], " - absDiff", 
-                      idx2, " <= 1")
-  cc2[idx2] <- paste0(variables$variables[idx2], " + absDiff", idx2, " >= 1")
+                      idx2, postfix, " <= 1")
+  cc2[idx2] <- paste0(variables$variables[idx2], " + absDiff", idx2, postfix, " >= 1")
   
-  cc1[idx3] <- paste0(variables$variables[idx3], " - absDiff", idx3, " <= -1")
-  cc2[idx3] <- paste0(variables$variables[idx3], " + absDiff", idx3, " >= -1")
+  cc1[idx3] <- paste0(variables$variables[idx3], " - absDiff", idx3, postfix, " <= -1")
+  cc2[idx3] <- paste0(variables$variables[idx3], " + absDiff", idx3, postfix, " >= -1")
   
   constraints0 <- c(cc1, cc2)
   

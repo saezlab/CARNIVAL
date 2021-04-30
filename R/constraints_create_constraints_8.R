@@ -7,7 +7,7 @@ createConstraints_8_v2 <- function(variables, perturbations, constraintName=c("c
 
   # "Sync" all predicted states values with perturbation data
   lapply(variables$nodesDf$nodes, function(x) {
-    row <-  variables$nodesDf[variables$nodesDf$nodes == x, ]
+    row <- variables$nodesDf[variables$nodesDf$nodes == x, ]
     constraint_8 <<- c(constraint_8, createConstraintFreeForm(row$nodesUpVars, "-",
                                                               row$nodesDownVars, "+",
                                                               row$nodesActStateVars, "-",
@@ -18,7 +18,6 @@ createConstraints_8_v2 <- function(variables, perturbations, constraintName=c("c
   # Defines activations state for unperturbed nodes
   unperturbedNodes <- variables$nodesDf[!variables$nodesDf$nodes %in% names(perturbations), ]
   lapply(unperturbedNodes$nodes, function(x) {
-    
     var <- variables$nodesDf[variables$nodesDf$nodes == x, ]$nodesActStateVars
     constraint_8 <<- c(constraint_8, createConstraintFreeForm(var, "=", 0))
     
@@ -28,11 +27,16 @@ createConstraints_8_v2 <- function(variables, perturbations, constraintName=c("c
   lapply(names(perturbations), function(x) {
     var <- variables$nodesDf[variables$nodesDf$nodes == x, ]$nodesVars
     constraint_8 <<- c(constraint_8, createConstraintFreeForm(var, "=", perturbations[[x]]))
-
-    varActState <- variables$nodesDf[variables$nodesDf == x, ]$nodesActStateVars
-    constraint_8 <<- c(constraint_8, createConstraintFreeForm(var, "-", varActState, "=", 0))
   })
-
+  
+  parentNodes <- setdiff(variables$edgesDf$Node1, variables$edgesDf$Node2)
+  lapply(parentNodes, function(x) {
+    var <- variables$nodesDf[variables$nodesDf$nodes == x, c("nodesVars", "nodesActStateVars")]
+    constraint_8 <<- c(constraint_8, createConstraintFreeForm(var$nodesVars, "-", 
+                                                              var$nodesActStateVars,
+                                                              "=", 0))
+  })
+  
   constraint_8 <- list(constraint_8)
   names(constraint_8) <- constraintName
   return(constraint_8)

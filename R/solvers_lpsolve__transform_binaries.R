@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-transformBinaries <- function(mt = mt, lpFile = lpFile){
+transformBinaries <- function(mt, lpFile){
   
   idx1 <- which(lpFile == "Binaries")
   idx2 <- which(lpFile == "Generals")

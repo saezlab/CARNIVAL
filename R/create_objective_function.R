@@ -5,7 +5,7 @@
 createObjectiveFunction_v2 <- function(variables, alphaWeight, betaWeight, weights) {
   objectiveFunction <- "Obj:\t "
   
-  objectiveFunctionMeasurements <- paste(variables$measurementsDf$value, 
+  objectiveFunctionMeasurements <- paste(abs(as.numeric(variables$measurementsDf$value)), 
                                          variables$measurementsDf$measurementsVars, "+ ")
   
   if(is.null(weights)){

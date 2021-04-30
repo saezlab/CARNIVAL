@@ -1,5 +1,9 @@
 #' The list of supported solvers. 
-supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
+getSupportedSolvers <- function() {
+  supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
+  return(supportedSolvers)
+}
+
 requiredCarnivalCplexOptions <- c("solverPath", "solver", "betaWeight")
 requiredCplexOptions <- c("timelimit", "mipGap", "poolrelGap", 
                           "limitPop", "poolCap", "poolIntensity", 
@@ -41,7 +45,7 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
     
     options <- list(
          solverPath = solverPath,
-         solver = supportedSolvers$cplex, 
+         solver = getSupportedSolvers()$cplex, 
          lpFilename = "",
          cplexCommandFilename = "",
          outputFolder = "",
@@ -58,7 +62,7 @@ defaultCplexCarnivalOptions <- function(solverPath=""){
 defaultLpSolveCarnivalOptions <- function(){
   
   options <- list(
-    solver = supportedSolvers$lpSolve, 
+    solver = getSupportedSolvers()$lpSolve, 
     lpFilename = "",
     outputFolder = "",
     betaWeight = 0.2,
@@ -72,7 +76,7 @@ defaultLpSolveCarnivalOptions <- function(){
 
 defaultCbcSolveCarnivalOptions <- function(solverPath=""){
   options <- list(
-    solver = supportedSolvers$cbc, 
+    solver = getSupportedSolvers()$cbc, 
     solverPath = solverPath,
     lpFilename = "",
     outputFolder = "",

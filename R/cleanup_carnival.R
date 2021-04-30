@@ -14,7 +14,7 @@ cleanupCarnival <- function(carnivalOptions){
       file.remove(lpFile)
     }
     
-    if (carnivalOptions$solver == supportedSolvers$cplex) {
+    if (carnivalOptions$solver == getSupportedSolvers()$cplex) {
       workdir <- carnivalOptions$workdir
       cplexCommandFile <- carnivalOptions$filenames$cplexCommandFile
       

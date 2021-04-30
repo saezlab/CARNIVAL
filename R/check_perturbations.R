@@ -1,6 +1,6 @@
-## Returning error message in case of errors in the inputs
+## Returning error message in case of errors in the perturbations. 
 ##
-## Enio Gjerga, 2020
+## Enio Gjerga, Olga Ivanova 2020-2021
 
 checkPerturbations <- function(perturbations, nodesPriorKnowledgeNetwork) {
 

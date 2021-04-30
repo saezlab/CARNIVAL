@@ -4,7 +4,7 @@
 
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
-  nSolutions <- dim(solutionMatrix)[[2]]
+  nSolutions <- ncol(solutionMatrix)
   summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables, nSolutions)
   
   allSolutions <- list()

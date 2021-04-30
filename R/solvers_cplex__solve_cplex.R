@@ -1,4 +1,4 @@
-solveWithCplex <- function( variables, dataPreprocessed, carnivalOptions ) {
+solveWithCplex <- function(carnivalOptions) {
   
   #create cplex command file
   writeCplexCommandFile(carnivalOptions)

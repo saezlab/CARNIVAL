@@ -8,24 +8,26 @@ createConstraintsMeasurements_v2 <- function(variables, constraintName = "c0") {
   
   positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]
   negativeMeasurements <- variables$measurementsDf[variables$measurementsDf$value < 0, ]
+  cOf1 <- c()
+  cOf2 <- c()
   
-  if( dim(positiveMeasurements)[1] > 0 ) {
-    cOf1 <<- createConstraint(positiveMeasurements$nodesVars, "-", 
+  if( nrow(positiveMeasurements) > 0 ) {
+    cOf1 <- createConstraint(positiveMeasurements$nodesVars, "-", 
                               positiveMeasurements$measurementsVars,
                               "<=", 1)
-    cOf2 <<- createConstraint(positiveMeasurements$nodesVars, "+", 
+    cOf2 <- createConstraint(positiveMeasurements$nodesVars, "+", 
                               positiveMeasurements$measurementsVars,
                                ">=", 1)
    
   }
   
-  if( dim(negativeMeasurements)[1] > 0 ) {
-    cOf1 <<- createConstraint(negativeMeasurements$nodesVars, "-", 
+  if( nrow(negativeMeasurements) > 0 ) {
+    cOf1 <- c( cOf1, createConstraint(negativeMeasurements$nodesVars, "-", 
                               negativeMeasurements$measurementsVars,
-                             "<=", -1)
-    cOf2 <<- createConstraint(negativeMeasurements$nodesVars, "+", 
+                             "<=", -1) )
+    cOf2 <- c( cOf2, createConstraint(negativeMeasurements$nodesVars, "+", 
                               negativeMeasurements$measurementsVars,
-                             ">=", -1)
+                             ">=", -1) )
   }
   
   cOf <- list( c(cOf1, cOf2) )

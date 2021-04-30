@@ -1,8 +1,7 @@
 ## The list of all LP constraints with removed failed-to-write constraints that 
-## returns NaN
+## returns NaN.
 ## 
 ## Enio Gjerga, 2020
-
 concatenateConstraints <- function(constraintsText){
 
   allConstraints <- paste0("c", seq_len(length(constraintsText)),
