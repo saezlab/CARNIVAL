@@ -25,8 +25,10 @@ createLpFormulation_v2 <- function( internalDataRepresentation,
   c3 <- createConstraints_3_v2(variables)
   c4_5 <- createConstraints_4_5_v2(variables)
   c6_7 <- createConstraints_6_7_v2(variables)
+  #TODO get rid of perturbations from param (not needed, this info is in nodesDf)
+  # Keeping it here until the bug when one node is both perturbation and measurement fixed
   c8 <- createConstraints_8_v2(variables, dataPreprocessed$perturbations)
-  c9 <- createLoopConstraints_v2(variables)
+  c9 <- createLoopConstraints_v2(variables, dataPreprocessed$perturbations)
   
   allConstraints <- c(c0, c1_2, c3, c4_5, c6_7, c8, c9)
   allConstraints <- concatenateConstraints(unlist(allConstraints))

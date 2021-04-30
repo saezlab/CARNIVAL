@@ -117,7 +117,7 @@ createMeasurementsVariables <- function(measurements,
     measurementsNodesVars <- nodesDf[nodesDf$nodes %in% names(measurements), ]
     idxNodes <- gsub("[^\\d_1]+", "", measurementsNodesVars$nodesVars, perl=TRUE)
     measurementsVars <- paste0(prefixes["measurementsAbsDiff"], idxNodes)
-    measurementsVars <- measurementsVars[order(measurementsNodesVars$nodes)]
+    measurementsVars <- measurementsVars[order(match(measurementsNodesVars$nodes, measurementsVars))]
     
   } else {
     idxNodes <- seq(from = 1, to = length(measurements), by = 1)
