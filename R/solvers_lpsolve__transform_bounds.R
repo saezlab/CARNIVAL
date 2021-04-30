@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, 2020
 
-transformBounds <- function(mt = mt, lpFile = lpFile){
+transformBounds <- function(mt, lpFile){
   
   idx1 <- which(lpFile == "Bounds")
   idx2 <- which(lpFile == "Binaries")

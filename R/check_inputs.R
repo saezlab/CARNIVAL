@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
 
-checkData <- function( perturbations,
+checkData <- function( perturbations = NULL,
                        measurements,
                        priorKnowledgeNetwork,
                        weights = NULL ) {
@@ -12,6 +12,7 @@ checkData <- function( perturbations,
   priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
   nodesPriorKnowledgeNetwork <- getPriorKnowledgeNetworkNodes(priorKnowledgeNetworkProcessed)
   
+  print(perturbations)
   if (is.null(perturbations)) {
     priorKnowledgeNetworkProcessed <- addPerturbationNodes(priorKnowledgeNetworkProcessed)
     message("Perturbations are not given, all parents nodes are added as potential perturbations.")
@@ -21,6 +22,7 @@ checkData <- function( perturbations,
                                                  nodesPriorKnowledgeNetwork)
   }
   
+  print(priorKnowledgeNetworkProcessed)
   measurementsProcessed <- checkMeasurements(measurements, 
                                              nodesPriorKnowledgeNetwork)
   
@@ -44,18 +46,19 @@ getPriorKnowledgeNetworkNodes <- function(priorKnowledgeNetwork = priorKnowledge
 }
 
 checkSolverInputs <- function(options){
-  if (options$solver == supportedSolvers$cplex) {
+  if (options$solver == getSupportedSolvers()$cplex) {
     checkCplexCarnivalOptions(options)  
-  } else if (options$solver == supportedSolvers$lpSolve) {
+  } else if (options$solver == getSupportedSolvers()$lpSolve) {
     #TODO
     #checkLpSolveCarnivalOptions(options)
     message("No checks for inputs for lpSolve needed.")
-  } else if (options$solver == supportedSolvers$cbc){
+  } else if (options$solver == getSupportedSolvers()$cbc){
     #TODO 
     #checkCbcCarnivalOptions(options)
     message("No checks for inputs for cbc needed.")
   } else {
-    stop("Other solvers (except lpSolve and cplex) are not supported (yet) in the updated API.")
+    stop("This solver is not supported. List of supported solvers: ", 
+         paste(getSupportedSolvers(), collapse=", "))
   }
 }
 

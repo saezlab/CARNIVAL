@@ -2,7 +2,7 @@
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
-transformConstraints <- function(mt = mt, lpFile = lpFile){
+transformConstraints <- function(mt, lpFile){
   
   idx1 <- which(lpFile == "Subject To")
   idx2 <- which(lpFile == "Bounds")

@@ -9,12 +9,12 @@
 #'@param priorKnowledgeNetwork data frame of the prior knowledge network
 #'@param weights (optional) vector of the additional weights: e.g. PROGENy pathway
 #'scores or measured protein activities.
-#'@param solver ILP solver to use. Currently supported solvers can be found in supportedSolvers.
+#'@param solver ILP solver to use. Currently supported solvers can be obtained by getSupportedSolvers()
 #'@param solverPath a path to an executable file of a solver (needed e.g. for cplex and cbc)
 #'@param carnivalOptions the list of options for the run. See defaultLpSolveCarnivalOptions(), 
 #'defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.
 #'
-#'@return data frame of all variables for ILP formulation.
+#'@return paths to .lp file and .RData file that can be used for runFromLpCarnival()
 #'
 #'@export
 #'
@@ -22,7 +22,7 @@ generateLpFileCarnival <- function( perturbations = NULL,
                                     measurements,
                                     priorKnowledgeNetwork,
                                     weights = NULL,
-                                    solver = supportedSolvers$lpSolve,
+                                    solver = getSupportedSolvers()$lpSolve,
                                     solverPath = "",
                                     carnivalOptions =
                                       defaultLpSolveCarnivalOptions()) {
@@ -42,7 +42,8 @@ generateLpFileCarnival <- function( perturbations = NULL,
   message(getTime(), " All tasks finished.")
   message("\n", "--- End of the CARNIVAL pipeline --- ", "\n")
 
-  return(variables)
+  return(c("lpFile" = carnivalOptions$filenames$lpFilename, 
+           "parsedDataFile" = carnivalOptions$filenames$parsedData))
 }
 
 #'\code{runVanillaCarnival}
@@ -55,7 +56,7 @@ generateLpFileCarnival <- function( perturbations = NULL,
 #'@param priorKnowledgeNetwork data frame of the prior knowledge network
 #'@param pathwayWeights (optional) vector of the additional weights: e.g. PROGENy pathway
 #'score or measured protein activities.
-#'@param solver ILP solver to use. Currently supported solvers can be found in supportedSolvers.
+#'@param solver ILP solver to use. Currently supported solvers can be obtained by getSupportedSolvers()
 #'@param solverPath a path to an executable file of a solver (needed e.g. for cplex and cbc)
 #'@param carnivalOptions the list of options for the run. See defaultLpSolveCarnivalOptions(), 
 #'defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.
@@ -88,7 +89,7 @@ runVanillaCarnival <- function( perturbations,
                                 measurements,
                                 priorKnowledgeNetwork,
                                 weights = NULL,
-                                solver = supportedSolvers$lpSolve,
+                                solver = getSupportedSolvers()$lpSolve,
                                 solverPath = "",
                                 carnivalOptions =
                                   defaultLpSolveCarnivalOptions()) {
@@ -102,8 +103,7 @@ runVanillaCarnival <- function( perturbations,
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
 
-  result <- solveCarnival( dataPreprocessed,
-                           carnivalOptions )
+  result <- solveCarnival(dataPreprocessed, carnivalOptions)
   cleanupCarnival(carnivalOptions)
 
   message(getTime(), " All tasks finished.")
@@ -118,7 +118,7 @@ runVanillaCarnival <- function( perturbations,
 #' 
 #'@param lpFile full path to .lp file
 #'@param parsedDataFile full path to preprocessed .RData file
-#'@param solver ILP solver to use. Currently supported solvers can be found in supportedSolvers.
+#'@param solver ILP solver to use. Currently supported solvers can be obtained by getSupportedSolvers()
 #'@param solverPath a path to an executable file of a solver (needed e.g. for cplex and cbc)
 #'@param carnivalOptions the list of options for the run. See defaultLpSolveCarnivalOptions(), 
 #'defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.
@@ -149,7 +149,7 @@ runVanillaCarnival <- function( perturbations,
 #'@export
 runFromLpCarnival <- function(lpFile = "",
                               parsedDataFile = "",
-                              solver = supportedSolvers$lpSolve,
+                              solver = getSupportedSolvers()$lpSolve,
                               solverPath = "",
                               carnivalOptions =
                                 defaultLpSolveCarnivalOptions()) {
@@ -204,16 +204,17 @@ runFromLpCarnival <- function(lpFile = "",
 runInverseCarnival <- function( measurements,
                                 priorKnowledgeNetwork,
                                 weights = NULL,
-                                solverPath = solverPath,
-                                solver = supportedSolvers$lpSolve,
+                                solverPath = "",
+                                solver = getSupportedSolvers()$lpSolve,
                                 carnivalOptions =
-                                  defaultCplexCarnivalOptions(solverPath = solverPath)()){
+                                  defaultLpSolveCarnivalOptions() ){
   message(" ")
   message("--- Start of the CARNIVAL pipeline ---")
   message(getTime(), " Carnival flavour: inverse")
 
-  dataPreprocessed <- checkData(  perturbations, measurements,
-                                  priorKnowledgeNetwork, pathwayWeights )
+  dataPreprocessed <- checkData(  perturbations = NULL, 
+                                  measurements, 
+                                  priorKnowledgeNetwork, weights )
 
   checkSolverInputs(carnivalOptions)
   carnivalOptions <- collectMetaInfo(carnivalOptions)
@@ -231,7 +232,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
                                              measurements,
                                              priorKnowledgeNetwork,
                                              pathwayWeights = NULL,
-                                             solver = supportedSolvers$lpSolve,
+                                             solver = getSupportedSolvers()$lpSolve,
                                              solverPath = "",
                                              constraints = c(),
                                              carnivalOptions =
@@ -323,7 +324,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
 runCARNIVAL <- function(inputObj = NULL,
                         measObj = measObj,
                         netObj = netObj,
-                        weightObj  =NULL,
+                        weightObj  = NULL,
                         solverPath = NULL,
                         solver = c('lpSolve', 'cplex', 'cbc'),
                         timelimit = 3600,

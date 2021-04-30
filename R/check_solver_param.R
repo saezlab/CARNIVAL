@@ -92,7 +92,7 @@ checkCplexCarnivalOptions <- function(options) {
   if (is.null(options$solverPath))
     stop("Path to ILP solver must be provided")
   
-  if (options$solver == supportedSolvers$cplex &&
+  if (options$solver == getSupportedSolvers()$cplex &&
       options$solverPath == "")
     stop("Path to ILP solver cannot be empty")
   

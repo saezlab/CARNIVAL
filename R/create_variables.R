@@ -3,16 +3,21 @@
 ##
 ## Olga Ivanova 2021
 
-createVariablesForIlpProblem <- function(dataProcessed) {
+createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = F) {
   message(getTime(), " Generating variables for lp problem")
   
   perturbations <- dataProcessed$perturbations
   measurements <- dataProcessed$measurements
   priorKnowledgeNetwork <- dataProcessed$priorKnowledgeNetwork
   
-  nodesDf <- createNodesVariables(priorKnowledgeNetwork, perturbations, measurements)
-  edgesDf <- createEdgesVariables(priorKnowledgeNetwork) 
-  measurementsDf <- createMeasurementsVariables(measurements, nodesDf, priorKnowledgeNetwork)
+  nodesDf <- createNodesVariables(priorKnowledgeNetwork, perturbations, measurements, 
+                                  backwardCompatibility)
+  
+  edgesDf <- createEdgesVariables(priorKnowledgeNetwork, backwardCompatibility, 
+                                  startingIdx = nrow(nodesDf) * 3 + 1) 
+  
+  measurementsDf <- createMeasurementsVariables(measurements, nodesDf, priorKnowledgeNetwork, 
+                                                backwardCompatibility)
  
   message(getTime(), " Done: generating variables for lp problem")
   return(list("nodesDf" = nodesDf, "edgesDf" = edgesDf, 
@@ -21,7 +26,7 @@ createVariablesForIlpProblem <- function(dataProcessed) {
 
 createNodesVariables <- function(priorKnowledgeNetwork, 
                                  perturbations, measurements, 
-                                 backwardCompatibility=F,
+                                 backwardCompatibility = F,
                                  prefixes=c("nodes" = "n", "nodesUp" = "nU", 
                                             "nodesDown" = "nD", 
                                             "nodesActivationState" = "nAc",
@@ -33,15 +38,22 @@ createNodesVariables <- function(priorKnowledgeNetwork,
     nodesPrefix <- "xb"
     nodesActivationStatePrefix <- "B"
     nodesDistancePrefix <- "dist"
+    postfix <- "_1"
       
     idxNodes <- seq(from = 1, to = 3 * length(nodes), by = 1)
-    nodesVars <- paste0(nodesPrefix, idxNodes[1 : length(nodes)], "_1")
-    nodesUpVars <- paste0(nodesPrefix, idxNodes[(length(nodes) + 1) : ( 2 * length(nodes))], "_1")
-    nodesDownVars <- paste0(nodesPrefix, idxNodes[(2 * length(nodes) + 1) : (3 * length(nodes))], "_1")
+    nodesVars <- paste0(nodesPrefix, idxNodes[1 : length(nodes)], postfix)
+    nodesUpVars <- paste0(nodesPrefix, idxNodes[(length(nodes) + 1) : ( 2 * length(nodes))], postfix)
+    nodesDownVars <- paste0(nodesPrefix, idxNodes[(2 * length(nodes) + 1) : (3 * length(nodes))], postfix)
     
-    nodesActStateVars <- paste0(nodesActivationStatePrefix, "_", nodes)
+    #rearrange order of nodes: all unmeasured nodes first (as it was in CARNIVAL v1)
+    measuredNodes <- names(measurements)[names(measurements) %in% nodes]
+    nodes <- c(nodes[!(nodes %in% names(measurements))], measuredNodes)
+    
+    nodesActStateVars <- paste0(nodesActivationStatePrefix, "_", nodes, postfix)
     nodesDistanceVars <- paste0(nodesDistancePrefix, "_", nodes)
+    
   } else {
+    
     idxNodes <- seq(from = 1, to = length(nodes), by = 1)
     nodesVars <- paste0(prefixes['nodes'], idxNodes)
     nodesUpVars <- paste0(prefixes['nodesUp'], idxNodes)
@@ -49,6 +61,7 @@ createNodesVariables <- function(priorKnowledgeNetwork,
     
     nodesActStateVars <- paste0(prefixes['nodesActivationState'], idxNodes)
     nodesDistanceVars <- paste0(prefixes['nodesDistance'], idxNodes)
+    
   }
  
   nodesDf <- cbind(nodes, nodesVars, nodesUpVars, nodesDownVars, 
@@ -62,41 +75,56 @@ createNodesVariables <- function(priorKnowledgeNetwork,
   return(nodesDf)
 }
 
-createEdgesVariables <- function(priorKnowledgeNetwork, prefixes = c("edgeUp" = "eU", 
-                                                                     "edgeDown" = "eD"),
+createEdgesVariables <- function(priorKnowledgeNetwork,
                                  backwardCompatibility = F,
-                                 startingIdx = 1) {
+                                 startingIdx = 1,
+                                 prefixes = c("edgeUp" = "eU", 
+                                              "edgeDown" = "eD")) {
   
   if(backwardCompatibility) {
+    edgesPrefixes <- "xb"
     #this will generate the variable names that were previously used in the ILP file (CARNIVAL v1)
+    #should be used in combination with startingIdx shifted by N of nodes * 3me
     idxEdges <- seq(from = startingIdx, to = startingIdx + 2 * length(priorKnowledgeNetwork$Node1))
     edgesUpVars <- paste0(edgesPrefixes, idxEdges[1 : length(priorKnowledgeNetwork$Node1)], "_1")
     edgesDownVars <- paste0(edgesPrefixes, idxEdges[(length(priorKnowledgeNetwork$Node1) + 1) : 
                                                       (2 * length(priorKnowledgeNetwork$Node1))], "_1")
   } else {
+    
     idxEdges <- seq(from = 1, to = length(priorKnowledgeNetwork$Node1), by = 1)
     edgesUpVars <- paste0(prefixes["edgeUp"], idxEdges)
     edgesDownVars <- paste0(prefixes["edgeDown"], idxEdges)  
+    
   }
 
   edgesDf <- cbind(priorKnowledgeNetwork, edgesUpVars, edgesDownVars)
   return(edgesDf)
 }
 
-#TODO no backward compatibility (yet)
+
 createMeasurementsVariables <- function(measurements, 
                                         nodesDf, 
                                         priorKnowledgeNetwork,
-                                        prefixes = c("aD")) {
+                                        backwardCompatibility = F,
+                                        prefixes = c("measurementsAbsDiff" = "aD")) {
   
   nodes <- c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2)
   measurements <- measurements[names(measurements) %in% nodes]
   
-  idxNodes <- seq(from = 1, to = length(measurements), by = 1)
-  #measurementsAbsDifferencePrefix <- "aD"
-  measurementsAbsDifferencePrefix <- "absDiff"
+  if(backwardCompatibility) {
+    #this will generate the variable names that were previously used in the ILP file (CARNIVAL v1)
+    prefixes["measurementsAbsDiff"] <- "absDiff"
+    measurementsNodesVars <- nodesDf[nodesDf$nodes %in% names(measurements), ]
+    idxNodes <- gsub("[^\\d_1]+", "", measurementsNodesVars$nodesVars, perl=TRUE)
+    measurementsVars <- paste0(prefixes["measurementsAbsDiff"], idxNodes)
+    measurementsVars <- measurementsVars[order(measurementsNodesVars$nodes)]
+    
+  } else {
+    idxNodes <- seq(from = 1, to = length(measurements), by = 1)
+    measurementsVars <- paste0(prefixes["measurementsAbsDiff"], idxNodes)
+  }
   
-  measurementsVars <- paste0(measurementsAbsDifferencePrefix, idxNodes)
+ 
   measurementsVars <- cbind("nodes" = names(measurements), 
                             "value" = measurements, 
                             measurementsVars)
@@ -108,7 +136,6 @@ createMeasurementsVariables <- function(measurements,
                        c('nodes', 'nodesVars')]
   
   measurementsVars <- merge(measurementsVars, nodesVars)
-  
   return(measurementsVars)
 }
 

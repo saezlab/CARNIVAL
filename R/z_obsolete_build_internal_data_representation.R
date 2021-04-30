@@ -8,9 +8,7 @@
 
 ## Return the data matrix containing the data for running CARNIVAL 
 ## and a set of identifiers for targets, measured and unmeasured nodes.
-buildDataVector <- function(measurements = measurements, 
-                            priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                            perturbations = perturbations) {
+buildDataVector <- function(measurements, priorKnowledgeNetwork, perturbations) {
     
   colnames(priorKnowledgeNetwork) <- c("X1", "X2", "X3")
   
@@ -79,22 +77,23 @@ buildDataVector <- function(measurements = measurements,
 # prior knowledge network, where nodes that are not present in prior knowledge network were removed
 # from the measurements data. Basically, it is always the same list of nodes as in PKN.
 # See buildDataVector(...) dataVector for information. 
-createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork, 
-                            dataVector = dataVector){
+createVariables <- function(priorKnowledgeNetwork, dataVector, postfix="_1"){
   
   colnames(priorKnowledgeNetwork) <- c("X1", "X2", "X3")
   
   dataLength <- length(dataVector$dataVector)
   nrowsPkn <- nrow(priorKnowledgeNetwork)
   
-  nodes <- paste0("xb", seq_len( dataLength ))
+  nodes <- paste0("xb", seq_len( dataLength ), postfix)
   
   nodesUp <- paste0("xb", seq(from = dataLength + 1, 
                               to = 2 * dataLength, 
-                              by = 1))
+                              by = 1), 
+                    postfix)
   
   nodesDown <- paste0("xb", seq(from = 2 * dataLength + 1, 
-                                to = 3 * dataLength, by = 1))
+                                to = 3 * dataLength, by = 1),
+                      postfix)
   
   expNodes <- paste0("Species ", dataVector$species)
   expNodesReduced = paste0("Species ", dataVector$species)
@@ -119,12 +118,14 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
   # edges
   edgesUp <- paste0("xb", seq(from = length(nodesALL) + 1, 
                               to = length(nodesALL) +
-                                nrowsPkn, by = 1))
+                                nrowsPkn, by = 1), 
+                    postfix)
   
   edgesDown <- paste0("xb", seq(from = length(nodesALL) +
                                   nrowsPkn + 1, 
                                 to = length(nodesALL) +
-                                  2 * nrowsPkn, by = 1))
+                                  2 * nrowsPkn, by = 1),
+                      postfix)
   
   expEdgesUp <- paste0("ReactionUp ", as.character(priorKnowledgeNetwork$X1), "=", 
                        as.character(priorKnowledgeNetwork$X3))
@@ -165,7 +166,7 @@ createVariables <- function(priorKnowledgeNetwork = priorKnowledgeNetwork,
   
   #Introducing B variables
   varB <- paste0("B_", sapply(strsplit(expNodes, split = " "),
-                              function(x) x[2]))
+                              function(x) x[2]), postfix)
   
   expVarB <- paste0("B variable for ", sapply(strsplit(expNodes, split = " "),
                                               function(x) x[2]))

@@ -2,8 +2,8 @@
 ##
 ## Enio Gjerga, 2020
 
-transformObjectiveFunction <- function(mt = mt, lpFile = lpFile){
-  
+transformObjectiveFunction <- function(mt, lpFile){
+
   matrixProblem <- matrix(data = , nrow = 1, ncol = nrow(mt))
   idx <- which(grepl(pattern = "Obj:", x = lpFile))
   

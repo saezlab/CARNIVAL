@@ -3,19 +3,21 @@
 ## Enio Gjerga, Olga Ivanova 2020-2021
 
 #' Supported solver functions to run all solvers in an uniform way.
-supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
-                                              "getSolutionMatrix" = getSolutionMatrixCplex,
-                                              "export" = exportIlpSolutionFromSolutionMatrix, 
-                                              "saveDiagnostics" = saveDiagnosticsCplex),
-                                  
-                                  "cbc" =   c("solve" = solveWithCbc, 
-                                              "getSolutionMatrix" = getSolutionMatrixCbc, 
-                                              "export" = exportIlpSolutionFromSolutionMatrix), 
-                                  
-                                  "lpSolve" = c("solve" = solveWithLpSolve, 
-                                                "getSolutionMatrix" = getSolutionMatrixLpSolve,
-                                                "export" = exportIlpSolutionFromSolutionMatrix)) 
-
+getSupportedSolversFunctions <- function() {
+  supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
+                                                "getSolutionMatrix" = getSolutionMatrixCplex,
+                                                "export" = exportIlpSolutionFromSolutionMatrix, 
+                                                "saveDiagnostics" = saveDiagnosticsCplex),
+                                    
+                                    "cbc" =   c("solve" = solveWithCbc, 
+                                                "getSolutionMatrix" = getSolutionMatrixCbc, 
+                                                "export" = exportIlpSolutionFromSolutionMatrix), 
+                                    
+                                    "lpSolve" = c("solve" = solveWithLpSolve, 
+                                                  "getSolutionMatrix" = getSolutionMatrixLpSolve,
+                                                  "export" = exportIlpSolutionFromSolutionMatrix)) 
+  return(supportedSolversFunctions)
+}
 
 prepareForCarnivalRun <- function(dataPreprocessed,
                                   carnivalOptions, 
@@ -33,10 +35,6 @@ prepareForCarnivalRun <- function(dataPreprocessed,
     lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, 
                                           carnivalOptions )
     variables <- intDataRep[[2]]
-    
-    if(carnivalOptions$solver == supportedSolvers$lpSolve) {
-      variables <- transformVariables(variables, dataPreprocessed$measurements)
-    }
   }
   
   writeSolverFile(objectiveFunction = lpFormulation$objectiveFunction,
@@ -55,10 +53,6 @@ solveCarnivalFromLp <- function(lpFile = "",
                                 newDataRepresentation = T,
                                 carnivalOptions) {
   load(parsedDataFile) 
-  dataPreprocessed$measurements <- measurements
-  dataPreprocessed$priorKnowledgeNetwork <- priorKnowledgeNetwork
-  dataPreprocessed$perturbations <- perturbations
-  dataPreprocessed$weights <- weights
 
   carnivalOptions$filenames$lpFilename <- lpFile
   solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
@@ -70,12 +64,19 @@ solveCarnivalFromLp <- function(lpFile = "",
 
 solveCarnival <- function( dataPreprocessed,
                            carnivalOptions, 
-                           newDataRepresentation = T) {
+                           newDataRepresentation = T ) {
   
   variables <- prepareForCarnivalRun(dataPreprocessed, carnivalOptions, newDataRepresentation)
-  solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
-  result <- processSolution( solutionMatrix, variables, newDataRepresentation, 
-                             dataPreprocessed, carnivalOptions )
+  solutionMatrix <- sendTaskToSolver(variables, dataPreprocessed, carnivalOptions)
+  
+  print(solutionMatrix)
+  
+  if (ncol(solutionMatrix) == 0) {
+    message("No solutions exist.")
+  } else {
+    result <- processSolution( solutionMatrix, variables, newDataRepresentation, 
+                               dataPreprocessed, carnivalOptions )  
+  }
   
   #TODO results with diagnostics is never null, think how to implement it better
   #if (!is.null(result)) {
@@ -91,20 +92,30 @@ solveCarnival <- function( dataPreprocessed,
 
 sendTaskToSolver <- function( variables,
                               dataPreprocessed, 
-                              carnivalOptions ) {
+                              carnivalOptions,
+                              newDataRepresentation = T) {
   
   message(getTime(), " Solving LP problem")
   
+  supportedSolversFunctions <- getSupportedSolversFunctions()
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
-  #TODO remove variables, we don't need them for everything except lpSolver
-  lpSolution <- solversFunctions$solve( variables = variables, 
-                                        carnivalOptions = carnivalOptions,
-                                        dataPreprocessed )
+  #lpSolve uses matrix input for variables, other solvers take .lp file
+  if(carnivalOptions$solver == getSupportedSolvers()$lpSolve) {
+    if(newDataRepresentation) {
+      lpMatrix <- transformVariables_v2(variables, dataPreprocessed$measurements)
+    } else {
+      lpMatrix <- transformVariables(variables, dataPreprocessed$measurements)
+    }
+    lpSolution <- solversFunctions$solve(lpMatrix, carnivalOptions)
+  } else {
+    lpSolution <- solversFunctions$solve(carnivalOptions)  
+  }
+
   message(getTime(), " Done: solving LP problem.")
   
   message(getTime()," Getting the solution matrix")
-  solutionMatrix <- solversFunctions$getSolutionMatrix( lpSolution )
+  solutionMatrix <- solversFunctions$getSolutionMatrix(lpSolution)
   message(getTime(), " Done: getting the solution matrix.")
   
   return(solutionMatrix)
@@ -118,18 +129,19 @@ processSolution <- function(solutionMatrix,
                             carnivalOptions) {
   
   message(getTime(), " Exporting solution matrix")
+  
+  supportedSolversFunctions <- getSupportedSolversFunctions()
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
   if (newDataRepresentation) {
-    result <- solversFunctions$export( solutionMatrix = solutionMatrix, 
-                                       variables = variables )
+    result <- solversFunctions$export( solutionMatrix, variables )
   } else {
     result <- exportIlpSolutionResultFromXml( solMatrix = solutionMatrix, 
                                               variables = variables, 
                                               dataPreprocessed )
   }
   
-  if (carnivalOptions$solver == supportedSolvers$cplex) {
+  if (carnivalOptions$solver == getSupportedSolvers()$cplex) {
     result <- solversFunctions$saveDiagnostics(result, carnivalOptions)
   } 
   
@@ -138,18 +150,17 @@ processSolution <- function(solutionMatrix,
 }
 
 
-createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresentation = F ) {
+createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresentation = T ) {
   if (newDataRepresentation) {
     variables <- createVariablesForIlpProblem(dataPreprocessed)
     return(variables)
     
   } else {
-    dataVector <- buildDataVector(measurements = dataPreprocessed$measurements, 
-                                  priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                  perturbations = dataPreprocessed$perturbations)
+    dataVector <- buildDataVector(dataPreprocessed$measurements, 
+                                  dataPreprocessed$priorKnowledgeNetwork, 
+                                  dataPreprocessed$perturbations)
     
-    variables <- createVariables(priorKnowledgeNetwork = dataPreprocessed$priorKnowledgeNetwork, 
-                                 dataVector = dataVector)
+    variables <- createVariables(dataPreprocessed$priorKnowledgeNetwork, dataVector)
     return(list("dataVector" = dataVector, "variables" = variables))
   }
 }
@@ -158,7 +169,7 @@ createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresent
 writeParsedData <- function ( variables = variables, 
                               dataPreprocessed = dataPreprocessed, 
                               carnivalOptions = carnivalOptions,
-                              filename="parsedData.RData") {
+                              filename = "parsedData.RData") {
   message("Saving parsed data")
   
   outputFolder <- carnivalOptions$outputFolder
@@ -166,5 +177,6 @@ writeParsedData <- function ( variables = variables,
   save(variables, 
        dataPreprocessed,
        file = parsedDataFilename)
+  
   message("Done: saving parsed data: ", parsedDataFilename)
 }

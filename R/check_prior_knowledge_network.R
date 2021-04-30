@@ -18,7 +18,7 @@ checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork){
 preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork) {
   incorrectInteractionValue <- "Interactions column should contain either 1 or -1."
   
-  priorKnowledgeNetwork <- correctNodeIdentifiersInNetwork(network = priorKnowledgeNetwork)
+  priorKnowledgeNetwork <- correctNodeIdentifiersInNetwork(priorKnowledgeNetwork)
   priorKnowledgeNetwork$source = as.character(priorKnowledgeNetwork$source)
   priorKnowledgeNetwork$target = as.character(priorKnowledgeNetwork$target)
   
@@ -32,7 +32,6 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork) {
   
   #this renaming is used during export of results of each solver (see export_result.R)
   colnames(priorKnowledgeNetwork) <- c("Node1", "Sign", "Node2")
-  
   
   #N.B. Don't remove the line below, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)

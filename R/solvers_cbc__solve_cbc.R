@@ -1,4 +1,4 @@
-solveWithCbc <- function( variables, dataPreprocessed, carnivalOptions) {
+solveWithCbc <- function(carnivalOptions) {
   
   resultFile <- carnivalOptions$filenames$resultFile
   lpFile <- carnivalOptions$filenames$lpFilename
