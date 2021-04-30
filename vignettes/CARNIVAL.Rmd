@@ -259,7 +259,7 @@ generateLpFileCarnival(perturbations = toy_perturbations_ex1,
 which writes two files, an Lp File and a parsed Data file. The next function takes these files as inputs and runs the stdCARNIVAL Pipeline with them. 
 ```{r}
 
-resultsLpSolve <- runCarnivalFromLp(lpFile = "toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp",
+resultsFromLp <- runCarnivalFromLp(lpFile = "toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp",
                               parsedDataFile = "toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData",
                               solver = supportedSolvers$lpSolve,
                               solverPath = "",
@@ -270,7 +270,7 @@ which generates the following output:
 
 ```{r}
 
-#resultsLpSolve
+resultsFromLp
 ```
 
 ```
