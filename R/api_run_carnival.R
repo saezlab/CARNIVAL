@@ -1,6 +1,6 @@
 #'\code{generateLpFileCarnival}
 #'
-#'@details Prepare the input data for the run: tranforms data into lp file and .Rdata file.
+#'@details Prepares the input data for the run: tranforms data into lp file and .Rdata file.
 #'These files can be reused to run CARNIVAL without preprocessing step using runCarnivalFromLp(..)
 #'
 #'@param perturbations (optional, if inverse CARNIVAL flavour is used further) vector of targets of perturbations.
@@ -22,8 +22,6 @@ generateLpFileCarnival <- function( perturbations = NULL,
                                     measurements,
                                     priorKnowledgeNetwork,
                                     weights = NULL,
-                                    solver = getSupportedSolvers()$lpSolve,
-                                    solverPath = "",
                                     carnivalOptions =
                                       defaultLpSolveCarnivalOptions()) {
   message("--- Start of the CARNIVAL pipeline ---")
@@ -89,8 +87,6 @@ runVanillaCarnival <- function( perturbations,
                                 measurements,
                                 priorKnowledgeNetwork,
                                 weights = NULL,
-                                solver = getSupportedSolvers()$lpSolve,
-                                solverPath = "",
                                 carnivalOptions =
                                   defaultLpSolveCarnivalOptions()) {
 
@@ -149,8 +145,6 @@ runVanillaCarnival <- function( perturbations,
 #'@export
 runFromLpCarnival <- function(lpFile = "",
                               parsedDataFile = "",
-                              solver = getSupportedSolvers()$lpSolve,
-                              solverPath = "",
                               carnivalOptions =
                                 defaultLpSolveCarnivalOptions()) {
 
@@ -204,8 +198,6 @@ runFromLpCarnival <- function(lpFile = "",
 runInverseCarnival <- function( measurements,
                                 priorKnowledgeNetwork,
                                 weights = NULL,
-                                solverPath = "",
-                                solver = getSupportedSolvers()$lpSolve,
                                 carnivalOptions =
                                   defaultLpSolveCarnivalOptions() ){
   message(" ")
@@ -232,8 +224,6 @@ runCarnivalWithManualConstraints <- function(perturbations,
                                              measurements,
                                              priorKnowledgeNetwork,
                                              pathwayWeights = NULL,
-                                             solver = getSupportedSolvers()$lpSolve,
-                                             solverPath = "",
                                              constraints = c(),
                                              carnivalOptions =
                                                defaultLpSolveCarnivalOptions()) {
@@ -340,6 +330,7 @@ runCARNIVAL <- function(inputObj = NULL,
                         cplexMemoryLimit = 8192,
                         cleanTmpFiles = TRUE,
                         dir_name = NULL) {
+  .Deprecated("runVanillaCarnival")
   solver <- match.arg(solver)
 
   opts = c(solverPath = solverPath,

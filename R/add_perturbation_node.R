@@ -1,8 +1,16 @@
-## Introduces a perturbation node connecting periphery nodes without a target in 
-## the prior knowledge network.
-## 
-## Panuwat Trairatphisan, 2020
-
+#' Introduces a perturbation node connecting periphery nodes without a target in 
+#' the prior knowledge network.
+#'
+#' @param priorKnowledgeNetwork data.frame with priorKnowledgeNetwork with source, interaction, target columns
+#' @return data.frame with prior knowledge network with added perturbations
+#' @author Panuwat Trairatphisan, 2020
+#' 
+#' @keywords internal
+#' @examples
+#' 
+#' load(file = system.file("toy_network_ex1.RData", package="CARNIVAL"))
+#' addPerturbationNodes(priorKnowledgeNetwork)
+#' 
 addPerturbationNodes <- function(priorKnowledgeNetwork) {
   
   priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)

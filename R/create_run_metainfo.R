@@ -1,16 +1,10 @@
-#TODO add this rather to api and then to docs
-availableFlavours <- list(vanilla = "vanilla", fromLp = "fromLp", 
-                          inverse = "inverse")
-
 collectMetaInfo <- function(carnivalOptions) {
   runId <- createRunId()
   carnivalOptions$runId <- runId
 
   filenames <- createFilenames(carnivalOptions)
   carnivalOptions$filenames <- filenames
-
   carnivalOptions$startTime <- getTime()
-  carnivalOptions$flavour <- availableFlavours$vanilla
 
   return(carnivalOptions)
 }
@@ -61,4 +55,3 @@ getTime <- function() {
   time <- format(Sys.time(), "%H:%M:%S %d.%m.%Y")
   return(time)
 }
-
