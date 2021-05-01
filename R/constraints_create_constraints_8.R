@@ -12,9 +12,9 @@ createConstraints_8_v2 <- function(variables, perturbations, constraintName=c("c
                                                          row$nodesActStateVars, "-",
                                                          row$nodesVars,
                                                          "=", 0)
-                          }) 
+                          })
   constraint_8 <- unlist(constraint_8)
-  
+
   # Defines activations state for unperturbed nodes
   unperturbedNodes <- variables$nodesDf[!variables$nodesDf$nodes %in% names(perturbations), ]
   constraint_8Temp <- lapply(unperturbedNodes$nodes, function(x) {
@@ -29,17 +29,17 @@ createConstraints_8_v2 <- function(variables, perturbations, constraintName=c("c
                                   createConstraintFreeForm(var, "=", perturbations[[x]])
                             })
   constraint_8 <- c(constraint_8, unlist(constraint_8Temp))
-  
+
   parentNodes <- setdiff(variables$edgesDf$Node1, variables$edgesDf$Node2)
   constraint_8Temp <- lapply(parentNodes, function(x) {
-                                  var <- variables$nodesDf[variables$nodesDf$nodes == x, 
+                                  var <- variables$nodesDf[variables$nodesDf$nodes == x,
                                                          c("nodesVars", "nodesActStateVars")]
-                                  createConstraintFreeForm(var$nodesVars, "-", 
+                                  createConstraintFreeForm(var$nodesVars, "-",
                                                            var$nodesActStateVars,
                                                            "=", 0)
                              })
   constraint_8 <- c(constraint_8, unlist(constraint_8Temp))
-  
+
   constraint_8 <- list(constraint_8)
   names(constraint_8) <- constraintName
   return(constraint_8)
