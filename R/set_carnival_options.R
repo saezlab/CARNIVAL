@@ -1,4 +1,9 @@
-#' The list of supported solvers. 
+#' Retirns the list of supported solvers.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getSupportedSolvers <- function() {
   supportedSolvers <- list(cplex = "cplex", cbc = "cbc", lpSolve = "lpSolve")
   
@@ -16,7 +21,7 @@ getSupportedSolvers <- function() {
 #' @examples
 getOptionsList <- function(solver = "", onlyRequired = F) {
   requiredGeneralCarnivalOptions <- c("betaWeight")
-  optionalCarnivalOptions <- c("lpFilename", "outputFolder", "cleanTmpFiles", "keepLPFile")
+  optionalCarnivalOptions <- c("lpFilename", "outputFolder", "cleanTmpFiles", "keepLPFiles")
   
   requiredCplexOptions <- c("solverPath", 
                             "timelimit", "mipGap", "poolrelGap", 
@@ -165,6 +170,7 @@ defaultCplexCarnivalOptions <- function(...){
     return(options)
 }
 
+#' @export 
 defaultLpSolveCarnivalOptions <- function(...){
   
   if ( "solver" %in% names(list(...)) ) {
@@ -188,6 +194,7 @@ defaultLpSolveCarnivalOptions <- function(...){
   return(options)
 }
 
+#' @export
 defaultCbcSolveCarnivalOptions <- function(...){
   
   if ( "solver" %in% names(list(...)) ) {

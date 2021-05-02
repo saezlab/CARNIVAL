@@ -1,37 +1,54 @@
-## Solving CARNIVAL problem. 
-## 
-## Enio Gjerga, Olga Ivanova 2020-2021
-
-#' Supported solver functions to run all solvers in an uniform way.
+#' Supported solvers functions to work with all solvers in a uniform way.
+#' 
+#' To add a new solver, one must write and add here the functions for 
+#' 3 steps: solve, obtaining a solution matrix, exporting the solution
+#' matrix. More specific functions can be written and called (e.g. check 
+#' saveDiagnostics in cplex).
+#' 
+#' @return list of solvers and their corresponding functions.
+#' @keywords internal
 getSupportedSolversFunctions <- function() {
-  supportedSolversFunctions <- list("cplex" = c("solve" = solveWithCplex, 
-                                                "getSolutionMatrix" = getSolutionMatrixCplex,
-                                                "export" = exportIlpSolutionFromSolutionMatrix, 
-                                                "saveDiagnostics" = saveDiagnosticsCplex),
+  solversFunctions <- list("cplex" =  c("solve" = solveWithCplex, 
+                                        "getSolutionMatrix" = getSolutionMatrixCplex,
+                                        "export" = exportIlpSolutionFromSolutionMatrix, 
+                                        "saveDiagnostics" = saveDiagnosticsCplex),
                                     
-                                    "cbc" =   c("solve" = solveWithCbc, 
-                                                "getSolutionMatrix" = getSolutionMatrixCbc, 
-                                                "export" = exportIlpSolutionFromSolutionMatrix), 
+                          "cbc" =     c("solve" = solveWithCbc, 
+                                        "getSolutionMatrix" = getSolutionMatrixCbc, 
+                                        "export" = exportIlpSolutionFromSolutionMatrix), 
                                     
-                                    "lpSolve" = c("solve" = solveWithLpSolve, 
-                                                  "getSolutionMatrix" = getSolutionMatrixLpSolve,
-                                                  "export" = exportIlpSolutionFromSolutionMatrix)) 
-  return(supportedSolversFunctions)
+                          "lpSolve" = c("solve" = solveWithLpSolve, 
+                                        "getSolutionMatrix" = getSolutionMatrixLpSolve,
+                                        "export" = exportIlpSolutionFromSolutionMatrix)) 
+  return(solversFunctions)
 }
 
-prepareForCarnivalRun <- function(dataPreprocessed,
-                                  carnivalOptions, 
+
+#' Prepares ILP formulation and writes it to .lp file. 
+#' Currently supports the old data representation (CARNIVAL v.<2) 
+#' for debugging and testing if any problems arise with the new way 
+#' to generate variables. 
+#'
+#' @inheritParams solveCarnival
+#'
+#' @return list with all variables and ILP formulation written in .lp file.
+#' @keywords internal
+prepareForCarnivalRun <- function(dataPreprocessed, carnivalOptions, 
                                   newDataRepresentation = T) {
-  intDataRep <- createInternalDataRepresentation( dataPreprocessed, newDataRepresentation )
   
-  if(newDataRepresentation) {
-    writeParsedData( intDataRep, dataPreprocessed, carnivalOptions )
+  intDataRep <- createInternalDataRepresentation(dataPreprocessed, 
+                                                 newDataRepresentation)
+  parsedDataFilename <- carnivalOptions$filenames$parsedData
+  
+  if (newDataRepresentation) {
+    writeParsedData( intDataRep, dataPreprocessed, parsedDataFilename )
     lpFormulation <- createLpFormulation_v2( intDataRep, dataPreprocessed, 
                                              carnivalOptions )
     variables <- intDataRep 
     
   } else {
-    writeParsedData( intDataRep[[2]], dataPreprocessed, carnivalOptions )
+    #previous data representation had two data structures, variables were in 2nd
+    writeParsedData( intDataRep[[2]], dataPreprocessed, parsedDataFilename )
     lpFormulation <- createLpFormulation( intDataRep, dataPreprocessed, 
                                           carnivalOptions )
     variables <- intDataRep[[2]]
@@ -44,37 +61,75 @@ prepareForCarnivalRun <- function(dataPreprocessed,
                   generals = lpFormulation$generals,
                   carnivalOptions = carnivalOptions)
   
-  return(variables)
+  preparedForRun <- list("variables" = variables, 
+                         "lpFormulation" = lpFormulation)
+  return(preparedForRun)
 }
 
 
+#' Sends the ILP formulation defined in .lp file to solver. Uses parsedDataFile
+#' to process the final solution and map the ILP variables back to inital 
+#' data. 
+#'
+#' @param lpFile path to .lp file that will be used to run the solver.
+#' @param parsedDataFile path to parsed data file that was created after running 
+#' \code{\link{prepareForCarnivalRun}} or in previous CARNIVAL runs.
+#' @inheritParams solveCarnival
+#'
+#' @return solution of ILP problem
+#' @keywords internal
 solveCarnivalFromLp <- function(lpFile = "", 
                                 parsedDataFile = "",
-                                newDataRepresentation = T,
-                                carnivalOptions) {
-  load(parsedDataFile) 
+                                carnivalOptions,
+                                newDataRepresentation = T) {
+
+  load(parsedDataFile, loadedData <- new.env()) 
 
   carnivalOptions$filenames$lpFilename <- lpFile
-  solutionMatrix <- sendTaskToSolver( variables, dataPreprocessed, carnivalOptions )
-  result <- processSolution( solutionMatrix, variables, newDataRepresentation, 
-                             dataPreprocessed, carnivalOptions )
-  
-  return(result)
-}
-
-solveCarnival <- function( dataPreprocessed,
-                           carnivalOptions, 
-                           newDataRepresentation = T ) {
-  
-  variables <- prepareForCarnivalRun(dataPreprocessed, carnivalOptions, newDataRepresentation)
-  solutionMatrix <- sendTaskToSolver(variables, dataPreprocessed, carnivalOptions)
-  
-  print(solutionMatrix)
+  solutionMatrix <- sendTaskToSolver( loadedData$variables, 
+                                      loadedData$dataPreprocessed, 
+                                      carnivalOptions )
   
   if (ncol(solutionMatrix) == 0) {
     message("No solutions exist.")
   } else {
-    result <- processSolution( solutionMatrix, variables, newDataRepresentation, 
+    solution <- processSolution( solutionMatrix, loadedData$variables, 
+                                 loadedData$dataPreprocessed, 
+                                 carnivalOptions,
+                                 newDataRepresentation )  
+  }
+  
+  return(solution)
+}
+
+#' Main CARNIVAL function to execute the full pipeline: 
+#' 1) preprocess the data
+#' 2) prepare ILP formulation
+#' 3) executes the solver on ILP formulation 
+#' 4) parse the output of the solver and map it to the original data.
+#'
+#' @param dataPreprocessed list containing preprocessed priorKnowledgeNetwork, 
+#' measurements, weights (if provided), perturbations (if provided).
+#' @param carnivalOptions all options of CARNIVAL.
+#' @param newDataRepresentation TRUE by default. For debugging with the old 
+#' data representation, put to FALSE.
+#'
+#' @return solution of the ILP problem.
+#' @keywords internal
+solveCarnival <- function(dataPreprocessed,
+                          carnivalOptions, 
+                          newDataRepresentation = T) {
+  
+  preparedForRun <- prepareForCarnivalRun(dataPreprocessed, carnivalOptions, 
+                                          newDataRepresentation)
+  solutionMatrix <- sendTaskToSolver(preparedForRun$variables, dataPreprocessed, 
+                                     carnivalOptions)
+  
+  if (ncol(solutionMatrix) == 0) {
+    message("No solutions exist.")
+  } else {
+    solution <- processSolution( solutionMatrix, preparedForRun$variables, 
+                               newDataRepresentation, 
                                dataPreprocessed, carnivalOptions )  
   }
   
@@ -87,13 +142,23 @@ solveCarnival <- function( dataPreprocessed,
   #              UP2GS = FALSE)
   #}
   
-  return(result)
+  return(solution)
 }
 
+
+#' Executes the solve on the provided ILP formulation (in .lp file). 
+#'
+#' @param variables list of nodes, edges and measurements variables 
+#' generated by \code{\link{createLpFormulation_v2}}
+#' @inheritParams solveCarnival
+#'
+#' @return solution matrix from ILP solver containing variables list (rows) and 
+#' their values in different solutions (columns). 
+#' @keywords internal
 sendTaskToSolver <- function( variables,
                               dataPreprocessed, 
                               carnivalOptions,
-                              newDataRepresentation = T) {
+                              newDataRepresentation = T ) {
   
   message(getTime(), " Solving LP problem")
   
@@ -122,11 +187,18 @@ sendTaskToSolver <- function( variables,
 }
 
 
+#' Exports the solution matrix to the final solution.
+#'
+#' @param solutionMatrix the output matrix from ILP solver containing 
+#' variables list (rows) and their values in different solutions (columns).
+#' @inheritParams sendTaskToSolver
+#'
+#' @keywords internal
 processSolution <- function(solutionMatrix, 
                             variables,
-                            newDataRepresentation = T,
                             dataPreprocessed,
-                            carnivalOptions) {
+                            carnivalOptions, 
+                            newDataRepresentation = T) {
   
   message(getTime(), " Exporting solution matrix")
   
@@ -150,7 +222,18 @@ processSolution <- function(solutionMatrix,
 }
 
 
-createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresentation = T ) {
+#' Creates internal data representation - variables for ILP solvers, on the 
+#' basis of provided preprocessed data.
+#'
+#' @inheritParams solveCarnival
+#'
+#' @return variables for the new data representation or
+#' data vector (containing preprocessed information on measurement) 
+#' and variables for the old data representation (CARNIVAL v.<2)
+#' 
+#' @keywords internal
+createInternalDataRepresentation <- function(dataPreprocessed, 
+                                            newDataRepresentation = T) {
   if (newDataRepresentation) {
     variables <- createVariablesForIlpProblem(dataPreprocessed)
     return(variables)
@@ -160,23 +243,29 @@ createInternalDataRepresentation <- function( dataPreprocessed, newDataRepresent
                                   dataPreprocessed$priorKnowledgeNetwork, 
                                   dataPreprocessed$perturbations)
     
-    variables <- createVariables(dataPreprocessed$priorKnowledgeNetwork, dataVector)
+    variables <- createVariables(dataPreprocessed$priorKnowledgeNetwork, 
+                                 dataVector)
     return(list("dataVector" = dataVector, "variables" = variables))
   }
 }
 
 
-writeParsedData <- function ( variables = variables, 
-                              dataPreprocessed = dataPreprocessed, 
-                              carnivalOptions = carnivalOptions,
-                              filename = "parsedData.RData") {
-  message("Saving parsed data")
-  
-  outputFolder <- carnivalOptions$outputFolder
-  parsedDataFilename <-carnivalOptions$filenames$parsedData
-  save(variables, 
-       dataPreprocessed,
-       file = parsedDataFilename)
-  
-  message("Done: saving parsed data: ", parsedDataFilename)
+#' Saves all provided data together with generated variables for ILP problem in 
+#' .RData file.
+#'
+#' @param dataPreprocessed list containing preprocessed priorKnowledgeNetwork, 
+#' measurements, weights (if provided), perturbations (if provided).
+#' @param variables list of nodes, edges and measurements variables 
+#' generated by \code{\link{createLpFormulation_v2}}
+#' @param filename filename of the parsed data file.
+#'
+#' @return filename of the parsed data file.
+#' @keywords internal
+writeParsedData <- function(variables = variables, 
+                            dataPreprocessed = dataPreprocessed, 
+                            filename = "parsedData.RData") {
+  message("Saving preprocessed data.")
+  save(variables, dataPreprocessed, file = filename)
+  message("Done: saving parsed data: ", filename)
+  return(filename)
 }

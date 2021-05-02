@@ -18,9 +18,10 @@ prepareLPMatrixSingle <- function(lpMatrix, carnivalOptions){
   f.dir <- c(ff1$dir, ff2$dir, ff3$dir)
   f.rhs <- c(ff1$rhs, ff2$rhs, ff3$rhs)
    
-  idx1 <- which(lpFile == "Binaries")
-  idx2 <- which(lpFile == "Generals")
-  idx3 <- which(lpFile == "End")
+  #[[1]] is needed in each index for running examples while packaging (devtools::check())
+  idx1 <- match("Binaries", lpFile)
+  idx2 <- match("Generals", lpFile)
+  idx3 <- match("End", lpFile)
   
   binaryVar <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
  

@@ -12,10 +12,9 @@ checkData <- function( perturbations = NULL,
   priorKnowledgeNetworkProcessed <- preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
   nodesPriorKnowledgeNetwork <- getPriorKnowledgeNetworkNodes(priorKnowledgeNetworkProcessed)
   
-  print(perturbations)
   if (is.null(perturbations)) {
     priorKnowledgeNetworkProcessed <- addPerturbationNodes(priorKnowledgeNetworkProcessed)
-    message("Perturbations are not given, all parents nodes are added as potential perturbations.")
+    message("Perturbations are not provided, all parents nodes are added as potential perturbations.")
     perturbationsProcessed <- NULL
   } else {
     perturbationsProcessed <- checkPerturbations(perturbations, 

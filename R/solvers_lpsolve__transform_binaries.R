@@ -4,8 +4,8 @@
 
 transformBinaries <- function(mt, lpFile){
   
-  idx1 <- which(lpFile == "Binaries")
-  idx2 <- which(lpFile == "Generals")
+  idx1 <- match("Binaries", lpFile)
+  idx2 <- match("Generals", lpFile)
   
   constraintSet <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   

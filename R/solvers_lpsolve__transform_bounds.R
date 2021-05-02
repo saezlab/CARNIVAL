@@ -4,8 +4,8 @@
 
 transformBounds <- function(mt, lpFile){
   
-  idx1 <- which(lpFile == "Bounds")
-  idx2 <- which(lpFile == "Binaries")
+  idx1 <- match("Bounds", lpFile)
+  idx2 <- match("Binaries", lpFile)
   
   constraintSet <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   

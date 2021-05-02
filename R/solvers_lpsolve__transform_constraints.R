@@ -4,8 +4,8 @@
 
 transformConstraints <- function(mt, lpFile){
   
-  idx1 <- which(lpFile == "Subject To")
-  idx2 <- which(lpFile == "Bounds")
+  idx1 <- match("Subject To", lpFile)
+  idx2 <- match("Bounds", lpFile)
   
   constraintSet <- lpFile[seq(from = idx1 + 1, to = idx2 - 1, by = 1)]
   constraintSet <- lapply(strsplit(x = constraintSet, 

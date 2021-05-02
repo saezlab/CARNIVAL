@@ -3,9 +3,8 @@
 ## Enio Gjerga, 2020
 
 transformObjectiveFunction <- function(mt, lpFile){
-
-  matrixProblem <- matrix(data = , nrow = 1, ncol = nrow(mt))
-  idx <- which(grepl(pattern = "Obj:", x = lpFile))
+  
+  idx <- which(grepl(pattern = "Obj:", x = lpFile), arr.ind = FALSE)
   
   problem <- as.character(lpFile[idx])
   problem <- gsub(pattern = "Obj:\t ", replacement = "", x = problem, 
@@ -29,7 +28,7 @@ transformObjectiveFunction <- function(mt, lpFile){
   
   idx <- rep(NA, length(varId))
   for( ii in seq_len(length(varId)) ) {
-    idx[ii] <- which( mt[, 1] == varId[ii] )
+    idx[ii] <- match(varId[ii],  mt[, 1])
   }
   
   f.obj <- rep(0, nrow(mt))
