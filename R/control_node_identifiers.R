@@ -21,11 +21,10 @@ collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames
 correctIdentifiers <- function(nodesIds, replacementSymbol = "_",
                                verbose = FALSE, keepMapping = FALSE ){
   
-  preparedPattern <- paste0("\\", specialRegExpCharactersToFix, collapse="|")
-  preparedPattern <- paste0(c(preparedPattern, specialCharactersToFix), collapse="|")
+  preparedPattern <- paste0("\\", specialRegExpCharactersToFix, collapse = "|")
+  preparedPattern <- paste0(c(preparedPattern, specialCharactersToFix), collapse = "|")
   
   if (verbose) {
-    
     idsWithSpecialCharacters <- gregexpr(pattern = preparedPattern, text = nodesIds) 
     
     resultsIds <- collectSpecialCharactersNames(idsWithSpecialCharacters, nodesIds)

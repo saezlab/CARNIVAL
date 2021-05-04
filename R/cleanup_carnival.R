@@ -10,7 +10,7 @@ cleanupCarnival <- function(carnivalOptions){
     resultFile <- carnivalOptions$filenames$resultFile
     keepLpFiles <- carnivalOptions$keepLPFiles
     
-    if(!keepLpFiles & file.exists(lpFile)){
+    if(!keepLpFiles && file.exists(lpFile)){
       file.remove(lpFile)
     }
     

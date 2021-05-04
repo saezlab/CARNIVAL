@@ -1,3 +1,5 @@
+# Author: Olga Ivanova, 2021
+
 #' Supported solvers functions to work with all solvers in a uniform way.
 #' 
 #' To add a new solver, one must write and add here the functions for 
@@ -129,8 +131,8 @@ solveCarnival <- function(dataPreprocessed,
     message("No solutions exist.")
   } else {
     solution <- processSolution( solutionMatrix, preparedForRun$variables, 
-                               newDataRepresentation, 
-                               dataPreprocessed, carnivalOptions )  
+                                 dataPreprocessed, carnivalOptions, 
+                                 newDataRepresentation )  
   }
   
   #TODO results with diagnostics is never null, think how to implement it better
@@ -155,10 +157,10 @@ solveCarnival <- function(dataPreprocessed,
 #' @return solution matrix from ILP solver containing variables list (rows) and 
 #' their values in different solutions (columns). 
 #' @keywords internal
-sendTaskToSolver <- function( variables,
-                              dataPreprocessed, 
-                              carnivalOptions,
-                              newDataRepresentation = T ) {
+sendTaskToSolver <- function(variables,
+                            dataPreprocessed, 
+                            carnivalOptions,
+                            newDataRepresentation = T) {
   
   message(getTime(), " Solving LP problem")
   
@@ -166,8 +168,8 @@ sendTaskToSolver <- function( variables,
   solversFunctions <- supportedSolversFunctions[[carnivalOptions$solver]]
   
   #lpSolve uses matrix input for variables, other solvers take .lp file
-  if(carnivalOptions$solver == getSupportedSolvers()$lpSolve) {
-    if(newDataRepresentation) {
+  if (carnivalOptions$solver == getSupportedSolvers()$lpSolve) {
+    if (newDataRepresentation) {
       lpMatrix <- transformVariables_v2(variables, dataPreprocessed$measurements)
     } else {
       lpMatrix <- transformVariables(variables, dataPreprocessed$measurements)

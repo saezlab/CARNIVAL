@@ -1,11 +1,18 @@
-## Check input data and options for CARNIVAL. 
-##
-## Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
-
-checkData <- function( perturbations = NULL,
-                       measurements,
-                       priorKnowledgeNetwork,
-                       weights = NULL ) {
+#' Checks the input data for correctness. 
+#'
+#' @param perturbations 
+#' @param measurements 
+#' @param priorKnowledgeNetwork 
+#' @param weights 
+#'
+#' @return
+#' @author Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
+#'
+#' @keywords internal
+checkData <- function(perturbations = NULL,
+                      measurements,
+                      priorKnowledgeNetwork,
+                      weights = NULL) {
   
   checkPriorKnowledgeNetwork(priorKnowledgeNetwork)
   
@@ -21,7 +28,6 @@ checkData <- function( perturbations = NULL,
                                                  nodesPriorKnowledgeNetwork)
   }
   
-  print(priorKnowledgeNetworkProcessed)
   measurementsProcessed <- checkMeasurements(measurements, 
                                              nodesPriorKnowledgeNetwork)
   
@@ -43,22 +49,4 @@ getPriorKnowledgeNetworkNodes <- function(priorKnowledgeNetwork = priorKnowledge
   allNodes <- c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2)
   return( unique(allNodes) )
 }
-
-checkSolverInputs <- function(options){
-  if (options$solver == getSupportedSolvers()$cplex) {
-    checkCplexCarnivalOptions(options)  
-  } else if (options$solver == getSupportedSolvers()$lpSolve) {
-    #TODO
-    #checkLpSolveCarnivalOptions(options)
-    message("No checks for inputs for lpSolve needed.")
-  } else if (options$solver == getSupportedSolvers()$cbc){
-    #TODO 
-    #checkCbcCarnivalOptions(options)
-    message("No checks for inputs for cbc needed.")
-  } else {
-    stop("This solver is not supported. List of supported solvers: ", 
-         paste(getSupportedSolvers(), collapse=", "))
-  }
-}
-
 

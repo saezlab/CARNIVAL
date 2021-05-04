@@ -55,11 +55,10 @@ getSolutionMatrixCplex <- function(solution) {
 }
 
 saveDiagnosticsCplex <- function(result, carnivalOptions){
-  
   cplexLog <- carnivalOptions$filenames$cplexLog
   # add log to results
   if(!is.null(result) && file.exists(cplexLog)){
-    cplex_out <- parse_CPLEX_log(cplexLog)
+    cplex_out <- parseCplexLog(cplexLog)
     result$diagnostics <- cplex_out
   } else {
     result$diagnostics <- list()

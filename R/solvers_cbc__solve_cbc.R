@@ -1,3 +1,10 @@
+#' Executes cbc solver on provided .lp file. 
+#'
+#' @param carnivalOptions 
+#'
+#' @return
+#' @keywords internal
+#'
 solveWithCbc <- function(carnivalOptions) {
   
   resultFile <- carnivalOptions$filenames$resultFile
@@ -11,9 +18,9 @@ solveWithCbc <- function(carnivalOptions) {
   system(cbc_command)
   
   solutionFileName <- carnivalOptions$filenames$resultFile
-  solMatrix <- read.csv2(solutionFileName, sep = ",")
+  solutionMatrix <- read.csv2(solutionFileName, sep = ",")
   
-  return(solMatrix)
+  return(solutionMatrix)
 }
 
 getSolutionMatrixCbc <- function(solutionMatrix) {

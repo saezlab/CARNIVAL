@@ -1,9 +1,8 @@
-
 carnivalOptionsErrorChecks <- list(
-  #solver =       data.frame( func = c("!is.null", "`%in%`")
-  #                           param = c("", "supportedSolvers")
-  #                           message = paste0("Error in solver paramter: invalid value provided, you can used only", 
-  #                                            supportedSolvers))
+  # solver =       data.frame( func = c("!is.null", "`%in%`"),
+  #                            param = c("", "getSupportedSolvers()"),
+  #                            message = paste0("Error in solver paramter: invalid value provided, you can used only", 
+  #                                             getSupportedSolvers())),
   
   #solverPath = data.frame(func = c("is.character", "file.exists"), 
   #                        param = c("", ""),
@@ -13,6 +12,10 @@ carnivalOptionsErrorChecks <- list(
   betaWeight =    data.frame(func = "is.numeric", 
                              param = "",
                              message = "Error in Objective Function, betaWeight: Please set a weight for node penalty")
+  
+)
+
+metaInfoOptionsErrorChecks <- list(
   
 )
 
@@ -62,116 +65,36 @@ cplexOptionsErrorChecks <- list(
   
 )
 
-
-#' check_CARNIVAL_options
-#' 
-#' checks options provided for CARNIVAL
-#' 
-
-### CPLEX
-
-checkCplexCarnivalOptions <- function(options) {
-  
-  if (!is.list(options))
-    stop("CARNIVAL options should be a list")
-  
-  if (!all(requiredCarnivalCplexOptions %in% names(options))) {
-    stop(
-      "CARNIVAL options should contain all options.
-            See/use default_carnival_options() for references. "
-    )
-  }
-  
-  if (!all(requiredCplexOptions %in% names(options))) {
-    stop(
-      "CARNIVAL cplex options should contain all required cplex options.
-            See/use default_carnival_options() for references."
-    )
-  }
-  
-  if (is.null(options$solverPath))
-    stop("Path to ILP solver must be provided")
-  
-  if (options$solver == getSupportedSolvers()$cplex &&
-      options$solverPath == "")
-    stop("Path to ILP solver cannot be empty")
-  
-  checkGenericFunction <- function(x, value) {
-    functionToCall <- eval(parse(text = x['func']))
-    if (x['param'] == "") {
-      if (!functionToCall(value))
-        stop(x['message'])
-    } else {
-      param <- eval(parse(text = x['param']))
-      if (!functionToCall(value, param)) {
-        stop(x['message'])
-      }
-    }
-  }
-  
-  invisible(
-    lapply(names(carnivalOptionsErrorChecks), function(x) {
-      value = unlist(options[x])
-      checkValue = carnivalOptionsErrorChecks[[x]]
-      
-      # if there are several checks, apply all
-      if (is.data.frame(checkValue)) {
-        apply(checkValue, 1, checkGenericFunction, value)
-      } else {
-        checkGenericFunction(checkValue, value)
-      }
-    })) 
-  
-  invisible(
-    lapply(names(cplexOptionsErrorChecks), function(x) {
-      value = unlist(options[x])
-      checkValue = cplexOptionsErrorChecks[[x]]
-      
-      # if there are several checks, apply all
-      if (is.data.frame(checkValue)) {
-        apply(checkValue, 1, checkGenericFunction, value)
-      } else {
-        checkGenericFunction(checkValue, value)
-      }
-    }))
-}
-
 ### cbc
 cbcOptionsErrorChecks <- list(
-  timelimit =     data.frame(func = "is.numeric",
-                             param = "",
-                             message="Error in parameter timelimit: set a time limit for ILP optimisation in
+  timelimit = data.frame(func = "is.numeric",
+                         param = "",
+                         message="Error in parameter timelimit: set a time limit for ILP optimisation in
                              seconds, e.g. 3600"),
   
-  
-  poolrelGap =    data.frame(func = "is.numeric", 
-                             param = "", 
-                             message = "Error in cbc parameter poolrelGap: set the allowed pool relative GAP parameter
+  poolrelGap = data.frame(func = "is.numeric", 
+                          param = "", 
+                          message="Error in cbc parameter poolrelGap: set the allowed pool relative GAP parameter
                                       or leave it as NULL for using cbc default value (1e75)")
   
 )
 
+getSolversCheckFunctions <- function(solver) {
+  #TODO add check for the supported solvers
+  
+  solversCheckFunctions <- c("cplex" = cplexOptionsErrorChecks,
+                             "cbc" = cbcOptionsErrorChecks, 
+                             "lpSolve" = function(){})
+  
+  return(solversCheckFunctions$solver)
+}
 
-
-checkCbcCarnivalOptions <- function(options) {
+executeSolversChecks <- function(checksToRun) {
   
-  if (!is.list(options))
-    stop("CARNIVAL options should be a list")
-  
-  if (!all(requiredCarnivalCplexOptions %in% names(options))) {
-    stop(
-      "CARNIVAL options should contain all options.
-            See/use default_carnival_options() for references. "
-    )
-  }
-  
-  if (!all(requiredlpsolveOptions %in% names(options))) {
-    stop(
-      "CARNIVAL cbc options should contain all required cplex options.
-            See/use default_carnival_options() for references."
-    )
-  }
-  
+  #Executes the functions in "func" for each option with 
+  #parameters in "param". The functions are expected to return 
+  #logical TRUE/FALSE. Throws an error message if the function call
+  #returned false. 
   checkGenericFunction <- function(x, value) {
     functionToCall <- eval(parse(text = x['func']))
     if (x['param'] == "") {
@@ -185,10 +108,11 @@ checkCbcCarnivalOptions <- function(options) {
     }
   }
   
+  print(checksToRun)
   invisible(
-    lapply(names(carnivalOptionsErrorChecks), function(x) {
+    lapply(names(checksToRun), function(x) {
       value = unlist(options[x])
-      checkValue = carnivalOptionsErrorChecks[[x]]
+      checkValue = checksToRun[[x]]
       
       # if there are several checks, apply all
       if (is.data.frame(checkValue)) {
@@ -197,66 +121,46 @@ checkCbcCarnivalOptions <- function(options) {
         checkGenericFunction(checkValue, value)
       }
     })) 
-  
-  invisible(
-    lapply(names(cbcOptionsErrorChecks), function(x) {
-      value = unlist(options[x])
-      checkValue = cplexOptionsErrorChecks[[x]]
-      
-      # if there are several checks, apply all
-      if (is.data.frame(checkValue)) {
-        apply(checkValue, 1, checkGenericFunction, value)
-      } else {
-        checkGenericFunction(checkValue, value)
-      }
-    }))
   
 }
 
-
-### lpSolve
-checkLpSolveCarnivalOptions <- function(options) {
+#'Checks options provided for CARNIVAL
+#' 
+#' @param options
+#' @keywords internal
+#' 
+checkCarnivalOptions <- function(options) {
   
   if (!is.list(options))
     stop("CARNIVAL options should be a list")
   
-  if (!all(requiredCarnivalCplexOptions %in% names(options))) {
-    stop(
-      "CARNIVAL options should contain all options.
-            See/use default_carnival_options() for references. "
-    )
+  if (is.null(options$solver) || options$solver == "") {
+    warning("Solver is not provided. Default solver will be used:", 
+            getSupportedSolvers()$lpSolve)
+    options$solver <- getSupportedSolvers()$lpSolve
   }
   
-  if (!all(requiredlpsolveOptions %in% names(options))) {
-    stop(
-      "CARNIVAL cbc options should contain all required cplex options.
-            See/use default_carnival_options() for references."
-    )
+  missingOptions <- which(!getOptionsList(options$solver, onlyRequired = T) %in% 
+                            names(options))
+  
+  if (length(missingOptions) > 0) {
+    stop("CARNIVAL options should contain all required options.", 
+          paste(missingOptions, "collapse" = ", "),
+          "Check getOptionsList() for references.")
   }
   
-  checkGenericFunction <- function(x, value) {
-    functionToCall <- eval(parse(text = x['func']))
-    if (x['param'] == "") {
-      if (!functionToCall(value))
-        stop(x['message'])
-    } else {
-      param <- eval(parse(text = x['param']))
-      if (!functionToCall(value, param)) {
-        stop(x['message'])
-      }
-    }
-  }
+  if ( (options$solver == getSupportedSolvers()$cplex ||
+       options$solver == getSupportedSolvers()$cbc) &&
+       (options$solverPath == "" || 
+       is.null(options$solverPath)) )
+    stop("Path to the solver cannot be empty.")
   
-  invisible(
-    lapply(names(carnivalOptionsErrorChecks), function(x) {
-      value = unlist(options[x])
-      checkValue = carnivalOptionsErrorChecks[[x]]
-      
-      # if there are several checks, apply all
-      if (is.data.frame(checkValue)) {
-        apply(checkValue, 1, checkGenericFunction, value)
-      } else {
-        checkGenericFunction(checkValue, value)
-      }
-    })) 
+  solversCheckFunction <- getSolversCheckFunctions(options$solver)
+  
+  #Do general checks for all solvers
+  executeSolversChecks(carnivalOptionsErrorChecks)
+  
+  #Do solver specific checks
+  executeSolversChecks(solversCheckFunction)
+  
 }

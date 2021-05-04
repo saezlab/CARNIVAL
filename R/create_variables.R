@@ -2,7 +2,6 @@
 ## formulation.
 ##
 ## Olga Ivanova 2021
-
 createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = F) {
   message(getTime(), " Generating variables for lp problem")
 
@@ -16,7 +15,8 @@ createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = 
   edgesDf <- createEdgesVariables(priorKnowledgeNetwork, backwardCompatibility,
                                   startingIdx = nrow(nodesDf) * 3 + 1)
 
-  measurementsDf <- createMeasurementsVariables(measurements, nodesDf, priorKnowledgeNetwork,
+  measurementsDf <- createMeasurementsVariables(measurements, nodesDf, 
+                                                priorKnowledgeNetwork,
                                                 backwardCompatibility)
 
   message(getTime(), " Done: generating variables for lp problem")
@@ -115,9 +115,10 @@ createMeasurementsVariables <- function(measurements,
     #this will generate the variable names that were previously used in the ILP file (CARNIVAL v1)
     prefixes["measurementsAbsDiff"] <- "absDiff"
     measurementsNodesVars <- nodesDf[nodesDf$nodes %in% names(measurements), ]
-    idxNodes <- gsub("[^\\d_1]+", "", measurementsNodesVars$nodesVars, perl=TRUE)
+    idxNodes <- gsub("[^\\d_1]+", "", measurementsNodesVars$nodesVars, perl = TRUE)
     measurementsVars <- paste0(prefixes["measurementsAbsDiff"], idxNodes)
-    measurementsVars <- measurementsVars[order(match(measurementsNodesVars$nodes, measurementsVars))]
+    measurementsVars <- measurementsVars[order(match(measurementsNodesVars$nodes, 
+                                                     measurementsVars))]
 
   } else {
     idxNodes <- seq(from = 1, to = length(measurements), by = 1)
