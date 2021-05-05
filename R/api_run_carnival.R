@@ -1,3 +1,36 @@
+#' Title
+#'
+#' @param perturbations 
+#' @param measurements 
+#' @param priorKnowledgeNetwork 
+#' @param weights 
+#' @param carnivalOptions 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+isInputValidCarnival <- function(perturbations = NULL,
+                                 measurements,
+                                 priorKnowledgeNetwork,
+                                 weights = NULL,
+                                 carnivalOptions =
+                                   defaultLpSolveCarnivalOptions()) {
+  message("--- Start of the CARNIVAL pipeline ---")
+  message(getTime(), " Carnival flavour: input validity check.")
+  
+  checkData( perturbations, measurements,
+             priorKnowledgeNetwork, weights )
+  
+  checkCarnivalOptions(carnivalOptions)
+  
+  message(getTime(), " All inputs checks passed.")
+  message(getTime(), " All tasks finished.")
+  message("\n", "--- End of the CARNIVAL pipeline --- ", "\n")
+  
+  return(TRUE) 
+}
+
 #'\code{generateLpFileCarnival}
 #'
 #'@details Prepares the input data for the run: tranforms data into lp file and .Rdata file.

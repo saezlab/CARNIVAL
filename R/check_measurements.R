@@ -5,7 +5,7 @@
 
 checkMeasurements <- function(measurements, nodesPriorKnowledgeNetwork) {
   
-  nullObjectError <- "Please provide a valid measurement object."
+  nullObjectError <- "Please provide a valid measurement object: a vector with identifiers and their values."
   noMeasurementsInNetworkError <- "None of your measurements are in prior knowledge networks (PKN). 
                                    Check node identifiers in both measurements and PKN objects."
   

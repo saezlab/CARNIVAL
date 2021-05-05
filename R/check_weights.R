@@ -3,7 +3,7 @@
 ## Enio Gjerga, Olga Ivanova 2020-2021
 checkWeights <- function(weights, nodesPriorKnowledgeNetwork){
   
-  nullObjectError <- "Please provide a valid weights object."
+  nullObjectError <- "Please provide a valid weights object: a vector with identifiers and their values."
   noWeightsInNetworkError <- "None of your weights nodes are in prior knowledge networks (PKN). 
                               Check node identifiers in both weights and PKN objects. 
                               You can use Carnival without weights (set to NULL by default)."

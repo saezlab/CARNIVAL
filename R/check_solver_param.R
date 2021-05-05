@@ -205,12 +205,6 @@ checkCarnivalOptions <- function(carnivalOptions) {
           "Check getOptionsList() for references.")
   }
   
-  if ( (carnivalOptions$solver == getSupportedSolvers()$cplex ||
-       carnivalOptions$solver == getSupportedSolvers()$cbc) &&
-       (carnivalOptions$solverPath == "" || 
-       is.null(carnivalOptions$solverPath)) )
-    stop("Path to the solver cannot be empty.")
-  
   solversSpecificChecks <- getSolversSpecificChecks(carnivalOptions$solver)
   
   errorMessages <- executeSolversChecks(carnivalOptions, carnivalOptionsErrorChecks)
@@ -222,4 +216,6 @@ checkCarnivalOptions <- function(carnivalOptions) {
   if (length(collectedMessages) > 0) {
     stop("Incorrect parameters setup \n", paste(collectedMessages, collapse = "\n"))  
   }
+  
+  return(TRUE)
 }
