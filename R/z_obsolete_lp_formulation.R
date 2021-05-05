@@ -4,7 +4,7 @@
 createLpFormulation <- function( internalDataRepresentation, 
                                  dataPreprocessed,
                                  carnivalOptions ) {
-  
+  .Deprecated("createLpFormulation_v2")
   message("Writing constraints...")
   options(scipen=999)
   
@@ -64,7 +64,7 @@ createLpFormulation <- function( internalDataRepresentation,
 }
 
 createBinaries <- function(variables = variables){
-  
+  .Deprecated("createBinaries_v2")
   cc1 <- paste0("\t", variables$variables[variables$idxNodesUp])
   cc2 <- paste0("\t", variables$variables[variables$idxNodesDown])
   cc3 <- paste0("\t", variables$variables[variables$idxEdgesUp])
@@ -76,7 +76,7 @@ createBinaries <- function(variables = variables){
 
 createBoundaries <- function(variables = variables, 
                              objectiveFunction = objectiveFunction){
-  
+  .Deprecated("createBoundaries_v2")
   M <- 100
   cc1 <- paste0("\t", 
                 "-1 <= ", 
@@ -115,7 +115,7 @@ createBoundaries <- function(variables = variables,
 }
 
 createGenerals <- function(variables = variables, objectiveFunction = objectiveFunction){
-  
+  .Deprecated("createGenerals_v2")
   generals <- c(paste0("\t", 
                        variables$variables[variables$idxNodes]),
                 paste0("\t", 

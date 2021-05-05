@@ -2,7 +2,6 @@
 ## conditions.
 ##
 ## Enio Gjerga, 2020
-
 createObjectiveFunction <- function(dataVector = dataVector, 
                                     variables = variables, 
                                     measurementsWeights = measurementsWeights, 
@@ -10,7 +9,7 @@ createObjectiveFunction <- function(dataVector = dataVector,
                                     betaWeight = betaWeight, 
                                     scores = scores) {
   
-  
+  .Deprecated("createObjectiveFunction_v2")
   objectiveFunctionStart <- "Obj:\t "
   
   if(is.null(scores)){

@@ -2,7 +2,6 @@
 ## read by interactive cplex solver to perform network optimisation.
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
-
 createLpFormulation_v2 <- function( internalDataRepresentation,
                                     dataPreprocessed,
                                     carnivalOptions ) {
@@ -11,11 +10,10 @@ createLpFormulation_v2 <- function( internalDataRepresentation,
   options(scipen=999)
 
   variables <- internalDataRepresentation
-  objectiveFunction <- createObjectiveFunction_v2 ( variables = variables,
-                                                    alphaWeight = carnivalOptions$alphaWeight,
-                                                    betaWeight = carnivalOptions$betaWeight,
-                                                    weights = dataPreprocessed$weights )
-
+  objectiveFunction <- createObjectiveFunction_v2 (variables = variables,
+                                                   alphaWeight = carnivalOptions$alphaWeight,
+                                                   betaWeight = carnivalOptions$betaWeight,
+                                                   weights = dataPreprocessed$weights)
   bounds <- createBoundaries_v2(variables)
   binaries <- createBinaries_v2(variables)
   generals <- createGenerals_v2(variables)

@@ -4,6 +4,7 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
                                            variables = variables, 
                                            dataPreprocessed = dataPreprocessed){
   
+  .Deprecated("exportIlpSolutionFromSolutionMatrix")
   priorKnowledgeNetwork <- dataPreprocessed$priorKnowledgeNetwork
   perturbations <- dataPreprocessed$perturbations
   measurements <- dataPreprocessed$measurement

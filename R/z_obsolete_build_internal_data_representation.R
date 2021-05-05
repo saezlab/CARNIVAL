@@ -9,7 +9,7 @@
 ## Return the data matrix containing the data for running CARNIVAL 
 ## and a set of identifiers for targets, measured and unmeasured nodes.
 buildDataVector <- function(measurements, priorKnowledgeNetwork, perturbations) {
-    
+  .Deprecated("createVariablesForIlpProblem")  
   colnames(priorKnowledgeNetwork) <- c("X1", "X2", "X3")
   
   allSpecies <- unique( c(as.character(priorKnowledgeNetwork$X1), 
@@ -78,7 +78,7 @@ buildDataVector <- function(measurements, priorKnowledgeNetwork, perturbations) 
 # from the measurements data. Basically, it is always the same list of nodes as in PKN.
 # See buildDataVector(...) dataVector for information. 
 createVariables <- function(priorKnowledgeNetwork, dataVector, postfix="_1"){
-  
+  .Deprecated("createVariablesForIlpProblem")  
   colnames(priorKnowledgeNetwork) <- c("X1", "X2", "X3")
   
   dataLength <- length(dataVector$dataVector)

@@ -1,10 +1,9 @@
 ## Obsolete code kept here for backward compatibility for v.2.1. 
 # Planned to be removed in v.3
-
 createConstraintsObjectiveFunction <- function(variables = variables, 
                                                dataVector = dataVector, 
                                                postfix="_1"){
-  
+  .Deprecated("createConstraintsMeasurements_v2")
   measurements <- dataVector$dataVectorSign
   
   idx2 <- which(measurements == 1)
@@ -27,7 +26,7 @@ createConstraintsObjectiveFunction <- function(variables = variables,
 } 
 
 createConstraints_1 <- function(variables = variables){
-  
+  .Deprecated("createConstraints_1_2_v2")
   selectEdges <- function(idx, reactionType) {
     gsub(variables$exp[idx], 
          pattern = reactionType, 
@@ -68,7 +67,7 @@ createConstraints_1 <- function(variables = variables){
 }
 
 createConstraints_2 <- function(variables = variables){
-  
+  .Deprecated("createConstraints_1_2_v2")
   vars <- variables$variables
   
   selectEdges <- function(idx, reactionType) {
@@ -109,7 +108,7 @@ createConstraints_2 <- function(variables = variables){
 }
 
 createConstraints_3 <- function(variables = variables) {
-  
+  .Deprecated("createConstraints_3_v2")  
   constraints3 <- paste0(
     variables$variables[variables$idxEdgesUp], 
     " + ", 
@@ -121,7 +120,7 @@ createConstraints_3 <- function(variables = variables) {
 }
 
 createConstraints_4 <- function(variables=variables) {
-  
+  .Deprecated("createConstraints_4_5_v2")
   vars <- variables$variables
   constraints4 <- rep("", length(variables$idxEdgesUp))
   
@@ -171,7 +170,7 @@ createConstraints_4 <- function(variables=variables) {
 }
 
 createConstraints_5 <- function(variables=variables) {
-  
+  .Deprecated("createConstraints_4_5_v2")
   vars <- variables$variables
   constraints1 <- rep("", length(variables$idxEdgesDown))
   
@@ -220,7 +219,7 @@ createConstraints_5 <- function(variables=variables) {
 
 createConstraints_6 <- function(variables = variables,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
-  
+  .Deprecated("createConstraints_6_7_v2")
   vars <- variables$variables
   
   source <- unique(variables$reactionSource)
@@ -273,7 +272,7 @@ createConstraints_6 <- function(variables = variables,
 
 createConstraints_7 <- function(variables = variables,
                                 priorKnowledgeNetwork = priorKnowledgeNetwork) {
-  
+  .Deprecated("createConstraints_6_7_v2")
   vars <- variables$variables
   
   source <- unique(variables$reactionSource)
@@ -321,6 +320,7 @@ createConstraints_7 <- function(variables = variables,
 createConstraints_8 <- function(variables = variables, 
                                 perturbations = perturbations, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork){
+  .Deprecate("createConstraints_8_v2")
   vars <- variables$variables
   
   cc1 <- paste0(
@@ -371,6 +371,7 @@ createLoopConstraints <- function( variables = variables,
                                    perturbations = perturbations,
                                    priorKnowledgeNetwork = priorKnowledgeNetwork) {
   
+  .Deprecated("createLoopConstraints_v2")
   M <- 101
   constraints1 <- c()
   constraints2 <- c()
