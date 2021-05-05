@@ -8,15 +8,15 @@ getSupportedSolvers <- function() {
   return(supportedSolvers)
 }
 
-#' Title
+#' Returns the list of options needed/supported for each solver.
 #'
 #' @param solver 
-#' @param onlyRequired 
+#' @param onlyRequired logic, set to TRUE if you want to obtain only
+#' required options for the run
 #'
 #' @return
 #' @export
 #'
-#' @examples
 getOptionsList <- function(solver = "", onlyRequired = F) {
   requiredGeneralCarnivalOptions <- c("solver", "betaWeight")
   optionalCarnivalOptions <- c("lpFilename", "outputFolder", "cleanTmpFiles", 
@@ -44,7 +44,7 @@ getOptionsList <- function(solver = "", onlyRequired = F) {
                                        optionalCarnivalOptions))
   }
   
-  if(solver != "") {
+  if (solver != "") {
     if (solver %in% getSupportedSolvers()) {
       validOptions <- validOptions[[solver]]  
     } else {
@@ -56,7 +56,7 @@ getOptionsList <- function(solver = "", onlyRequired = F) {
   return(validOptions)
 }
 
-#' Title
+#' Sets CARNIVAL options for the solver.
 #'
 #' @param ... 
 #'
@@ -79,7 +79,7 @@ setCarnivalOptions <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 }
 
 
-#' Title
+#' Checks if provided option names are valid. 
 #'
 #' @param solver 
 #' @param ... 
@@ -93,7 +93,6 @@ checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
   allOptionsValid <- TRUE
 
   invalidOptions <- which(!(names(options) %in% getOptionsList(solver)))
-  print(invalidOptions)
   
   if(is.null(names(options))) {
     warning("Empty options names provided. Use getOptionsList() to see all available options.")
@@ -112,9 +111,7 @@ checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
   return(allOptionsValid)
 }
 
-#' default_CARNIVAL_options
-#' 
-#' generates default CARNIVAL options.  
+#' Sets default CARNIVAL options for cplex.
 #' 
 #'@param solverPath Path to executable cbc/cplex file - default set to NULL, in
 #'which case the solver from lpSolve package is used.
@@ -170,7 +167,15 @@ defaultCplexCarnivalOptions <- function(...){
     return(options)
 }
 
-#' @export 
+
+#' Sets default CARNIVAL options for lpSolve.
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 defaultLpSolveCarnivalOptions <- function(...){
   
   if ( "solver" %in% names(list(...)) ) {
@@ -194,7 +199,15 @@ defaultLpSolveCarnivalOptions <- function(...){
   return(options)
 }
 
+
+#'  Sets default CARNIVAL options for cbc.
+#'
+#' @param ... 
+#'
+#' @return
 #' @export
+#'
+#' @examples
 defaultCbcSolveCarnivalOptions <- function(...){
   
   if ( "solver" %in% names(list(...)) ) {
@@ -219,6 +232,14 @@ defaultCbcSolveCarnivalOptions <- function(...){
   return(options)
 }
 
+#' Suggests cplex specific options.s
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 suggestedCplexSpecificOptions <- function(...) {
   
   if ( "solver" %in% names(list(...)) ) {
@@ -247,6 +268,14 @@ suggestedCplexSpecificOptions <- function(...) {
   return(options)
 }
 
+#' Suggests cbc specific options.
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 suggestedCbcSpecificOptions <- function(...) {
   
   if ( "solver" %in% names(list(...)) ) {
@@ -267,9 +296,17 @@ suggestedCbcSpecificOptions <- function(...) {
 }
 
 
-#TODO N.B. careful with scientific notation, it is switched off at another place in the code 
-# (look up for scipen) - options(scipen = 0) to switch it on
+#' Sets default options from cplex documentation.
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 defaultCplexSpecificOptions <- function(...) {
+  #TODO N.B. careful with scientific notation, it is switched off at another place in the code 
+  # (look up for scipen) - options(scipen = 0) to switch it on
   
   if ( "solver" %in% names(list(...)) ) {
     stop("Don't try to redefine solver in this function.",
@@ -294,7 +331,7 @@ defaultCplexSpecificOptions <- function(...) {
 }
 
 
-#' Title
+#' Read options from json file.
 #'
 #' @param jsonFileName 
 #'
