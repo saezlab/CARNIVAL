@@ -8,7 +8,7 @@ createObjectiveFunction_v2 <- function(variables, alphaWeight, betaWeight, weigh
   objectiveFunctionMeasurements <- paste(abs(as.numeric(variables$measurementsDf$value)), 
                                          variables$measurementsDf$measurementsVars, "+ ")
   
-  if(is.null(weights)){
+  if (is.null(weights)){
     objectiveFunctionNodesUp <- paste(betaWeight, variables$nodesDf$nodesUpVars, "+ ")
     objectiveFunctionNodesDown <- paste(betaWeight, variables$nodesDf$nodesDownVars, "+ ")
  

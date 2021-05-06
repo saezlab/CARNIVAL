@@ -135,15 +135,6 @@ solveCarnival <- function(dataPreprocessed,
                                  newDataRepresentation )  
   }
   
-  #TODO results with diagnostics is never null, think how to implement it better
-  #if (!is.null(result)) {
-  #  writeDotFigure(result = result,
-  #              dir_name = outputFolder,
-  #              inputs = perturbations,
-  #              measurements = measurements,
-  #              UP2GS = FALSE)
-  #}
-  
   return(solution)
 }
 
