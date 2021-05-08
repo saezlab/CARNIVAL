@@ -8,7 +8,8 @@ createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = 
   perturbations <- dataProcessed$perturbations
   measurements <- dataProcessed$measurements
   priorKnowledgeNetwork <- dataProcessed$priorKnowledgeNetwork
-
+  priorKnowledgeNetwork$Sign <- as.numeric(priorKnowledgeNetwork$Sign)
+  
   nodesDf <- createNodesVariables(priorKnowledgeNetwork, perturbations, measurements,
                                   backwardCompatibility)
 

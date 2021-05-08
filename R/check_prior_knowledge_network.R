@@ -53,6 +53,7 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork) {
   priorKnowledgeNetwork <- correctNodeIdentifiersInNetwork(priorKnowledgeNetwork)
   priorKnowledgeNetwork$source <- as.character(priorKnowledgeNetwork$source)
   priorKnowledgeNetwork$target <- as.character(priorKnowledgeNetwork$target)
+  priorKnowledgeNetwork$interaction <- as.numeric(priorKnowledgeNetwork$interaction)
   
   tryCatch({
     priorKnowledgeNetwork$interaction <- as.numeric(as.character(priorKnowledgeNetwork$interaction))  

@@ -22,7 +22,7 @@ checkData <- function(perturbations = NULL,
   if (is.null(perturbations)) {
     priorKnowledgeNetworkProcessed <- addPerturbationNodes(priorKnowledgeNetworkProcessed)
     message("Perturbations are not provided, all parents nodes are added as potential perturbations.")
-    perturbationsProcessed <- NULL
+    perturbationsProcessed <- c("Perturbation" = "NaN")
   } else {
     perturbationsProcessed <- checkPerturbations(perturbations, 
                                                  nodesPriorKnowledgeNetwork)

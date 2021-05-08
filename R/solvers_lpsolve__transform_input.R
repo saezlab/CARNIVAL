@@ -6,15 +6,15 @@ processOneInequality <- function(inequality, allVariables) {
   operators <- c("-", "+")
   
   partsSeparator <- which(inequality %in% inequalityPartsSeparators)
-  leftPart <- inequality[1 : partsSeparator - 1]
-  rightPart <- inequality[(partsSeparator + 1) : length(inequality)]
+  leftPart <- inequality[1:(partsSeparator - 1)]
+  rightPart <- inequality[(partsSeparator + 1):length(inequality)]
   sepOperator <- inequality[partsSeparator]
   
   leftPart[leftPart == "+"] <- 1
   leftPart[leftPart == "-"] <- -1
   
   #if the line starts with variable, add coefficient 1 to it
-  if(leftPart[1] %in% allVariables) {
+  if (leftPart[1] %in% allVariables) {
     leftPart <- c(1, leftPart)
   } 
   
@@ -34,11 +34,11 @@ transformInequalititesToMatrix <- function(inequalities, allVariables) {
   inequalities <- trimws(inequalities)
 
   inequalitiesSplit <- strsplit(inequalities, " ")
-  allTranformedInequalities <- sapply(inequalitiesSplit, processOneInequality, 
+  allTransformedInequalities <- sapply(inequalitiesSplit, processOneInequality, 
                                       allVariables)
-  leftParts <- do.call(rbind, allTranformedInequalities[1, ])
-  operator <- unlist(allTranformedInequalities[2, ])
-  rightParts <- unlist(allTranformedInequalities[3, ])
+  leftParts <- do.call(rbind, allTransformedInequalities[1, ])
+  operator <- unlist(allTransformedInequalities[2, ])
+  rightParts <- unlist(allTransformedInequalities[3, ])
   
   return(list("left" = leftParts, "operator" = operator, "right" = rightParts))
 }

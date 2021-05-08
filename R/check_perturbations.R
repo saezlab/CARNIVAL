@@ -5,12 +5,12 @@ checkPerturbations <- function(perturbations, nodesPriorKnowledgeNetwork) {
 
   nullObjectError <- "Please provide a valid perturbations object: a vector with identifiers and their values. Please, 
                       Use runInverseCarnival() if you have no perturbation data."
-  
+  wrongOrderError <- "Or did you use unnamed carnivalOptions parameter in place of measurements?"
   noPerturbationsInNetworkError <- "None of your perturbations are in prior knowledge networks (PKN). 
                                    Check node identifiers in both perturbations and PKN objects."
   
   if (is.null(perturbations) || !is.numeric(perturbations)) {
-    stop(nullObjectError)
+    stop(paste(nullObjectError, wrongOrderError))
   }
   
   names(perturbations) <- correctIdentifiers(names(perturbations))

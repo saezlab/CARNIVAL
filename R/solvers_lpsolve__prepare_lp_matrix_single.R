@@ -4,6 +4,7 @@
 
 prepareLPMatrixSingle <- function(lpMatrix, carnivalOptions){
   
+  message("Parsing .lp file for lpSolve")
   lpFile <- readr::read_csv(file = carnivalOptions$filenames$lpFilename, 
                             col_names = F)
   lpFile <- lpFile[[1]]
@@ -41,7 +42,8 @@ prepareLPMatrixSingle <- function(lpMatrix, carnivalOptions){
               "con" = f.con, "dir" = f.dir, 
               "rhs" = f.rhs, "bins" = bins, 
               "ints" = ints)
-
+  
+  message("Done: parsing .lp file for lpSolve")
   return(res)
   
 }

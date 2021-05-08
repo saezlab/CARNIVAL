@@ -1,8 +1,7 @@
 #' Introduces a perturbation node connecting periphery nodes without a target in 
 #' the prior knowledge network.
 #'
-#' @param priorKnowledgeNetwork data.frame with priorKnowledgeNetwork with source,
-#' interaction, target columns
+#' @param priorKnowledgeNetwork data.frame with priorKnowledgeNetwork with source, interaction, target columns
 #' @return data.frame with prior knowledge network with added perturbations
 #' @author Panuwat Trairatphisan, 2020
 #' 
@@ -10,7 +9,7 @@
 #' @examples
 #' 
 #' load(file = system.file("toy_network_ex1.RData", package="CARNIVAL"))
-#' CARNIVAL:::addPerturbationNodes(priorKnowledgeNetwork = toy_network_ex1)
+#' addPerturbationNodes(priorKnowledgeNetwork)
 #' 
 addPerturbationNodes <- function(priorKnowledgeNetwork) {
   
@@ -20,9 +19,10 @@ addPerturbationNodes <- function(priorKnowledgeNetwork) {
   targetList <- sort(unique(priorKnowledgeNetwork[, 3]))
   inputList <-  setdiff(sourceList, targetList)
   
-  #Create a set of rows for each possible input with all possible activities (1/-1, activation/inhibiton)
+  #Create a set of rows for each possible input with all possible activities
+  #(1/-1, activation/inhibiton)
   addToNet <- data.frame(matrix(NA, length(inputList) * 2, 3))
-  addToNet[, 1] <- "perturbation"
+  addToNet[, 1] <- "Perturbation"
   
   addToNet[seq_len(length(inputList)), 2] <- "1";
   addToNet[seq_len(length(inputList)), 3] <- inputList

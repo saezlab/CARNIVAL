@@ -41,10 +41,12 @@ testRunCplex <- function() {
 }
 
 testRunLpSolve <- function(){
+  #simple lp problem (copied from lpSolve examples)
   chess.obj <- rep (1, 64)
   q8 <- make.q8 ()
   chess.dir <- rep (c("=", "<"), c(16, 26))
   chess.rhs <- rep (1, 42)
+  
   results <- lp ('max', chess.obj, , chess.dir, chess.rhs, dense.const = q8, 
                 all.bin=TRUE, num.bin.solns=3)
   isSuccessfull <- any(grepl("Success:", results))

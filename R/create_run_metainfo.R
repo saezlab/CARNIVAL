@@ -19,7 +19,7 @@ createRunId <- function() {
 
 createFilenames <- function(carnivalOptions) {
   #TODO add windows support with .Platform
-  if( carnivalOptions$outputFolder != "" ) {
+  if ( carnivalOptions$outputFolder != "" ) {
     outputFolder <- file.path(carnivalOptions$outputFolder, "")  
   } else {
     outputFolder <- file.path(getwd(), "")

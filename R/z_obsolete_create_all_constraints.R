@@ -320,7 +320,7 @@ createConstraints_7 <- function(variables = variables,
 createConstraints_8 <- function(variables = variables, 
                                 perturbations = perturbations, 
                                 priorKnowledgeNetwork = priorKnowledgeNetwork){
-  .Deprecate("createConstraints_8_v2")
+  .Deprecated("createConstraints_8_v2")
   vars <- variables$variables
   
   cc1 <- paste0(
