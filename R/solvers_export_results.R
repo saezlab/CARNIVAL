@@ -1,7 +1,6 @@
 ## Extract and export the optimisation results from the solution matrix.
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
-
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
   nSolutions <- ncol(solutionMatrix)
