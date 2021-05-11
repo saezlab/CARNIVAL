@@ -10,11 +10,11 @@ getSupportedSolvers <- function() {
 
 #' Returns the list of options needed/supported for each solver.
 #'
-#' @param solver 
+#' @param solver one of the solvers available from getSupportedSolvers()
 #' @param onlyRequired logic, set to TRUE if you want to obtain only
 #' required options for the run
 #'
-#' @return
+#' @return list of options, solver-dependent
 #' @export
 #'
 getOptionsList <- function(solver = "", onlyRequired = F) {
@@ -58,7 +58,8 @@ getOptionsList <- function(solver = "", onlyRequired = F) {
 
 #' Sets CARNIVAL options for the solver.
 #'
-#' @param ... 
+#' @param solver  one of the solvers available from getSupportedSolvers(). 
+#' @param ... any possible options from the solver's list
 #'
 #' @return
 #' @export
@@ -81,8 +82,8 @@ setCarnivalOptions <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 
 #' Checks if provided option names are valid. 
 #'
-#' @param solver 
-#' @param ... 
+#' @param solver  one of the solvers available from getSupportedSolvers(). 
+#' @param ... any possible options from the solver's list
 #'
 #' @return
 #' @export
@@ -113,32 +114,7 @@ checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 
 #' Sets default CARNIVAL options for cplex.
 #' 
-#'@param solverPath Path to executable cbc/cplex file - default set to NULL, in
-#'which case the solver from lpSolve package is used.
-#'@param solver Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).
-#'@param timelimit CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
-#'seconds (default set to 3600).
-#'@param mipGAP CPLEX parameter: the absolute tolerance on the gap between the
-#'best integer objective and the objective of the best node remaining. When this
-#'difference falls below the value of this parameter, the linear integer
-#'optimization is stopped (default set to 0.05)
-#'@param poolrelGAP CPLEX/Cbc parameter: Allowed relative gap of accepted
-#'solution comparing within the pool of accepted solution (default: 0.0001)
-#'@param limitPop CPLEX parameter: Allowed number of solutions to be generated
-#'(default: 500)
-#'@param poolCap CPLEX parameter: Allowed number of solution to be kept in the
-#'pool of solution (default: 100)
-#'@param poolIntensity CPLEX parameter: Intensity of solution searching
-#'(0,1,2,3,4 - default: 4)
-#'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
-#'@param threads CPLEX parameter: Number of threads to use
-#'default: 0 for maximum number possible threads on system
-#'@param dirName Specify directory name to store results. by default set to
-#'NULL
-#'
-#' 
-#' @return returns a list with all possible options implemented in CARNIVAL.
-#' see the documentation on \code{\link{runCARNIVAL}}.
+#' @param ... any possible options from the solver's list  
 #' @export
 #' 
 defaultCplexCarnivalOptions <- function(...){
@@ -170,7 +146,7 @@ defaultCplexCarnivalOptions <- function(...){
 
 #' Sets default CARNIVAL options for lpSolve.
 #'
-#' @param ... 
+#' @param ... any possible options from the solver's list   
 #'
 #' @return
 #' @export
@@ -202,7 +178,7 @@ defaultLpSolveCarnivalOptions <- function(...){
 
 #'  Sets default CARNIVAL options for cbc.
 #'
-#' @param ... 
+#' @param ... any possible options from the solver's list  
 #'
 #' @return
 #' @export
@@ -234,7 +210,7 @@ defaultCbcSolveCarnivalOptions <- function(...){
 
 #' Suggests cplex specific options.s
 #'
-#' @param ... 
+#' @param ... any possible options from the solver's list  
 #'
 #' @return
 #' @export
@@ -270,7 +246,7 @@ suggestedCplexSpecificOptions <- function(...) {
 
 #' Suggests cbc specific options.
 #'
-#' @param ... 
+#' @param ... any possible options from the solver's list  
 #'
 #' @return
 #' @export
@@ -298,7 +274,7 @@ suggestedCbcSpecificOptions <- function(...) {
 
 #' Sets default options from cplex documentation.
 #'
-#' @param ... 
+#' @param ... any possible options from the solver's list  
 #'
 #' @return
 #' @export
@@ -331,21 +307,23 @@ defaultCplexSpecificOptions <- function(...) {
 }
 
 
-#' Read options from json file.
+#' Reads options from json file.
 #'
-#' @param jsonFileName 
+#' @param jsonFileName path to json files with setups for the solver
 #'
-#' @return
-#' @export
+#' @return full list of options
+#' @keywords internal
+#' #TODO
 #'
-#' @examples
-readOptions <- function(jsonFileName = "parameters/carnival_cplex_parameters.json") {
+#' #examples
+#' #readOptions(jsonFileName = "inst/carnival_cplex_parameters.json")
+readOptions <- function(jsonFileName = "inst/carnival_cplex_parameters.json") {
   if ("rjson" %in% (.packages())) {
-    message("Loading parameters file for CARNIVAL:", jsonFileName)
-    parameters <- fromJSON(file = jsonFileName)  
-    return(parameters)  
+    message("Loading options file for CARNIVAL:", jsonFileName)
+    options  <- rjson::fromJSON(file = jsonFileName)  
+    return(options)  
   } else {
-    stop("Cannot read parameters from json: rjson package should be installed and loaded.")
+    stop("Cannot read options from json: rjson package should be installed and loaded.")
   }
 }
 

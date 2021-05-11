@@ -7,17 +7,24 @@
 runInverseCarnival(
   measurements,
   priorKnowledgeNetwork,
-  pathwayWeights = NULL,
-  solverPath = solverPath,
-  solver = supportedSolvers$lpSolve,
-  carnivalOptions = defaultCplexCarnivalOptions(solverPath = solverPath)()
+  weights = NULL,
+  carnivalOptions = defaultLpSolveCarnivalOptions()
 )
 }
 \arguments{
-\item{lpFile}{full path to .lp file}
+\item{measurements}{vector of the measurements (i.e. DoRothEA/VIPER normalised
+enrichment scores)}
 
-\item{parsedDataFile}{full path to preprocessed .RData file
+\item{priorKnowledgeNetwork}{data frame of the prior knowledge network}
 
+\item{weights}{(optional) vector of the additional weights: e.g. PROGENy pathway
+score or measured protein activities.}
+
+\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(), 
+defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.}
+}
+\value{
+The function will return a list of results containing:
 1. weightedSIF: A table with 4 columns containing the combined network
 solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 Sign of the interaction (Sign), the Target of the interaction (Node2) and the
@@ -36,13 +43,53 @@ solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
 solution.
 
 5. diagnostics: reports the convergence of optimization and reason of
-the termination. Only for CPLEX solver.}
+the termination. Only for CPLEX solver.
 }
 \description{
 \code{runInverseCarnival}
 }
 \details{
-Runs CARNIVAL pipeline with preparsed data - lp file and Rdata file containing variables for ILP formulation.
+TODO Replace with correct description
+}
+\examples{
+load(file = system.file("toy_measurements_ex1.RData",
+                       package="CARNIVAL"))
+load(file = system.file("toy_network_ex1.RData",
+                       package="CARNIVAL"))
+
+## lpSolve
+res1 = runInverseCarnival(measurements = toy_measurements_ex1,
+                         priorKnowledgeNetwork = toy_network_ex1,
+                         carnivalOptions = defaultLpSolveCarnivalOptions())
+                              
+res1$weightedSIF ##see @return
+res1$nodesAttributes ## see @return  
+res1$sifAll ## see @return
+res1$attributesAll ## see @return 
+
+## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
+## and need to be installed separately
+## 
+## cbc
+## res2 = runInverseCarnival(measurements = toy_measurements_ex1,
+##                           priorKnowledgeNetwork = toy_network_ex1,
+##                           carnivalOptions = defaultCbcCarnivalOptions())
+##                               
+## res2$weightedSIF ##see @return
+## res2$nodesAttributes ## see @return  
+## res2$sifAll ## see @return 
+## res2$attributesAll ## see @return 
+##
+## cplex
+## res3 = runVanillaCarnival(measurements = toy_measurements_ex1,
+##                           priorKnowledgeNetwork = toy_network_ex1,
+##                           carnivalOptions = defaultCplexCarnivalOptions())
+##
+## res3$weightedSIF ##see @return
+## res3$nodesAttributes ## see @return  
+## res3$sifAll ## see @return
+## res3$attributesAll ## see @return
+ 
 }
 \author{
 Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}

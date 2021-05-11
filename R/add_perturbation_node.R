@@ -6,11 +6,6 @@
 #' @author Panuwat Trairatphisan, 2020
 #' 
 #' @keywords internal
-#' @examples
-#' 
-#' load(file = system.file("toy_network_ex1.RData", package="CARNIVAL"))
-#' addPerturbationNodes(priorKnowledgeNetwork)
-#' 
 addPerturbationNodes <- function(priorKnowledgeNetwork) {
   
   priorKnowledgeNetwork <- as.matrix(priorKnowledgeNetwork)

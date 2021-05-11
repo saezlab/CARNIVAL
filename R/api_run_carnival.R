@@ -1,15 +1,30 @@
-#' Title
+#' Checks validity of all inputs of CARNIVAL 
 #'
-#' @param perturbations 
-#' @param measurements 
-#' @param priorKnowledgeNetwork 
-#' @param weights 
-#' @param carnivalOptions 
+#'@param perturbations (optional, if inverse CARNIVAL flavour is used further) vector of targets of perturbations.
+#'@param measurements vector of the measurements (i.e. DoRothEA/VIPER normalised
+#'enrichment scores)
+#'@param priorKnowledgeNetwork data frame of the prior knowledge network
+#'@param weights (optional) vector of the additional weights: e.g. PROGENy pathway
+#'scores or measured protein activities.
+#'@param carnivalOptions the list of options for the run. See defaultLpSolveCarnivalOptions(), 
+#'defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.
 #'
-#' @return
+#' @return TRUE if everything passed the checks. 
 #' @export
 #'
-#' @examples
+#' '@examples
+#' load(file = system.file("toy_perturbations_ex1.RData",
+#'                         package="CARNIVAL"))
+#' load(file = system.file("toy_measurements_ex1.RData",
+#'                         package="CARNIVAL"))
+#' load(file = system.file("toy_network_ex1.RData",
+#'                         package="CARNIVAL"))
+#'
+#' ## lpSolve
+#' isInputValidCarnival(perturbations = toy_perturbations_ex1,
+#'                      measurements = toy_measurements_ex1,
+#'                      priorKnowledgeNetwork = toy_network_ex1,
+#'                      carnivalOptions = defaultLpSolveCarnivalOptions())
 isInputValidCarnival <- function(perturbations = NULL,
                                  measurements,
                                  priorKnowledgeNetwork,
@@ -450,6 +465,8 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'solution comparing within the pool of accepted solution (default: 0.0001)
 #'@param limitPop CPLEX parameter: Allowed number of solutions to be generated
 #'(default: 500)
+#'@param poolReplace CPLEX parameter: Replacement strategy of solutions in the 
+#'pool (0,1,2 - default: 2 = most diversified solutions)
 #'@param poolCap CPLEX parameter: Allowed number of solution to be kept in the
 #'pool of solution (default: 100)
 #'@param poolIntensity CPLEX parameter: Intensity of solution searching
@@ -461,6 +478,10 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'default: 0 for maximum number possible threads on system
 #'@param dir_name Specify directory name to store results. by default set to
 #'NULL
+#'@param cleanTmpFiles logic (default-TRUE), specifying if the tmp files made by 
+#'solvers should be cleaned after run.
+#'@param keepLPFiles logic (default=TRUE), specifying if the LP file should be 
+#'kept.
 #'
 
 #'@return The function will return a list of results containing:
@@ -552,11 +573,9 @@ runCARNIVAL <- function(inputObj = NULL,
                         alphaWeight = 1,
                         betaWeight = 0.2,
                         threads = 0,
-                        cplexMemoryLimit = 8192,
                         cleanTmpFiles = TRUE,
                         keepLPFiles = TRUE,
                         dir_name = "") {
-  .Deprecated("runVanillaCarnival")
   solver <- match.arg(solver)
 
   opts <- list(solverPath = solverPath,
@@ -571,7 +590,6 @@ runCARNIVAL <- function(inputObj = NULL,
                alphaWeight = alphaWeight,
                betaWeight = betaWeight,
                threads = threads,
-               cplexMemoryLimit = cplexMemoryLimit,
                cleanTmpFiles = cleanTmpFiles,
                keepLPFiles = keepLPFiles,
                outputFolder = dir_name)

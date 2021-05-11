@@ -38,16 +38,18 @@ Depends:
     R (>= 4.0)
 Imports:
     readr,
+    stringr,
     lpSolve,
     igraph,
-    dplyr
+    dplyr,
+    rjson,
+    rmarkdown
 biocViews: Transcriptomics, GeneExpression, Network
-License: GPL-3 + file LICENSE
+License: GPL-3
 LazyData: true
 Encoding: UTF-8
 Suggests:
     knitr,
-    testthat (>= 2.1.0),
-    rjson
+    testthat (>= 2.1.0)
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

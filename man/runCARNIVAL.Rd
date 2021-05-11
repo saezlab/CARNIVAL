@@ -13,7 +13,7 @@ runCARNIVAL(
   solver = c("lpSolve", "cplex", "cbc"),
   timelimit = 3600,
   mipGAP = 0.05,
-  poolrelGAP = 0.0001,
+  poolrelGAP = 1e-04,
   limitPop = 500,
   poolCap = 100,
   poolIntensity = 4,
@@ -21,23 +21,68 @@ runCARNIVAL(
   alphaWeight = 1,
   betaWeight = 0.2,
   threads = 0,
-  cplexMemoryLimit = 8192,
   cleanTmpFiles = TRUE,
-  dir_name = NULL
+  keepLPFiles = TRUE,
+  dir_name = ""
 )
 }
 \arguments{
-\item{perturbations}{vector of targets of perturbation - optional
+\item{inputObj}{Data frame of the list for target of perturbation - optional
 or default set to NULL to run invCARNIVAL when inputs are not known.}
 
-\item{measurements}{vector of the measurements (i.e. DoRothEA normalised
+\item{measObj}{Data frame of the measurement file (i.e. DoRothEA normalised
 enrichment scores) - always required.}
 
-\item{priorKnowledgeNetwork}{data frame of the prior knowledge network - always required.}
+\item{netObj}{Data frame of the prior knowledge network - always required.}
 
-\item{pathwayWeights}{vector of the additional weight (i.e. PROGENy pathway
+\item{weightObj}{Data frame of the additional weight (i.e. PROGENy pathway
 score or measured protein activities) - optional or default set as NULL to run
 CARNIVAL without weights.}
+
+\item{solverPath}{Path to executable cbc/cplex file - default set to NULL, in
+which case the solver from lpSolve package is used.}
+
+\item{solver}{Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).}
+
+\item{timelimit}{CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
+seconds (default set to 3600).}
+
+\item{mipGAP}{CPLEX parameter: the absolute tolerance on the gap between the
+best integer objective and the objective of the best node remaining. When this
+difference falls below the value of this parameter, the linear integer
+optimization is stopped (default set to 0.05)}
+
+\item{poolrelGAP}{CPLEX/Cbc parameter: Allowed relative gap of accepted
+solution comparing within the pool of accepted solution (default: 0.0001)}
+
+\item{limitPop}{CPLEX parameter: Allowed number of solutions to be generated
+(default: 500)}
+
+\item{poolCap}{CPLEX parameter: Allowed number of solution to be kept in the
+pool of solution (default: 100)}
+
+\item{poolIntensity}{CPLEX parameter: Intensity of solution searching
+(0,1,2,3,4 - default: 4)}
+
+\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the 
+pool (0,1,2 - default: 2 = most diversified solutions)}
+
+\item{alphaWeight}{Objective function: weight for mismatch penalty (default:
+1 - will only be applied once measurement file only contains discrete values)}
+
+\item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
+
+\item{threads}{CPLEX parameter: Number of threads to use
+default: 0 for maximum number possible threads on system}
+
+\item{cleanTmpFiles}{logic (default-TRUE), specifying if the tmp files made by 
+solvers should be cleaned after run.}
+
+\item{keepLPFiles}{logic (default=TRUE), specifying if the LP file should be 
+kept.}
+
+\item{dir_name}{Specify directory name to store results. by default set to
+NULL}
 }
 \value{
 The function will return a list of results containing:
@@ -66,18 +111,52 @@ the termination. Only for CPLEX solver.
 }
 \details{
 Run CARNIVAL pipeline using to the user-provided list of inputs or
-run CARNIVAL built-in examples. The function is an API from v1.2 of CARNIVAL
+run CARNIVAL built-in examples. The function is from v1.2 of CARNIVAL
 and is left for backward compatibility.
 }
 \examples{
 load(file = system.file("toy_perturbations_ex1.RData",
-                        package="CARNIVAL"))
+                       package="CARNIVAL"))
 load(file = system.file("toy_measurements_ex1.RData",
-                        package="CARNIVAL"))
+                       package="CARNIVAL"))
 load(file = system.file("toy_network_ex1.RData",
-                        package="CARNIVAL"))
+                       package="CARNIVAL"))
 
 ## lpSolve
+res1 = runCARNIVAL(inputObj = toy_perturbations_ex1,
+                   measObj = toy_measurements_ex1,
+                   netObj = toy_network_ex1,
+                   solver = 'lpSolve')
+                   
+res1$weightedSIF ##see @return
+res1$nodesAttributes ## see @return  
+res1$sifAll ## see @return
+res1$attributesAll ## see @return
+
+## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
+## and need to be installed separately
+## 
+## cbc
+## res2 = runCARNIVAL(inputObj = toy_perturbations_ex1,
+##                    measObj = toy_measurements_ex1,
+##                    netObj = toy_network_ex1,
+##                    solver = 'cbc')
+##                               
+## res2$weightedSIF ##see @return
+## res2$nodesAttributes ## see @return  
+## res2$sifAll ## see @return 
+## res2$attributesAll ## see @return 
+##
+## cplex
+## res3 = runCARNIVAL(inputObj = toy_perturbations_ex1,
+##                    measObj = toy_measurements_ex1,
+##                    netObj = toy_network_ex1,
+##                    solver = 'cplex')
+##
+## res3$weightedSIF ##see @return
+## res3$nodesAttributes ## see @return  
+## res3$sifAll ## see @return
+## res3$attributesAll ## see @return
 
 }
 \author{
