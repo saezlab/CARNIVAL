@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -104,19 +104,19 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/CARNIVAL/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/saezlab">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="http://www.saezlab.org">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -159,9 +159,105 @@
       <tr>
         
         <td>
+          <p><code><a href="checkOptionsValidity.html">checkOptionsValidity()</a></code> </p>
+        </td>
+        <td><p>Checks if provided option names are valid.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="defaultCbcSolveCarnivalOptions.html">defaultCbcSolveCarnivalOptions()</a></code> </p>
+        </td>
+        <td><p>Sets default CARNIVAL options for cbc.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="defaultCplexCarnivalOptions.html">defaultCplexCarnivalOptions()</a></code> </p>
+        </td>
+        <td><p>Sets default CARNIVAL options for cplex.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="defaultCplexSpecificOptions.html">defaultCplexSpecificOptions()</a></code> </p>
+        </td>
+        <td><p>Sets default options from cplex documentation.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions()</a></code> </p>
+        </td>
+        <td><p>Sets default CARNIVAL options for lpSolve.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generateLpFileCarnival.html">generateLpFileCarnival()</a></code> </p>
+        </td>
+        <td><p><code>generateLpFileCarnival</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getOptionsList.html">getOptionsList()</a></code> </p>
+        </td>
+        <td><p>Returns the list of options needed/supported for each solver.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getSupportedSolvers.html">getSupportedSolvers()</a></code> </p>
+        </td>
+        <td><p>Returns the list of supported solvers.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="isInputValidCarnival.html">isInputValidCarnival()</a></code> </p>
+        </td>
+        <td><p>Checks validity of all inputs of CARNIVAL</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="parseCplexLog.html">parseCplexLog()</a></code> </p>
+        </td>
+        <td><p>Parses the cplex log file and reads some basic information.</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="runCARNIVAL.html">runCARNIVAL()</a></code> </p>
         </td>
         <td><p><code>runCARNIVAL</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runFromLpCarnival.html">runFromLpCarnival()</a></code> </p>
+        </td>
+        <td><p><code>runCarnivalFromLp</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runInverseCarnival.html">runInverseCarnival()</a></code> </p>
+        </td>
+        <td><p><code>runInverseCarnival</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runVanillaCarnival.html">runVanillaCarnival()</a></code> </p>
+        </td>
+        <td><p><code>runVanillaCarnival</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="setCarnivalOptions.html">setCarnivalOptions()</a></code> </p>
+        </td>
+        <td><p>Sets CARNIVAL options for the solver.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="suggestedCbcSpecificOptions.html">suggestedCbcSpecificOptions()</a></code> </p>
+        </td>
+        <td><p>Suggests cbc specific options.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="suggestedCplexSpecificOptions.html">suggestedCplexSpecificOptions()</a></code> </p>
+        </td>
+        <td><p>Suggests cplex specific options.s</p></td>
       </tr>
     </tbody>
     </table>
@@ -177,11 +273,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Aurelien Dugourd.</p>
+  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Olga Ivanova.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
