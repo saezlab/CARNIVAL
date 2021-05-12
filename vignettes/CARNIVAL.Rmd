@@ -1,9 +1,8 @@
 ---
 title: "Contextualizing large scale signalling networks from expression footprints with CARNIVAL"
-author: "Enio Gjerga"
+author: "Enio Gjerga, Matteo Spatuzzi, Olga Ivanova,"
 date: "`r Sys.Date()`"
-output:
-  rmarkdown::html_vignette
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{narray Usage Examples}
   %\VignetteEngine{knitr::rmarkdown}
@@ -49,6 +48,9 @@ result, CARNIVAL derives a family of highest scoring networks which best explain
 the inferred TF activities. Continuous pathway and TF activities can be 
 additionally considered in the objective function.
 
+
+![Figure 1: CARNIVAL  pipeline](./vignettes_pictures/graphical_abstract.png)
+
 ILP solvers
 -----------
 CARNIVAL is an extension of the previously implemented Causal Reasoning 
@@ -75,18 +77,18 @@ based on the operating system. The default installation path for each OS is as
 follows:
 
 For Mac OS:
-```{r}
-# ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex
+```
+    ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex
 ```
 
 For Linux:
-```{r}
-# /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex
+```
+    /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex
 ```
 
 For Windows:
-```{r}
-# C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe
+```
+    C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe
 ```
 
 Note that the version of CPLEX has to be changed accordingly (the latest
@@ -101,7 +103,7 @@ Prerequisites
 -------------
 Besides the above mentioned solvers, users need also to install the following 
 R-package dependencies: [readr](https://cran.r-project.org/web/packages/readr/index.html);
-[igraph](https://igraph.org/r/); [readxl](https://readxl.tidyverse.org/); 
+[igraph](https://igraph.org/r/); 
 [dplyr](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8);
 [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
 
@@ -111,55 +113,130 @@ users will also need to download and install the Graph Visualization software
 
 Running CARNIVAL
 ================
+The CARNIVAL package provides the use with five functions to run the Carnival pipeline in a flexible way.
+runVanillaCarnival is used to run the standard carnival pipeline with one function, while runInverseCarnival runs inverse Carnival (no input). The generateLPFileCarnival and runCarnivalFromLp  functions  work in tandem and allow the user for example to  obtain the LPFile without running the whole pipeline or create an LPFile from a different source and run the Carnival pipeline with it. These functions also contain multiple parameters to tailor the 
+
 In the CARNIVAL package, built-in examples are available as the test cases as 
 follows:
 
-1. A small toy example where the inputs are known (stdCARNIVAL)
+1. A small toy example where the perturbations are known (vanialla CARNIVAL flavour)
 
-2. A small toy example where the inputs are not known (invCARNVAL)
+2. A small toy example where the perturbations are not known (inverse CARNIVAL flavour)
+
+3. A small toy example to run with two functions (vanilla CARNIVAL flavour)
+
+
+The Data of these toy examples looks as follows:
+
+* Two input Nodes I1 and I2 connected to the nodes N1 and N2 respectively
+* N1 and N2 are connected to both measured Nodes M1 and M2 
+* All connections beside I2 to N2 are activatory
 
 Toy Example - 1
 ---------------
-Toy example for the stdCARNIVAL pipeline:
+Toy example for the CARNIVAL standard pipeline:
 
 ```{r}
 library(CARNIVAL)
-
-load(file = system.file("toy_inputs_ex1.RData",
-                        package="CARNIVAL"))
+load(file = system.file("toy_perturbations_ex1.RData",
+                        package = "CARNIVAL"))
 load(file = system.file("toy_measurements_ex1.RData",
-                        package="CARNIVAL"))
+                        package = "CARNIVAL"))
 load(file = system.file("toy_network_ex1.RData",
-                        package="CARNIVAL"))
+                        package = "CARNIVAL"))
+
+carnivalOptions <- defaultLpSolveCarnivalOptions()
+
+# Output dir
+dir.create("ToyExample1", showWarnings = FALSE)
 
 # lpSolve
-result = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1,
-                     netObj = toy_network_ex1)
+resultsLpSolve <- runVanillaCarnival( perturbations = toy_perturbations_ex1, 
+                                      measurements = toy_measurements_ex1,
+                                      priorKnowledgeNetwork = toy_network_ex1, 
+                                      carnivalOptions = carnivalOptions)
 
-print(result)
+```
+which generates the following output:
+```{r}
+print(resultsLpSolve)
+```
+The output from CARNIVAL can be saved in `Rds` format like so:
+```{r}
+saveRDS(resultsLpSolve, "ToyExample1/network_solution.Rds")
 ```
 
 Toy Example - 2
 ---------------
-Toy example for the invCARNIVAL pipeline:
+Toy example for the CARNIVAL inverted pipeline:
 
 ```{r}
-library(CARNIVAL) # load CARNIVAL library
-
 load(file = system.file("toy_measurements_ex2.RData",
                         package="CARNIVAL"))
 load(file = system.file("toy_network_ex2.RData",
                         package="CARNIVAL"))
 
-# lpSolve
-result = runCARNIVAL(measObj = toy_measurements_ex2, netObj = toy_network_ex2)
+carnivalOptions <- defaultLpSolveCarnivalOptions()
 
-print(result)
+# Output dir
+dir.create("ToyExample2", showWarnings = FALSE)
+carnivalOptions$outputFolder <- "ToyExample2"
+
+# lpSolve
+toy_network_ex2 <- as.data.frame(toy_network_ex2)
+colnames(toy_network_ex2) <- c("source", "interaction", "target")
+toy_measurements_ex2 <- c("M1" = 1, "M2" = 1, "M3" = 1)
+
+inverseCarnivalResults <- runInverseCarnival( measurements = c(toy_measurements_ex2), 
+                                              priorKnowledgeNetwork = toy_network_ex2, 
+                                              carnivalOptions = carnivalOptions)
+```
+which generates the following output:
+```{r}
+print(inverseCarnivalResults)
 ```
 
-R version information
----------------------
+Toy Example - 3
+---------------
+Toy example for the CARNIVAL standard pipeline with generateLPFileCarnival and runCarnivalFromLp:
 
-```{r echo=FALSE}
+```{r}
+
+load(file = system.file("toy_perturbations_ex1.RData",
+                        package = "CARNIVAL"))
+load(file = system.file("toy_measurements_ex1.RData",
+                        package = "CARNIVAL"))
+load(file = system.file("toy_network_ex1.RData",
+                        package = "CARNIVAL"))
+
+carnivalOptions <- defaultLpSolveCarnivalOptions()
+
+# Output dir
+dir.create("ToyExample3", showWarnings = FALSE)
+carnivalOptions$outputFolder <- "ToyExample3"
+
+# lpSolve
+generateLpFileCarnival(perturbations = toy_perturbations_ex1,
+                       measurements = toy_measurements_ex1, 
+                       priorKnowledgeNetwork = toy_network_ex1, 
+                       carnivalOptions = carnivalOptions)
+
+```
+which writes two files, an Lp File and a parsed Data file. The next function takes these files as inputs and runs the vanilla (standard) CARNIVAL pipeline with them. 
+```{r}
+
+lpFilename <- "toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp"
+parsedDataFile <- "toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData"
+resultsFromLp <- runFromLpCarnival(lpFile = lpFilename,
+                                   parsedDataFile = parsedDataFile,
+                                   carnivalOptions = defaultLpSolveCarnivalOptions())
+```
+which generates the following output:
+
+```{r}
+resultsFromLp
+```
+
+```{r}
 sessionInfo()
 ```

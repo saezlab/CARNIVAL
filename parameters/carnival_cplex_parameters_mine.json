@@ -1,0 +1,23 @@
+{
+    "solverPath": "/Applications/CPLEX_Studio1210/cplex/bin/x86-64_osx/cplex",
+    "solver": "cplex",
+    "outputFolder": "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests/testruns/",
+    "inputLpFile": "",
+    "inputCplexCommandFilename": "",
+	"dirName": "NULL",
+    "timelimit": 3600, 
+    "alphaWeight": 1, 
+    "betaWeight": 0.2,
+    "threads": 0,
+    "clonelog": -1, 
+    "workdir": "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests/testruns/",
+	"cplexMemoryLimit": 8192,
+    "cleanTmpFiles": "FALSE",
+    "keepLPFiles": "TRUE",
+    "mipGap": 0.05,
+    "poolrelGap": 0.0001,
+    "limitPop": 500,
+    "poolCap": 100,
+    "poolIntensity": 4,
+    "poolReplace": 2
+}
