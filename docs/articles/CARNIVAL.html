@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -63,19 +63,19 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/saezlab/CARNIVAL/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/saezlab">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="http://www.saezlab.org">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -89,13 +89,13 @@
 
       
 
-      </header><script src="CARNIVAL_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Contextualizing large scale signalling networks from expression footprints with CARNIVAL</h1>
-                        <h4 class="author">Enio Gjerga</h4>
+                        <h4 class="author">Enio Gjerga, Matteo Spatuzzi, Olga Ivanova,</h4>
             
-            <h4 class="date">2020-07-21</h4>
+            <h4 class="date">2021-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/CARNIVAL/blob/master/vignettes/CARNIVAL.Rmd"><code>vignettes/CARNIVAL.Rmd</code></a></small>
       <div class="hidden name"><code>CARNIVAL.Rmd</code></div>
@@ -112,151 +112,266 @@
 <h2 class="hasAnchor">
 <a href="#pipeline" class="anchor"></a>Pipeline</h2>
 <p>CARNIVAL refines a quantitative objective function for ILP problem by incorporating TF and pathway activities on a continuous scale. In addition, the CARNIVAL framework allows us to contextualize the network with or without known targets of perturbations. The implementation is separated into two pipelines which will be referred henceforth as Standard CARNIVAL StdCARNIVAL (with known perturbation targets as an input) and Inverse CARNIVAL InvCARNIVAL (without information on targets of perturbation). The differential gene expression is used to infer transcription factor (TF) activities with DoRothEA, which are subsequently discretized in order to formulate ILPconstraints. As a result, CARNIVAL derives a family of highest scoring networks which best explain the inferred TF activities. Continuous pathway and TF activities can be additionally considered in the objective function.</p>
+<div class="figure">
+<img src="vignettes_pictures/graphical_abstract.png" alt="Figure 1: CARNIVAL pipeline"><p class="caption">Figure 1: CARNIVAL pipeline</p>
+</div>
 </div>
 <div id="ilp-solvers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ilp-solvers" class="anchor"></a>ILP solvers</h2>
 <p>CARNIVAL is an extension of the previously implemented Causal Reasoning method from <a href="https://pubs.rsc.org/en/content/articlelanding/2015/ib/c4ib00294f#!divAbstract">Melas et al.</a>. The network inference process is swiftly performed with an Integer Linear Programming (ILP) formulation of causal reasoning using three solvers: the <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">R-CRAN lpSolve</a> free software used for solving linear problems; the open-source mixed integer programming solver <a href="https://projects.coin-or.org/Cbc">Cbc</a> (Coin-or branch and cut); or the <a href="https://www.ibm.com/analytics/cplex-optimizer">CPLEX optimizer</a> from IBM which can be obtained for free through the Academic Initiative. To perform the analysis with cplex or cbc, the users will then need to store the binary cbc or cplex executables on any directory they wish. The binary files of cbc can be found by first downloading one of the optimization suites provided here: <a href="https://www.coin-or.org/download/binary/OptimizationSuite/" class="uri">https://www.coin-or.org/download/binary/OptimizationSuite/</a>, unzip the download and from there save the cbc executable (which can be found on the bin directory) file on any of the direcotries they wish of their machines. As for the cplex, the executable file can be obtained after registration on the <a href="%7Bhttps://my15.digitalexperience.ibm.com/b73a5759-c6a6-4033-ab6b-d9d4f9a6d65b/dxsites/151914d1-03d2-48fe-97d9-d21166848e65/technology/data-science">ILOG CPLEX Optimization Studio</a> Similar like before, users will have to find the cplex executable binary file and save on a directory of their own wish or keep them on their default installation paths. The path to interactive version of CPLEX is differed based on the operating system. The default installation path for each OS is as follows:</p>
 <p>For Mac OS:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"># ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex</pre></body></html></div>
+<pre><code>    ~/Applications/IBM/ILOG/CPLEX_Studio129/cplex/bin/x86-64_osx/cplex</code></pre>
 <p>For Linux:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"># /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex</pre></body></html></div>
+<pre><code>    /opt/ibm/ILOG/CPLEX_Studio129/cplex/bin/x86-64_linux/cplex</code></pre>
 <p>For Windows:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"># C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe</pre></body></html></div>
+<pre><code>    C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/bin/x64_win64/cplex.exe</code></pre>
 <p>Note that the version of CPLEX has to be changed accordingly (the latest current version is CPLEX-Studio129).</p>
 <p>The lpSolve solver can be used after downloading and installing the <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">lpSolve</a> R-package. This solver only works for smaller examples and it can give only one optimal solution. For larger real-case examples, the users can use cbc or cplex solvers.</p>
 </div>
 <div id="prerequisites" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prerequisites" class="anchor"></a>Prerequisites</h2>
-<p>Besides the above mentioned solvers, users need also to install the following R-package dependencies: <a href="https://cran.r-project.org/web/packages/readr/index.html">readr</a>; <a href="https://igraph.org/r/">igraph</a>; <a href="https://readxl.tidyverse.org/">readxl</a>; <a href="https://www.rdocumentation.org/packages/dplyr/versions/0.7.8">dplyr</a>; <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">lpSolve</a></p>
+<p>Besides the above mentioned solvers, users need also to install the following R-package dependencies: <a href="https://cran.r-project.org/web/packages/readr/index.html">readr</a>; <a href="https://igraph.org/r/">igraph</a>; <a href="https://www.rdocumentation.org/packages/dplyr/versions/0.7.8">dplyr</a>; <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">lpSolve</a></p>
 <p>In order to visualize the automatically generated CARNIVAL networks, users will also need to download and install the Graph Visualization software <a href="https://www.graphviz.org/">graphviz</a>.</p>
 </div>
 </div>
 <div id="running-carnival" class="section level1">
 <h1 class="hasAnchor">
 <a href="#running-carnival" class="anchor"></a>Running CARNIVAL</h1>
+<p>The CARNIVAL package provides the use with five functions to run the Carnival pipeline in a flexible way. runVanillaCarnival is used to run the standard carnival pipeline with one function, while runInverseCarnival runs inverse Carnival (no input). The generateLPFileCarnival and runCarnivalFromLp functions work in tandem and allow the user for example to obtain the LPFile without running the whole pipeline or create an LPFile from a different source and run the Carnival pipeline with it. These functions also contain multiple parameters to tailor the</p>
 <p>In the CARNIVAL package, built-in examples are available as the test cases as follows:</p>
 <ol style="list-style-type: decimal">
-<li><p>A small toy example where the inputs are known (stdCARNIVAL)</p></li>
-<li><p>A small toy example where the inputs are not known (invCARNVAL)</p></li>
+<li><p>A small toy example where the perturbations are known (vanialla CARNIVAL flavour)</p></li>
+<li><p>A small toy example where the perturbations are not known (inverse CARNIVAL flavour)</p></li>
+<li><p>A small toy example to run with two functions (vanilla CARNIVAL flavour)</p></li>
 </ol>
+<p>The Data of these toy examples looks as follows:</p>
+<ul>
+<li>Two input Nodes I1 and I2 connected to the nodes N1 and N2 respectively</li>
+<li>N1 and N2 are connected to both measured Nodes M1 and M2</li>
+<li>All connections beside I2 to N2 are activatory</li>
+</ul>
 <div id="toy-example---1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#toy-example---1" class="anchor"></a>Toy Example - 1</h2>
-<p>Toy example for the stdCARNIVAL pipeline:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">CARNIVAL</span>)
+<p>Toy example for the CARNIVAL standard pipeline:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/CARNIVAL">CARNIVAL</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,
+                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,
+                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,
+                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"toy_inputs_ex1.RData"</span>,
-                        <span class="kw">package</span><span class="kw">=</span><span class="st">"CARNIVAL"</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"toy_measurements_ex1.RData"</span>,
-                        <span class="kw">package</span><span class="kw">=</span><span class="st">"CARNIVAL"</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"toy_network_ex1.RData"</span>,
-                        <span class="kw">package</span><span class="kw">=</span><span class="st">"CARNIVAL"</span>))
+<span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Output dir</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample1"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># lpSolve</span>
-<span class="no">result</span> <span class="kw">=</span> <span class="fu"><a href="../reference/runCARNIVAL.html">runCARNIVAL</a></span>(<span class="kw">inputObj</span> <span class="kw">=</span> <span class="no">toy_inputs_ex1</span>, <span class="kw">measObj</span> <span class="kw">=</span> <span class="no">toy_measurements_ex1</span>,
-                     <span class="kw">netObj</span> <span class="kw">=</span> <span class="no">toy_network_ex1</span>)
-
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">result</span>)</pre></body></html></div>
+<span class="va">resultsLpSolve</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runVanillaCarnival.html">runVanillaCarnival</a></span><span class="op">(</span> perturbations <span class="op">=</span> <span class="va">toy_perturbations_ex1</span>, 
+                                      measurements <span class="op">=</span> <span class="va">toy_measurements_ex1</span>,
+                                      priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, 
+                                      carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></code></pre></div>
+<p>which generates the following output:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">resultsLpSolve</span><span class="op">)</span></code></pre></div>
 <pre><code>## $weightedSIF
-##      Node1 Sign Node2 Weight
-## [1,] "I1"  "1"  "N1"  "100" 
-## [2,] "N1"  "1"  "M1"  "100" 
-## [3,] "N1"  "1"  "M2"  "100" 
+##   Node1 Sign Node2 Weight
+## 1    I1    1    N1    100
+## 2    N1    1    M1    100
+## 3    N1    1    M2    100
+## 4    I2   -1    N2    100
 ## 
 ## $nodesAttributes
-##      Node ZeroAct UpAct DownAct AvgAct NodeType
-## [1,] "I1" "0"     "100" "0"     "100"  "S"     
-## [2,] "N1" "0"     "100" "0"     "100"  ""      
-## [3,] "I2" "0"     "100" "0"     "100"  "S"     
-## [4,] "N2" "100"   "0"   "0"     "0"    ""      
-## [5,] "M1" "0"     "100" "0"     "100"  "T"     
-## [6,] "M2" "0"     "100" "0"     "100"  "T"     
+##   nodes ZeroAct UpAct DownAct AvgAct nodesType
+## 1    I1       0   100       0    100         P
+## 2    N1       0   100       0    100          
+## 3    I2       0   100       0    100         P
+## 4    N2     100     0       0      0          
+## 5    M1       0   100       0    100         M
+## 6    M2       0   100       0    100         M
 ## 
 ## $sifAll
 ## $sifAll[[1]]
-##      Node1 Sign Node2
-## [1,] "I1"  "1"  "N1" 
-## [2,] "N1"  "1"  "M1" 
-## [3,] "N1"  "1"  "M2" 
+##   Node1 Sign Node2
+## 1    I1    1    N1
+## 2    N1    1    M1
+## 3    N1    1    M2
+## 4    I2   -1    N2
 ## 
 ## 
 ## $attributesAll
 ## $attributesAll[[1]]
-##      Nodes Activity
-## [1,] "I1"  "1"     
-## [2,] "N1"  "1"     
-## [3,] "I2"  "1"     
-## [4,] "M1"  "1"     
-## [5,] "M2"  "1"</code></pre>
+##   nodes activity
+## 1    I1        1
+## 2    N1        1
+## 3    I2        1
+## 4    M1        1
+## 5    M2        1</code></pre>
+<p>The output from CARNIVAL can be saved in <code>Rds</code> format like so:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">resultsLpSolve</span>, <span class="st">"ToyExample1/network_solution.Rds"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="toy-example---2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#toy-example---2" class="anchor"></a>Toy Example - 2</h2>
-<p>Toy example for the invCARNIVAL pipeline:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">CARNIVAL</span>) <span class="co"># load CARNIVAL library</span>
+<p>Toy example for the CARNIVAL inverted pipeline:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex2.RData"</span>,
+                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex2.RData"</span>,
+                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"toy_measurements_ex2.RData"</span>,
-                        <span class="kw">package</span><span class="kw">=</span><span class="st">"CARNIVAL"</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"toy_network_ex2.RData"</span>,
-                        <span class="kw">package</span><span class="kw">=</span><span class="st">"CARNIVAL"</span>))
+<span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Output dir</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample2"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample2"</span>
 
 <span class="co"># lpSolve</span>
-<span class="no">result</span> <span class="kw">=</span> <span class="fu"><a href="../reference/runCARNIVAL.html">runCARNIVAL</a></span>(<span class="kw">measObj</span> <span class="kw">=</span> <span class="no">toy_measurements_ex2</span>, <span class="kw">netObj</span> <span class="kw">=</span> <span class="no">toy_network_ex2</span>)
+<span class="va">toy_network_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">toy_network_ex2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">toy_network_ex2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"source"</span>, <span class="st">"interaction"</span>, <span class="st">"target"</span><span class="op">)</span>
+<span class="va">toy_measurements_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M1"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"M2"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"M3"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">result</span>)</pre></body></html></div>
+<span class="va">inverseCarnivalResults</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runInverseCarnival.html">runInverseCarnival</a></span><span class="op">(</span> measurements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">toy_measurements_ex2</span><span class="op">)</span>, 
+                                              priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex2</span>, 
+                                              carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></code></pre></div>
+<p>which generates the following output:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">inverseCarnivalResults</span><span class="op">)</span></code></pre></div>
 <pre><code>## $weightedSIF
-##      Node1          Sign Node2 Weight
-## [1,] "I2"           "1"  "N1"  "100" 
-## [2,] "I2"           "1"  "N2"  "100" 
-## [3,] "N1"           "1"  "M1"  "100" 
-## [4,] "N1"           "1"  "M2"  "100" 
-## [5,] "N2"           "1"  "M2"  "100" 
-## [6,] "N2"           "1"  "M3"  "100" 
-## [7,] "Perturbation" "1"  "I2"  "100" 
+##           Node1 Sign Node2 Weight
+## 1  Perturbation    1    I2    100
+## 2  Perturbation    1    I3    100
+## 3            I2    1    N1    100
+## 4            I2    1    N2    100
+## 5            N1    1    M1    100
+## 6            N1    1    M2    100
+## 7            N2    1    M2    100
+## 8            N2    1    M3    100
+## 9  Perturbation    1    I1    100
+## 10 Perturbation   -1    I1    100
+## 11 Perturbation   -1    I2    100
+## 12 Perturbation   -1    I3    100
 ## 
 ## $nodesAttributes
-##       Node           ZeroAct UpAct DownAct AvgAct NodeType
-##  [1,] "I1"           "100"   "0"   "0"     "0"    ""      
-##  [2,] "I2"           "0"     "100" "0"     "100"  ""      
-##  [3,] "I3"           "100"   "0"   "0"     "0"    ""      
-##  [4,] "N1"           "0"     "100" "0"     "100"  ""      
-##  [5,] "N2"           "0"     "100" "0"     "100"  ""      
-##  [6,] "Perturbation" "0"     "100" "0"     "100"  "S"     
-##  [7,] "M1"           "0"     "100" "0"     "100"  "T"     
-##  [8,] "M2"           "0"     "100" "0"     "100"  "T"     
-##  [9,] "M3"           "0"     "100" "0"     "100"  "T"     
+##          nodes ZeroAct UpAct DownAct AvgAct nodesType
+## 1           I1     100     0       0      0          
+## 2           I2       0   100       0    100          
+## 3           I3     100     0       0      0          
+## 4           N1       0   100       0    100          
+## 5           N2       0   100       0    100          
+## 6 Perturbation       0   100       0    100         P
+## 7           M1       0   100       0    100         M
+## 8           M2       0   100       0    100         M
+## 9           M3       0   100       0    100         M
 ## 
 ## $sifAll
 ## $sifAll[[1]]
-##      Node1          Sign Node2
-## [1,] "I2"           "1"  "N1" 
-## [2,] "I2"           "1"  "N2" 
-## [3,] "N1"           "1"  "M1" 
-## [4,] "N1"           "1"  "M2" 
-## [5,] "N2"           "1"  "M2" 
-## [6,] "N2"           "1"  "M3" 
-## [7,] "Perturbation" "1"  "I2" 
+##           Node1 Sign Node2
+## 2            I2    1    N1
+## 3            I2    1    N2
+## 5            N1    1    M1
+## 6            N1    1    M2
+## 7            N2    1    M2
+## 8            N2    1    M3
+## 9  Perturbation    1    I1
+## 10 Perturbation    1    I2
+## 11 Perturbation    1    I3
+## 12 Perturbation   -1    I1
+## 13 Perturbation   -1    I2
+## 14 Perturbation   -1    I3
 ## 
 ## 
 ## $attributesAll
 ## $attributesAll[[1]]
-##      Nodes          Activity
-## [1,] "I2"           "1"     
-## [2,] "N1"           "1"     
-## [3,] "N2"           "1"     
-## [4,] "Perturbation" "1"     
-## [5,] "M1"           "1"     
-## [6,] "M2"           "1"     
-## [7,] "M3"           "1"</code></pre>
+##          nodes activity
+## 1           I2        1
+## 2           N1        1
+## 3           N2        1
+## 4 Perturbation        1
+## 5           M1        1
+## 6           M2        1
+## 7           M3        1</code></pre>
 </div>
-<div id="r-version-information" class="section level2">
+<div id="toy-example---3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#r-version-information" class="anchor"></a>R version information</h2>
-<pre><code>## R version 4.0.2 (2020-06-22)
+<a href="#toy-example---3" class="anchor"></a>Toy Example - 3</h2>
+<p>Toy example for the CARNIVAL standard pipeline with generateLPFileCarnival and runCarnivalFromLp:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,
+                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,
+                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,
+                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Output dir</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample3"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample3"</span>
+
+<span class="co"># lpSolve</span>
+<span class="fu"><a href="../reference/generateLpFileCarnival.html">generateLpFileCarnival</a></span><span class="op">(</span>perturbations <span class="op">=</span> <span class="va">toy_perturbations_ex1</span>,
+                       measurements <span class="op">=</span> <span class="va">toy_measurements_ex1</span>, 
+                       priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, 
+                       carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></code></pre></div>
+<pre><code>##                                                 lpFile 
+##        "ToyExample3/lpFile_t01_55_50d12_05_2021n32.lp" 
+##                                         parsedDataFile 
+## "ToyExample3/parsedData_t01_55_50d12_05_2021n32.RData"</code></pre>
+<p>which writes two files, an Lp File and a parsed Data file. The next function takes these files as inputs and runs the vanilla (standard) CARNIVAL pipeline with them.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lpFilename</span> <span class="op">&lt;-</span> <span class="st">"toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp"</span>
+<span class="va">parsedDataFile</span> <span class="op">&lt;-</span> <span class="st">"toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData"</span>
+<span class="va">resultsFromLp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runFromLpCarnival.html">runFromLpCarnival</a></span><span class="op">(</span>lpFile <span class="op">=</span> <span class="va">lpFilename</span>,
+                                   parsedDataFile <span class="op">=</span> <span class="va">parsedDataFile</span>,
+                                   carnivalOptions <span class="op">=</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>which generates the following output:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">resultsFromLp</span></code></pre></div>
+<pre><code>## $weightedSIF
+##   Node1 Sign Node2 Weight
+## 1    I1    1    N1    100
+## 2    N1    1    M1    100
+## 3    N1    1    M2    100
+## 4    I2   -1    N2    100
+## 
+## $nodesAttributes
+##   nodes ZeroAct UpAct DownAct AvgAct nodesType
+## 1    I1       0   100       0    100         P
+## 2    N1       0   100       0    100          
+## 3    I2       0   100       0    100         P
+## 4    N2     100     0       0      0          
+## 5    M1       0   100       0    100         M
+## 6    M2       0   100       0    100         M
+## 
+## $sifAll
+## $sifAll[[1]]
+##   Node1 Sign Node2
+## 1    I1    1    N1
+## 2    N1    1    M1
+## 3    N1    1    M2
+## 4    I2   -1    N2
+## 
+## 
+## $attributesAll
+## $attributesAll[[1]]
+##   nodes activity
+## 1    I1        1
+## 2    N1        1
+## 3    I2        1
+## 4    M1        1
+## 5    M2        1</code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.0.0 (2020-04-24)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Mojave 10.14.5
+## Running under: macOS  10.16
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
@@ -269,39 +384,24 @@
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] CARNIVAL_1.0.1 knitr_1.29    
+## [1] CARNIVAL_2.0.0 knitr_1.33    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.4.1           Biobase_2.48.0       mixtools_1.2.0      
-##  [4] UniProt.ws_2.28.0    bit64_0.9-7.1        splines_4.0.2       
-##  [7] foreach_1.5.0        assertthat_0.2.1     stats4_4.0.2        
-## [10] BiocFileCache_1.12.0 RBGL_1.64.0          blob_1.2.1          
-## [13] yaml_2.2.1           Category_2.54.0      viper_1.22.0        
-## [16] pillar_1.4.6         RSQLite_2.2.0        backports_1.1.8     
-## [19] lattice_0.20-41      glue_1.4.1           digest_0.6.25       
-## [22] colorspace_1.4-1     htmltools_0.5.0      Matrix_1.2-18       
-## [25] GSEABase_1.50.0      lpSolve_5.6.15       XML_3.99-0.4        
-## [28] pkgconfig_2.0.3      genefilter_1.70.0    purrr_0.3.4         
-## [31] xtable_1.8-4         scales_1.1.1         tibble_3.0.3        
-## [34] annotate_1.66.0      generics_0.0.2       IRanges_2.22.1      
-## [37] ggplot2_3.3.2        ellipsis_0.3.1       BiocGenerics_0.34.0 
-## [40] survival_3.1-12      magrittr_1.5         crayon_1.3.4        
-## [43] memoise_1.1.0        evaluate_0.14        fs_1.4.2            
-## [46] doParallel_1.0.15    MASS_7.3-51.6        segmented_1.2-0     
-## [49] class_7.3-17         graph_1.66.0         tools_4.0.2         
-## [52] hms_0.5.3            lifecycle_0.2.0      stringr_1.4.0       
-## [55] S4Vectors_0.26.0     kernlab_0.9-29       munsell_0.5.0       
-## [58] AnnotationDbi_1.50.0 compiler_4.0.2       pkgdown_1.5.1       
-## [61] e1071_1.7-3          rlang_0.4.7          grid_4.0.2          
-## [64] RCurl_1.98-1.2       iterators_1.0.12     rstudioapi_0.11     
-## [67] rappdirs_0.3.1       igraph_1.2.5         bitops_1.0-6        
-## [70] rmarkdown_2.3        gtable_0.3.0         codetools_0.2-16    
-## [73] curl_4.3             DBI_1.1.0            R6_2.4.1            
-## [76] dplyr_1.0.0          bit_1.1-15.2         rprojroot_1.3-2     
-## [79] KernSmooth_2.23-17   readr_1.3.1          desc_1.2.0          
-## [82] stringi_1.4.6        parallel_4.0.2       Rcpp_1.0.5          
-## [85] vctrs_0.3.2          dbplyr_1.4.4         tidyselect_1.1.0    
-## [88] xfun_0.15</code></pre>
+##  [1] bslib_0.2.4         compiler_4.0.0      pillar_1.6.0       
+##  [4] jquerylib_0.1.4     tools_4.0.0         digest_0.6.27      
+##  [7] jsonlite_1.7.2      evaluate_0.14       memoise_2.0.0      
+## [10] lifecycle_1.0.0     tibble_3.1.1        pkgconfig_2.0.3    
+## [13] rlang_0.4.11        igraph_1.2.6        rstudioapi_0.13    
+## [16] cli_2.5.0           yaml_2.2.1          pkgdown_1.6.1      
+## [19] xfun_0.22           fastmap_1.1.0       stringr_1.4.0      
+## [22] desc_1.3.0          fs_1.5.0            sass_0.3.1         
+## [25] vctrs_0.3.8         systemfonts_1.0.1   hms_1.0.0          
+## [28] rprojroot_2.0.2     glue_1.4.2          R6_2.5.0           
+## [31] textshaping_0.3.3   fansi_0.4.2         rmarkdown_2.8      
+## [34] readr_1.4.0         magrittr_2.0.1.9000 htmltools_0.5.1.1  
+## [37] ellipsis_0.3.2      lpSolve_5.6.15      ragg_1.1.2         
+## [40] utf8_1.2.1          stringi_1.5.3       cachem_1.0.4       
+## [43] crayon_1.4.1</code></pre>
 </div>
 </div>
   </div>
@@ -317,11 +417,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Aurelien Dugourd.</p>
+  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Olga Ivanova.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

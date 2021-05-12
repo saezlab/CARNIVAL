@@ -1,0 +1,8 @@
+{
+    "solverPath": "solverPath",
+    "lpFilename": "",
+    "betaWeight": 0.2,
+    "timelimit": 3600, 
+    "keepLPFiles": "TRUE",
+    "poolrelGap": 0.0001
+}

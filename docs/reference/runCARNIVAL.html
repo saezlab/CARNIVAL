@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title><code>runCARNIVAL</code> — runCARNIVAL • CARNIVAL</title>
+<title>runCARNIVAL — runCARNIVAL • CARNIVAL</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="<code>runCARNIVAL</code> — runCARNIVAL" />
-<meta property="og:description" content="Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL 
-built-in examples" />
+<meta property="og:title" content="runCARNIVAL — runCARNIVAL" />
+<meta property="og:description" content="runCARNIVAL" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -81,7 +80,7 @@ built-in examples" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -89,7 +88,7 @@ built-in examples" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,19 +105,19 @@ built-in examples" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/CARNIVAL/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/saezlab">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="http://www.saezlab.org">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -136,148 +135,234 @@ built-in examples" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1><code>runCARNIVAL</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/CARNIVAL/blob/master/R/runCARNIVAL.R'><code>R/runCARNIVAL.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/CARNIVAL/blob/master/R/api_run_carnival.R'><code>R/api_run_carnival.R</code></a></small>
     <div class="hidden name"><code>runCARNIVAL.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Run CARNIVAL pipeline using to the user-provided list of inputs or run CARNIVAL 
-built-in examples</p>
+    <p><code>runCARNIVAL</code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>runCARNIVAL</span>(<span class='kw'>inputObj</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>measObj</span><span class='kw'>=</span><span class='no'>measObj</span>, <span class='kw'>netObj</span><span class='kw'>=</span><span class='no'>netObj</span>, <span class='kw'>weightObj</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-            <span class='kw'>solverPath</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>solver</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lpSolve"</span>, <span class='st'>"cplex"</span>, <span class='st'>"cbc"</span>),
-            <span class='kw'>timelimit</span><span class='kw'>=</span><span class='fl'>3600</span>, <span class='kw'>mipGAP</span><span class='kw'>=</span><span class='fl'>0.05</span>, <span class='kw'>poolrelGAP</span><span class='kw'>=</span><span class='fl'>0.0001</span>, <span class='kw'>limitPop</span><span class='kw'>=</span><span class='fl'>500</span>,
-            <span class='kw'>poolCap</span><span class='kw'>=</span><span class='fl'>100</span>, <span class='kw'>poolIntensity</span><span class='kw'>=</span><span class='fl'>4</span>, <span class='kw'>poolReplace</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>alphaWeight</span><span class='kw'>=</span><span class='fl'>1</span>,
-            <span class='kw'>betaWeight</span><span class='kw'>=</span><span class='fl'>0.2</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>dir_name</span><span class='kw'>=</span><span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>runCARNIVAL</span><span class='op'>(</span>
+  inputObj <span class='op'>=</span> <span class='cn'>NULL</span>,
+  measObj <span class='op'>=</span> <span class='va'>measObj</span>,
+  netObj <span class='op'>=</span> <span class='va'>netObj</span>,
+  weightObj <span class='op'>=</span> <span class='cn'>NULL</span>,
+  solverPath <span class='op'>=</span> <span class='cn'>NULL</span>,
+  solver <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lpSolve"</span>, <span class='st'>"cplex"</span>, <span class='st'>"cbc"</span><span class='op'>)</span>,
+  timelimit <span class='op'>=</span> <span class='fl'>3600</span>,
+  mipGAP <span class='op'>=</span> <span class='fl'>0.05</span>,
+  poolrelGAP <span class='op'>=</span> <span class='fl'>1e-04</span>,
+  limitPop <span class='op'>=</span> <span class='fl'>500</span>,
+  poolCap <span class='op'>=</span> <span class='fl'>100</span>,
+  poolIntensity <span class='op'>=</span> <span class='fl'>4</span>,
+  poolReplace <span class='op'>=</span> <span class='fl'>2</span>,
+  alphaWeight <span class='op'>=</span> <span class='fl'>1</span>,
+  betaWeight <span class='op'>=</span> <span class='fl'>0.2</span>,
+  threads <span class='op'>=</span> <span class='fl'>0</span>,
+  cleanTmpFiles <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  keepLPFiles <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  dir_name <span class='op'>=</span> <span class='st'>""</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>inputObj</th>
-      <td><p>Data frame of the list for target of perturbation - optional 
-                or default set to NULL to run invCARNIVAL when inputs are not 
-                known</p></td>
+      <td><p>Data frame of the list for target of perturbation - optional
+or default set to NULL to run invCARNIVAL when inputs are not known.</p></td>
     </tr>
     <tr>
       <th>measObj</th>
-      <td><p>Data frame of the measurement file (i.e. DoRothEA normalised 
-               enrichment scores) - always required</p></td>
+      <td><p>Data frame of the measurement file (i.e. DoRothEA normalised
+enrichment scores) - always required.</p></td>
     </tr>
     <tr>
       <th>netObj</th>
-      <td><p>Data frame of the prior knowledge network - always required</p></td>
+      <td><p>Data frame of the prior knowledge network - always required.</p></td>
     </tr>
     <tr>
       <th>weightObj</th>
-      <td><p>Data frame of the additional weight (i.e. PROGENy pathway 
-                 score or measured protein activities) - optional or default set 
-                 as NULL to run CARNIVAL without weights</p></td>
+      <td><p>Data frame of the additional weight (i.e. PROGENy pathway
+score or measured protein activities) - optional or default set as NULL to run
+CARNIVAL without weights.</p></td>
     </tr>
     <tr>
       <th>solverPath</th>
       <td><p>Path to executable cbc/cplex file - default set to NULL, in
-                  which case the solver from lpSolve package is used</p></td>
+which case the solver from lpSolve package is used.</p></td>
     </tr>
     <tr>
       <th>solver</th>
-      <td><p>Solver to use: lpSolve/cplex/cbc (Default set to lpSolve)</p></td>
+      <td><p>Solver to use: lpSolve/cplex/cbc (Default set to lpSolve).</p></td>
     </tr>
     <tr>
       <th>timelimit</th>
-      <td><p>CPLEX/Cbc parameter: Time limit of CPLEX optimisation (in 
-                 seconds)</p></td>
+      <td><p>CPLEX/Cbc parameter: Time limit of CPLEX optimisation in
+seconds (default set to 3600).</p></td>
     </tr>
     <tr>
       <th>mipGAP</th>
-      <td><p>CPLEX parameter: the absolute tolerance on the gap between the 
-              best integer objective and the objective of the best node 
-              remaining. When this difference falls below the value of this 
-              parameter, the linear integer optimization is stopped. Default set
-              to 0.05</p></td>
+      <td><p>CPLEX parameter: the absolute tolerance on the gap between the
+best integer objective and the objective of the best node remaining. When this
+difference falls below the value of this parameter, the linear integer
+optimization is stopped (default set to 0.05)</p></td>
     </tr>
     <tr>
       <th>poolrelGAP</th>
-      <td><p>CPLEX/Cbc parameter: Allowed relative gap of accepted solution 
-      comparing within the pool of accepted solution (fraction; default: 
-      0.0001)</p></td>
+      <td><p>CPLEX/Cbc parameter: Allowed relative gap of accepted
+solution comparing within the pool of accepted solution (default: 0.0001)</p></td>
     </tr>
     <tr>
       <th>limitPop</th>
-      <td><p>CPLEX parameter: Allowed number of solutions to be generated 
-                (default: 500)</p></td>
+      <td><p>CPLEX parameter: Allowed number of solutions to be generated
+(default: 500)</p></td>
     </tr>
     <tr>
       <th>poolCap</th>
-      <td><p>CPLEX parameter: Allowed number of solution to be kept in the 
-               pool of solution (default: 100)</p></td>
+      <td><p>CPLEX parameter: Allowed number of solution to be kept in the
+pool of solution (default: 100)</p></td>
     </tr>
     <tr>
       <th>poolIntensity</th>
-      <td><p>CPLEX parameter: Intensity of solution searching (0,1,2,3,4
-                     - default: 4)</p></td>
+      <td><p>CPLEX parameter: Intensity of solution searching
+(0,1,2,3,4 - default: 4)</p></td>
     </tr>
     <tr>
       <th>poolReplace</th>
       <td><p>CPLEX parameter: Replacement strategy of solutions in the 
-                   pool (0,1,2 - default: 2 = most diversified solutions)</p></td>
+pool (0,1,2 - default: 2 = most diversified solutions)</p></td>
     </tr>
     <tr>
       <th>alphaWeight</th>
-      <td><p>Objective function: weight for mismatch penalty (default: 1 - 
-                   will only be applied once measurement file only contains 
-                   discrete values)</p></td>
+      <td><p>Objective function: weight for mismatch penalty (default:
+1 - will only be applied once measurement file only contains discrete values)</p></td>
     </tr>
     <tr>
       <th>betaWeight</th>
-      <td><p>Objective function: weight for node penalty (default: 0.2)</p></td>
+      <td><p>Objective function: weight for node penalty (defaul: 0.2)</p></td>
     </tr>
     <tr>
       <th>threads</th>
-      <td><p>Number of threads to be used for the analysis (default: 0 - 
-meaning all threads)</p></td>
+      <td><p>CPLEX parameter: Number of threads to use
+default: 0 for maximum number possible threads on system</p></td>
+    </tr>
+    <tr>
+      <th>cleanTmpFiles</th>
+      <td><p>logic (default-TRUE), specifying if the tmp files made by 
+solvers should be cleaned after run.</p></td>
+    </tr>
+    <tr>
+      <th>keepLPFiles</th>
+      <td><p>logic (default=TRUE), specifying if the LP file should be 
+kept.</p></td>
     </tr>
     <tr>
       <th>dir_name</th>
-      <td><p>For plotting: define if DOT figure will be exported in the 
-directory defined by this variable. Default set to NULL, meaning that no .DOT 
-figure will be exported. If a valid path is specified, the figure will be 
-exported as 'network_solution.dot' file in the specified directory. If 
-specified dir_name path oes not exist, nos figure will be generated</p></td>
+      <td><p>Specify directory name to store results. by default set to
+NULL</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The networks and predicted node activities from the CARNIVAL pipeline as a 
-variable which are also optionally saved in the destined result folder</p>
+    <p>The function will return a list of results containing:
+1. weightedSIF: A table with 4 columns containing the combined network
+solutions from CARNIVAL. It contains the Source of the interaction (Node1),
+Sign of the interaction (Sign), the Target of the interaction (Node2) and the
+weight of the interaction (Weight) which shows how often an interaction
+appears across all solutions.</p>
+<p>2. nodesAttributes: A table with 6 columns containing information about
+infered protein activity states and attributes. It contains the Protein IDs
+(Node); how often this node has taken an activity of 0, 1 and -1 across the
+solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
+(AvgAct); and the node attribute (measured, target, inferred).</p>
+<p>3. sifAll: A list of separate network solutions.</p>
+<p>4. attributesAll: A list of separate inferred node activities in each
+solution.</p>
+<p>5. diagnostics: reports the convergence of optimization and reason of
+the termination. Only for CPLEX solver.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Run CARNIVAL pipeline using to the user-provided list of inputs or
+run CARNIVAL built-in examples. The function is from v1.2 of CARNIVAL
+and is left for backward compatibility.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Enio Gjerga, 2020 <a href='mailto:carnival.developers@gmail.com'>carnival.developers@gmail.com</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## loading toy example 1</span>
-
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"toy_inputs_ex1.RData"</span>,
-<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"CARNIVAL"</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"toy_measurements_ex1.RData"</span>,
-<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"CARNIVAL"</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"toy_network_ex1.RData"</span>,
-<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"CARNIVAL"</span>))
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"toy_perturbations_ex1.RData"</span>,
+                       package<span class='op'>=</span><span class='st'>"CARNIVAL"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"toy_measurements_ex1.RData"</span>,
+                       package<span class='op'>=</span><span class='st'>"CARNIVAL"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"toy_network_ex1.RData"</span>,
+                       package<span class='op'>=</span><span class='st'>"CARNIVAL"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## lpSolve</span>
-<span class='no'>res1</span> <span class='kw'>=</span> <span class='fu'>runCARNIVAL</span>(<span class='kw'>inputObj</span> <span class='kw'>=</span> <span class='no'>toy_inputs_ex1</span>, <span class='kw'>measObj</span> <span class='kw'>=</span> <span class='no'>toy_measurements_ex1</span>,
-                      <span class='kw'>netObj</span> <span class='kw'>=</span> <span class='no'>toy_network_ex1</span>)</div><div class='output co'>#&gt; <span class='message'>Writing constraints...</span></div><div class='output co'>#&gt; <span class='message'>Solving LP problem...</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+<span class='va'>res1</span> <span class='op'>=</span> <span class='fu'>runCARNIVAL</span><span class='op'>(</span>inputObj <span class='op'>=</span> <span class='va'>toy_perturbations_ex1</span>,
+                   measObj <span class='op'>=</span> <span class='va'>toy_measurements_ex1</span>,
+                   netObj <span class='op'>=</span> <span class='va'>toy_network_ex1</span>,
+                   solver <span class='op'>=</span> <span class='st'>'lpSolve'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>--- Start of the CARNIVAL pipeline ---</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Carnival flavour: vanilla</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Generating variables for lp problem</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Done: generating variables for lp problem</span></div><div class='output co'>#&gt; <span class='message'>Saving preprocessed data.</span></div><div class='output co'>#&gt; <span class='message'>Done: saving parsed data: /Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/docs/reference/parsedData_t01_55_45d12_05_2021n23.RData</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Generating formulation for LP problem</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Done: generating formulation for LP problem.</span></div><div class='output co'>#&gt; <span class='message'>Saving LP file</span></div><div class='output co'>#&gt; <span class='message'>Done: Saving LP file: /Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/docs/reference/lpFile_t01_55_45d12_05_2021n23.lp</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Solving LP problem</span></div><div class='output co'>#&gt; <span class='message'>Parsing .lp file for lpSolve</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'><span style='color: #00BBBB;'>──</span><span> </span><span style='font-weight: bold;'>Column specification</span><span> </span><span style='color: #00BBBB;'>────────────────────────────────────────────────────────</span><span></span>
 #&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  `enter Problem` = <span style='color: #BB0000;'>col_character()</span><span></span>
-#&gt; <span class='message'>)</span></div><div class='input'>
-# ## cbc
-# res2 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-#                    netObj = toy_network_ex1, solverPath = solverPath,
-#                    solver = "cbc")
-# 
-# ## cplex
-# res3 = runCARNIVAL(inputObj = toy_inputs_ex1, measObj = toy_measurements_ex1, 
-#                    netObj = toy_network_ex1, solverPath = solverPath,
-#                    solver = "cplex")
+#&gt; <span class='message'>  X1 = </span><span style='color: #BB0000;'>col_character()</span><span></span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>Done: parsing .lp file for lpSolve</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Done: solving LP problem.</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Getting the solution matrix</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Done: getting the solution matrix.</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Exporting solution matrix</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 Done: exporting solution matrix.</span></div><div class='output co'>#&gt; <span class='message'>Cleaning intermediate files</span></div><div class='output co'>#&gt; <span class='message'>Done: cleaning</span></div><div class='output co'>#&gt; <span class='message'>01:55:45 12.05.2021 All tasks finished.</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>--- End of the CARNIVAL pipeline --- </span></div><div class='input'>                   
+<span class='va'>res1</span><span class='op'>$</span><span class='va'>weightedSIF</span> <span class='co'>##see @return</span>
+</div><div class='output co'>#&gt;   Node1 Sign Node2 Weight
+#&gt; 1    I1    1    N1    100
+#&gt; 2    N1    1    M1    100
+#&gt; 3    N1    1    M2    100
+#&gt; 4    I2   -1    N2    100</div><div class='input'><span class='va'>res1</span><span class='op'>$</span><span class='va'>nodesAttributes</span> <span class='co'>## see @return  </span>
+</div><div class='output co'>#&gt;   nodes ZeroAct UpAct DownAct AvgAct nodesType
+#&gt; 1    I1       0   100       0    100         P
+#&gt; 2    N1       0   100       0    100          
+#&gt; 3    I2       0   100       0    100         P
+#&gt; 4    N2     100     0       0      0          
+#&gt; 5    M1       0   100       0    100         M
+#&gt; 6    M2       0   100       0    100         M</div><div class='input'><span class='va'>res1</span><span class='op'>$</span><span class='va'>sifAll</span> <span class='co'>## see @return</span>
+</div><div class='output co'>#&gt; [[1]]
+#&gt;   Node1 Sign Node2
+#&gt; 1    I1    1    N1
+#&gt; 2    N1    1    M1
+#&gt; 3    N1    1    M2
+#&gt; 4    I2   -1    N2
+#&gt; </div><div class='input'><span class='va'>res1</span><span class='op'>$</span><span class='va'>attributesAll</span> <span class='co'>## see @return</span>
+</div><div class='output co'>#&gt; [[1]]
+#&gt;   nodes activity
+#&gt; 1    I1        1
+#&gt; 2    N1        1
+#&gt; 3    I2        1
+#&gt; 4    M1        1
+#&gt; 5    M2        1
+#&gt; </div><div class='input'>
+<span class='co'>## Examples for cbc and cplex are commented out because these solvers are not part of R environment </span>
+<span class='co'>## and need to be installed separately</span>
+<span class='co'>## </span>
+<span class='co'>## cbc</span>
+<span class='co'>## res2 = runCARNIVAL(inputObj = toy_perturbations_ex1,</span>
+<span class='co'>##                    measObj = toy_measurements_ex1,</span>
+<span class='co'>##                    netObj = toy_network_ex1,</span>
+<span class='co'>##                    solver = 'cbc')</span>
+<span class='co'>##                               </span>
+<span class='co'>## res2$weightedSIF ##see @return</span>
+<span class='co'>## res2$nodesAttributes ## see @return  </span>
+<span class='co'>## res2$sifAll ## see @return </span>
+<span class='co'>## res2$attributesAll ## see @return </span>
+<span class='co'>##</span>
+<span class='co'>## cplex</span>
+<span class='co'>## res3 = runCARNIVAL(inputObj = toy_perturbations_ex1,</span>
+<span class='co'>##                    measObj = toy_measurements_ex1,</span>
+<span class='co'>##                    netObj = toy_network_ex1,</span>
+<span class='co'>##                    solver = 'cplex')</span>
+<span class='co'>##</span>
+<span class='co'>## res3$weightedSIF ##see @return</span>
+<span class='co'>## res3$nodesAttributes ## see @return  </span>
+<span class='co'>## res3$sifAll ## see @return</span>
+<span class='co'>## res3$attributesAll ## see @return</span>
 
 </div></span></pre>
   </div>
@@ -291,11 +376,11 @@ variable which are also optionally saved in the destined result folder</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Aurelien Dugourd.</p>
+  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Olga Ivanova.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

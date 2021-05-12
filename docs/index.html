@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming">
-<meta property="og:description" content="An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores. 
+<meta property="og:description" content="An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores.
              Optimization parameters can be freely adjusted and multiple solutions can be obtained and aggregated.">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -64,19 +64,19 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/saezlab/CARNIVAL/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/saezlab">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="http://www.saezlab.org">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -92,19 +92,20 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="carnival-" class="section level1">
+<div id="carnival" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#carnival-" class="anchor"></a>CARNIVAL <img src="reference/figures/logo.png" align="right" height="139">
+<a href="#carnival" class="anchor"></a>CARNIVAL <img src="reference/figures/logo.png" align="right" height="139">
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
+
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
 <p>CARNIVAL (<strong>CA</strong>usal <strong>R</strong>easoning for <strong>N</strong>etwork identification using <strong>I</strong>nteger <strong>VAL</strong>ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).</p>
 <p>This is a tool currently being developed by the <a href="http://saezlab.org/">saezlab</a> members and is an extension of the previously implemented Causal Reasoning (<a href="http://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f"><em>Melas et al.</em></a>) method. More detailed information on the CARNIVAL pipeline as well as benchmarking and applicational studies are available on following paper.</p>
 <blockquote>
-<p>Liu A., Trairatphisan P., Gjerga E. et al. <a href="https://www.nature.com/articles/s41540-019-0118-z">From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL</a> <em>npj Systems Biology and Applications</em> volume 5, Article number: 40 (2019) (equal contributions).</p>
+<p>Liu A., Trairatphisan P., Gjerga E. et al. <a href="https://www.nature.com/articles/s41540-019-0118-z">From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL</a> <em>npj Systems Biology and Applications</em> volume 5, Article number: 40 (2019) (equal contributions).</p>
 </blockquote>
 <p>The aim of the CARNIVAL pipeline is to identify a subset of interactions from a prior knowledge network that represent potential regulated pathways linking known or potential targets of perturbation towards active transcription factors derived from GEX data. The pipeline includes a number improved functionalities comparing to the original version and consists of the following processes:</p>
 <ul>
@@ -122,20 +123,23 @@
 <div id="prerequisites" class="section level3">
 <h3 class="hasAnchor">
 <a href="#prerequisites" class="anchor"></a>Prerequisites</h3>
-<p>CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative <a href="https://www.ibm.com/products/ilog-cplex-optimization-studio?S_PKG=CoG&amp;cm_mmc=Search_Google-_-Data+Science_Data+Science-_-WW_IDA-_-+IBM++CPLEX_Broad_CoG&amp;cm_mmca1=000000RE&amp;cm_mmca2=10000668&amp;cm_mmca7=9041989&amp;cm_mmca8=kwd-412296208719&amp;cm_mmca9=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_&amp;cm_mmca10=267798126431&amp;cm_mmca11=b&amp;mkwid=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_%7C470%7C135655&amp;cvosrc=ppc.google.%2Bibm%20%2Bcplex&amp;cvo_campaign=000000RE&amp;cvo_crid=267798126431&amp;Matchtype=b&amp;gclid=Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB">here</a>. The <a href="https://projects.coin-or.org/Cbc">CBC</a> solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">lpSolve R-package</a>.</p>
+<p>CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative <a href="https://www.ibm.com/products/ilog-cplex-optimization-studio">here</a>. The <a href="https://projects.coin-or.org/Cbc">CBC</a> solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available <a href="https://cran.r-project.org/web/packages/lpSolve/index.html">lpSolve R-package</a>.</p>
 </div>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install from bioconductor</span>
-<span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
+<p>To install the stable version from <a href="http://bioconductor.org/">Bioconductor</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install from bioconductor</span>
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
 
-<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"CARNIVAL"</span>)
-
-<span class="co"># install the development version from GitHub</span>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"CARNIVAL"</span><span class="op">)</span></code></pre></div>
+<p>Otherwise, it is possible to install the newest version from github using:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install the development version from GitHub</span>
 <span class="co"># install.packages("devtools")</span>
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"saezlab/CARNIVAL"</span>)</pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"saezlab/CARNIVAL"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="inputs-and-outputs-of-carnival" class="section level3">
 <h3 class="hasAnchor">
@@ -154,7 +158,8 @@
 <h2 class="hasAnchor">
 <a href="#running-carnival" class="anchor"></a>Running CARNIVAL</h2>
 <p>To obtain the list of tutorials/vignettes of the CARNIVAL package, user can start with typing the following commmand on R-console:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"CARNIVAL-vignette"</span>)</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"CARNIVAL-vignette"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
@@ -176,10 +181,10 @@
 <h2 class="hasAnchor">
 <a href="#studies-where-carnival-was-used" class="anchor"></a>Studies where CARNIVAL was used</h2>
 <blockquote>
-<p>Buhl E.M. et al. <a href="https://www.embopress.org/doi/10.15252/emmm.201911021">Dysregulated mesenchymal PDGFR‐β drives kidney fibrosis</a> <em>EMBO Mol Med (2020)e11021 doi: 10.15252/emmm.201911021</em></p>
+<p>Buhl E.M. et al. <a href="https://www.embopress.org/doi/10.15252/emmm.201911021">Dysregulated mesenchymal PDGFR‐β drives kidney fibrosis</a> <em>EMBO Mol Med (2020)e11021 doi: 10.15252/emmm.201911021</em></p>
 </blockquote>
 <blockquote>
-<p>Binenbaum I. et. al. <a href="https://link.springer.com/content/pdf/10.1007/s10522-020-09866-y.pdf">Bioinformatic framework for analysis of transcription factor changes as the molecular link between replicative cellular senescence signaling pathways and carcinogenesis</a> <em>Biogerontology doi: 10.1007/s10522-020-09866-y</em></p>
+<p>Binenbaum I. et. al. <a href="https://link.springer.com/content/pdf/10.1007/s10522-020-09866-y.pdf">Bioinformatic framework for analysis of transcription factor changes as the molecular link between replicative cellular senescence signaling pathways and carcinogenesis</a> <em>Biogerontology doi: 10.1007/s10522-020-09866-y</em></p>
 </blockquote>
 </div>
 <div id="acknowledgement" class="section level2">
@@ -206,9 +211,7 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
 <div class="citation">
@@ -222,21 +225,27 @@
 <ul class="list-unstyled">
 <li>Enio Gjerga <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3060-5786" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Panuwat Trairatphisan <br><small class="roles"> Author </small>  </li>
-<li>Aurelien Dugourd <br><small class="roles"> Maintainer </small>  </li>
+<li>Olga Ivanova <br><small class="roles"> Maintainer </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.org/saezlab/CARNIVAL"><img src="https://travis-ci.org/saezlab/CARNIVAL.svg?branch=devel_2_1" alt="Build Status"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Aurelien Dugourd.</p>
+  <p>Developed by Enio Gjerga, Panuwat Trairatphisan, Olga Ivanova.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

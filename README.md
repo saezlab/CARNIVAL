@@ -4,6 +4,7 @@
 
 <!-- badges: start -->
 <!-- badges: end -->
+[![Build Status](https://travis-ci.org/saezlab/CARNIVAL.svg?branch=devel_2_1)](https://travis-ci.org/saezlab/CARNIVAL)
 
 ## Overview
 CARNIVAL (**CA**usal **R**easoning for **N**etwork identification using **I**nteger **VAL**ue programming) is a method for the identification of upstream reguatory signalling pathways from downstream gene expression (GEX).
@@ -30,17 +31,21 @@ A tutorial for preparing CARNIVAL input files starting from differentially gene 
 
 ### Prerequisites
 
-CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative [here](https://www.ibm.com/products/ilog-cplex-optimization-studio?S_PKG=CoG&cm_mmc=Search_Google-_-Data+Science_Data+Science-_-WW_IDA-_-+IBM++CPLEX_Broad_CoG&cm_mmca1=000000RE&cm_mmca2=10000668&cm_mmca7=9041989&cm_mmca8=kwd-412296208719&cm_mmca9=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_&cm_mmca10=267798126431&cm_mmca11=b&mkwid=_k_Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB_k_|470|135655&cvosrc=ppc.google.%2Bibm%20%2Bcplex&cvo_campaign=000000RE&cvo_crid=267798126431&Matchtype=b&gclid=Cj0KCQiAr93gBRDSARIsADvHiOpDUEHgUuzu8fJvf3vmO5rI0axgtaleqdmwk6JRPIDeNcIjgIHMhZIaAiwWEALw_wcB). The [CBC](https://projects.coin-or.org/Cbc) solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available [lpSolve R-package](https://cran.r-project.org/web/packages/lpSolve/index.html).
+CARNIVAL requires the interactive version of IBM Cplex or CBC-COIN solver as the network optimiser. The IBM ILOG Cplex is freely available through Academic Initiative [here](https://www.ibm.com/products/ilog-cplex-optimization-studio). The [CBC](https://projects.coin-or.org/Cbc) solver is open source and freely available for any user. Alternatively for smaller cases, users can rely on the freely available [lpSolve R-package](https://cran.r-project.org/web/packages/lpSolve/index.html).
 
 ### Installation
 
+To install the stable version from [Bioconductor](http://bioconductor.org/):
 ```r
 # install from bioconductor
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("CARNIVAL")
+```
 
+Otherwise, it is possible to install the newest version from github using:
+```r
 # install the development version from GitHub
 # install.packages("devtools")
 devtools::install_github("saezlab/CARNIVAL")
@@ -63,7 +68,6 @@ The outcome of CARNIVAL includes the list of identified networks that fitted to 
 ## Running CARNIVAL
 
 To obtain the list of tutorials/vignettes of the CARNIVAL package, user can start with typing the following commmand on R-console:
-
 ```r
 vignette("CARNIVAL-vignette")
 ```
