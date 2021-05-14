@@ -594,11 +594,18 @@ runCARNIVAL <- function(inputObj = NULL,
                keepLPFiles = keepLPFiles,
                outputFolder = dir_name)
 
-  result <- runVanillaCarnival(perturbations = inputObj,
-                               measurements = measObj,
-                               priorKnowledgeNetwork = netObj,
-                               weights = weightObj,
-                               carnivalOptions = opts)
+  if (is.null(inputObj)){
+    result <- runVanillaCarnival(perturbations = inputObj,
+                                 measurements = measObj,
+                                 priorKnowledgeNetwork = netObj,
+                                 weights = weightObj,
+                                 carnivalOptions = opts)
+  } else {
+    result <- runInverseCarnival(measurements = measObj,
+                                 priorKnowledgeNetwork = netObj,
+                                 weights = weightObj,
+                                 carnivalOptions = opts)
+  }
 
   return(result)
 
