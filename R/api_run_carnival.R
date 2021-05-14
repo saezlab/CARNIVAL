@@ -593,15 +593,27 @@ runCARNIVAL <- function(inputObj = NULL,
                cleanTmpFiles = cleanTmpFiles,
                keepLPFiles = keepLPFiles,
                outputFolder = dir_name)
-
+  
+  if (is.data.frame(inputObj)) {
+    perturbationNames <- colnames(inputObj)
+    inputObj <- as.vector(t(inputObj))
+    names(inputObj) <- perturbationNames
+  }
+  
+  if (is.data.frame(measObj)) {
+    measurementsNames <- colnames(measObj)
+    measObj <- as.vector(t(measObj))
+    names(measObj) <- measurementsNames
+  }
+  
   if (is.null(inputObj)){
-    result <- runVanillaCarnival(perturbations = inputObj,
-                                 measurements = measObj,
+    result <- runInverseCarnival(measurements = measObj,
                                  priorKnowledgeNetwork = netObj,
                                  weights = weightObj,
                                  carnivalOptions = opts)
   } else {
-    result <- runInverseCarnival(measurements = measObj,
+    result <- runVanillaCarnival(perturbations = inputObj,
+                                 measurements = measObj,
                                  priorKnowledgeNetwork = netObj,
                                  weights = weightObj,
                                  carnivalOptions = opts)

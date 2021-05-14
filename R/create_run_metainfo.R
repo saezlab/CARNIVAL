@@ -19,10 +19,12 @@ createRunId <- function() {
 
 createFilenames <- function(carnivalOptions) {
   #TODO add windows support with .Platform
-  if ( carnivalOptions$outputFolder != "" ) {
-    outputFolder <- file.path(carnivalOptions$outputFolder, "")  
-  } else {
+  if ( is.null(carnivalOptions$outputFolder) ) {
     outputFolder <- file.path(getwd(), "")
+  } else if ( carnivalOptions$outputFolder == "" ){
+    outputFolder <- file.path(getwd(), "")
+  } else {
+    outputFolder <- file.path(carnivalOptions$outputFolder, "")  
   }
   
   lpFilename <- paste0(outputFolder, "lpFile", "_", carnivalOptions$runId, ".lp")
