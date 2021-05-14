@@ -71,13 +71,13 @@ isInputValidCarnival <- function(perturbations = NULL,
 #'                         package="CARNIVAL"))
 #'
 #' ## lpSolve
-#' res1 = generateLpFileCarnival(perturbations = toy_perturbations_ex1,
-#'                               measurements = toy_measurements_ex1,
-#'                               priorKnowledgeNetwork = toy_network_ex1,
-#'                               carnivalOptions = defaultLpSolveCarnivalOptions())
+#' #res1 = generateLpFileCarnival(perturbations = toy_perturbations_ex1,
+#' #                             measurements = toy_measurements_ex1,
+#' #                             priorKnowledgeNetwork = toy_network_ex1,
+#' #                             carnivalOptions = defaultLpSolveCarnivalOptions())
 #'                               
-#' res1["lpFile"] ##path to generated lp file
-#' res1["parsedDataFile"] ##path to data file used during generation
+#' #res1["lpFile"] ##path to generated lp file
+#' #res1["parsedDataFile"] ##path to data file used during generation
 #' 
 #' ## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 #' ## and need to be installed separately
@@ -169,15 +169,15 @@ generateLpFileCarnival <- function( perturbations = NULL,
 #'                        package="CARNIVAL"))
 #'
 #'## lpSolve
-#'res1 = runVanillaCarnival(perturbations = toy_perturbations_ex1,
-#'                          measurements = toy_measurements_ex1,
-#'                          priorKnowledgeNetwork = toy_network_ex1,
-#'                          carnivalOptions = defaultLpSolveCarnivalOptions())
+#'#res1 = runVanillaCarnival(perturbations = toy_perturbations_ex1,
+#'#                          measurements = toy_measurements_ex1,
+#'#                          priorKnowledgeNetwork = toy_network_ex1,
+#'#                          carnivalOptions = defaultLpSolveCarnivalOptions())
 #'                               
-#'res1$weightedSIF ##see @return
-#'res1$nodesAttributes ## see @return  
-#'res1$sifAll ## see @return
-#'res1$attributesAll ## see @return 
+#'#res1$weightedSIF ##see @return
+#'#res1$nodesAttributes ## see @return  
+#'#res1$sifAll ## see @return
+#'#res1$attributesAll ## see @return 
 #' 
 #'## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 #'## and need to be installed separately
@@ -270,14 +270,14 @@ runVanillaCarnival <- function( perturbations,
 #'                                 package="CARNIVAL")                        
 #'
 #'## lpSolve
-#'res1 = runFromLpCarnival(lpFile = lpFilePath,
-#'                         parsedDataFile = parsedDataFilePath,
-#'                         carnivalOptions = defaultLpSolveCarnivalOptions())
+#'#res1 = runFromLpCarnival(lpFile = lpFilePath,
+#'#                         parsedDataFile = parsedDataFilePath,
+#'#                         carnivalOptions = defaultLpSolveCarnivalOptions())
 #'                               
-#'res1$weightedSIF ##see @return
-#'res1$nodesAttributes ## see @return  
-#'res1$sifAll ## see @return
-#'res1$attributesAll ## see @return 
+#'#res1$weightedSIF ##see @return
+#'#res1$nodesAttributes ## see @return  
+#'#res1$sifAll ## see @return
+#'#res1$attributesAll ## see @return 
 #' 
 #'## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 #'## and need to be installed separately
@@ -366,14 +366,14 @@ runFromLpCarnival <- function(lpFile = "",
 #'                        package="CARNIVAL"))
 #'
 #'## lpSolve
-#'res1 = runInverseCarnival(measurements = toy_measurements_ex1,
-#'                          priorKnowledgeNetwork = toy_network_ex1,
-#'                          carnivalOptions = defaultLpSolveCarnivalOptions())
+#'#res1 = runInverseCarnival(measurements = toy_measurements_ex1,
+#'#                          priorKnowledgeNetwork = toy_network_ex1,
+#'#                          carnivalOptions = defaultLpSolveCarnivalOptions())
 #'                               
-#'res1$weightedSIF ##see @return
-#'res1$nodesAttributes ## see @return  
-#'res1$sifAll ## see @return
-#'res1$attributesAll ## see @return 
+#'#res1$weightedSIF ##see @return
+#'#res1$nodesAttributes ## see @return  
+#'#res1$sifAll ## see @return
+#'#res1$attributesAll ## see @return 
 #' 
 #'## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 #'## and need to be installed separately
@@ -516,15 +516,15 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'                        package="CARNIVAL"))
 #'
 #'## lpSolve
-#'res1 = runCARNIVAL(inputObj = toy_perturbations_ex1,
-#'                    measObj = toy_measurements_ex1,
-#'                    netObj = toy_network_ex1,
-#'                    solver = 'lpSolve')
+#'#res1 = runCARNIVAL(inputObj = toy_perturbations_ex1,
+#'#                    measObj = toy_measurements_ex1,
+#'#                    netObj = toy_network_ex1,
+#'#                    solver = 'lpSolve')
 #'                    
-#'res1$weightedSIF ##see @return
-#'res1$nodesAttributes ## see @return  
-#'res1$sifAll ## see @return
-#'res1$attributesAll ## see @return
+#'#res1$weightedSIF ##see @return
+#'#res1$nodesAttributes ## see @return  
+#'#res1$sifAll ## see @return
+#'#res1$attributesAll ## see @return
 #'
 #'## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 #'## and need to be installed separately
