@@ -22,13 +22,14 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
     nodesAttributes <- nodesAttributes[names(nodesAttributes) %in% variables$nodesDf$nodesVars & nodesAttributes != 0]
     nodesAttributes <- as.data.frame(nodesAttributes)
     nodesAttributes <- cbind(nodesAttributes, row.names(nodesAttributes))
-    names(nodesAttributes) <- c("activity", "variables")
+    names(nodesAttributes) <- c("Activity", "variables")
     
     attributes <- merge(nodesAttributes, variables$nodesDf, by.x = "variables", by.y="nodesVars")
     
     #TODO is the sign always the same in the solution as in PKN?
     sol <- sol[c("Node1", "Sign", "Node2")]
-    attributes <- attributes[c("nodes", "activity")]
+    attributes <- attributes[c("nodes", "Activity")]
+    names(attributes) <- c("Nodes", "Activity")
     
     allSolutions[[i]] <- sol
     allAttributes[[i]] <- attributes
@@ -102,6 +103,7 @@ getSummaryNodesAttributes <- function(solutionMatrix, variables, nSolutions) {
   
   nodesSolution <- merge(variables$nodesDf, nodesSolution, by.x = "nodesVars", by.y = "Node")
   nodesSolution <- nodesSolution[, c("nodes", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesType")]
+  names(nodesSolution)[1] <- "Node" 
   
   return(nodesSolution)
 }
