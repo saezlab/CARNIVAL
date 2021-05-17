@@ -1,6 +1,6 @@
 Package: CARNIVAL
 Title: A CAusal Reasoning tool for Network Identification (from gene expression data) using Integer VALue programming
-Version: 2.0.0
+Version: 2.0.1
 Authors@R: c(
     person(given = "Enio",
            family = "Gjerga",
