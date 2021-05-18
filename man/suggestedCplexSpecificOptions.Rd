@@ -15,3 +15,6 @@ suggestedCplexSpecificOptions(...)
 \description{
 Suggests cplex specific options.s
 }
+\examples{
+suggestedCplexSpecificOptions()
+}

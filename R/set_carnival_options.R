@@ -63,8 +63,8 @@ getOptionsList <- function(solver = "", onlyRequired = F) {
 #'
 #' @return
 #' @export
-#'
 #' @examples
+#' setCarnivalOptions(solver="lpSolve")
 setCarnivalOptions <- function(solver = getSupportedSolvers()$lpSolve, ...) {
   if(length(list(...)) > 0) {
     if (checkOptionsValidity(solver = solver, ...)) {
@@ -87,8 +87,8 @@ setCarnivalOptions <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 #'
 #' @return
 #' @export
-#'
 #' @examples
+#' checkOptionsValidity(solver="lpSolve")
 checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
   options <- list(..., solver = solver)
   allOptionsValid <- TRUE
@@ -116,7 +116,8 @@ checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 #' 
 #' @param ... any possible options from the solver's list  
 #' @export
-#' 
+#' @example 
+#' #defaultCplexCarnivalOptions()
 defaultCplexCarnivalOptions <- function(...){
     
     if ( "solver" %in% names(list(...)) ) {
@@ -150,8 +151,8 @@ defaultCplexCarnivalOptions <- function(...){
 #'
 #' @return
 #' @export
-#'
 #' @examples
+#' defaultLpSolveCarnivalOptions()
 defaultLpSolveCarnivalOptions <- function(...){
   
   if ( "solver" %in% names(list(...)) ) {
@@ -182,8 +183,8 @@ defaultLpSolveCarnivalOptions <- function(...){
 #'
 #' @return
 #' @export
-#'
 #' @examples
+#' #defaultCbcSolveCarnivalOptions()
 defaultCbcSolveCarnivalOptions <- function(...){
   
   if ( "solver" %in% names(list(...)) ) {
@@ -214,8 +215,8 @@ defaultCbcSolveCarnivalOptions <- function(...){
 #'
 #' @return
 #' @export
-#'
 #' @examples
+#' suggestedCplexSpecificOptions()
 suggestedCplexSpecificOptions <- function(...) {
   
   if ( "solver" %in% names(list(...)) ) {
@@ -250,8 +251,8 @@ suggestedCplexSpecificOptions <- function(...) {
 #'
 #' @return
 #' @export
-#'
 #' @examples
+#' suggestedCbcSpecificOptions()
 suggestedCbcSpecificOptions <- function(...) {
   
   if ( "solver" %in% names(list(...)) ) {
@@ -278,8 +279,8 @@ suggestedCbcSpecificOptions <- function(...) {
 #'
 #' @return
 #' @export
-#'
-#' @examples
+#' @example
+#' defaultCplexSpecificOptions()
 defaultCplexSpecificOptions <- function(...) {
   #TODO N.B. careful with scientific notation, it is switched off at another place in the code 
   # (look up for scipen) - options(scipen = 0) to switch it on

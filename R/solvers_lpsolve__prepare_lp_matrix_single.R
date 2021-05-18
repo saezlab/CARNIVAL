@@ -4,10 +4,15 @@
 prepareLPMatrixSingle <- function(lpMatrix, carnivalOptions){
   
   message("Parsing .lp file for lpSolve")
-  lpFile <- readr::read_csv(file = carnivalOptions$filenames$lpFilename, 
-                            col_names = F)
-  lpFile <- lpFile[[1]]
   
+  if (file.exists(carnivalOptions$filenames$lpFilename)) {
+    lpFile <- readr::read_csv(file = carnivalOptions$filenames$lpFilename, 
+                              col_names = F)
+    lpFile <- lpFile[[1]]
+  } else {
+    error("Cannot find .lp file for solver")
+  }
+
   f.obj <- transformObjectiveFunction(lpMatrix, lpFile)
   
   ff1 <- transformConstraints(lpMatrix, lpFile)

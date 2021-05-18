@@ -45,13 +45,13 @@ load(file = system.file("toy_network_ex1.RData",
                         package="CARNIVAL"))
 
 ## lpSolve
-res1 = generateLpFileCarnival(perturbations = toy_perturbations_ex1,
-                              measurements = toy_measurements_ex1,
-                              priorKnowledgeNetwork = toy_network_ex1,
-                              carnivalOptions = defaultLpSolveCarnivalOptions())
+#res1 = generateLpFileCarnival(perturbations = toy_perturbations_ex1,
+#                             measurements = toy_measurements_ex1,
+#                             priorKnowledgeNetwork = toy_network_ex1,
+#                             carnivalOptions = defaultLpSolveCarnivalOptions())
                               
-res1["lpFile"] ##path to generated lp file
-res1["parsedDataFile"] ##path to data file used during generation
+#res1["lpFile"] ##path to generated lp file
+#res1["parsedDataFile"] ##path to data file used during generation
 
 ## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 ## and need to be installed separately

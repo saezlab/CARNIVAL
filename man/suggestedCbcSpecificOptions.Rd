@@ -15,3 +15,6 @@ suggestedCbcSpecificOptions(...)
 \description{
 Suggests cbc specific options.
 }
+\examples{
+suggestedCbcSpecificOptions()
+}

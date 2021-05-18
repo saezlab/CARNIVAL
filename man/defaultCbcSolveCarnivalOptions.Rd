@@ -15,3 +15,6 @@ defaultCbcSolveCarnivalOptions(...)
 \description{
 Sets default CARNIVAL options for cbc.
 }
+\examples{
+#defaultCbcSolveCarnivalOptions()
+}

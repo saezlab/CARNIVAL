@@ -182,7 +182,7 @@ executeSolversChecks <- function(carnivalOptions, checksToRun) {
 
 #'Checks options provided for CARNIVAL
 #' 
-#' @param carnivalOptions
+#' @param carnivalOptions all available carnival options 
 #' @keywords internal
 checkCarnivalOptions <- function(carnivalOptions) {
   

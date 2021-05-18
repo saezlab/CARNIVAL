@@ -15,3 +15,6 @@ defaultLpSolveCarnivalOptions(...)
 \description{
 Sets default CARNIVAL options for lpSolve.
 }
+\examples{
+defaultLpSolveCarnivalOptions()
+}

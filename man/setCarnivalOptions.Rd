@@ -17,3 +17,6 @@ setCarnivalOptions(solver = getSupportedSolvers()$lpSolve, ...)
 \description{
 Sets CARNIVAL options for the solver.
 }
+\examples{
+setCarnivalOptions(solver="lpSolve")
+}

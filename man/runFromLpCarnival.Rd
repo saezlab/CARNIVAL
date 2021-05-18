@@ -54,14 +54,14 @@ parsedDataFilePath = system.file("toy_parsed_data_ex1.RData",
                                 package="CARNIVAL")                        
 
 ## lpSolve
-res1 = runFromLpCarnival(lpFile = lpFilePath,
-                        parsedDataFile = parsedDataFilePath,
-                        carnivalOptions = defaultLpSolveCarnivalOptions())
+#res1 = runFromLpCarnival(lpFile = lpFilePath,
+#                         parsedDataFile = parsedDataFilePath,
+#                         carnivalOptions = defaultLpSolveCarnivalOptions())
                               
-res1$weightedSIF ##see @return
-res1$nodesAttributes ## see @return  
-res1$sifAll ## see @return
-res1$attributesAll ## see @return 
+#res1$weightedSIF ##see @return
+#res1$nodesAttributes ## see @return  
+#res1$sifAll ## see @return
+#res1$attributesAll ## see @return 
 
 ## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 ## and need to be installed separately

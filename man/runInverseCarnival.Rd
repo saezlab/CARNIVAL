@@ -58,14 +58,14 @@ load(file = system.file("toy_network_ex1.RData",
                        package="CARNIVAL"))
 
 ## lpSolve
-res1 = runInverseCarnival(measurements = toy_measurements_ex1,
-                         priorKnowledgeNetwork = toy_network_ex1,
-                         carnivalOptions = defaultLpSolveCarnivalOptions())
+#res1 = runInverseCarnival(measurements = toy_measurements_ex1,
+#                          priorKnowledgeNetwork = toy_network_ex1,
+#                          carnivalOptions = defaultLpSolveCarnivalOptions())
                               
-res1$weightedSIF ##see @return
-res1$nodesAttributes ## see @return  
-res1$sifAll ## see @return
-res1$attributesAll ## see @return 
+#res1$weightedSIF ##see @return
+#res1$nodesAttributes ## see @return  
+#res1$sifAll ## see @return
+#res1$attributesAll ## see @return 
 
 ## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
 ## and need to be installed separately

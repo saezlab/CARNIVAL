@@ -11,7 +11,6 @@
 #'
 #' @return TRUE if everything passed the checks. 
 #' @export
-#'
 #' '@examples
 #' load(file = system.file("toy_perturbations_ex1.RData",
 #'                         package="CARNIVAL"))
@@ -21,10 +20,10 @@
 #'                         package="CARNIVAL"))
 #'
 #' ## lpSolve
-#' isInputValidCarnival(perturbations = toy_perturbations_ex1,
-#'                      measurements = toy_measurements_ex1,
-#'                      priorKnowledgeNetwork = toy_network_ex1,
-#'                      carnivalOptions = defaultLpSolveCarnivalOptions())
+#' #isInputValidCarnival(perturbations = toy_perturbations_ex1,
+#' #                    measurements = toy_measurements_ex1,
+#' #                    priorKnowledgeNetwork = toy_network_ex1,
+#' #                    carnivalOptions = defaultLpSolveCarnivalOptions())
 isInputValidCarnival <- function(perturbations = NULL,
                                  measurements,
                                  priorKnowledgeNetwork,
@@ -100,7 +99,6 @@ isInputValidCarnival <- function(perturbations = NULL,
 #' ## res3["lpFile"] ##path to generated lp file
 #' ## res3["parsedDataFile"] ##path to data file used during generation
 #'@export
-#'
 generateLpFileCarnival <- function( perturbations = NULL,
                                     measurements,
                                     priorKnowledgeNetwork,
@@ -556,7 +554,6 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'@import igraph
 #'
 #'@export
-#'
 runCARNIVAL <- function(inputObj = NULL,
                         measObj = measObj,
                         netObj = netObj,

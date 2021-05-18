@@ -6,6 +6,9 @@
 \usage{
 checkCarnivalOptions(carnivalOptions)
 }
+\arguments{
+\item{carnivalOptions}{all available carnival options}
+}
 \description{
 Checks options provided for CARNIVAL
 }

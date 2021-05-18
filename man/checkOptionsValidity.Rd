@@ -17,3 +17,6 @@ checkOptionsValidity(solver = getSupportedSolvers()$lpSolve, ...)
 \description{
 Checks if provided option names are valid.
 }
+\examples{
+checkOptionsValidity(solver="lpSolve")
+}
