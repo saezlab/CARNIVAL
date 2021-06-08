@@ -23,7 +23,7 @@ The aim of the CARNIVAL pipeline is to identify a subset of interactions from a 
 
 Applications of CARNIVAL include the identification of drug’s modes of action and of deregulated processes in diseases (even if the molecular targets remain unknown) by deciphering the alterations of main signalling pathways as well as alternative pathways and off-target effects.
 
-<img src="man/figures/graphical_abstract.png" align="center" width="800">
+<img src="vignettes/vignettes_pictures/graphical_abstract.png" align="center" width="800">
 
 ## Getting Started
 
