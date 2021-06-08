@@ -1,4 +1,4 @@
-# CARNIVAL 2.1.0
+# CARNIVAL 2.2.0
 * Changed API: introduced separate functions for different flavours of CARNIVAL.
 * A more convenient way to work with CARNIVAL parameters. Parameters setup is possible through jsons and function calls.
 * Better file naming to prevent concurrent file writing when running several instances of CARNIVAL.
