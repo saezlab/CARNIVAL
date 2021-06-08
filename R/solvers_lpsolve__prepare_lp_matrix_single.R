@@ -10,7 +10,7 @@ prepareLPMatrixSingle <- function(lpMatrix, carnivalOptions){
                               col_names = F)
     lpFile <- lpFile[[1]]
   } else {
-    error("Cannot find .lp file for solver")
+    stop("Cannot find .lp file for solver")
   }
 
   f.obj <- transformObjectiveFunction(lpMatrix, lpFile)

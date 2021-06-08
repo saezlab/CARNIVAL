@@ -4,39 +4,56 @@
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
   nSolutions <- ncol(solutionMatrix)
-  summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables, nSolutions)
-  
+ 
   allSolutions <- list()
   allAttributes <- list()
+  weightedSolution <- c()
   
   for (i in 1:ncol(solutionMatrix)) {
     
     solMtx <- solutionMatrix[solutionMatrix[, i] > 0, i]
     namesSol <- names(solMtx)
     
-    sol <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol | 
-                             variables$edgesDf$edgesDownVars %in% namesSol , ]
+    solutionEdgesUp <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol, ]
+    solutionEdgesDown <-  variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesSol, ]
+  
+    nodesUp <- variables$nodesDf[variables$nodesDf$nodesUpVars %in% namesSol, ]
+    nodesDown <- variables$nodesDf[variables$nodesDf$nodesDownVars %in% namesSol, ]
+    
+    #Nodes activity should be in line with incoming edges  
+    solutionEdgesUp <- solutionEdgesUp[solutionEdgesUp$Node2 %in% nodesUp$nodes, ]
+    solutionEdgesDown <- solutionEdgesDown[solutionEdgesDown$Node2 %in% nodesDown$nodes, ]
+
+    solution <- rbind(solutionEdgesUp, solutionEdgesDown)
+    solution <- solution[, c("Node1", "Sign", "Node2")]
+    
+    #collect collapsed solution
+    weightedSolution <- rbind(weightedSolution, solution)
     
     #For nodes, we need to select values below 0 too.
+    nodesSolution <- unique(c(solution$Node1, solution$Node2))
+    nodesSolution <- variables$nodesDf[variables$nodesDf$nodes %in% nodesSolution, ]
     nodesAttributes <- solutionMatrix[, i]
-    nodesAttributes <- nodesAttributes[names(nodesAttributes) %in% variables$nodesDf$nodesVars & nodesAttributes != 0]
+    nodesAttributes <- nodesAttributes[names(nodesAttributes) %in% nodesSolution$nodesVars &
+                                         nodesAttributes != 0]
     nodesAttributes <- as.data.frame(nodesAttributes)
     nodesAttributes <- cbind(nodesAttributes, row.names(nodesAttributes))
     names(nodesAttributes) <- c("Activity", "variables")
     
-    attributes <- merge(nodesAttributes, variables$nodesDf, by.x = "variables", by.y="nodesVars")
+    attributes <- merge(nodesAttributes, variables$nodesDf, by.x = "variables", 
+                        by.y = "nodesVars")
     
-    #TODO is the sign always the same in the solution as in PKN?
-    sol <- sol[c("Node1", "Sign", "Node2")]
     attributes <- attributes[c("nodes", "Activity")]
     names(attributes) <- c("Nodes", "Activity")
     
-    allSolutions[[i]] <- sol
+    allSolutions[[i]] <- solution
     allAttributes[[i]] <- attributes
   }
   
+  summarisedSolution <- getWeightedCollapsedSolution(weightedSolution, 
+                                                     length(allSolutions))
+  
   #TODO perturbations are handled differently? 
-  #TODO divide all values to N of solutions
   nodesAttributes <- getSummaryNodesAttributes(solutionMatrix, variables, nSolutions)
   
   result <- list("weightedSIF" = summarisedSolution, 
@@ -45,36 +62,12 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
                  "attributesAll" = allAttributes) 
 }
 
-getWeightedCollapsedSolution <- function(solutionMatrix, variables, nSolutions) {
-  solutionMatrix <- as.data.frame(solutionMatrix)
-  
-  weights <- apply(solutionMatrix, 1, function(x) {
-    sum(as.numeric(as.character(x)))
-  })  
-  
-  weights <- weights[weights > 0]
-  namesWeights <- names(weights)
-  weights <- as.data.frame(weights)
-  weights <- cbind(weights, row.names(weights))
-  names(weights) <- c("Weight", "variables")
-  
-  edgesVars <- c(variables$edgesDf$edgesUpVars, variables$edgesDf$edgesDownVars)
-  
-  sol1 <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesWeights , ]
-  sol2 <- variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesWeights , ]
-  
-  edgesUpWeights <- weights[weights$variables %in% variables$edgesDf$edgesUpVars, ]
-  edgesDownWeights <- weights[weights$variables %in% variables$edgesDf$edgesDownVars, ]
-  
-  sol1 <- merge(sol1, edgesUpWeights, by.x = "edgesUpVars", by.y = "variables")
-  sol2 <- merge(sol2, edgesDownWeights, by.x = "edgesDownVars", by.y = "variables")
-  
-  sol <- rbind(sol1, sol2)
-  sol <- sol[c("Node1", "Sign", "Node2", "Weight")]
-  
-  sol$Weight <- (sol$Weight / nSolutions) * 100
-  
-  return(sol)
+getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
+  weightedSolution <- count(weightedSolution)
+  names(weightedSolution) <- c("Node1", "Sign", "Node2", "Weight")
+  weightedSolution$Weight <- ( weightedSolution$Weight / nSolutions ) * 100
+ 
+  return(weightedSolution)
 }
 
 getSummaryNodesAttributes <- function(solutionMatrix, variables, nSolutions) {

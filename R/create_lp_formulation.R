@@ -77,10 +77,13 @@ createBinaries_v2 <- function(variables) {
 createGenerals_v2 <- function(variables) {
   generals <- paste(c(variables$nodesDf$nodesVars,
                       variables$nodesDf$nodesActStateVars,
-                      variables$measurementsDf$absDifference), sep="\t")
+                      variables$measurementsDf$absDifference), 
+                    sep="\t")
+  return(generals)
 }
 
 defaultListConstraints <- function() {
-  defaultListConstrains <- c("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9")
+  defaultListConstrains <- c("c0", "c1", "c2", "c3", "c4", "c5", 
+                             "c6", "c7", "c8", "c9")
   return(defaultListConstrains)
 }

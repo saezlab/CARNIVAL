@@ -149,6 +149,7 @@ carnivalOptions <- defaultLpSolveCarnivalOptions()
 
 # Output dir
 dir.create("ToyExample1", showWarnings = FALSE)
+carnivalOptions$outputFolder <- "ToyExample1"
 
 # lpSolve
 resultsLpSolve <- runVanillaCarnival( perturbations = toy_perturbations_ex1, 

@@ -39,6 +39,7 @@ Imports:
     lpSolve,
     igraph,
     dplyr,
+    plyr,
     rjson,
     rmarkdown,
     methods

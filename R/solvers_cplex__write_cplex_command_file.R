@@ -1,4 +1,3 @@
-
 writeCplexCommandFile <- function(carnivalOptions){
 
   message("Writing cplex command file")

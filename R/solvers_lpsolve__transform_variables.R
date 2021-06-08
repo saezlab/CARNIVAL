@@ -22,10 +22,11 @@ transformVariables_v2 <- function(variables, measurements){
 }
 
 #The function is obsolete, kept here for old data representation compatibility
+# TODO move to z_obsolete files. 
 transformVariables <- function(variables, measurements){
   
   vars1 <- variables$variables
-  measSpecies <- colnames(measurements)
+  measSpecies <- names(measurements)
   vars2 <- rep("", length(measSpecies))
   
   for(jj in seq_len(length(measSpecies))){

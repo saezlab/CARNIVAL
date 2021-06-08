@@ -5,7 +5,6 @@ carnivalOptionsErrorChecks <- list(
       param = c("", "getSupportedSolvers()"),
       message = paste0("Error in solver parameter: invalid value provided.")
       ), 
-                     #  paste(getSupportedSolvers(), collapse = ", "))),
   
   betaWeight =   
     data.frame(
