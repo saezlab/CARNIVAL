@@ -24,9 +24,9 @@ createFilenames <- function(carnivalOptions) {
   } else if ( carnivalOptions$outputFolder == "" ){
     outputFolder <- file.path(getwd(), "")
   } else {
-    outputFolder <- file.path(carnivalOptions$outputFolder, "")  
+    outputFolder <- file.path(carnivalOptions$outputFolder, "")
   }
-  
+
   lpFilename <- file.path(outputFolder, paste0("lpFile", "_", carnivalOptions$runId, ".lp"))
   parsedData <- file.path(outputFolder, paste0("parsedData_", carnivalOptions$runId, ".RData"))
   resultFile <- file.path(outputFolder, paste0("result", "_", carnivalOptions$runId, ".txt"))
