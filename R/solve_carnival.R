@@ -21,7 +21,11 @@ getSupportedSolversFunctions <- function() {
                                     
                           "lpSolve" = c("solve" = solveWithLpSolve, 
                                         "getSolutionMatrix" = getSolutionMatrixLpSolve,
-                                        "export" = exportIlpSolutionFromSolutionMatrix)) 
+                                        "export" = exportIlpSolutionFromSolutionMatrix),
+                                        
+                          "gurobi" = c("solve" = solveWithGurobi,
+                                       "getSolutionMatrix" = getSolutionMatrixGurobi,
+                                       "export" = exportIlpSolutionFromSolutionMatrix))
   return(solversFunctions)
 }
 

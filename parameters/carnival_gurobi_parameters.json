@@ -1,2 +1,18 @@
 {
+    "solverPath": "solverPath",
+    "lpFilename": "",
+    "cplexCommandFilename": "",
+    "timelimit": 3600,
+    "betaWeight": 0.2,
+    "Threads": 0,
+    "clonelog": 1,
+    "workdir": "",
+    "cleanTmpFiles": "TRUE",
+    "keepLPFiles": "TRUE",
+    "dirName": "NULL",
+    "MIPGAP": 0.05,
+    "PoolSearchMode": 2,
+    "PoolGap": 0.0001,
+    "SolutionLimit": 500,
+    "PoolSolutions": 100
 }
