@@ -23,7 +23,7 @@ checkMeasurements <- function(measurements, nodesPriorKnowledgeNetwork) {
   }
   
   if ( length(measurementsNotInNetwork) > 0 ) {
-    warning("These nodes are not in measurements and will be ignored: ", 
+    warning("These measurement nodes are not in prior knowledge network and will be ignored: ", 
             paste(names(measurementsNotInNetwork), collapse=" | "))   
   }
   

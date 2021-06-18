@@ -132,7 +132,7 @@ solveCarnival <- function(dataPreprocessed,
                                      carnivalOptions)
   
   if (ncol(solutionMatrix) == 0) {
-    message("No solutions exist.")
+    message(getTime(), "No solutions exist.")
   } else {
     solution <- processSolution( solutionMatrix, preparedForRun$variables, 
                                  dataPreprocessed, carnivalOptions, 

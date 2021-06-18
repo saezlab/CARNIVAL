@@ -23,7 +23,7 @@ checkPerturbations <- function(perturbations, nodesPriorKnowledgeNetwork) {
   }
   
   if ( length(perturbationsNotInNetwork) > 0 ) {
-    warning("These nodes are not in perturbations and will be ignored: ", 
+    warning("These perturbation nodes are not in prior knowledge network and will be ignored: ", 
             paste(names(perturbationsNotInNetwork), collapse = " | "))   
   }
 

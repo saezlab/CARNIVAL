@@ -4,11 +4,15 @@
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
   nSolutions <- ncol(solutionMatrix)
- 
+  
   allSolutions <- list()
   allAttributes <- list()
   weightedSolution <- c()
-  
+  collapsedAttributes <- data.frame("nodes" = variables$nodesDf$nodes, 
+                                    "activityUp" = rep(0, length(variables$nodesDf$nodes)), 
+                                    "activityDown" = rep(0, length(variables$nodesDf$nodes)),
+                                    "zeroActivity" = rep(0, length(variables$nodesDf$nodes)))
+  print(solutionMatrix)
   for (i in 1:ncol(solutionMatrix)) {
     
     solMtx <- solutionMatrix[solutionMatrix[, i] > 0, i]
@@ -31,35 +35,48 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
     weightedSolution <- rbind(weightedSolution, solution)
     
     #For nodes, we need to select values below 0 too.
-    nodesSolution <- unique(c(solution$Node1, solution$Node2))
-    nodesSolution <- variables$nodesDf[variables$nodesDf$nodes %in% nodesSolution, ]
-    nodesAttributes <- solutionMatrix[, i]
-    nodesAttributes <- nodesAttributes[names(nodesAttributes) %in% nodesSolution$nodesVars &
-                                         nodesAttributes != 0]
-    nodesAttributes <- as.data.frame(nodesAttributes)
-    nodesAttributes <- cbind(nodesAttributes, row.names(nodesAttributes))
-    names(nodesAttributes) <- c("Activity", "variables")
+    allNodesVariables <- variables$nodesDf[, c("nodes", "nodesUpVars", "nodesDownVars")] 
     
-    attributes <- merge(nodesAttributes, variables$nodesDf, by.x = "variables", 
-                        by.y = "nodesVars")
+    allNodesVariables$activityUp <- solutionMatrix[rownames(solutionMatrix) %in% 
+                                                     variables$nodesDf$nodesUpVars, ]
+    allNodesVariables$activityDown <- solutionMatrix[rownames(solutionMatrix) %in% 
+                                                       variables$nodesDf$nodesDownVars, ]
+    allNodesVariables$activity <- solutionMatrix[rownames(solutionMatrix) %in% 
+                                                   variables$nodesDf$nodesVars, ]
     
-    attributes <- attributes[c("nodes", "Activity")]
-    names(attributes) <- c("Nodes", "Activity")
+    nodesAttributes <- allNodesVariables[, c("nodes", "activityUp", "activityDown", "activity")] 
+    names(nodesAttributes) <- c("Nodes", "activityUp", "activityDown", "Activity")
+  
+    
+    collapsedAttributes$activityUp <- collapsedAttributes$activityUp + 
+                                      as.numeric(allNodesVariables$activityUp)
+    collapsedAttributes$activityDown <- collapsedAttributes$activityDown + 
+                                        as.numeric(allNodesVariables$activityDown)
+    
+    zeroActivity <- as.numeric(allNodesVariables$activity == 0)
+    collapsedAttributes$zeroActivity <- collapsedAttributes$zeroActivity + zeroActivity
+    collapsedAttributes$nodesType <- variables$nodesDf$nodesType
     
     allSolutions[[i]] <- solution
-    allAttributes[[i]] <- attributes
+    allAttributes[[i]] <- nodesAttributes[, c("Nodes", "Activity")]
   }
   
   summarisedSolution <- getWeightedCollapsedSolution(weightedSolution, 
-                                                     length(allSolutions))
-  
+                                                     nSolutions)
   #TODO perturbations are handled differently? 
-  nodesAttributes <- getSummaryNodesAttributes(solutionMatrix, variables, nSolutions)
+  nodesAttributes <- getSummaryNodesAttributes(collapsedAttributes,
+                                               nSolutions)
+  if (nrow(summarisedSolution) != 0) {
+    result <- list("weightedSIF" = summarisedSolution, 
+                   "nodesAttributes" = nodesAttributes,
+                   "sifAll" = allSolutions, 
+                   "attributesAll" = allAttributes) 
+  } else {
+    result <- NULL
+    message(getTime(), " No consistent solutions exist.")
+  }
   
-  result <- list("weightedSIF" = summarisedSolution, 
-                 "nodesAttributes" = nodesAttributes,
-                 "sifAll" = allSolutions, 
-                 "attributesAll" = allAttributes) 
+  return(result)
 }
 
 getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
@@ -70,33 +87,16 @@ getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
   return(weightedSolution)
 }
 
-getSummaryNodesAttributes <- function(solutionMatrix, variables, nSolutions) {
-  solutionMatrix <- as.data.frame(solutionMatrix)
+getSummaryNodesAttributes <- function(collapsedAttributes, nSolutions) {
+  nodesSolution <- data.frame("Node" = collapsedAttributes$nodes, 
+                              "NodeType" = collapsedAttributes$nodesType)
   
-  nodesVars <- c(variables$nodesDf$nodesVars, variables$nodesDf$nodesUpVars, 
-                 variables$nodesDf$nodesDownVars)
-  
-  namesSol <- rownames(solutionMatrix)
-  nodesSolutions <- solutionMatrix[namesSol %in% nodesVars, ]
-  nodesSolutions <- t(nodesSolutions)
-  nodesSolutions <- as.data.frame(nodesSolutions)
-  colnames(nodesSolutions) <- namesSol[namesSol %in% nodesVars]
-  
-  summaryNodes <- apply(nodesSolutions, 2, function(x) {sum(as.numeric(x))})
-  
-  nodesSolution <- summaryNodes[names(summaryNodes) %in% variables$nodesDf$nodesVars]
-  nodesSolution <- as.data.frame(nodesSolution)
-  nodesSolution <- cbind(nodesSolution, row.names(nodesSolution))
-  names(nodesSolution) <- c("Activity", "Node")
-  
-  nodesSolution$ZeroAct <- ( as.numeric(!nodesSolution$Activity) / nSolutions ) * 100
-  nodesSolution$UpAct <- ( as.numeric(nodesSolution$Activity == 1) / nSolutions ) * 100
-  nodesSolution$DownAct <- ( as.numeric(nodesSolution$Activity == -1) / nSolutions ) * 100
+  nodesSolution$ZeroAct <- ( collapsedAttributes$zeroActivity / nSolutions ) * 100
+  nodesSolution$UpAct <- ( collapsedAttributes$activityUp / nSolutions ) * 100
+  nodesSolution$DownAct <- ( collapsedAttributes$activityDown / nSolutions ) * 100
   nodesSolution$AvgAct <- nodesSolution$UpAct - nodesSolution$DownAct
-  
-  nodesSolution <- merge(variables$nodesDf, nodesSolution, by.x = "nodesVars", by.y = "Node")
-  nodesSolution <- nodesSolution[, c("nodes", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesType")]
-  names(nodesSolution)[1] <- "Node" 
+  nodesSolution <- nodesSolution[, c("Node", "ZeroAct", "UpAct", "DownAct", 
+                                     "AvgAct", "NodeType")]
   
   return(nodesSolution)
 }

@@ -77,7 +77,7 @@ createBinaries_v2 <- function(variables) {
 createGenerals_v2 <- function(variables) {
   generals <- paste(c(variables$nodesDf$nodesVars,
                       variables$nodesDf$nodesActStateVars,
-                      variables$measurementsDf$absDifference), 
+                      variables$measurementsDf$measurementsVars), 
                     sep="\t")
   return(generals)
 }
