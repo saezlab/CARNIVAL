@@ -31,7 +31,9 @@
 
 
 createConstraint_6_7_v3<-function(variables){
-  parentNodes<-base::setdiff(variables$edgeDf$Node1,variables$edgeDf$Node2)
+  edgeDf<-variables$edgesDf
+  nodeDf<-variables$nodesDf
+  parentNodes<-base::setdiff(edgeDf$Node1,edgeDf$Node2)
   
   variableMerged<-base::merge(edgeDf,nodeDf,by.x = "Node1",by.y = "nodes")
   parentNodesEdges<-variableMerged[variableMerged$Node1 %in% parentNodes,]
