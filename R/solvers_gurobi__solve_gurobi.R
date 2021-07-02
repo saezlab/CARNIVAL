@@ -42,6 +42,7 @@ solveWithGurobi <- function(carnivalOptions) {
                            " SolutionLimit=", carnivalOptions$limitPop,
                            " PoolSolutions=", carnivalOptions$poolCap,
                            " Threads=", carnivalOptions$threads,
+                           " PoolSearchMode=2",
                            " ResultFile=", resultFile,
                            additional_params,
                            " ", lpFile)
