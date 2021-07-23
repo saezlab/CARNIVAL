@@ -10,10 +10,10 @@ runCARNIVAL(
   netObj = netObj,
   weightObj = NULL,
   solverPath = NULL,
-  solver = c("lpSolve", "cplex", "cbc"),
+  solver = c("lpSolve", "cplex", "cbc", "gurobi"),
   timelimit = 3600,
   mipGAP = 0.05,
-  poolrelGAP = 1e-04,
+  poolrelGAP = 0.0001,
   limitPop = 500,
   poolCap = 100,
   poolIntensity = 4,
@@ -23,7 +23,8 @@ runCARNIVAL(
   threads = 0,
   cleanTmpFiles = TRUE,
   keepLPFiles = TRUE,
-  dir_name = ""
+  clonelog = -1,
+  dir_name = "."
 )
 }
 \arguments{
@@ -64,7 +65,7 @@ pool of solution (default: 100)}
 \item{poolIntensity}{CPLEX parameter: Intensity of solution searching
 (0,1,2,3,4 - default: 4)}
 
-\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the 
+\item{poolReplace}{CPLEX parameter: Replacement strategy of solutions in the
 pool (0,1,2 - default: 2 = most diversified solutions)}
 
 \item{alphaWeight}{Objective function: weight for mismatch penalty (default:
@@ -75,10 +76,10 @@ pool (0,1,2 - default: 2 = most diversified solutions)}
 \item{threads}{CPLEX parameter: Number of threads to use
 default: 0 for maximum number possible threads on system}
 
-\item{cleanTmpFiles}{logic (default-TRUE), specifying if the tmp files made by 
+\item{cleanTmpFiles}{logic (default-TRUE), specifying if the tmp files made by
 solvers should be cleaned after run.}
 
-\item{keepLPFiles}{logic (default=TRUE), specifying if the LP file should be 
+\item{keepLPFiles}{logic (default=TRUE), specifying if the LP file should be
 kept.}
 
 \item{dir_name}{Specify directory name to store results. by default set to
@@ -127,25 +128,25 @@ load(file = system.file("toy_network_ex1.RData",
 #                    measObj = toy_measurements_ex1,
 #                    netObj = toy_network_ex1,
 #                    solver = 'lpSolve')
-                   
+
 #res1$weightedSIF ##see @return
-#res1$nodesAttributes ## see @return  
+#res1$nodesAttributes ## see @return
 #res1$sifAll ## see @return
 #res1$attributesAll ## see @return
 
-## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
+## Examples for cbc and cplex are commented out because these solvers are not part of R environment
 ## and need to be installed separately
-## 
+##
 ## cbc
 ## res2 = runCARNIVAL(inputObj = toy_perturbations_ex1,
 ##                    measObj = toy_measurements_ex1,
 ##                    netObj = toy_network_ex1,
 ##                    solver = 'cbc')
-##                               
+##
 ## res2$weightedSIF ##see @return
-## res2$nodesAttributes ## see @return  
-## res2$sifAll ## see @return 
-## res2$attributesAll ## see @return 
+## res2$nodesAttributes ## see @return
+## res2$sifAll ## see @return
+## res2$attributesAll ## see @return
 ##
 ## cplex
 ## res3 = runCARNIVAL(inputObj = toy_perturbations_ex1,
@@ -154,7 +155,7 @@ load(file = system.file("toy_network_ex1.RData",
 ##                    solver = 'cplex')
 ##
 ## res3$weightedSIF ##see @return
-## res3$nodesAttributes ## see @return  
+## res3$nodesAttributes ## see @return
 ## res3$sifAll ## see @return
 ## res3$attributesAll ## see @return
 

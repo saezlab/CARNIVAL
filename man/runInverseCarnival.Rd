@@ -20,7 +20,7 @@ enrichment scores)}
 \item{weights}{(optional) vector of the additional weights: e.g. PROGENy pathway
 score or measured protein activities.}
 
-\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(), 
+\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(),
 defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.}
 }
 \value{
@@ -61,24 +61,24 @@ load(file = system.file("toy_network_ex1.RData",
 #res1 = runInverseCarnival(measurements = toy_measurements_ex1,
 #                          priorKnowledgeNetwork = toy_network_ex1,
 #                          carnivalOptions = defaultLpSolveCarnivalOptions())
-                              
-#res1$weightedSIF ##see @return
-#res1$nodesAttributes ## see @return  
-#res1$sifAll ## see @return
-#res1$attributesAll ## see @return 
 
-## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
+#res1$weightedSIF ##see @return
+#res1$nodesAttributes ## see @return
+#res1$sifAll ## see @return
+#res1$attributesAll ## see @return
+
+## Examples for cbc and cplex are commented out because these solvers are not part of R environment
 ## and need to be installed separately
-## 
+##
 ## cbc
 ## res2 = runInverseCarnival(measurements = toy_measurements_ex1,
 ##                           priorKnowledgeNetwork = toy_network_ex1,
 ##                           carnivalOptions = defaultCbcCarnivalOptions())
-##                               
+##
 ## res2$weightedSIF ##see @return
-## res2$nodesAttributes ## see @return  
-## res2$sifAll ## see @return 
-## res2$attributesAll ## see @return 
+## res2$nodesAttributes ## see @return
+## res2$sifAll ## see @return
+## res2$attributesAll ## see @return
 ##
 ## cplex
 ## res3 = runVanillaCarnival(measurements = toy_measurements_ex1,
@@ -86,10 +86,10 @@ load(file = system.file("toy_network_ex1.RData",
 ##                           carnivalOptions = defaultCplexCarnivalOptions())
 ##
 ## res3$weightedSIF ##see @return
-## res3$nodesAttributes ## see @return  
+## res3$nodesAttributes ## see @return
 ## res3$sifAll ## see @return
 ## res3$attributesAll ## see @return
- 
+
 }
 \author{
 Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}
