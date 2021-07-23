@@ -9,7 +9,11 @@ checkPerturbations <- function(perturbations, nodesPriorKnowledgeNetwork) {
   noPerturbationsInNetworkError <- "None of your perturbations are in prior knowledge networks (PKN). 
                                    Check node identifiers in both perturbations and PKN objects."
   
-  if (is.null(perturbations) || !is.numeric(perturbations)) {
+  if (any(is.na(perturbations))) {
+    warning("These perturbation nodes are provided as NA, their activity will be inferred: ", 
+            paste(names(perturbations)[is.na(perturbations)], collapse = " | "))   
+    
+  } else if (is.null(perturbations) || !is.numeric(perturbations)) {
     stop(paste(nullObjectError, wrongOrderError))
   }
   

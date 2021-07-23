@@ -7,7 +7,7 @@ concatenateConstraints <- function(constraintsText){
   allConstraints <- paste0("c", seq_len(length(constraintsText)),
                            ":\t", constraintsText, "\t \t")
 
-  collectNan <- grep(pattern = "NaN", x = allConstraints) 
+  collectNan <- grep(pattern = "NaN|NA", x = allConstraints) 
   if(length(collectNan) > 0){
     allConstraints <- allConstraints[-collectNan] 
   }
