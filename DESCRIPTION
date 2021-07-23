@@ -39,7 +39,7 @@ Imports:
     lpSolve,
     igraph,
     dplyr,
-    plyr
+    plyr,
     rjson,
     rmarkdown
 biocViews: Transcriptomics, GeneExpression, Network
