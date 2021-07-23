@@ -41,8 +41,7 @@ Imports:
     dplyr,
     plyr,
     rjson,
-    rmarkdown,
-    methods
+    rmarkdown
 biocViews: Transcriptomics, GeneExpression, Network
 License: GPL-3
 LazyData: true

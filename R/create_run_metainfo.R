@@ -32,9 +32,9 @@ createFilenames <- function(carnivalOptions) {
   parsedData <- file.path(outputFolder, paste0("parsedData_", carnivalOptions$runId, ".RData"))
   resultFile <- file.path(outputFolder, paste0("result", "_", carnivalOptions$runId, ".txt"))
   
-  filenames <- list("lpFilename" = normalizePath(lpFilename), 
-                    "parsedData" = normalizePath(normalizePathparsedData),
-                    "resultFile" = normalizePath(resultFile))
+  filenames <- list("lpFilename" = path.expand(lpFilename), 
+                    "parsedData" = path.expand(parsedData),
+                    "resultFile" = path.expand(resultFile))
 
   if(carnivalOptions$solver == getSupportedSolvers()$cplex) {
     filenames <- createSolverSpecificFiles(carnivalOptions, filenames)
@@ -49,8 +49,8 @@ createSolverSpecificFiles <- function(carnivalOptions, filenames) {
   if( carnivalOptions$solver == getSupportedSolvers()$cplex ) {
     cplexCommandFile <- file.path(outputFolder, paste0("cplexCommand", "_", carnivalOptions$runId, ".txt"))
     cplexLog <- file.path(outputFolder, paste0("cplexLog", "_", carnivalOptions$runId, ".txt"))
-    filenames <- c(filenames, "cplexCommandFile" = normalizePath(cplexCommandFile),
-                              "cplexLog" = normalizePath(cplexLog))
+    filenames <- c(filenames, "cplexCommandFile" = path.expand(cplexCommandFile),
+                              "cplexLog" = path.expand(cplexLog))
   }
 
   return(filenames)
