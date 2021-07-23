@@ -75,7 +75,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
 }
 
 getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
-  weightedSolution <- count(weightedSolution)
+  weightedSolution <- plyr::count(weightedSolution)
   names(weightedSolution) <- c("Node1", "Sign", "Node2", "Weight")
   weightedSolution$Weight <- ( weightedSolution$Weight / nSolutions ) * 100
  

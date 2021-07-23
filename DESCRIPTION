@@ -39,10 +39,9 @@ Imports:
     lpSolve,
     igraph,
     dplyr,
-    plyr,
+    plyr
     rjson,
-    rmarkdown,
-    methods
+    rmarkdown
 biocViews: Transcriptomics, GeneExpression, Network
 License: GPL-3
 LazyData: true
