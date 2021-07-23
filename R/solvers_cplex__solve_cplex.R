@@ -9,7 +9,7 @@ solveWithCplex <- function(carnivalOptions) {
     # TODO: implement logging on Win machine. 
     #TODO why copying exe and not directly executing it? 
     file.copy(from = carnivalOptions$solverPath, to = getwd())
-    system(paste0("cplex.exe -f", cplexCommandFilename))
+    system(paste0("cplex.exe -f ", cplexCommandFilename))
     file.remove("cplex.exe")
   } else {
     system(paste0(carnivalOptions$solverPath, " -f ", cplexCommandFilename,
