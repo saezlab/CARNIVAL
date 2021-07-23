@@ -12,11 +12,13 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
                                     "activityUp" = rep(0, length(variables$nodesDf$nodes)), 
                                     "activityDown" = rep(0, length(variables$nodesDf$nodes)),
                                     "zeroActivity" = rep(0, length(variables$nodesDf$nodes)))
+  
   print(solutionMatrix)
   for (i in 1:ncol(solutionMatrix)) {
     
     solMtx <- solutionMatrix[solutionMatrix[, i] > 0, i]
     namesSol <- names(solMtx)
+    solMtx <- round(as.numeric(solMtx))
     
     solutionEdgesUp <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol, ]
     solutionEdgesDown <-  variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesSol, ]
@@ -35,30 +37,24 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
     weightedSolution <- rbind(weightedSolution, solution)
     
     #For nodes, we need to select values below 0 too.
-    allNodesVariables <- variables$nodesDf[, c("nodes", "nodesUpVars", "nodesDownVars")] 
+    allNodesVariables <- variables$nodesDf[, c("nodes", "nodesVars")] 
+    nodesActivity <- solutionMatrix[rownames(solutionMatrix) %in% 
+                                       variables$nodesDf$nodesVars, ]
+    nodesActivity <- as.data.frame(nodesActivity)
+    nodesActivity$nodesVars <- rownames(nodesActivity) 
     
-    allNodesVariables$activityUp <- solutionMatrix[rownames(solutionMatrix) %in% 
-                                                     variables$nodesDf$nodesUpVars, ]
-    allNodesVariables$activityDown <- solutionMatrix[rownames(solutionMatrix) %in% 
-                                                       variables$nodesDf$nodesDownVars, ]
-    allNodesVariables$activity <- solutionMatrix[rownames(solutionMatrix) %in% 
-                                                   variables$nodesDf$nodesVars, ]
+    allNodesVariables <- merge(allNodesVariables, nodesActivity, by="nodesVars")
     
-    nodesAttributes <- allNodesVariables[, c("nodes", "activityUp", "activityDown", "activity")] 
-    names(nodesAttributes) <- c("Nodes", "activityUp", "activityDown", "Activity")
-  
+    nodesAttributes <- allNodesVariables[, c("nodes", "nodesActivity")] 
+    names(nodesAttributes) <- c("Nodes", "Activity")
     
-    collapsedAttributes$activityUp <- collapsedAttributes$activityUp + 
-                                      as.numeric(allNodesVariables$activityUp)
-    collapsedAttributes$activityDown <- collapsedAttributes$activityDown + 
-                                        as.numeric(allNodesVariables$activityDown)
-    
-    zeroActivity <- as.numeric(allNodesVariables$activity == 0)
-    collapsedAttributes$zeroActivity <- collapsedAttributes$zeroActivity + zeroActivity
+    collapsedAttributes$zeroActivity <- as.numeric(nodesAttributes$Activity == 0)
+    collapsedAttributes$activityUp <- as.numeric(nodesAttributes$Activity == 1)
+    collapsedAttributes$activityDown <- as.numeric(nodesAttributes$Activity == -1)
     collapsedAttributes$nodesType <- variables$nodesDf$nodesType
     
     allSolutions[[i]] <- solution
-    allAttributes[[i]] <- nodesAttributes[, c("Nodes", "Activity")]
+    allAttributes[[i]] <- nodesAttributes[nodesAttributes$Activity > 0, c("Nodes", "Activity")]
   }
   
   summarisedSolution <- getWeightedCollapsedSolution(weightedSolution, 
