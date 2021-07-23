@@ -13,7 +13,6 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
                                     "activityDown" = rep(0, length(variables$nodesDf$nodes)),
                                     "zeroActivity" = rep(0, length(variables$nodesDf$nodes)))
   
-  print(solutionMatrix)
   for (i in 1:ncol(solutionMatrix)) {
     
     solMtx <- solutionMatrix[solutionMatrix[, i] > 0, i]
