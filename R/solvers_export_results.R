@@ -38,7 +38,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
     #For nodes, we need to select values below 0 too.
     allNodesVariables <- variables$nodesDf[, c("nodes", "nodesVars")] 
     nodesActivity <- solutionMatrix[rownames(solutionMatrix) %in% 
-                                       variables$nodesDf$nodesVars, ]
+                                       variables$nodesDf$nodesVars, i]
     nodesActivity <- as.data.frame(nodesActivity)
     nodesActivity$nodesVars <- rownames(nodesActivity) 
     
@@ -78,7 +78,8 @@ getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
   weightedSolution <- plyr::count(weightedSolution)
   names(weightedSolution) <- c("Node1", "Sign", "Node2", "Weight")
   weightedSolution$Weight <- ( weightedSolution$Weight / nSolutions ) * 100
- 
+  weightedSolution$Weight <- round(weightedSolution$Weight)
+  
   return(weightedSolution)
 }
 
@@ -86,9 +87,9 @@ getSummaryNodesAttributes <- function(collapsedAttributes, nSolutions) {
   nodesSolution <- data.frame("Node" = collapsedAttributes$nodes, 
                               "NodeType" = collapsedAttributes$nodesType)
   
-  nodesSolution$ZeroAct <- ( collapsedAttributes$zeroActivity / nSolutions ) * 100
-  nodesSolution$UpAct <- ( collapsedAttributes$activityUp / nSolutions ) * 100
-  nodesSolution$DownAct <- ( collapsedAttributes$activityDown / nSolutions ) * 100
+  nodesSolution$ZeroAct <- round(( collapsedAttributes$zeroActivity / nSolutions ) * 100)
+  nodesSolution$UpAct <- round(( collapsedAttributes$activityUp / nSolutions ) * 100)
+  nodesSolution$DownAct <- round(( collapsedAttributes$activityDown / nSolutions ) * 100)
   nodesSolution$AvgAct <- nodesSolution$UpAct - nodesSolution$DownAct
   nodesSolution <- nodesSolution[, c("Node", "ZeroAct", "UpAct", "DownAct", 
                                      "AvgAct", "NodeType")]
