@@ -1,10 +1,10 @@
 ## This code writes the list of constraints (4) and (5) of the ILP problem. 
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
-
 createConstraints_4_5_v2 <- function(variables, constraintName = c("c4", "c5")) {
   
-  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
+  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x = "Node1", 
+                           by.y = "nodes")
   constraints_4 <- c()
   constraints_5 <- c()
   

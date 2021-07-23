@@ -2,8 +2,7 @@
 ## Difference' variables and which measure the mis-fit between inferred and 
 ## measured data.
 ## 
-## Enio Gjerga, 2020
-
+## Enio Gjerga, Olga Ivanova 2020-2021
 createConstraintsMeasurements_v2 <- function(variables, constraintName = "c0") {
   
   positiveMeasurements <- variables$measurementsDf[variables$measurementsDf$value > 0, ]

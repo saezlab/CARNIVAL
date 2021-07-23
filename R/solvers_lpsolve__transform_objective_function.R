@@ -10,7 +10,7 @@ transformObjectiveFunction <- function(mt, lpFile){
   problem <- gsub(pattern = "Obj:\t ", replacement = "", x = problem, 
                   fixed = TRUE)
   
-  coefficients <- as.numeric(
+  problemCoefficients <- as.numeric(
     unlist(
       lapply(
         strsplit(
@@ -32,7 +32,7 @@ transformObjectiveFunction <- function(mt, lpFile){
   }
   
   f.obj <- rep(0, nrow(mt))
-  f.obj[idx] <- coefficients
+  f.obj[idx] <- problemCoefficients
   
   return(f.obj)
 }

@@ -1,16 +1,16 @@
 ## This code writes the list of constraints (1), (2) and (3) of the ILP problem. 
 ## 
 ## Enio Gjerga, Olga Ivanova 2020-2021
-
 createConstraints_1_2_v2 <- function(variables, constraintName = c("c1", "c2")) {
   
-  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x="Node1", by.y="nodes")
+  variablesMerged <- merge(variables$edgesDf, variables$nodesDf, by.x = "Node1", 
+                           by.y = "nodes")
   constraints_1 <- c()
   constraints_2 <- c()
   
   edgesUpActivation <- variablesMerged[variablesMerged$Sign == 1, ]
   
-  if(nrow(edgesUpActivation) > 0){
+  if (nrow(edgesUpActivation) > 0){
     sourceNodes <- edgesUpActivation$nodesVars
     constraints_1 <- c(constraints_1, createConstraint(edgesUpActivation$edgesUpVars, "-", 
                                       sourceNodes, ">=", 0))
@@ -20,7 +20,7 @@ createConstraints_1_2_v2 <- function(variables, constraintName = c("c1", "c2")) 
   
   edgesUpInhibition <- variablesMerged[variablesMerged$Sign == -1, ]
   
-  if(nrow(edgesUpInhibition) > 0){
+  if (nrow(edgesUpInhibition) > 0){
     sourceNodes <- edgesUpInhibition$nodesVars
     constraints_1 <- c(constraints_1, createConstraint(edgesUpInhibition$edgesUpVars, "+", 
                                                        sourceNodes, ">=", 0))

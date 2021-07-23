@@ -1,7 +1,6 @@
 ## Providing functions for fixing special characters in node identifiers
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
-
 specialRegExpCharactersToFix <- c("*", "+", "=")
 specialCharactersToFix <- c("-", "<", ">", "/", " ")
 
@@ -33,20 +32,22 @@ correctIdentifiers <- function(nodesIds, replacementSymbol = "_",
     allSubstitutedNamesTarget <- names(resultsIds[lengths(resultsIds) != 0])
     
     warning("Provided nodes have identifiers with characters ", 
-            paste0(allSpecialCharactersFound, sep=", "), " and they will
+            paste0(allSpecialCharactersFound, sep = ", "), " and they will
             be replaced with '_'")
   }  
   
   nodesIds <- gsub(pattern = preparedPattern, x = nodesIds, replacement = replacementSymbol)  
   return(nodesIds) 
-  
 }
 
-correctNodeIdentifiersInNetwork <- function( network, replacementSymbol = "_", verbose = FALSE,
+correctNodeIdentifiersInNetwork <- function( network, replacementSymbol = "_", 
+                                             verbose = FALSE,
                                              keepMapping = FALSE ){
   
-  network$source <- correctIdentifiers(network$source, replacementSymbol, verbose, keepMapping)
-  network$target <- correctIdentifiers(network$target, replacementSymbol, verbose, keepMapping)
+  network$source <- correctIdentifiers(network$source, replacementSymbol, 
+                                       verbose, keepMapping)
+  network$target <- correctIdentifiers(network$target, replacementSymbol, 
+                                       verbose, keepMapping)
   
   return(network) 
 }

@@ -4,106 +4,95 @@
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix, variables) {
   
   nSolutions <- ncol(solutionMatrix)
-  summarisedSolution <- getWeightedCollapsedSolution(solutionMatrix, variables, nSolutions)
   
   allSolutions <- list()
   allAttributes <- list()
+  weightedSolution <- c()
+  collapsedAttributes <- data.frame("nodes" = variables$nodesDf$nodes, 
+                                    "activityUp" = rep(0, length(variables$nodesDf$nodes)), 
+                                    "activityDown" = rep(0, length(variables$nodesDf$nodes)),
+                                    "zeroActivity" = rep(0, length(variables$nodesDf$nodes)))
   
+  print(solutionMatrix)
   for (i in 1:ncol(solutionMatrix)) {
     
     solMtx <- solutionMatrix[solutionMatrix[, i] > 0, i]
     namesSol <- names(solMtx)
+    solMtx <- round(as.numeric(solMtx))
     
-    sol <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol | 
-                             variables$edgesDf$edgesDownVars %in% namesSol , ]
+    solutionEdgesUp <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol, ]
+    solutionEdgesDown <-  variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesSol, ]
+  
+    nodesUp <- variables$nodesDf[variables$nodesDf$nodesUpVars %in% namesSol, ]
+    nodesDown <- variables$nodesDf[variables$nodesDf$nodesDownVars %in% namesSol, ]
+    
+    #Nodes activity should be in line with incoming edges  
+    solutionEdgesUp <- solutionEdgesUp[solutionEdgesUp$Node2 %in% nodesUp$nodes, ]
+    solutionEdgesDown <- solutionEdgesDown[solutionEdgesDown$Node2 %in% nodesDown$nodes, ]
+
+    solution <- rbind(solutionEdgesUp, solutionEdgesDown)
+    solution <- solution[, c("Node1", "Sign", "Node2")]
+    
+    #collect collapsed solution
+    weightedSolution <- rbind(weightedSolution, solution)
     
     #For nodes, we need to select values below 0 too.
-    nodesAttributes <- solutionMatrix[, i]
-    nodesAttributes <- nodesAttributes[names(nodesAttributes) %in% variables$nodesDf$nodesVars & nodesAttributes != 0]
-    nodesAttributes <- as.data.frame(nodesAttributes)
-    nodesAttributes <- cbind(nodesAttributes, row.names(nodesAttributes))
-    names(nodesAttributes) <- c("Activity", "variables")
+    allNodesVariables <- variables$nodesDf[, c("nodes", "nodesVars")] 
+    nodesActivity <- solutionMatrix[rownames(solutionMatrix) %in% 
+                                       variables$nodesDf$nodesVars, ]
+    nodesActivity <- as.data.frame(nodesActivity)
+    nodesActivity$nodesVars <- rownames(nodesActivity) 
     
-    attributes <- merge(nodesAttributes, variables$nodesDf, by.x = "variables", by.y="nodesVars")
+    allNodesVariables <- merge(allNodesVariables, nodesActivity, by="nodesVars")
     
-    #TODO is the sign always the same in the solution as in PKN?
-    sol <- sol[c("Node1", "Sign", "Node2")]
-    attributes <- attributes[c("nodes", "Activity")]
-    names(attributes) <- c("Nodes", "Activity")
+    nodesAttributes <- allNodesVariables[, c("nodes", "nodesActivity")] 
+    names(nodesAttributes) <- c("Nodes", "Activity")
     
-    allSolutions[[i]] <- sol
-    allAttributes[[i]] <- attributes
+    collapsedAttributes$zeroActivity <- as.numeric(nodesAttributes$Activity == 0)
+    collapsedAttributes$activityUp <- as.numeric(nodesAttributes$Activity == 1)
+    collapsedAttributes$activityDown <- as.numeric(nodesAttributes$Activity == -1)
+    collapsedAttributes$nodesType <- variables$nodesDf$nodesType
+    
+    allSolutions[[i]] <- solution
+    allAttributes[[i]] <- nodesAttributes[nodesAttributes$Activity > 0, c("Nodes", "Activity")]
   }
   
+  summarisedSolution <- getWeightedCollapsedSolution(weightedSolution, 
+                                                     nSolutions)
   #TODO perturbations are handled differently? 
-  #TODO divide all values to N of solutions
-  nodesAttributes <- getSummaryNodesAttributes(solutionMatrix, variables, nSolutions)
+  nodesAttributes <- getSummaryNodesAttributes(collapsedAttributes,
+                                               nSolutions)
+  if (nrow(summarisedSolution) != 0) {
+    result <- list("weightedSIF" = summarisedSolution, 
+                   "nodesAttributes" = nodesAttributes,
+                   "sifAll" = allSolutions, 
+                   "attributesAll" = allAttributes) 
+  } else {
+    result <- NULL
+    message(getTime(), " No consistent solutions exist.")
+  }
   
-  result <- list("weightedSIF" = summarisedSolution, 
-                 "nodesAttributes" = nodesAttributes,
-                 "sifAll" = allSolutions, 
-                 "attributesAll" = allAttributes) 
+  return(result)
 }
 
-getWeightedCollapsedSolution <- function(solutionMatrix, variables, nSolutions) {
-  solutionMatrix <- as.data.frame(solutionMatrix)
-  
-  weights <- apply(solutionMatrix, 1, function(x) {
-    sum(as.numeric(as.character(x)))
-  })  
-  
-  weights <- weights[weights > 0]
-  namesWeights <- names(weights)
-  weights <- as.data.frame(weights)
-  weights <- cbind(weights, row.names(weights))
-  names(weights) <- c("Weight", "variables")
-  
-  edgesVars <- c(variables$edgesDf$edgesUpVars, variables$edgesDf$edgesDownVars)
-  
-  sol1 <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesWeights , ]
-  sol2 <- variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesWeights , ]
-  
-  edgesUpWeights <- weights[weights$variables %in% variables$edgesDf$edgesUpVars, ]
-  edgesDownWeights <- weights[weights$variables %in% variables$edgesDf$edgesDownVars, ]
-  
-  sol1 <- merge(sol1, edgesUpWeights, by.x = "edgesUpVars", by.y = "variables")
-  sol2 <- merge(sol2, edgesDownWeights, by.x = "edgesDownVars", by.y = "variables")
-  
-  sol <- rbind(sol1, sol2)
-  sol <- sol[c("Node1", "Sign", "Node2", "Weight")]
-  
-  sol$Weight <- (sol$Weight / nSolutions) * 100
-  
-  return(sol)
+getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
+  weightedSolution <- count(weightedSolution)
+  names(weightedSolution) <- c("Node1", "Sign", "Node2", "Weight")
+  weightedSolution$Weight <- ( weightedSolution$Weight / nSolutions ) * 100
+ 
+  return(weightedSolution)
 }
 
-getSummaryNodesAttributes <- function(solutionMatrix, variables, nSolutions) {
-  solutionMatrix <- as.data.frame(solutionMatrix)
+getSummaryNodesAttributes <- function(collapsedAttributes, nSolutions) {
+  nodesSolution <- data.frame("Node" = collapsedAttributes$nodes, 
+                              "NodeType" = collapsedAttributes$nodesType)
   
-  nodesVars <- c(variables$nodesDf$nodesVars, variables$nodesDf$nodesUpVars, 
-                 variables$nodesDf$nodesDownVars)
-  
-  namesSol <- rownames(solutionMatrix)
-  nodesSolutions <- solutionMatrix[namesSol %in% nodesVars, ]
-  nodesSolutions <- t(nodesSolutions)
-  nodesSolutions <- as.data.frame(nodesSolutions)
-  colnames(nodesSolutions) <- namesSol[namesSol %in% nodesVars]
-  
-  summaryNodes <- apply(nodesSolutions, 2, function(x) {sum(as.numeric(x))})
-  
-  nodesSolution <- summaryNodes[names(summaryNodes) %in% variables$nodesDf$nodesVars]
-  nodesSolution <- as.data.frame(nodesSolution)
-  nodesSolution <- cbind(nodesSolution, row.names(nodesSolution))
-  names(nodesSolution) <- c("Activity", "Node")
-  
-  nodesSolution$ZeroAct <- ( as.numeric(!nodesSolution$Activity) / nSolutions ) * 100
-  nodesSolution$UpAct <- ( as.numeric(nodesSolution$Activity == 1) / nSolutions ) * 100
-  nodesSolution$DownAct <- ( as.numeric(nodesSolution$Activity == -1) / nSolutions ) * 100
+  nodesSolution$ZeroAct <- ( collapsedAttributes$zeroActivity / nSolutions ) * 100
+  nodesSolution$UpAct <- ( collapsedAttributes$activityUp / nSolutions ) * 100
+  nodesSolution$DownAct <- ( collapsedAttributes$activityDown / nSolutions ) * 100
   nodesSolution$AvgAct <- nodesSolution$UpAct - nodesSolution$DownAct
-  
-  nodesSolution <- merge(variables$nodesDf, nodesSolution, by.x = "nodesVars", by.y = "Node")
-  nodesSolution <- nodesSolution[, c("nodes", "ZeroAct", "UpAct", "DownAct", "AvgAct", "nodesType")]
-  names(nodesSolution)[1] <- "Node" 
+  nodesSolution <- nodesSolution[, c("Node", "ZeroAct", "UpAct", "DownAct", 
+                                     "AvgAct", "NodeType")]
   
   return(nodesSolution)
 }

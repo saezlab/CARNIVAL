@@ -185,6 +185,9 @@ exportIlpSolutionResultFromXml <- function(solMatrix = solMatrix,
       sif <- sif[-1,] ## simply remove an empty line
     }
     
+    #remove the spaces around 1
+    sif[, 2] <- trimws(sif[, 2])
+    
     if (nrow(sif) == 0) {
       sif <- NULL
     }

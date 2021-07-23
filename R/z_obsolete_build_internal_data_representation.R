@@ -67,7 +67,7 @@ buildDataVector <- function(measurements, priorKnowledgeNetwork, perturbations) 
 # expNodesReduced - full list of nodes names in prior knowledge network
 # expNodesReducedUpSource/expNodesReducedDownSource - source nodes names from prior knowledge network 
 # expNodesReducedUpTarget/expNodesReducedDownTarget - target nodes names from prior knowledge network 
-# expEdgesReducedSource/expEdgesReducedTarget - list of sources/targets from $exp with verbose explnation
+# expEdgesReducedSource/expEdgesReducedTarget - list of sources/targets from $exp with verbose explanation
 # expNodesReducedUp/expNodesReducedDown - all nodes names 
 # idxB - indices of variables corresponding to B variables (see constraint 8 in Liu et al.) in full variables list
 # idxDist - indices of variables corresponding to distance variables in full variables list
