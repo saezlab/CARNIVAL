@@ -23,7 +23,7 @@ enrichment scores)}
 \item{weights}{(optional) vector of the additional weights: e.g. PROGENy pathway
 scores or measured protein activities.}
 
-\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(), 
+\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(),
 defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.}
 }
 \value{
@@ -49,19 +49,19 @@ load(file = system.file("toy_network_ex1.RData",
 #                             measurements = toy_measurements_ex1,
 #                             priorKnowledgeNetwork = toy_network_ex1,
 #                             carnivalOptions = defaultLpSolveCarnivalOptions())
-                              
+
 #res1["lpFile"] ##path to generated lp file
 #res1["parsedDataFile"] ##path to data file used during generation
 
-## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
+## Examples for cbc and cplex are commented out because these solvers are not part of R environment
 ## and need to be installed separately
-## 
+##
 ## cbc
 ## res2 = generateLpFileCarnival(perturbations = toy_perturbations_ex1,
 ##                               measurements = toy_measurements_ex1,
 ##                               priorKnowledgeNetwork = toy_network_ex1,
 ##                               carnivalOptions = defaultCbcCarnivalOptions())
-##                               
+##
 ## res2["lpFile"] ##path to generated lp file
 ## res2["parsedDataFile"] ##path to data file used during generation
 ##

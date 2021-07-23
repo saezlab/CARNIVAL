@@ -15,7 +15,7 @@ runFromLpCarnival(
 
 \item{parsedDataFile}{full path to preprocessed .RData file}
 
-\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(), 
+\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(),
 defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.}
 }
 \value{
@@ -49,32 +49,32 @@ Runs CARNIVAL pipeline with preparsed data - lp file and Rdata file containing v
 \examples{
 lpFilePath = system.file("toy_lp_file_ex1.lp",
                          package="CARNIVAL")
-                         
+
 parsedDataFilePath = system.file("toy_parsed_data_ex1.RData",
-                                package="CARNIVAL")                        
+                                package="CARNIVAL")
 
 ## lpSolve
 #res1 = runFromLpCarnival(lpFile = lpFilePath,
 #                         parsedDataFile = parsedDataFilePath,
 #                         carnivalOptions = defaultLpSolveCarnivalOptions())
-                              
-#res1$weightedSIF ##see @return
-#res1$nodesAttributes ## see @return  
-#res1$sifAll ## see @return
-#res1$attributesAll ## see @return 
 
-## Examples for cbc and cplex are commented out because these solvers are not part of R environment 
+#res1$weightedSIF ##see @return
+#res1$nodesAttributes ## see @return
+#res1$sifAll ## see @return
+#res1$attributesAll ## see @return
+
+## Examples for cbc and cplex are commented out because these solvers are not part of R environment
 ## and need to be installed separately
-## 
+##
 ## cbc
 ## res2 = runFromLpCarnival(lpFile = lpFilePath,
 ##                          parsedDataFile = parsedDataFilePath,
 ##                          carnivalOptions = defaultLpCbcCarnivalOptions())
-##                               
+##
 ## res2$weightedSIF ##see @return
-## res2$nodesAttributes ## see @return  
-## res2$sifAll ## see @return 
-## res2$attributesAll ## see @return 
+## res2$nodesAttributes ## see @return
+## res2$sifAll ## see @return
+## res2$attributesAll ## see @return
 ##
 ## cplex
 ## res3 = runFromLpCarnival(lpFile = lpFilePath,
@@ -82,10 +82,10 @@ parsedDataFilePath = system.file("toy_parsed_data_ex1.RData",
 ##                          carnivalOptions = defaultLpCplexCarnivalOptions())
 ##
 ## res3$weightedSIF ##see @return
-## res3$nodesAttributes ## see @return  
+## res3$nodesAttributes ## see @return
 ## res3$sifAll ## see @return
 ## res3$attributesAll ## see @return
- 
+
 }
 \author{
 Enio Gjerga, Olga Ivanova 2020-2021 \email{carnival.developers@gmail.com}

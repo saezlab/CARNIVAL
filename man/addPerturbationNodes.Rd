@@ -8,7 +8,8 @@ the prior knowledge network.}
 addPerturbationNodes(priorKnowledgeNetwork)
 }
 \arguments{
-\item{priorKnowledgeNetwork}{data.frame with priorKnowledgeNetwork with source, interaction, target columns}
+\item{priorKnowledgeNetwork}{data.frame with priorKnowledgeNetwork with source, 
+interaction, target columns.}
 }
 \value{
 data.frame with prior knowledge network with added perturbations

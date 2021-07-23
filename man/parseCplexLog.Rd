@@ -12,8 +12,8 @@ of this file read by \code{\link[readr]{read_lines}}.}
 }
 \value{
 list variable with following fields:
-- `convergence` a table that contains information on the convergence of CPLEX 
-- `n_solutions` number of solutions found 
+- `convergence` a table that contains information on the convergence of CPLEX
+- `n_solutions` number of solutions found
 - `objective` objective function value
 - `termination_reason`: reason of termination
 }

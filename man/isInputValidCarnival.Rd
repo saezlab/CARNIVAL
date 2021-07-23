@@ -23,7 +23,7 @@ enrichment scores)}
 \item{weights}{(optional) vector of the additional weights: e.g. PROGENy pathway
 scores or measured protein activities.}
 
-\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(), 
+\item{carnivalOptions}{the list of options for the run. See defaultLpSolveCarnivalOptions(),
 defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.}
 }
 \value{
