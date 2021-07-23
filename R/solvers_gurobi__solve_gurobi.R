@@ -12,8 +12,8 @@ solveWithGurobi <- function(carnivalOptions) {
     lpFile <- carnivalOptions$filenames$lpFilename
     
     additional_params = ""
-    if (("distributed" %in% names(carnivalOptions)) &  
-      ("WorkerPassword" %in% names(carnivalOptions)) & 
+    if (("distributed" %in% names(carnivalOptions)) &&  
+      ("WorkerPassword" %in% names(carnivalOptions)) && 
       (carnivalOptions$distributed)) {
     
         node_port <- 61000
