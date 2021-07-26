@@ -62,7 +62,8 @@ getSolutionMatrixGurobi <- function(sol_name_prefix) {
     main_sol <- paste0(sol_name_prefix, ".sol")
 
     # Get the objective function value of the main solution
-    opt_val <- as.numeric(tail(scan(main_sol, nlines=2, what=character(), quiet=T), 1))
+    line <- grep("Objective value", readLines(main_sol, n=3), value=T)
+    opt_val <- as.numeric(stringr::str_split(line, " = ", simplify=T)[2])
 
     # Get the names of the alternative solutions 
     # (includes intermediate, non-optimal solutions)
@@ -80,7 +81,8 @@ getSolutionMatrixGurobi <- function(sol_name_prefix) {
         x <- paste0(sol_name_prefix, "_", i, ".sol")
 
         # Objective function value of this solution 
-        obj_val <- as.numeric(tail(scan(x, nlines=2, what=character(), quiet=T), 1))
+        line <- grep("Objective value", readLines(x, n=3), value=T)
+        obj_val <- as.numeric(stringr::str_split(line, " = ", simplify=T)[2])
 
         # If the solution has the same objective function value as the main,
         # add it to the solution matrix

@@ -130,9 +130,9 @@ solveCarnival <- function(dataPreprocessed,
                                           newDataRepresentation)
   solutionMatrix <- sendTaskToSolver(preparedForRun$variables, dataPreprocessed, 
                                      carnivalOptions)
-  
+  solution <- NULL 
   if (ncol(solutionMatrix) == 0) {
-    message(getTime(), "No solutions exist.")
+    message(getTime(), " No solutions exist.")
   } else {
     solution <- processSolution( solutionMatrix, preparedForRun$variables, 
                                  dataPreprocessed, carnivalOptions, 
