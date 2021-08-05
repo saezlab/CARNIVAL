@@ -3,7 +3,7 @@
 # Thus, here I modified it and validated that it can produce the results same as 
 # line 38-46 in the toy_lp_file_ex1.lp file 
 ##
-## Author: Geoffrey(Dingquan) Yu, EMBL-HH, 01-Jul-2021
+## Author: Geoffrey(Dingquan) Yu, EMBL-HH, 01-Aug-2021
 
 ## Please uncomment codes and change paths to reproduce results 
 ## 
@@ -14,59 +14,62 @@
 # nodes<-base::unique(c(toy_network_ex1$source,toy_network_ex1$target))
 # idxNodes<-seq(1,length(nodes),1)
 # 
-# nodeVars<-paste0("n",seq(1:length(nodes)))
-# nodeUpVars<-paste0("nU",idxNodes)
-# nodeDownVars<-paste0("nD",idxNodes)
-# nodeDf<-cbind(nodes,nodeVars,nodeUpVars,nodeDownVars)
+# nodesVars<-paste0("n",seq(1:length(nodes)))
+# nodesUpVars<-paste0("nU",idxNodes)
+# nodesDownVars<-paste0("nD",idxNodes)
+# nodesDf<-cbind(nodes,nodesVars,nodesUpVars,nodesDownVars)
 # 
 # 
-# edgeDf<-toy_network_ex1
-# names(edgeDf)<-c("Node1","Sign","Node2")
-# edgeIdx<-seq(1,nrow(edgeDf),1)
-# edgeUpVars<-paste0("eU",edgeIdx)
-# edgeDownVars<-paste0("eD",edgeIdx)
-# edgeDf$edgeUpVars<-edgeUpVars
-# edgeDf$edgeDownVars<-edgeDownVars
+# edgesDf<-toy_network_ex1
+# names(edgesDf)<-c("Node1","Sign","Node2")
+# edgeIdx<-seq(1,nrow(edgesDf),1)
+# edgesUpVars<-paste0("eU",edgeIdx)
+# edgesDownVars<-paste0("eD",edgeIdx)
+# edgesDf$edgesUpVars<-edgesUpVars
+# edgesDf$edgesDownVars<-edgesDownVars
 
 
 
-createConstraint_6_7_v3<-function(variables){
+createConstraints_6_7_v3<-function(variables){
   edgeDf<-variables$edgesDf
   nodeDf<-variables$nodesDf
   parentNodes<-base::setdiff(edgeDf$Node1,edgeDf$Node2)
-  
-  variableMerged<-base::merge(edgeDf,nodeDf,by.x = "Node1",by.y = "nodes")
+  variableMerged<-base::merge(as.matrix(edgeDf),as.matrix(nodeDf),by.x = "Node1",by.y = "nodes")
   parentNodesEdges<-variableMerged[variableMerged$Node1 %in% parentNodes,]
   
   if(length(parentNodes)>0){
-    constraint_6<-paste(unique(parentNodesEdges$nodeUpVars),"<=",0)
-    constraints_7<-paste(unique(parentNodesEdges$nodeDownVars),"<=",0)
+    constraint_6<-paste(unique(parentNodesEdges$nodesUpVars),"<=",0)
+    constraints_7<-paste(unique(parentNodesEdges$nodesDownVars),"<=",0)
   }else{
     constraints_6<-c()
     constraints_7<-c()
   }
   
-  variablesMergedTwoNodes<-merge(edgeDf,nodeDf,by.x = "Node2",by.y = "nodes")
+  variablesMergedTwoNodes<-merge(as.matrix(edgeDf),as.matrix(nodeDf),by.x = "Node2",by.y = "nodes")
   
 
   allIncomingEdges<-variablesMergedTwoNodes[variablesMergedTwoNodes$Node2%in%unique(variablesMergedTwoNodes$Node2),]
   
-  c6_7_nodeVars<-unique(allIncomingEdges$nodeUpVars)
+  c6_7_nodeVars<-unique(allIncomingEdges$nodesUpVars)
   for (x in c6_7_nodeVars){
-    incomingedges<-allIncomingEdges[allIncomingEdges$nodeUpVars==x,]
-    edgeVars<-paste("-",paste(incomingedges$edgeUpVars,collapse = " - "))
-    constraintLeft<-paste(x,edgeVars,"<=",0)
+    incomingedges<-allIncomingEdges[allIncomingEdges$nodesUpVars==x,]
+    edgesVars<-paste("-",paste(incomingedges$edgesUpVars,collapse = " - "))
+    constraintLeft<-paste(x,edgesVars,"<=",0)
     constraint_6<-c(constraint_6,constraintLeft)
   }
   
-  c6_7_nodeVars<-unique(allIncomingEdges$nodeDownVars)
+  c6_7_nodeVars<-unique(allIncomingEdges$nodesDownVars)
   for (x in c6_7_nodeVars){
-    incomingedges<-allIncomingEdges[allIncomingEdges$nodeDownVars==x,]
-    edgeVars<-paste("-",paste(incomingedges$edgeDownVars,collapse = " - "))
-    constraintLeft<-paste(x,edgeVars,"<=",0)
+    incomingedges<-allIncomingEdges[allIncomingEdges$nodesDownVars==x,]
+    edgesVars<-paste("-",paste(incomingedges$edgesDownVars,collapse = " - "))
+    constraintLeft<-paste(x,edgesVars,"<=",0)
     constraints_7 <- c(constraints_7, constraintLeft)
   }
   constraints6_7<-list(constraint_6,constraints_7)
   names(constraints6_7)<-c("c6","c7")
   return(constraints6_7)
 }
+
+variables<-list(nodesDf,edgesDf)
+names(variables)<-c("nodesDf","edgesDf")
+createConstraints_6_7_v3(variables)
