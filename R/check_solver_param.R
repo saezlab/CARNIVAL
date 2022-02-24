@@ -194,14 +194,15 @@ checkCarnivalOptions <- function(carnivalOptions) {
     carnivalOptions$solver <- getSupportedSolvers()$lpSolve
   }
   
-  missingOptions <- which(!getOptionsList(carnivalOptions$solver, 
+  missingOptions_ind <- which(!getOptionsList(carnivalOptions$solver, 
                                           onlyRequired = TRUE) %in% 
-                                          names(carnivalOptions))
+                                          names(unlist(carnivalOptions)))
   
-  if (length(missingOptions) > 0) {
-    stop("CARNIVAL options should contain all required options.", 
+  if (length(missingOptions_ind) > 0) {
+    missingOptions <- getOptionsList(carnivalOptions$solver, onlyRequired = TRUE)[missingOptions_ind]
+    stop("CARNIVAL options should contain all required options. Required options missing:  ", 
           paste(missingOptions, "collapse" = ", "),
-          "Check getOptionsList() for references.")
+          ".\n  Check getOptionsList(onlyRequired = TRUE) for references.")
   }
   
   outputSpecificChecks(carnivalOptions)
