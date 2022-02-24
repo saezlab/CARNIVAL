@@ -164,7 +164,7 @@ defaultLpSolveCarnivalOptions <- function(...){
   options <- list(
     solver = getSupportedSolvers()$lpSolve,
     lpFilename = "",
-    outputFolder = "",
+    outputFolder = "./",
     betaWeight = 0.2,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE

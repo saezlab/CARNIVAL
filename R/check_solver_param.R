@@ -195,7 +195,7 @@ checkCarnivalOptions <- function(carnivalOptions) {
   }
   
   missingOptions <- which(!getOptionsList(carnivalOptions$solver, 
-                                          onlyRequired = T) %in% 
+                                          onlyRequired = TRUE) %in% 
                                           names(carnivalOptions))
   
   if (length(missingOptions) > 0) {
@@ -204,6 +204,7 @@ checkCarnivalOptions <- function(carnivalOptions) {
           "Check getOptionsList() for references.")
   }
   
+  outputSpecificChecks(carnivalOptions)
   solversSpecificChecks <- getSolversSpecificChecks(carnivalOptions$solver)
   
   errorMessages <- executeSolversChecks(carnivalOptions, carnivalOptionsErrorChecks)
@@ -217,4 +218,13 @@ checkCarnivalOptions <- function(carnivalOptions) {
   }
   
   return(TRUE)
+}
+
+#' Checks and creates outputFolder if it does not exists
+outputSpecificChecks <- function(carnivalOptions){
+  
+  if(!dir.exists(carnivalOptions$outputFolder)){
+    dir.create(carnivalOptions$outputFolder,recursive = TRUE)
+  }
+  
 }
