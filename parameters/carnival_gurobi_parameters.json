@@ -6,7 +6,7 @@
     "betaWeight": 0.2,
     "Threads": 0,
     "clonelog": 1,
-    "workdir": "",
+    "workdir": "./",
     "cleanTmpFiles": "TRUE",
     "keepLPFiles": "TRUE",
     "dirName": "NULL",

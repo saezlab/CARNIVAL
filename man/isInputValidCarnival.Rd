@@ -32,3 +32,17 @@ TRUE if everything passed the checks.
 \description{
 Checks validity of all inputs of CARNIVAL
 }
+\examples{
+load(file = system.file("toy_perturbations_ex1.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_measurements_ex1.RData",
+                        package="CARNIVAL"))
+load(file = system.file("toy_network_ex1.RData",
+                        package="CARNIVAL"))
+
+## lpSolve
+#isInputValidCarnival(perturbations = toy_perturbations_ex1,
+#                    measurements = toy_measurements_ex1,
+#                    priorKnowledgeNetwork = toy_network_ex1,
+#                    carnivalOptions = defaultLpSolveCarnivalOptions())
+}

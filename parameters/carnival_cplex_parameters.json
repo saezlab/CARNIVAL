@@ -6,7 +6,7 @@
     "betaWeight": 0.2,
     "threads": 0,
 	"clonelog": 1,
-	"workdir": "", 
+	"workdir": "./", 
 	"cplexMemoryLimit": 8192,
     "cleanTmpFiles": "TRUE",
     "keepLPFiles": "TRUE",

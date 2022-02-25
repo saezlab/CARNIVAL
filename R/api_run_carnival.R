@@ -11,7 +11,7 @@
 #'
 #' @return TRUE if everything passed the checks.
 #' @export
-#' '@examples
+#' @examples
 #' load(file = system.file("toy_perturbations_ex1.RData",
 #'                         package="CARNIVAL"))
 #' load(file = system.file("toy_measurements_ex1.RData",
@@ -471,7 +471,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'(0,1,2,3,4 - default: 4)
 #'@param alphaWeight Objective function: weight for mismatch penalty (default:
 #'1 - will only be applied once measurement file only contains discrete values)
-#'@param betaWeight Objective function: weight for node penalty (defaul: 0.2)
+#'@param betaWeight Objective function: weight for node penalty (default: 0.2)
 #'@param threads CPLEX parameter: Number of threads to use
 #'default: 0 for maximum number possible threads on system
 #'@param dir_name Specify directory name to store results. by default set to
@@ -480,7 +480,8 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'solvers should be cleaned after run.
 #'@param keepLPFiles logic (default=TRUE), specifying if the LP file should be
 #'kept.
-#'
+#'@param clonelog determines if CPLEX clones the log files in case of 
+#'multi-threaded optimization, default: -1, (no cloning)
 
 #'@return The function will return a list of results containing:
 #'1. weightedSIF: A table with 4 columns containing the combined network

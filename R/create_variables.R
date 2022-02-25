@@ -2,7 +2,7 @@
 ## formulation.
 ##
 ## Olga Ivanova 2021
-createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = F) {
+createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = FALSE) {
   message(getTime(), " Generating variables for lp problem")
 
   perturbations <- dataProcessed$perturbations
@@ -77,7 +77,7 @@ createNodesVariables <- function(priorKnowledgeNetwork,
 }
 
 createEdgesVariables <- function(priorKnowledgeNetwork,
-                                 backwardCompatibility = F,
+                                 backwardCompatibility = FALSE,
                                  startingIdx = 1,
                                  prefixes = c("edgeUp" = "eU",
                                               "edgeDown" = "eD")) {
@@ -106,7 +106,7 @@ createEdgesVariables <- function(priorKnowledgeNetwork,
 createMeasurementsVariables <- function(measurements,
                                         nodesDf,
                                         priorKnowledgeNetwork,
-                                        backwardCompatibility = F,
+                                        backwardCompatibility = FALSE,
                                         prefixes = c("measurementsAbsDiff" = "aD")) {
 
   nodes <- c(priorKnowledgeNetwork$Node1, priorKnowledgeNetwork$Node2)
