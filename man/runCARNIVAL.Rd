@@ -13,7 +13,7 @@ runCARNIVAL(
   solver = c("lpSolve", "cplex", "cbc", "gurobi"),
   timelimit = 3600,
   mipGAP = 0.05,
-  poolrelGAP = 1e-04,
+  poolrelGAP = 0.0001,
   limitPop = 500,
   poolCap = 100,
   poolIntensity = 4,
@@ -71,7 +71,7 @@ pool (0,1,2 - default: 2 = most diversified solutions)}
 \item{alphaWeight}{Objective function: weight for mismatch penalty (default:
 1 - will only be applied once measurement file only contains discrete values)}
 
-\item{betaWeight}{Objective function: weight for node penalty (defaul: 0.2)}
+\item{betaWeight}{Objective function: weight for node penalty (default: 0.2)}
 
 \item{threads}{CPLEX parameter: Number of threads to use
 default: 0 for maximum number possible threads on system}
@@ -81,6 +81,9 @@ solvers should be cleaned after run.}
 
 \item{keepLPFiles}{logic (default=TRUE), specifying if the LP file should be
 kept.}
+
+\item{clonelog}{determines if CPLEX clones the log files in case of 
+multi-threaded optimization, default: -1, (no cloning)}
 
 \item{dir_name}{Specify directory name to store results. by default set to
 NULL}
