@@ -19,10 +19,12 @@ measurements <- testEnvironement$toy_measurements_ex1
 # Setting options 
 carnivalLpOptions <- defaultLpSolveCarnivalOptions()
 cplexSolverPath <- "/Applications/CPLEX_Studio1210/cplex/bin/x86-64_osx/cplex"
+cplexSolverPath <- "/Applications/CPLEX_Studio128/cplex/bin/x86-64_osx/cplex"
+
 carnivalCplexOptions <- defaultCplexCarnivalOptions(solverPath = cplexSolverPath)
 carnivalCbcOptions <- defaultCbcSolveCarnivalOptions()
 
-carnivalCplexOptions$outputFolder <- "/Users/olgaivanova/GoogleDrive/_PhD_Heidelberg/playground/carnival_style/carnival/tests"
+carnivalCplexOptions$outputFolder <- "./"
 
 #Testing API with lpSolve
 generateLpFileCarnival(perturbations, measurements, 
@@ -40,12 +42,12 @@ vanillaCarnivalOutput <- runVanillaCarnival(perturbations, measurements,
                                             priorKnowledgeNetwork,
                                             carnivalOptions = carnivalLpOptions) 
 
-vanillaCarnivalWeightedOutput <- runVanillaCarnival(perturbations, measurements, 
-                                                    priorKnowledgeNetwork, 
-                                                    weights, 
-                                                    carnivalOptions = carnivalLpOptions)
+# vanillaCarnivalWeightedOutput <- runVanillaCarnival(perturbations, measurements, 
+#                                                     priorKnowledgeNetwork, 
+#                                                     weights, 
+#                                                     carnivalOptions = carnivalLpOptions)
 
-testthat::expect_equal()
+
 
 #cplex
 vanillaCarnivalCplexOutput <- runVanillaCarnival(perturbations, measurements, 
@@ -55,4 +57,4 @@ vanillaCarnivalCplexOutput <- runVanillaCarnival(perturbations, measurements,
 #cbc 
 vanillaCarnivalCplexOutput <- runVanillaCarnival(perturbations, measurements, 
                                                  priorKnowledgeNetwork,
-                                                 carnivalCbcOptions) 
+                                                 carnivalOptions = carnivalCbcOptions) 
