@@ -117,8 +117,8 @@ checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 #'
 #' @param ... any possible options from the solver's list
 #' @export
-#' @example
-#' #defaultCplexCarnivalOptions()
+#' @examples
+#' defaultCplexCarnivalOptions()
 defaultCplexCarnivalOptions <- function(...){
 
     if ( "solver" %in% names(list(...)) ) {
@@ -131,11 +131,12 @@ defaultCplexCarnivalOptions <- function(...){
          solver = getSupportedSolvers()$cplex,
          lpFilename = "",
          cplexCommandFilename = "",
-         outputFolder = "",
+         outputFolder = getwd(),
          betaWeight = 0.2,
          cleanTmpFiles = TRUE,
          keepLPFiles = TRUE,
-         dirName = NULL)
+         dirName = NULL,
+         workdir = getwd())
 
     options <- c(options, suggestedCplexSpecificOptions())
     manuallySetOptions <- setCarnivalOptions(solver = options$solver, ...)
@@ -228,7 +229,6 @@ suggestedCplexSpecificOptions <- function(...) {
   options <- list(
     threads = 0,
     clonelog = -1,
-    workdir = ".",
     mipGap = 0.05,
     timelimit = 3600,
     poolrelGap = 0.0001,
@@ -280,7 +280,7 @@ suggestedCbcSpecificOptions <- function(...) {
 #'
 #' @return
 #' @export
-#' @example
+#' @examples
 #' defaultCplexSpecificOptions()
 defaultCplexSpecificOptions <- function(...) {
   #TODO N.B. careful with scientific notation, it is switched off at another place in the code

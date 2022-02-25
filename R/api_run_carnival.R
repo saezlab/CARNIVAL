@@ -11,7 +11,7 @@
 #'
 #' @return TRUE if everything passed the checks.
 #' @export
-#' '@examples
+#' @examples
 #' load(file = system.file("toy_perturbations_ex1.RData",
 #'                         package="CARNIVAL"))
 #' load(file = system.file("toy_measurements_ex1.RData",

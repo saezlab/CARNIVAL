@@ -12,3 +12,6 @@ defaultCplexCarnivalOptions(...)
 \description{
 Sets default CARNIVAL options for cplex.
 }
+\examples{
+defaultCplexCarnivalOptions()
+}

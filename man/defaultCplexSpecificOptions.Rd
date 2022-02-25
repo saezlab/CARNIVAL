@@ -15,3 +15,6 @@ defaultCplexSpecificOptions(...)
 \description{
 Sets default options from cplex documentation.
 }
+\examples{
+defaultCplexSpecificOptions()
+}
