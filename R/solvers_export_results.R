@@ -93,7 +93,7 @@ getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
   
   sumWeightedSolution <- weightedSolution %>%
     dplyr::group_by(Node1, Sign, Node2) %>%
-    dplyr::summarise(Weight = dplyr::n()/nSolutions*100,.group="drop")
+    dplyr::summarise(Weight = dplyr::n()/nSolutions*100,.groups ="drop")
   
   return(sumWeightedSolution)
 }
