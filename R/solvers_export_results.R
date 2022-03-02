@@ -1,114 +1,106 @@
 ## Extract and export the optimisation results from the solution matrix.
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
-## fixed by A. Gabor
-#' @importFrom  dplyr group_by bind_rows mutate summarise rename
+## fixed and formatted to tidy by A. Gabor
+#' @importFrom  dplyr group_by bind_rows mutate summarise rename group_split add_column pivot_longer left_join
+#' @importFrom  tibble group_by add_column
+#' @importFrom  tidyr pivot_longer
+
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
   
   solutionMatrix <- apply(solutionMatrix_chr,2,as.numeric)
   rownames(solutionMatrix) <- rownames(solutionMatrix_chr)
+  colnames(solutionMatrix) <- paste("soluton", 1:ncol(solutionMatrix_chr),sep = "_")
   
-  nSolutions <- ncol(solutionMatrix)
-  allSolutions <- list()
-  allAttributes <- list()
-  allCollapsedAttributes <- list()
-  weightedSolution <- c()
+  solutionTable <- solutionMatrix %>% 
+    dplyr::as_tibble() %>% 
+    tibble::add_column(opt_variable = rownames(solutionMatrix), .before=1) %>%
+    tidyr::pivot_longer(cols = -1, names_to = "solution", values_to = "value")
   
+  # get the values of the edge variables from the solution table
+  edgeSolutions = variables$edgesDf %>% 
+    dplyr::left_join(solutionTable, by = c("edgesUpVars" = "opt_variable")) %>%
+    dplyr::rename(edgesUpValue = "value") %>%
+    dplyr::left_join(solutionTable, by = c("edgesDownVars" = "opt_variable",solution = "solution")) %>%
+    dplyr::rename(edgesDownValue = "value")
   
-  for (i in 1:ncol(solutionMatrix)) {
-    
-    collapsedAttributes <- data.frame("nodes" = variables$nodesDf$nodes, 
-                                      "activityUp" = rep(0, length(variables$nodesDf$nodes)), 
-                                      "activityDown" = rep(0, length(variables$nodesDf$nodes)),
-                                      "zeroActivity" = rep(0, length(variables$nodesDf$nodes)))
-    
-    solMtx <- solutionMatrix[abs(solutionMatrix[, i]) > 0, i]
-    namesSol <- names(solMtx)
-    solMtx <- round(as.numeric(solMtx))
-    
-    solutionEdgesUp <- variables$edgesDf[variables$edgesDf$edgesUpVars %in% namesSol, ]
-    solutionEdgesDown <-  variables$edgesDf[variables$edgesDf$edgesDownVars %in% namesSol, ]
-    
-    nodesUp <- variables$nodesDf[variables$nodesDf$nodesUpVars %in% namesSol, ]
-    nodesDown <- variables$nodesDf[variables$nodesDf$nodesDownVars %in% namesSol, ]
-    
-    #Nodes activity should be in line with incoming edges  
-    solutionEdgesUp <- solutionEdgesUp[solutionEdgesUp$Node2 %in% nodesUp$nodes, ]
-    solutionEdgesDown <- solutionEdgesDown[solutionEdgesDown$Node2 %in% nodesDown$nodes, ]
-    
-    solution <- rbind(solutionEdgesUp, solutionEdgesDown)
-    solution <- solution[, c("Node1", "Sign", "Node2")]
-    
-    #collect collapsed solution
-    weightedSolution <- rbind(weightedSolution, solution)
-    
-    #For nodes, we need to select values below 0 too.
-    allNodesVariables <- variables$nodesDf[, c("nodes", "nodesVars")] 
-    nodesActivity <- solutionMatrix[rownames(solutionMatrix) %in% 
-                                      variables$nodesDf$nodesVars, i]
-    nodesActivity <- as.data.frame(nodesActivity)
-    nodesActivity$nodesVars <- rownames(nodesActivity) 
-    
-    allNodesVariables <- merge(allNodesVariables, nodesActivity, by="nodesVars")
-    
-    nodesAttributes <- allNodesVariables[, c("nodes", "nodesActivity")] 
-    names(nodesAttributes) <- c("Nodes", "Activity")
-    
-    collapsedAttributes <- merge(collapsedAttributes, nodesAttributes,by.x = "nodes",by.y = "Nodes")
-    
-    collapsedAttributes$zeroActivity <- as.numeric(collapsedAttributes$Activity == 0)
-    collapsedAttributes$activityUp <- as.numeric(collapsedAttributes$Activity == 1)
-    collapsedAttributes$activityDown <- as.numeric(collapsedAttributes$Activity == -1)
-    # add node types 
-    collapsedAttributes <- merge(collapsedAttributes,variables$nodesDf[,c("nodes","nodesType")],by="nodes")
-    collapsedAttributes$Activity = NULL
-    collapsedAttributes$solution = i
-    
-    allSolutions[[i]] <- solution
-    allAttributes[[i]] <- nodesAttributes[abs(nodesAttributes$Activity) > 0, c("Nodes", "Activity")]
-    allCollapsedAttributes[[i]] <- collapsedAttributes
-  }
-  
-  summarisedSolution <- getWeightedCollapsedSolution(weightedSolution, 
-                                                     nSolutions)
-  #TODO perturbations are handled differently? 
+  # get the values of the node variables from the solution table
+  nodeSolutions = variables$nodesDf %>% 
+    dplyr::left_join(solutionTable, by = c("nodesVars" = "opt_variable")) %>%
+    dplyr::rename(nodesValue = "value") %>%
+    dplyr::left_join(solutionTable, by = c("nodesUpVars" = "opt_variable",solution = "solution")) %>%
+    dplyr::rename(nodesUpValue = "value") %>%
+    dplyr::left_join(solutionTable, by = c("nodesDownVars" = "opt_variable",solution = "solution")) %>%
+    dplyr::rename(nodesDownValue = "value") %>%
+    dplyr::left_join(solutionTable, by = c("nodesActStateVars" = "opt_variable",solution = "solution")) %>%
+    dplyr::rename(nodesActStateValue = "value") %>%
+    dplyr::left_join(solutionTable, by = c("nodesDistanceVars" = "opt_variable",solution = "solution")) %>%
+    dplyr::rename(nodesDistanceValue = "value") 
   
   
-  nodesAttributes <- getSummaryNodesAttributes(allCollapsedAttributes,
-                                               nSolutions)
-  if (nrow(summarisedSolution) != 0) {
-    result <- list("weightedSIF" = summarisedSolution, 
-                   "nodesAttributes" = nodesAttributes,
-                   "sifAll" = allSolutions, 
-                   "attributesAll" = allAttributes) 
-  } else {
-    result <- NULL
-    message(getTime(), " No consistent solutions exist.")
-  }
+  # Process inputs
+  # edges:  A -e-> B
+  # due to the ILP formalism, the edge (e) always takes a non-zero value if the
+  # upstream node (A) has a non-zero value, i.e. the edge cannot be 0 if A is 1 or -1.  
+  # The decision, if this edge is activating/inhibiting the downstream node B is decided on the 
+  # level of downstream node B. Even though the edge "e" is 1, B can be zero. 
+  # However, this is counter-intuitive, and we probably should not report an 
+  # edge in the solution if the downstream node is not activated by it.
+  # To implement this, we check the downstream node value and if the value is 
+  # according to the edge then we report the edge, otherwise we remove it. 
+  processed_edgeSolutions <- edgeSolutions %>% 
+    #dplyr::mutate(presents = as.numeric(edgesUpValue | edgesDownValue)) %>%
+    dplyr::left_join(select(nodeSolutions,nodes,nodesValue,solution), by = c("Node2"="nodes","solution"="solution")) %>%
+    dplyr::rename(Node2Value = "nodesValue") %>%
+    dplyr::mutate(presents = ifelse(Node2Value == 1 & edgesUpValue == 1, 1, 0)) %>%
+    dplyr::mutate(presents = ifelse(Node2Value == -1 & edgesDownValue == 1, 1, presents))
   
-  return(result)
-}
-
-getWeightedCollapsedSolution <- function(weightedSolution, nSolutions) {
-  
-  sumWeightedSolution <- weightedSolution %>%
-    dplyr::group_by(Node1, Sign, Node2) %>%
-    dplyr::summarise(Weight = dplyr::n()/nSolutions*100,.groups ="drop")
-  
-  return(sumWeightedSolution)
-}
-
-getSummaryNodesAttributes <- function(collapsedAttributes_list, nSolutions) {
-  nodesSolution = dplyr::bind_rows(collapsedAttributes_list) %>%
+  pocessed_nodeSolution <- nodeSolutions %>%
+    dplyr::mutate(Activity = nodesValue)
     
+  # Individual solutions as list:
+    
+  sifAll <- processed_edgeSolutions %>%
+    dplyr::filter(presents>0) %>%
+    dplyr::select(Node1,Sign,Node2,solution) %>%
+    dplyr::group_by(solution) %>% 
+    dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
+    
+  
+  nodeAttributesAll <- pocessed_nodeSolution %>%
+    dplyr::select(nodes,Activity,solution) %>% 
+    dplyr::filter(Activity != 0) %>%
+    dplyr::group_by(solution) %>% 
+    dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
+    
+  
+  
+  # Aggregated solutions: 
+  weightedNodes <- pocessed_nodeSolution %>%
+    dplyr::mutate(activityUp = as.numeric(Activity > 0),
+                  activityDown = as.numeric(Activity < 0),
+                  zeroActivity = as.numeric(Activity == 0)) %>%
     dplyr::group_by(nodes,nodesType) %>%
-    dplyr::summarise(ZeroAct = sum(zeroActivity)/nSolutions*100,
-                     UpAct = sum(activityUp)/nSolutions*100,
-                     DownAct = sum(activityDown)/nSolutions*100,
+    dplyr::summarise(ZeroAct = sum(zeroActivity)/dplyr::n()*100,
+                     UpAct = sum(activityUp)/dplyr::n()*100,
+                     DownAct = sum(activityDown)/dplyr::n()*100,
                      AvgAct = UpAct-DownAct,.groups ="drop" ) %>%
     dplyr::rename(Node = "nodes",
                   NodeType = "nodesType")
   
   
-  return(nodesSolution)
+  weightedSIF <- edgeSolutions %>% 
+    dplyr::mutate(presents = as.numeric(edgesUpValue | edgesDownValue)) %>%
+    dplyr::group_by(Node1,Sign,Node2) %>%
+    dplyr::summarise(Weight = sum(presents)/dplyr::n()*100,.groups ="drop")
+  
+    
+  
+  result <- list("weightedSIF" = weightedSIF, 
+                 "nodesAttributes" = weightedNodes,
+                 "sifAll" = sifAll, 
+                 "attributesAll" = nodeAttributesAll) 
+  
+  return(result)
 }
+
