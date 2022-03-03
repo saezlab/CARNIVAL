@@ -82,6 +82,51 @@ plotPKN <- function(network, inputs, measurement){
 
 # Tests with LP solve ------------------------------------------------------
 
+
+test_that("check case study -1 for lpSolve solver", {
+    
+    
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = -1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I1", 1, "N2"),
+                    inter("N2", 1, "M1"),
+                    inter("N1", 1, "M1"))
+    
+    # obtain actual result using LP solve
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "lpSolve",
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    
+    attr = result_actual$nodesAttributes
+    attr <- attr[match(attr$Node,c("I1","M1","N1","N2")),]
+    
+    expect_equal(attr$AvgAct, c(100,0,0,0))
+    expect_equal(attr$DownAct, c(0,0,0,0))
+    expect_equal(attr$UpAct, c(100,0,0,0))
+    expect_equal(attr$ZeroAct, c(0,100,100,100))
+    
+    # weightedSIF
+    expect_true(nrow(result_actual$weightedSIF)== 4)
+    expect_equal(result_actual$weightedSIF$Weight, c(0,0,0,0))
+    
+    # sifAll
+    expect_length(result_actual$sifAll,1)
+    
+    # attributesAll
+    expect_length(result_actual$attributesAll,1)
+    expect_true(result_actual$attributesAll[[1]]$Activity==1)
+    
+    
+})
+
 ### Model 0: minimalist chain model with 3 solutions ---------------------------
 # Only activatory edges
 # Note: LP solve will find only 1. 
@@ -327,6 +372,58 @@ test_that("check model3 with 2 input 2 output LP solve", {
 
 
 # Tests with CPLEX solve ------------------------------------------------------
+
+### Model -1 empty network solution  ---------------------
+
+
+test_that("check case study 0 for CPLEX solver", {
+    
+    skip_if_not(file.exists(cplexPath))
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = -1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I1", 1, "N2"),
+                    inter("N2", 1, "M1"),
+                    inter("N1", 1, "M1"))
+    
+    # obtain actual result using LP solve
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "cplex",
+                                solverPath = cplexPath,
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    # cplex should find 2 solutions with beta weight > 0
+    expect_equal(result_actual$diagnostics$objective, 1)
+    expect_equal(result_actual$diagnostics$n_solutions, 1)
+    
+    attr = result_actual$nodesAttributes
+    attr <- attr[match(attr$Node,c("I1","M1","N1","N2")),]
+    
+    expect_equal(attr$AvgAct, c(100,0,0,0))
+    expect_equal(attr$DownAct, c(0,0,0,0))
+    expect_equal(attr$UpAct, c(100,0,0,0))
+    expect_equal(attr$ZeroAct, c(0,100,100,100))
+    
+    # weightedSIF
+    expect_true(nrow(result_actual$weightedSIF)== 4)
+    expect_equal(result_actual$weightedSIF$Weight, c(0,0,0,0))
+    
+    # sifAll
+    expect_length(result_actual$sifAll,1)
+    
+    # attributesAll
+    expect_length(result_actual$attributesAll,1)
+    expect_true(result_actual$attributesAll[[1]]$Activity==1)
+    
+    
+})
+
 
 ### Model 0: minimalist chain model with 2 solutions ---------------------------
 # Only activatory edges

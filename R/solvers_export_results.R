@@ -37,7 +37,6 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
     dplyr::left_join(solutionTable, by = c("nodesDistanceVars" = "opt_variable",solution = "solution")) %>%
     dplyr::rename(nodesDistanceValue = "value") 
   
-  
   # Process inputs
   # edges:  A -e-> B
   # due to the ILP formalism, the edge (e) always takes a non-zero value if the
@@ -59,13 +58,21 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
     dplyr::mutate(Activity = nodesValue)
     
   # Individual solutions as list:
-    
-  sifAll <- processed_edgeSolutions %>%
-    dplyr::filter(presents>0) %>%
-    dplyr::select(Node1,Sign,Node2,solution) %>%
-    dplyr::group_by(solution) %>% 
-    dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
-    attributes(sifAll) <- NULL
+    if(all(processed_edgeSolutions$presents==0)){
+      # if there is no edge in this solution, we should return a formally valid result
+      sifAll = list()
+      sifAll[[1]] = processed_edgeSolutions %>%
+        dplyr::filter(presents>0) %>%
+        dplyr::select(Node1,Sign,Node2)
+    }else{
+      sifAll <- processed_edgeSolutions %>%
+        dplyr::filter(presents>0) %>%
+        dplyr::select(Node1,Sign,Node2,solution) %>%
+        dplyr::group_by(solution) %>% 
+        dplyr::group_split(.keep = TRUE) # this is experimental in dplyr
+      attributes(sifAll) <- NULL
+    }
+  
   
   nodeAttributesAll <- pocessed_nodeSolution %>%
     dplyr::select(nodes,Activity,solution) %>% 
@@ -74,7 +81,6 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
     dplyr::group_by(solution) %>% 
     dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
     attributes(nodeAttributesAll) <- NULL
-  
   
   # Aggregated solutions: 
   weightedNodes <- pocessed_nodeSolution %>%
@@ -89,13 +95,9 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
     dplyr::rename(Node = "nodes",
                   NodeType = "nodesType")
   
-  
-  weightedSIF <- edgeSolutions %>% 
-    dplyr::mutate(presents = as.numeric(edgesUpValue | edgesDownValue)) %>%
+  weightedSIF <- processed_edgeSolutions %>% 
     dplyr::group_by(Node1,Sign,Node2) %>%
     dplyr::summarise(Weight = sum(presents)/dplyr::n()*100,.groups ="drop")
-  
-    
   
   result <- list("weightedSIF" = weightedSIF, 
                  "nodesAttributes" = weightedNodes,
