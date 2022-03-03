@@ -8,7 +8,7 @@ sendTaskToSolver(
   variables,
   dataPreprocessed,
   carnivalOptions,
-  newDataRepresentation = T
+  newDataRepresentation = TRUE
 )
 }
 \arguments{

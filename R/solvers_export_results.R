@@ -69,6 +69,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
   
   nodeAttributesAll <- pocessed_nodeSolution %>%
     dplyr::select(nodes,Activity,solution) %>% 
+    dplyr::rename(Nodes = "nodes") %>%
     dplyr::filter(Activity != 0) %>%
     dplyr::group_by(solution) %>% 
     dplyr::group_split(.keep = FALSE) # this is experimental in dplyr

@@ -155,7 +155,7 @@ solveCarnival <- function(dataPreprocessed,
 sendTaskToSolver <- function(variables,
                             dataPreprocessed, 
                             carnivalOptions,
-                            newDataRepresentation = T) {
+                            newDataRepresentation = TRUE) {
   
   message(getTime(), " Solving LP problem")
   
