@@ -194,9 +194,12 @@ checkCarnivalOptions <- function(carnivalOptions) {
     carnivalOptions$solver <- getSupportedSolvers()$lpSolve
   }
   
-  if (!dir.exists(carnivalOptions$workdir)) {
+  if(is.null(carnivalOptions$workdir)) carnivalOptions$workdir = getwd()
+  if ( !dir.exists(carnivalOptions$workdir)) {
     dir.create(carnivalOptions$workdir,recursive = TRUE)
   } 
+  
+  if(is.null(carnivalOptions$outputFolder)) carnivalOptions$outputFolder = getwd()
   if (!dir.exists(carnivalOptions$outputFolder)) {
     dir.create(carnivalOptions$outputFolder,recursive = TRUE)
   }

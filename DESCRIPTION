@@ -22,6 +22,10 @@ Authors@R: c(
     person(given = "Aurelien",
            family = "Dugourd",
            role = "ctb"),
+    person(given = "Attila",
+           family = "Gabor",
+           role = "ctb",
+           email = "attila.gabor@uni-heidelberg.de"),
     person(given = "Olga",
            family = "Ivanova",
            role = "cre",
@@ -39,7 +43,8 @@ Imports:
     lpSolve,
     igraph,
     dplyr,
-    plyr,
+    tibble,
+    tidyr,
     rjson,
     rmarkdown
 biocViews: Transcriptomics, GeneExpression, Network

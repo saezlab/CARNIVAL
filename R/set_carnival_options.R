@@ -165,7 +165,8 @@ defaultLpSolveCarnivalOptions <- function(...){
   options <- list(
     solver = getSupportedSolvers()$lpSolve,
     lpFilename = "",
-    outputFolder = "",
+    outputFolder = getwd(),
+    workdir = getwd(),
     betaWeight = 0.2,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE
@@ -198,7 +199,8 @@ defaultCbcSolveCarnivalOptions <- function(...){
     solver = getSupportedSolvers()$cbc,
     solverPath = NULL,
     lpFilename = "",
-    outputFolder = "",
+    outputFolder = getwd(),
+    workdir = getwd(),
     betaWeight = 0.2,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE

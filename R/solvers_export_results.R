@@ -2,8 +2,8 @@
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
 ## fixed and formatted to tidy by A. Gabor
-#' @importFrom  dplyr group_by bind_rows mutate summarise rename group_split add_column pivot_longer left_join
-#' @importFrom  tibble group_by add_column
+#' @importFrom  dplyr group_by bind_rows mutate summarise rename group_split  left_join
+#' @importFrom  tibble add_column as_tibble
 #' @importFrom  tidyr pivot_longer
 
 exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
@@ -13,7 +13,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
   colnames(solutionMatrix) <- paste("soluton", 1:ncol(solutionMatrix_chr),sep = "_")
   
   solutionTable <- solutionMatrix %>% 
-    dplyr::as_tibble() %>% 
+    tibble::as_tibble() %>% 
     tibble::add_column(opt_variable = rownames(solutionMatrix), .before=1) %>%
     tidyr::pivot_longer(cols = -1, names_to = "solution", values_to = "value")
   
@@ -50,7 +50,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
   # according to the edge then we report the edge, otherwise we remove it. 
   processed_edgeSolutions <- edgeSolutions %>% 
     #dplyr::mutate(presents = as.numeric(edgesUpValue | edgesDownValue)) %>%
-    dplyr::left_join(select(nodeSolutions,nodes,nodesValue,solution), by = c("Node2"="nodes","solution"="solution")) %>%
+    dplyr::left_join(dplyr::select(nodeSolutions,nodes,nodesValue,solution), by = c("Node2"="nodes","solution"="solution")) %>%
     dplyr::rename(Node2Value = "nodesValue") %>%
     dplyr::mutate(presents = ifelse(Node2Value == 1 & edgesUpValue == 1, 1, 0)) %>%
     dplyr::mutate(presents = ifelse(Node2Value == -1 & edgesDownValue == 1, 1, presents))
@@ -65,7 +65,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
     dplyr::select(Node1,Sign,Node2,solution) %>%
     dplyr::group_by(solution) %>% 
     dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
-    
+    attributes(sifAll) <- NULL
   
   nodeAttributesAll <- pocessed_nodeSolution %>%
     dplyr::select(nodes,Activity,solution) %>% 
@@ -73,7 +73,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
     dplyr::filter(Activity != 0) %>%
     dplyr::group_by(solution) %>% 
     dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
-    
+    attributes(nodeAttributesAll) <- NULL
   
   
   # Aggregated solutions: 
