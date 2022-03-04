@@ -16,7 +16,7 @@ if(length(cplexFolder)==0){
 }
 
 # TODO: test cbc and gurobi
-cbcPath = ""  # not testing
+cbcPath = "~/Documents/SaezGroup/LocalGitRepo/cbc_optimizers/cbc-osx/cbc"  
 gurobiPath = "" # not testing at the moment
 
 lpsolvePath = "not needed"
@@ -131,28 +131,30 @@ test_that("check case study -1 for lpSolve solver", {
 # Only activatory edges
 # Note: LP solve will find only 1. 
 
-# small chain model
-inputs = data.frame(I1 = 1)
-measurement = data.frame(M1 = 1)
-network = rbind(inter("I1", 1, "N1"),
-                inter("I1", 1, "N2"),
-                inter("N2", 1, "M1"),
-                inter("N1", 1, "M1"))
 
-
-# obtain actual result using LP solve
-result_actual = runCARNIVAL(inputObj = inputs, 
-                            measObj = measurement, 
-                            netObj = network,
-                            solver = "lpSolve",
-                            timelimit = 60,
-                            dir_name = "./test_model1",
-                            threads = 1,
-                            betaWeight = 0.1)
 
 # Formal checking the output of runCARNIVAL
 
-test_that("formal checks on runCARNIAL results", {
+test_that("Model 0: minimalist chain", {
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = 1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I1", 1, "N2"),
+                    inter("N2", 1, "M1"),
+                    inter("N1", 1, "M1"))
+    
+    
+    # obtain actual result using LP solve
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "lpSolve",
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
     
     expect_length(result_actual, 4)
     expect_named(result_actual,expected =  c("weightedSIF", 
@@ -169,23 +171,19 @@ test_that("formal checks on runCARNIAL results", {
                                                               "DownAct","AvgAct"))
     expect_type( result_actual$sifAll,"list")
     expect_type( result_actual$attributesAll,"list")
-})
-
 
 # Quantitative checks related to the case study 0 with LPsolve (1 solution expected)
 
-test_that("check case study 0 for LP solve", {
-    
-    # nodesAttributes
-    expect_true(nrow(result_actual$nodesAttributes)== 4)
-    expect_true(sum(result_actual$nodesAttributes$AvgAct)==300)
-    expect_true(sum(result_actual$nodesAttributes$DownAct)==0)
-    expect_true(sum(result_actual$nodesAttributes$UpAct)==300)
-    expect_true(sum(result_actual$nodesAttributes$ZeroAct)==100)
+        # nodesAttributes
+    expect_equal(nrow(result_actual$nodesAttributes), 4)
+    expect_equal(sum(result_actual$nodesAttributes$AvgAct), 300)
+    expect_equal(sum(result_actual$nodesAttributes$DownAct), 0)
+    expect_equal(sum(result_actual$nodesAttributes$UpAct), 300)
+    expect_equal(sum(result_actual$nodesAttributes$ZeroAct), 100)
     
     # weightedSIF
-    expect_true(nrow(result_actual$weightedSIF)== 4)
-    expect_true(sum(result_actual$weightedSIF$Weight)==300)
+    expect_equal(nrow(result_actual$weightedSIF), 4)
+    expect_equal(sum(result_actual$weightedSIF$Weight),200)
     
     # sifAll
     expect_length(result_actual$sifAll,1)
@@ -207,29 +205,30 @@ test_that("check case study 0 for LP solve", {
 # With inhibitory edge
 # Note: LP solve will find only 1. 
 
-# small chain model
-inputs = data.frame(I1 = 1)
-measurement = data.frame(M1 = -1)
-network = rbind(inter("I1", 1, "N1"),
-                inter("I1", 1, "N2"),
-                inter("N2", 1, "M1"),
-                inter("N1", -1, "M1"))
 
-
-# obtain actual result using LP solve
-result_actual = runCARNIVAL(inputObj = inputs, 
-                            measObj = measurement, 
-                            netObj = network,
-                            solver = "lpSolve",
-                            timelimit = 60,
-                            dir_name = "./test_model1",
-                            threads = 1,
-                            betaWeight = 0.1)
-
-plotSolution(result_actual,1,inputs, measurement)
+# plotSolution(result_actual,1,inputs, measurement)
 
 
 test_that("check model1 with inhibitory edge for LP solve", {
+    
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = -1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I1", 1, "N2"),
+                    inter("N2", 1, "M1"),
+                    inter("N1", -1, "M1"))
+    
+    
+    # obtain actual result using LP solve
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "lpSolve",
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
     
     # nodesAttributes
     expect_true(nrow(result_actual$nodesAttributes)== 4)
@@ -244,7 +243,7 @@ test_that("check model1 with inhibitory edge for LP solve", {
     
     # weightedSIF
     expect_true(nrow(result_actual$weightedSIF)== 4)
-    expect_true(sum(result_actual$weightedSIF$Weight)==300)
+    expect_equal(sum(result_actual$weightedSIF$Weight),200)
     
     # sifAll
     expect_length(result_actual$sifAll,1)
@@ -261,33 +260,33 @@ test_that("check model1 with inhibitory edge for LP solve", {
 
 
 ### Model 2: chain model ------------------------------------
-# small chain model
-inputs = data.frame(I1 = 1)
-measurement = data.frame(M1 = 1)
-network = rbind(inter("I1", 1, "N1"),
-                inter("N1", -1, "N2"),
-                inter("N2", 1, "N3"),
-                inter("N3", -1, "M1"))
 
-
-
-
-# obtain actual results
-result_actual = runCARNIVAL(inputObj = inputs, 
-                            measObj = measurement, 
-                            netObj = network,
-                            solver = "lpSolve",
-                            timelimit = 60,
-                            dir_name = "./test_model1",
-                            threads = 1,
-                            betaWeight = 0.1)
-
-# plotPKN(network, inputs, measurement)
-# plotSolution(result_actual,1,inputs, measurement)
 
 
 test_that("check model2 with long-chain alternating sign LP solve", {
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = 1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("N1", -1, "N2"),
+                    inter("N2", 1, "N3"),
+                    inter("N3", -1, "M1"))
     
+    
+    
+    
+    # obtain actual results
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "lpSolve",
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    # plotPKN(network, inputs, measurement)
+    # plotSolution(result_actual,1,inputs, measurement)
     # nodesAttributes
     expect_true(nrow(result_actual$nodesAttributes)== 5)
     
@@ -318,31 +317,31 @@ test_that("check model2 with long-chain alternating sign LP solve", {
 
 ### Model 3: 2 inputs - 2 outputs ------------------------------------
 # small chain 
-inputs = data.frame(I1 = 1, I2 = -1)
-measurement = data.frame(M1 = -1, M2 = -1)
-network = rbind(inter("I1", 1, "N1"),
-                inter("I2", 1, "N1"),
-                inter("N1", 1, "N2"),
-                inter("N2", -1, "N3"),
-                inter("N3", 1, "M1"),
-                inter("N3", 1, "M2"))
-
-# obtain actual reesult
-result_actual = runCARNIVAL(inputObj = inputs, 
-                            measObj = measurement, 
-                            netObj = network,
-                            solver = "lpSolve",
-                            timelimit = 60,
-                            dir_name = "./test_model1",
-                            threads = 1,
-                            betaWeight = 0)
-
-
-# plotPKN(network, inputs, measurement)
-# plotSolution(result_actual,1,inputs, measurement)
 
 
 test_that("check model3 with 2 input 2 output LP solve", {
+    inputs = data.frame(I1 = 1, I2 = -1)
+    measurement = data.frame(M1 = -1, M2 = -1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I2", 1, "N1"),
+                    inter("N1", 1, "N2"),
+                    inter("N2", -1, "N3"),
+                    inter("N3", 1, "M1"),
+                    inter("N3", 1, "M2"))
+    
+    # obtain actual reesult
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "lpSolve",
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0)
+    
+    
+    # plotPKN(network, inputs, measurement)
+    # plotSolution(result_actual,1,inputs, measurement)
     
     # nodesAttributes
     expect_true(nrow(result_actual$nodesAttributes)== 7)
@@ -356,8 +355,8 @@ test_that("check model3 with 2 input 2 output LP solve", {
     expect_equal(attr$ZeroAct, c(0,0,0,0,0,0,0))
     
     # weightedSIF
-    expect_true(nrow(result_actual$weightedSIF)== 6)
-    expect_true(sum(result_actual$weightedSIF$Weight)==600)
+    expect_equal(nrow(result_actual$weightedSIF), 6)
+    expect_equal(sum(result_actual$weightedSIF$Weight), 500)
     
     # sifAll
     expect_length(result_actual$sifAll,1)
@@ -466,8 +465,8 @@ test_that("check case study 0 for CPLEX solver", {
     
     # weightedSIF
     expect_true(nrow(result_actual$weightedSIF)== 4)
-    expect_true(sum(result_actual$weightedSIF$Weight)==300)
-    expect_equal(result_actual$weightedSIF$Weight, c(100,100,50,50))
+    expect_true(sum(result_actual$weightedSIF$Weight)==200)
+    expect_equal(result_actual$weightedSIF$Weight, c(50,50,50,50))
     
     # sifAll
     expect_length(result_actual$sifAll,2)
@@ -530,7 +529,7 @@ test_that("check model3 with 2 input 2 output CPLEX solve", {
     
     # weightedSIF
     expect_true(nrow(result_actual$weightedSIF)== 6)
-    expect_true(sum(result_actual$weightedSIF$Weight)==600)
+    expect_true(sum(result_actual$weightedSIF$Weight)==500)
     
     # sifAll
     expect_length(result_actual$sifAll,1)
@@ -620,7 +619,7 @@ test_that("check larger model with CPLEX solver", {
     
     # weightedSIF
     expect_true(nrow(result_actual$weightedSIF)== 228)
-    expect_true(sum(result_actual$weightedSIF$Weight)==5300)
+    expect_true(sum(result_actual$weightedSIF$Weight)==2300)
     
     # sifAll
     expect_length(result_actual$sifAll,1)
@@ -634,4 +633,258 @@ test_that("check larger model with CPLEX solver", {
 })
 
 
+
+
+# Tests with CBC solve ------------------------------------------------------
+
+### Model -1 empty network solution  ---------------------
+
+
+test_that("check case study 0 for cbc solver", {
+    
+    skip_if_not(file.exists(cbcPath))
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = -1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I1", 1, "N2"),
+                    inter("N2", 1, "M1"),
+                    inter("N1", 1, "M1"))
+    
+    # obtain actual result using LP solve
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "cbc",
+                                solverPath = cbcPath,
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    
+    
+    
+    attr = result_actual$nodesAttributes
+    attr <- attr[match(attr$Node,c("I1","M1","N1","N2")),]
+    
+    expect_equal(attr$AvgAct, c(100,0,0,0))
+    expect_equal(attr$DownAct, c(0,0,0,0))
+    expect_equal(attr$UpAct, c(100,0,0,0))
+    expect_equal(attr$ZeroAct, c(0,100,100,100))
+    
+    # weightedSIF
+    expect_true(nrow(result_actual$weightedSIF)== 4)
+    expect_equal(result_actual$weightedSIF$Weight, c(0,0,0,0))
+    
+    # sifAll
+    expect_length(result_actual$sifAll,1)
+    
+    # attributesAll
+    expect_length(result_actual$attributesAll,1)
+    expect_true(result_actual$attributesAll[[1]]$Activity==1)
+    
+    
+})
+
+
+### Model 0: minimalist chain model with 2 solutions ---------------------------
+# Only activatory edges
+
+# Quantitative checks related to the case study 0 with CBC (1 solution expected)
+
+test_that("check case study 0 for CBC solver", {
+    
+    skip_if_not(file.exists(cbcPath))
+    # small chain model
+    inputs = data.frame(I1 = 1)
+    measurement = data.frame(M1 = 1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I1", 1, "N2"),
+                    inter("N2", 1, "M1"),
+                    inter("N1", 1, "M1"))
+    
+    # obtain actual result using LP solve
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "cbc",
+                                solverPath = cbcPath,
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    # cplex should find 2 solutions with beta weight > 0
+    
+    attr = result_actual$nodesAttributes
+    attr <- attr[match(attr$Node,c("I1","M1","N1","N2")),]
+    
+    expect_equal(sum(attr$AvgAct), 300)
+    expect_equal(sum(attr$DownAct), 0)
+    expect_equal(sum(attr$UpAct), 300)
+    expect_equal(sum(attr$ZeroAct), 100)
+    
+    # weightedSIF
+    expect_true(nrow(result_actual$weightedSIF)== 4)
+    expect_true(sum(result_actual$weightedSIF$Weight)==200)
+    
+    
+    # sifAll
+    expect_length(result_actual$sifAll,1)
+    expect_true(nrow(result_actual$sifAll[[1]])==2)
+    
+    
+    # attributesAll
+    expect_length(result_actual$attributesAll,1)
+    expect_true(sum(result_actual$attributesAll[[1]]$Activity)==3)
+    
+})
+
+
+### Model 1: minimalist chain model with 1 solutions ---------------------------
+# Only activatory edges
+# Note: CBC solve will find only 1. 
+
+
+test_that("check model3 with 2 input 2 output CBC solve", {
+    
+    skip_if_not(file.exists(cbcPath))
+    
+    inputs = data.frame(I1 = 1, I2 = -1)
+    measurement = data.frame(M1 = -1, M2 = -1)
+    network = rbind(inter("I1", 1, "N1"),
+                    inter("I2", 1, "N1"),
+                    inter("N1", 1, "N2"),
+                    inter("N2", -1, "N3"),
+                    inter("N3", 1, "M1"),
+                    inter("N3", 1, "M2"))
+    
+    # obtain actual reesult
+    
+    result_actual = runCARNIVAL(inputObj = inputs, 
+                                measObj = measurement, 
+                                netObj = network,
+                                solver = "cbc",
+                                solverPath = cbcPath,
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    # plotPKN(network, inputs, measurement)
+    # plotSolution(result_actual,1,inputs, measurement)
+    
+    # nodesAttributes
+    expect_true(nrow(result_actual$nodesAttributes)== 7)
+    
+    attr = result_actual$nodesAttributes
+    attr <- attr[match(attr$Node,c("I1","I2","M1","M2","N1","N2","N3")),]
+    
+    expect_equal(attr$AvgAct, c(100,-100,-100,-100,100,100,-100))
+    expect_equal(attr$DownAct, c(0,100,100,100,0,0,100))
+    expect_equal(attr$UpAct, c(100,0,0,0,100,100,0))
+    expect_equal(attr$ZeroAct, c(0,0,0,0,0,0,0))
+    
+    # weightedSIF
+    expect_true(nrow(result_actual$weightedSIF)== 6)
+    expect_true(sum(result_actual$weightedSIF$Weight)==500)
+    
+    # sifAll
+    expect_length(result_actual$sifAll,1)
+    expect_true(nrow(result_actual$sifAll[[1]])==5)
+    
+    # attributesAll
+    expect_length(result_actual$attributesAll,1)
+    expect_true(sum(result_actual$attributesAll[[1]]$Activity)==-1)
+    expect_true(sum(abs(result_actual$attributesAll[[1]]$Activity))==7)
+    
+})
+
+
+
+##### Larger random model --------------------------------------------------
+
+
+generate_case_study <- function(N_nodes, N_measured, N_inputs, p_negative){
+    # erdos renyi graph: edges are uniformly distributed
+    g = igraph::erdos.renyi.game(n = N_nodes,p.or.m = N_nodes*runif(1,min = 2,max = 3),type = "gnm",directed = TRUE)
+    
+    # scale free network
+    #g = igraph::barabasi.game(n = N_nodes,power = 0.7,m = 2)
+    
+    # find the largest component
+    clu <- igraph::components(g, mode = c("weak"))
+    largest_component <- clu$membership %>% table() %>% which.max()
+    g <- igraph::induced_subgraph(g,clu$membership==largest_component)
+    
+    # add sign with .1 probabilty
+    sif = igraph::as_data_frame(g,what = "edges") %>% as_tibble() %>%
+        mutate(interaction = ifelse(runif(n())>p_negative,1,-1)) %>%
+        mutate(source = make.names(from),
+               target = make.names(to)) %>%
+        dplyr::select(source, interaction,target)
+    
+    nodes = unique(c(sif$source,sif$target))
+    
+    inputs = as.data.frame(t(rep(1,N_inputs)))
+    names(inputs) = sample(nodes,N_inputs)
+    
+    measurement = as.data.frame(t(rep(1,N_measured)))
+    names(measurement) = sample(setdiff(nodes,names(inputs)),N_measured)
+    
+    return(list(sif = sif,
+                inputs = inputs,
+                measurement = measurement))
+}
+
+
+
+test_that("check larger model with CBC solver", {
+    
+    skip_if_not(file.exists(cbcPath))
+    
+    N_nodes = 100
+    N_measured = 10
+    N_inputs = 2
+    set.seed(123)
+    case_study <- generate_case_study(N_nodes,N_measured,N_inputs,p_negative=0.1)
+    
+    # obtain actual reesult
+    
+    result_actual = runCARNIVAL(inputObj = case_study$inputs, 
+                                measObj = case_study$measurement, 
+                                netObj = case_study$sif,
+                                solver = "cbc",
+                                solverPath = cbcPath,
+                                timelimit = 60,
+                                dir_name = "./test_model1",
+                                threads = 1,
+                                betaWeight = 0.1)
+    
+    
+    
+    # nodesAttributes
+    expect_true(nrow(result_actual$nodesAttributes)== 100)
+    
+    
+    expect_equal(sum(result_actual$nodesAttributes$AvgAct), 1800)
+    expect_equal(sum(result_actual$nodesAttributes$DownAct), 200)
+    expect_equal(sum(result_actual$nodesAttributes$UpAct), 2000)
+    expect_equal(sum(result_actual$nodesAttributes$ZeroAct), 7800)
+    
+    # weightedSIF
+    expect_true(nrow(result_actual$weightedSIF)== 228)
+    expect_true(sum(result_actual$weightedSIF$Weight)==2300)
+    
+    # sifAll
+    expect_length(result_actual$sifAll,1)
+    expect_true(nrow(result_actual$sifAll[[1]])==23)
+    
+    # attributesAll
+    expect_length(result_actual$attributesAll,1)
+    expect_true(sum(result_actual$attributesAll[[1]]$Activity)==18)
+    expect_true(sum(abs(result_actual$attributesAll[[1]]$Activity))==22)
+    
+})
 
