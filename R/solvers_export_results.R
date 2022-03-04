@@ -69,7 +69,7 @@ exportIlpSolutionFromSolutionMatrix <- function(solutionMatrix_chr, variables) {
         dplyr::filter(presents>0) %>%
         dplyr::select(Node1,Sign,Node2,solution) %>%
         dplyr::group_by(solution) %>% 
-        dplyr::group_split(.keep = TRUE) # this is experimental in dplyr
+        dplyr::group_split(.keep = FALSE) # this is experimental in dplyr
       attributes(sifAll) <- NULL
     }
   
