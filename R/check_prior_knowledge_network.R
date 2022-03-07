@@ -40,6 +40,7 @@ checkPriorKnowledgeNetwork <- function(priorKnowledgeNetwork){
 #' that might break solvers runs, assigns the types for each column: 
 #' Node1 (character), Sign (numeric), Node2 (character). 
 #' Stops if interaction/sign column has non-numeric value 
+#' Detect and remove self-activation (would break loop constraints with CbC)
 #'
 #' @inheritParams checkPriorKnowledgeNetwork
 #'
@@ -68,6 +69,16 @@ preprocessPriorKnowledgeNetwork <- function(priorKnowledgeNetwork) {
   
   #N.B. Don't remove the line, it breaks cplex runs
   priorKnowledgeNetwork <- as.data.frame(priorKnowledgeNetwork)
+  
+  # remove self-activation / self-inhibition
+  # if there is such interaction, it leads to an issue in loop-constraints, which in turns
+  # to warning in Gurobi and error in CbC. 
+  # 
+  selfLoopIndex <- which(priorKnowledgeNetwork$Node1==priorKnowledgeNetwork$Node2)
+  if(length(selfLoopIndex) > 0){
+    warning("self loop(s) detected and removed from prior knowledge network.")
+    priorKnowledgeNetwork <- priorKnowledgeNetwork[-selfLoopIndex,]  
+  }
   
   return(priorKnowledgeNetwork)           
 }
