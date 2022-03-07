@@ -2,9 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
-
+.DS_Store
 *.Rproj
 .Rbuildignore
-
+bug_reports
+carnival_reports
+dev
 packrat/*/*
 packrat/lib*/
