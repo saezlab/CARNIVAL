@@ -4,8 +4,6 @@
 
 library(dplyr)
 
-#cplexPath = "/Applications/CPLEX_Studio128/cplex/bin/x86-64_osx/cplex"
-
 # find CPLEX folder in Applications folder. Folder name changes between versions.
 cplexFolder = dir(path = "/Applications",pattern = "CPLEX_Studio",full.names = TRUE)
 if(length(cplexFolder)==0){
@@ -15,7 +13,7 @@ if(length(cplexFolder)==0){
     cplexPath = file.path(cplexFolder,cplex_rel_path)
 }
 
-# TODO: test cbc and gurobi
+# TODO: test gurobi
 cbcPath = "~/Documents/SaezGroup/LocalGitRepo/cbc_optimizers/cbc-osx/cbc"  
 gurobiPath = "" # not testing at the moment
 

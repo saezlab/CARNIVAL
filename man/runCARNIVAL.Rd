@@ -13,7 +13,7 @@ runCARNIVAL(
   solver = c("lpSolve", "cplex", "cbc", "gurobi"),
   timelimit = 3600,
   mipGAP = 0.05,
-  poolrelGAP = 1e-04,
+  poolrelGAP = 0.0001,
   limitPop = 500,
   poolCap = 100,
   poolIntensity = 4,

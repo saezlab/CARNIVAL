@@ -1,3 +1,14 @@
+# CARNIVAL 2.3.0
+* bug fix: parsing the output of ILP solvers were incorrect, especially 
+building the nodesAttributes. The bug resulted in inconsistencies between the 
+reported nodes and interactions
+* bug fix: empty workdir and outputFolder resulted in unhandled errors. From now on,
+current working directory is used for temporary and result files if not specified otherwise in the options
+* bug fix: the function defaultCbcSolveCarnivalOptions() had a undefined variable. 
+* bug fix: lpSolve has a non-negativity constraint which was ignored so far. Now this issue is handled. 
+lpSolve can be used for small networks and in tests. 
+* tests added: added many small-medium, general tests for lpSolve, CPLEX and CbC
+
 # CARNIVAL 2.2.0
 * Changed API: introduced separate functions for different flavours of CARNIVAL.
 * A more convenient way to work with CARNIVAL parameters. Parameters setup is possible through jsons and function calls.

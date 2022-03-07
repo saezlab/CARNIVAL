@@ -5,7 +5,8 @@
 \title{Preprocesses prior knowledge network: correct nodes identifiers for symbols 
 that might break solvers runs, assigns the types for each column: 
 Node1 (character), Sign (numeric), Node2 (character). 
-Stops if interaction/sign column has non-numeric value}
+Stops if interaction/sign column has non-numeric value 
+Detect and remove self-activation (would break loop constraints with CbC)}
 \usage{
 preprocessPriorKnowledgeNetwork(priorKnowledgeNetwork)
 }
@@ -22,7 +23,8 @@ add 3 columns: Node1, Sign, Node2
 Preprocesses prior knowledge network: correct nodes identifiers for symbols 
 that might break solvers runs, assigns the types for each column: 
 Node1 (character), Sign (numeric), Node2 (character). 
-Stops if interaction/sign column has non-numeric value
+Stops if interaction/sign column has non-numeric value 
+Detect and remove self-activation (would break loop constraints with CbC)
 }
 \author{
 Enio Gjerga, Olga Ivanova 2020-2021
