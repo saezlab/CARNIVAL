@@ -26,7 +26,7 @@ measurementsVariables <- createMeasurementsVariables(measurements_1, nodes, prio
 
 measurementsVariables_expected <- data.frame(nodes = c("Node5"), 
                                              value = c("5"), 
-                                             measurementsVars = c("absDiff1"), 
+                                             measurementsVars = c("aD1"), 
                                              nodesVars = c("n5"))
 
 test_that("Measurements variables check", {

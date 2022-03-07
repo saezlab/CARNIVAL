@@ -135,7 +135,6 @@ defaultCplexCarnivalOptions <- function(...){
          betaWeight = 0.2,
          cleanTmpFiles = TRUE,
          keepLPFiles = TRUE,
-         dirName = NULL,
          workdir = getwd())
 
     options <- c(options, suggestedCplexSpecificOptions())
@@ -165,7 +164,8 @@ defaultLpSolveCarnivalOptions <- function(...){
   options <- list(
     solver = getSupportedSolvers()$lpSolve,
     lpFilename = "",
-    outputFolder = "",
+    outputFolder = getwd(),
+    workdir = getwd(),
     betaWeight = 0.2,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE
@@ -198,8 +198,10 @@ defaultCbcSolveCarnivalOptions <- function(...){
     solver = getSupportedSolvers()$cbc,
     solverPath = NULL,
     lpFilename = "",
-    outputFolder = "",
+    outputFolder = getwd(),
+    workdir = getwd(),
     betaWeight = 0.2,
+    poolrelGap = 0.0001,
     cleanTmpFiles = TRUE,
     keepLPFiles = TRUE
   )

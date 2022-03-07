@@ -11,7 +11,6 @@ Below you will find a detailed description of parameters for each of the solver
 	"cplexMemoryLimit": 8192,
     "cleanTmpFiles": "TRUE",
     "keepLPFiles": "TRUE",
-    "dirName": "NULL",
     "mipGap": 0.05,
     "poolrelGap": 0.0001,
     "limitPop": 500,

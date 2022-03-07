@@ -194,14 +194,25 @@ checkCarnivalOptions <- function(carnivalOptions) {
     carnivalOptions$solver <- getSupportedSolvers()$lpSolve
   }
   
-  missingOptions <- which(!getOptionsList(carnivalOptions$solver, 
-                                          onlyRequired = T) %in% 
-                                          names(carnivalOptions))
+  if(is.null(carnivalOptions$workdir)) carnivalOptions$workdir = getwd()
+  if ( !dir.exists(carnivalOptions$workdir)) {
+    dir.create(carnivalOptions$workdir,recursive = TRUE)
+  } 
+  
+  if(is.null(carnivalOptions$outputFolder)) carnivalOptions$outputFolder = getwd()
+  if (!dir.exists(carnivalOptions$outputFolder)) {
+    dir.create(carnivalOptions$outputFolder,recursive = TRUE)
+  }
+  
+  reqOptions <- getOptionsList(carnivalOptions$solver, 
+                               onlyRequired = TRUE)
+  
+  missingOptions <- reqOptions[which(!reqOptions %in% names(carnivalOptions))]
   
   if (length(missingOptions) > 0) {
-    stop("CARNIVAL options should contain all required options.", 
+    stop("CARNIVAL options should contain all required options. Missing options are detected: ", 
           paste(missingOptions, "collapse" = ", "),
-          "Check getOptionsList() for references.")
+          ". Check getOptionsList() for references.")
   }
   
   solversSpecificChecks <- getSolversSpecificChecks(carnivalOptions$solver)

@@ -16,10 +16,10 @@ solveWithCbc <- function(carnivalOptions) {
                         " -seconds ", carnivalOptions$timelimit,
                         " -ratioGap ", carnivalOptions$poolrelGap,
                         " -threads ", carnivalOptions$threads,
-                        " -maxSavedSolutions ", carnivalOptions$limitPop,
+                        " -solve", # Make sure to solve before exporting!!!
                         " -printi csv ",
-                        " -solution ", resultFile,
-                        " -solve")
+                        " -solution ", resultFile
+                        )
 
   system(cbc_command)
 

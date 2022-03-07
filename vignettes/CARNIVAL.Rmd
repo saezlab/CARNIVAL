@@ -76,7 +76,7 @@ Similar like before, users will have to find the cplex executable binary
 file and save on a directory of their own wish or keep them on their default 
 installation paths. The path to interactive version of CPLEX is differed 
 based on the operating system. The default installation path for each OS is as 
-follows:
+follows (the path depends on CPLEX version, here is for 12.9):
 
 For Mac OS:
 ```
