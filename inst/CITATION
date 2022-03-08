@@ -22,11 +22,11 @@ c(
             as.person("Anika Liu"),
             as.person("Panuwat Trairatphisan"),
             as.person("Enio Gjerga"),
-            as.person("Athanasios Didangelos")
-            as.person("Jonathan Barratt")
+            as.person("Athanasios Didangelos"),
+            as.person("Jonathan Barratt"),
             as.person("Julio Saez-Rodriguez")
         ),
-        year = "2019"",
+        year = "2019",
         journal = "npj Syst Biol Appl",
         doi = "10.1038/s41540-019-0118-z",
         url = "https://www.nature.com/articles/s41540-019-0118-z"
