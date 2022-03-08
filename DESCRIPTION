@@ -56,7 +56,8 @@ Suggests:
     BiocStyle,
     covr,
     knitr,
-    testthat (>= 2.1.0),
+    testthat (>= 3.0.0),
     sessioninfo
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
+Config/testthat/edition: 3
