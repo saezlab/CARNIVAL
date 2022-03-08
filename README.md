@@ -58,7 +58,7 @@ targets remain unknown) by deciphering the alterations of main
 signalling pathways as well as alternative pathways and off-target
 effects.
 
-<img src="vignettes/vignettes_pictures/graphical_abstract.png" align="center" width="800">
+<img src="man/figures/graphical_abstract.png" align="center" width="800">
 
 ## Getting Started
 
