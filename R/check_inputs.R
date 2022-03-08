@@ -4,8 +4,7 @@
 #' @param measurements 
 #' @param priorKnowledgeNetwork 
 #' @param weights 
-#'
-#' @return
+#' @return returns list of checked data
 #' @author Enio Gjerga, Olga Ivanova, Attila Gabor, 2020-2021
 #'
 #' @keywords internal

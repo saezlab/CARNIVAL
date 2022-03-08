@@ -27,7 +27,7 @@ createVariablesForIlpProblem <- function(dataProcessed, backwardCompatibility = 
 
 createNodesVariables <- function(priorKnowledgeNetwork,
                                  perturbations, measurements,
-                                 backwardCompatibility = F,
+                                 backwardCompatibility = FALSE,
                                  prefixes=c("nodes" = "n", "nodesUp" = "nU",
                                             "nodesDown" = "nD",
                                             "nodesActivationState" = "nAc",

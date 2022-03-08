@@ -4,7 +4,7 @@
 \alias{getOptionsList}
 \title{Returns the list of options needed/supported for each solver.}
 \usage{
-getOptionsList(solver = "", onlyRequired = F)
+getOptionsList(solver = "", onlyRequired = FALSE)
 }
 \arguments{
 \item{solver}{one of the solvers available from getSupportedSolvers()}

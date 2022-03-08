@@ -10,7 +10,7 @@ priorKnowledgeNetwork_1 <- matrix( c(nodenames[1], 1, nodenames[4],
                                      nodenames[3], -1, nodenames[1],
                                      nodenames[3], -1, nodenames[2],
                                      nodenames[4], 1, nodenames[5]), 
-                                     byrow = T, ncol = 3 ) %>% as.data.frame()
+                                   byrow = T, ncol = 3 ) %>% as.data.frame()
 colnames(priorKnowledgeNetwork_1) <- c("Node1", "sign", "Node2")
 
 edgesVariables <- CARNIVAL:::createEdgesVariables(priorKnowledgeNetwork_1)
@@ -21,11 +21,11 @@ edgesVariables_expected <- data.frame(Node1 = c("Node1", "Node2", "Node3", "Node
                                       edgesDownVars = c("eD1", "eD2", "eD3", "eD4", "eD5"))
 
 test_that("Edges variables check:", {
-  expect_equal(edgesVariables_expected, edgesVariables)
+    expect_equal(edgesVariables_expected, edgesVariables)
 })
-              
+
 edgesVariables <- CARNIVAL:::createEdgesVariables(priorKnowledgeNetwork_1,prefixes= c("edgeUp" = "EU", 
-                                                                  "edgeDown" = "ED"))
+                                                                                      "edgeDown" = "ED"))
 
 edgesVariables_expected <- data.frame(Node1 = c("Node1", "Node2", "Node3", "Node3", "Node4"), 
                                       sign = c("1" ,"1", "-1", "-1", "1"), 
@@ -35,8 +35,7 @@ edgesVariables_expected <- data.frame(Node1 = c("Node1", "Node2", "Node3", "Node
 
 
 test_that("Comparison of the results", {
-  expect_equal(edgesVariables_expected, edgesVariables)
+    expect_equal(edgesVariables_expected, edgesVariables)
 })
 
 
-                                      

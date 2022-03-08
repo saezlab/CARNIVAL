@@ -10,7 +10,7 @@ defaultCplexSpecificOptions(...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+default CPLEX solver options as a list.
 }
 \description{
 Sets default options from cplex documentation.

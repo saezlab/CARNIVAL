@@ -183,6 +183,7 @@ executeSolversChecks <- function(carnivalOptions, checksToRun) {
 #' 
 #' @param carnivalOptions all available carnival options 
 #' @keywords internal
+#' @return returns TRUE if no error found.
 checkCarnivalOptions <- function(carnivalOptions) {
   
   if (!is.list(carnivalOptions))

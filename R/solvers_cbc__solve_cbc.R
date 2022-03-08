@@ -2,7 +2,7 @@
 #'
 #' @param carnivalOptions
 #'
-#' @return
+#' @return returns optimized variables in a solution matrix from CBC
 #' @keywords internal
 #'
 solveWithCbc <- function(carnivalOptions) {

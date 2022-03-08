@@ -10,7 +10,7 @@ solveWithCbc(carnivalOptions)
 \item{carnivalOptions}{}
 }
 \value{
-
+returns optimized variables in a solution matrix from CBC
 }
 \description{
 Executes cbc solver on provided .lp file.

@@ -9,6 +9,9 @@ checkCarnivalOptions(carnivalOptions)
 \arguments{
 \item{carnivalOptions}{all available carnival options}
 }
+\value{
+returns TRUE if no error found.
+}
 \description{
 Checks options provided for CARNIVAL
 }

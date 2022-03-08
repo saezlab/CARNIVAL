@@ -10,7 +10,7 @@ solveCarnivalFromLp(
   lpFile = "",
   parsedDataFile = "",
   carnivalOptions,
-  newDataRepresentation = T
+  newDataRepresentation = TRUE
 )
 }
 \arguments{

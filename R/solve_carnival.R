@@ -40,7 +40,7 @@ getSupportedSolversFunctions <- function() {
 #' @return list with all variables and ILP formulation written in .lp file.
 #' @keywords internal
 prepareForCarnivalRun <- function(dataPreprocessed, carnivalOptions, 
-                                  newDataRepresentation = T) {
+                                  newDataRepresentation = TRUE) {
   
   intDataRep <- createInternalDataRepresentation(dataPreprocessed, 
                                                  newDataRepresentation)
@@ -87,7 +87,7 @@ prepareForCarnivalRun <- function(dataPreprocessed, carnivalOptions,
 solveCarnivalFromLp <- function(lpFile = "", 
                                 parsedDataFile = "",
                                 carnivalOptions,
-                                newDataRepresentation = T) {
+                                newDataRepresentation = TRUE) {
 
   load(parsedDataFile, loadedData <- new.env()) 
 
@@ -124,7 +124,7 @@ solveCarnivalFromLp <- function(lpFile = "",
 #' @keywords internal
 solveCarnival <- function(dataPreprocessed,
                           carnivalOptions, 
-                          newDataRepresentation = T) {
+                          newDataRepresentation = TRUE) {
   
   preparedForRun <- prepareForCarnivalRun(dataPreprocessed, carnivalOptions, 
                                           newDataRepresentation)
@@ -189,13 +189,14 @@ sendTaskToSolver <- function(variables,
 #' @param solutionMatrix the output matrix from ILP solver containing 
 #' variables list (rows) and their values in different solutions (columns).
 #' @inheritParams sendTaskToSolver
-#'
+#' 
+#' @return  Carnival results exported from the solution  matrix. see runCARNIVAL for details.
 #' @keywords internal
 processSolution <- function(solutionMatrix, 
                             variables,
                             dataPreprocessed,
                             carnivalOptions, 
-                            newDataRepresentation = T) {
+                            newDataRepresentation = TRUE) {
   
   message(getTime(), " Exporting solution matrix")
   
@@ -230,7 +231,7 @@ processSolution <- function(solutionMatrix,
 #' 
 #' @keywords internal
 createInternalDataRepresentation <- function(dataPreprocessed, 
-                                            newDataRepresentation = T) {
+                                            newDataRepresentation = TRUE) {
   if (newDataRepresentation) {
     variables <- createVariablesForIlpProblem(dataPreprocessed)
     return(variables)
