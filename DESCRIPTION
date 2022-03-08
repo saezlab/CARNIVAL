@@ -52,7 +52,11 @@ License: GPL-3
 LazyData: true
 Encoding: UTF-8
 Suggests:
+    RefManageR,
+    BiocStyle,
+    covr,
     knitr,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    sessioninfo
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
