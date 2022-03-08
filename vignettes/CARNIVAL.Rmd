@@ -4,7 +4,7 @@ author: "Enio Gjerga, Matteo Spatuzzi, Olga Ivanova,"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{narray Usage Examples}
+  %\VignetteIndexEntry{Contextualizing large scale signalling networks from expression footprints with CARNIVAL}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
