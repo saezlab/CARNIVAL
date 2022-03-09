@@ -12,7 +12,7 @@ checkOptionsValidity(solver = getSupportedSolvers()$lpSolve, ...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+TRUE/FALSE depending on the status of the checks
 }
 \description{
 Checks if provided option names are valid.

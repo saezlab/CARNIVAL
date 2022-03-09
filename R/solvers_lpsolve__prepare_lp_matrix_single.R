@@ -7,7 +7,7 @@ prepareLPMatrixSingle <- function(lpMatrix, carnivalOptions){
   
   if (file.exists(carnivalOptions$filenames$lpFilename)) {
     lpFile <- readr::read_csv(file = carnivalOptions$filenames$lpFilename, 
-                              col_names = F)
+                              col_names = FALSE)
     lpFile <- lpFile[[1]]
   } else {
     stop("Cannot find .lp file for solver")

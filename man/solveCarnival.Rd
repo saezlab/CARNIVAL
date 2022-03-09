@@ -8,7 +8,7 @@
 3) executes the solver on ILP formulation 
 4) parse the output of the solver and map it to the original data.}
 \usage{
-solveCarnival(dataPreprocessed, carnivalOptions, newDataRepresentation = T)
+solveCarnival(dataPreprocessed, carnivalOptions, newDataRepresentation = TRUE)
 }
 \arguments{
 \item{dataPreprocessed}{list containing preprocessed priorKnowledgeNetwork, 

@@ -10,3 +10,4 @@ carnival_reports
 dev
 packrat/*/*
 packrat/lib*/
+inst/doc

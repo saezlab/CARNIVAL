@@ -21,7 +21,7 @@ checkData(
 \item{weights}{}
 }
 \value{
-
+returns list of checked data
 }
 \description{
 Checks the input data for correctness.

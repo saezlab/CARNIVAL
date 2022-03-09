@@ -10,7 +10,7 @@ defaultLpSolveCarnivalOptions(...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+default lpSolve solver options as a list.
 }
 \description{
 Sets default CARNIVAL options for lpSolve.

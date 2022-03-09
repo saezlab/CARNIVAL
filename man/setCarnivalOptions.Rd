@@ -12,7 +12,7 @@ setCarnivalOptions(solver = getSupportedSolvers()$lpSolve, ...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+carnival options as list.
 }
 \description{
 Sets CARNIVAL options for the solver.

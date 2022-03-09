@@ -10,7 +10,7 @@ solveWithGurobi(carnivalOptions)
 \item{carnivalOptions}{}
 }
 \value{
-
+Returns the name of the result files without ".sol" extension.
 }
 \description{
 Executes gurobi solver on provided .lp file.

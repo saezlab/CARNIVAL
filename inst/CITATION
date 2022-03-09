@@ -1,0 +1,61 @@
+pkgVer <- function(pkg) {
+    if (!exists("meta") || is.null(meta)) meta <- packageDescription(pkg)
+    ver <- meta$Version
+    paste0('https://github.com/saezlab/CARNIVAL/', pkg, ' - R package version ', ver)
+}
+
+c(
+
+    bibentry(bibtype="manual",
+        title = "CARNIVAL",
+        author = personList(
+            person(given = "Enio",
+           family = "Gjerga",
+           role = c("aut"),
+           email = "enio.gjerga@gmail.com",
+           comment = c(ORCID = "0000-0002-3060-5786")),
+    person(given = "Panuwat",
+           family = "Trairatphisan",
+           role = "aut"),
+    person(given = "Anika",
+           family = "Liu",
+           role = "ctb"),
+    person(given = "Alberto",
+           family = "Valdeolivas",
+           role = "ctb"),
+    person(given = "Nikolas",
+           family = "Peschke",
+           role = "ctb"),
+    person(given = "Aurelien",
+           family = "Dugourd",
+           role = "ctb"),
+    person(given = "Attila",
+           family = "Gabor",
+           role = "ctb",
+           email = "attila.gabor@uni-heidelberg.de"),
+    person(given = "Olga",
+           family = "Ivanova",
+           role = "cre",
+           email = "olga.ivanova@bioquant.uni-heidelberg.de")
+        ),
+        year = format(Sys.Date(), "%Y"),
+        url = "http://www.bioconductor.org/packages/CARNIVAL",
+        note = pkgVer('CARNIVAL'),
+        doi = '10.18129/B9.bioc.CARNIVAL'
+    ),
+    bibentry(bibtype="article",
+        title = "From expression footprints to causal pathways: contextualizing large signaling networks with CARNIVAL",
+        author = personList(
+            as.person("Anika Liu"),
+            as.person("Panuwat Trairatphisan"),
+            as.person("Enio Gjerga"),
+            as.person("Athanasios Didangelos"),
+            as.person("Jonathan Barratt"),
+            as.person("Julio Saez-Rodriguez")
+        ),
+        year = "2019",
+        journal = "npj Syst Biol Appl",
+        doi = "10.1038/s41540-019-0118-z",
+        url = "https://www.nature.com/articles/s41540-019-0118-z"
+    )
+)

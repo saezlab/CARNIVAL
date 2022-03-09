@@ -102,6 +102,7 @@ parseCplexLog <- function(log) {
 }
 
 # converts the lines containing convergence description to a table
+#' @importFrom dplyr across everything as_tibble mutate left_join select rename
 convergenceTextToTable <- function(text) {
 
     # atm we work with hard coded headers:
@@ -144,7 +145,7 @@ convergenceTextToTable <- function(text) {
     phaseI_table <- phaseI_table %>%
         dplyr::mutate(Gap = gsub("%","", Gap)) %>%
         dplyr::rename(`Gap [%]` = Gap) %>%
-        dplyr::mutate(across(everything(),as.numeric)) %>%
+        dplyr::mutate(dplyr::across(dplyr::everything(),as.numeric)) %>%
         dplyr::mutate(Gap = Objective - `Best Bound`)
 
     time_table <- timeStringToTable(time_text)
