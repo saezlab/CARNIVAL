@@ -118,6 +118,9 @@
     <loc>/reference/suggestedCplexSpecificOptions.html</loc>
   </url>
   <url>
+    <loc>/reference/writeCplexCommandFileFromJson.html</loc>
+  </url>
+  <url>
     <loc>/reference/writeParsedData.html</loc>
   </url>
 </urlset>

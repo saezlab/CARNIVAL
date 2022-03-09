@@ -1,7 +1,7 @@
-pandoc: '2.13'
+pandoc: 2.17.1.1
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   CARNIVAL: CARNIVAL.html
-last_built: 2022-03-08T13:04Z
+last_built: 2022-03-09T10:17Z
 
