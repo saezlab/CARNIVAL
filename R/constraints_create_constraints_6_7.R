@@ -26,14 +26,14 @@ createConstraints_6_7_v2 <- function(variables, constraintName = c("c6", "c7")) 
     constraintLeft <- c(nodeVar, edgesVars)
     constraintLeft <- paste(constraintLeft, collapse='')
     
-    constraints_6 <- c(constraints_6, createConstraintFreeForm(constraintLeft, "<=", 0))
+    constraints_6 <<- c(constraints_6, createConstraintFreeForm(constraintLeft, "<=", 0))
     
     nodeVar <- unique(allIncomingEdges$nodesDownVars.y)
     edgesVars <- paste0(" - ", allIncomingEdges$edgesDownVars)
     constraintLeft <- c(nodeVar, edgesVars)
     constraintLeft <- paste(constraintLeft, collapse='')
     
-    constraints_7 <- c(constraints_7, createConstraintFreeForm(constraintLeft, "<=", 0))
+    constraints_7 <<- c(constraints_7, createConstraintFreeForm(constraintLeft, "<=", 0))
     
   })
   
