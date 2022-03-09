@@ -35,6 +35,8 @@ writeCplexCommandFile <- function(carnivalOptions){
 
 #' writeCplexCommandFileFromJson
 #' @importFrom  rjson fromJSON 
+#' @param carnivalOptions list of options for the CPLEX solver
+#' @param jsonFileName name to JSONfile containing the solver parameters
 #' @return list of params
 writeCplexCommandFileFromJson <- function(carnivalOptions,
                                           jsonFileName = "parameters/cplex_parameters_cmd_file.json") {

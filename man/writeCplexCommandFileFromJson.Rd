@@ -9,6 +9,11 @@ writeCplexCommandFileFromJson(
   jsonFileName = "parameters/cplex_parameters_cmd_file.json"
 )
 }
+\arguments{
+\item{carnivalOptions}{list of options for the CPLEX solver}
+
+\item{jsonFileName}{name to JSONfile containing the solver parameters}
+}
 \value{
 list of params
 }
