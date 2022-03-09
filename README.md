@@ -11,6 +11,8 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 status](http://www.bioconductor.org/shields/build/release/bioc/CARNIVAL.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/CARNIVAL)
 [![BioC devel
 status](http://www.bioconductor.org/shields/build/devel/bioc/CARNIVAL.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/CARNIVAL)
+[![Codecov test
+coverage](https://codecov.io/gh/saezlab/CARNIVAL/branch/master/graph/badge.svg)](https://codecov.io/gh/saezlab/CARNIVAL?branch=master)
 <!-- badges: end -->
 
 ## Overview
