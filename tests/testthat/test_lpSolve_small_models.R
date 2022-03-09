@@ -214,7 +214,7 @@ test_that("LPsolve, check model1 with inhibitory edge for LP solve", {
     expect_true(nrow(result_actual$nodesAttributes)== 4)
     
     attr = result_actual$nodesAttributes
-    attr <- attr[match(attr$Node,c("I1","M1","N1","N2")),]
+    attr <- attr[match(c("I1","M1","N1","N2"),attr$Node),]
     
     expect_equal(attr$AvgAct, c(100,-100,100,0))
     expect_equal(attr$DownAct, c(0,100,0,0))
@@ -271,7 +271,7 @@ test_that("lpSolve, long-chain alternating signs", {
     expect_true(nrow(result_actual$nodesAttributes)== 5)
     
     attr = result_actual$nodesAttributes
-    attr <- attr[match(attr$Node,c("I1","M1","N1","N2","N3")),]
+    attr <- attr[match(c("I1","M1","N1","N2","N3"),attr$Node),]
     
     expect_equal(attr$AvgAct, c(100,100,100,-100,-100))
     expect_equal(attr$DownAct, c(0,0,0,100,100))
@@ -327,7 +327,7 @@ test_that("lpSolve, 2 input, 2 output, negative edges", {
     expect_true(nrow(result_actual$nodesAttributes)== 7)
     
     attr = result_actual$nodesAttributes
-    attr <- attr[match(attr$Node,c("I1","I2","M1","M2","N1","N2","N3")),]
+    attr <- attr[match(c("I1","I2","M1","M2","N1","N2","N3"),attr$Node),]
     
     expect_equal(attr$AvgAct, c(100,-100,-100,-100,100,100,-100))
     expect_equal(attr$DownAct, c(0,100,100,100,0,0,100))
