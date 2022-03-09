@@ -33,12 +33,17 @@ writeCplexCommandFile <- function(carnivalOptions){
   return(cplexCommandFilename)
 }
 
+#' writeCplexCommandFileFromJson
+#' @importFrom  rjson fromJSON 
+#' @param carnivalOptions list of options for the CPLEX solver
+#' @param jsonFileName name to JSONfile containing the solver parameters
+#' @return list of params
 writeCplexCommandFileFromJson <- function(carnivalOptions,
                                           jsonFileName = "parameters/cplex_parameters_cmd_file.json") {
   message("Writing cplex command file")
 
   message("Loading parameters file for cplex command file:", jsonFileName)
-  cplexCommands <- fromJSON(file = jsonFileName)
+  cplexCommands <- rjson::fromJSON(file = jsonFileName)
   cplexCommandsFilename <- carnivalOptions$cplexCommandFilename
 
   params <- lapply(seq(1:length(cplexCommands)), function(i) {

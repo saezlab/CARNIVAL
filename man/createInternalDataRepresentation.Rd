@@ -5,7 +5,10 @@
 \title{Creates internal data representation - variables for ILP solvers, on the 
 basis of provided preprocessed data.}
 \usage{
-createInternalDataRepresentation(dataPreprocessed, newDataRepresentation = T)
+createInternalDataRepresentation(
+  dataPreprocessed,
+  newDataRepresentation = TRUE
+)
 }
 \arguments{
 \item{dataPreprocessed}{list containing preprocessed priorKnowledgeNetwork, 

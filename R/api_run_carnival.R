@@ -553,6 +553,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'@import readr
 #'@import lpSolve
 #'@import igraph
+#'@import rmarkdown
 #'
 #'@export
 runCARNIVAL <- function(inputObj = NULL,

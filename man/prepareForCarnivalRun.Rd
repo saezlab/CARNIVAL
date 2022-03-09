@@ -10,7 +10,7 @@ to generate variables.}
 prepareForCarnivalRun(
   dataPreprocessed,
   carnivalOptions,
-  newDataRepresentation = T
+  newDataRepresentation = TRUE
 )
 }
 \arguments{

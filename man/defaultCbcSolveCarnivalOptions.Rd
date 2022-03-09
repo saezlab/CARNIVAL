@@ -10,7 +10,7 @@ defaultCbcSolveCarnivalOptions(...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+default CbB solver options as a list.
 }
 \description{
 Sets default CARNIVAL options for cbc.

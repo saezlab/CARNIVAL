@@ -2,7 +2,7 @@
 #'
 #' @param carnivalOptions
 #'
-#' @return
+#' @return Returns the name of the result files without ".sol" extension.
 #' @keywords internal
 #'
 solveWithGurobi <- function(carnivalOptions) {
@@ -62,17 +62,17 @@ getSolutionMatrixGurobi <- function(sol_name_prefix) {
     main_sol <- paste0(sol_name_prefix, ".sol")
 
     # Get the objective function value of the main solution
-    line <- grep("Objective value", readLines(main_sol, n=3), value=T)
-    opt_val <- as.numeric(stringr::str_split(line, " = ", simplify=T)[2])
+    line <- grep("Objective value", readLines(main_sol, n=3), value=TRUE)
+    opt_val <- as.numeric(stringr::str_split(line, " = ", simplify=TRUE)[2])
 
     # Get the names of the alternative solutions 
     # (includes intermediate, non-optimal solutions)
     sol_names <- list.files(path=dirname(sol_name_prefix), 
                             pattern=paste0(basename(sol_name_prefix), "_"), 
-                            full.names=T)
+                            full.names=TRUE)
 
     # Initialise the solution matrix
-    solMatrix <- read.csv2(main_sol, sep=" ", comment.char="#", header=F, 
+    solMatrix <- read.csv2(main_sol, sep=" ", comment.char="#", header=FALSE, 
                            row.names=1, col.names=c("Names", "Solution-0"))
 
     # Loop through the other solution files
@@ -81,15 +81,15 @@ getSolutionMatrixGurobi <- function(sol_name_prefix) {
         x <- paste0(sol_name_prefix, "_", i, ".sol")
 
         # Objective function value of this solution 
-        line <- grep("Objective value", readLines(x, n=3), value=T)
-        obj_val <- as.numeric(stringr::str_split(line, " = ", simplify=T)[2])
+        line <- grep("Objective value", readLines(x, n=3), value=TRUE)
+        obj_val <- as.numeric(stringr::str_split(line, " = ", simplify=TRUE)[2])
 
         # If the solution has the same objective function value as the main,
         # add it to the solution matrix
         if (abs(obj_val - opt_val) < 1e-5) {
             sol <- read.csv2(x, sep=" ", 
                              comment.char="#", 
-                             header=F, 
+                             header=FALSE, 
                              row.names=1, 
                              col.names=c("Names", paste0("Solution-", i)))
             solMatrix <- cbind(solMatrix, sol)

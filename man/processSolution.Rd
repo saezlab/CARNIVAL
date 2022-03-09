@@ -9,7 +9,7 @@ processSolution(
   variables,
   dataPreprocessed,
   carnivalOptions,
-  newDataRepresentation = T
+  newDataRepresentation = TRUE
 )
 }
 \arguments{
@@ -26,6 +26,9 @@ measurements, weights (if provided), perturbations (if provided).}
 
 \item{newDataRepresentation}{TRUE by default. For debugging with the old 
 data representation, put to FALSE.}
+}
+\value{
+Carnival results exported from the solution  matrix. see runCARNIVAL for details.
 }
 \description{
 Exports the solution matrix to the final solution.

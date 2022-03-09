@@ -10,7 +10,7 @@ suggestedCbcSpecificOptions(...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+additional CbC solver options as a list.
 }
 \description{
 Suggests cbc specific options.

@@ -10,7 +10,7 @@ suggestedCplexSpecificOptions(...)
 \item{...}{any possible options from the solver's list}
 }
 \value{
-
+additional CPLEX solver options as a list.
 }
 \description{
 Suggests cplex specific options.s

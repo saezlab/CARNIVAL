@@ -18,7 +18,7 @@ getSupportedSolvers <- function() {
 #' @return list of options, solver-dependent
 #' @export
 #'
-getOptionsList <- function(solver = "", onlyRequired = F) {
+getOptionsList <- function(solver = "", onlyRequired = FALSE) {
   requiredGeneralCarnivalOptions <- c("solver", "betaWeight")
   optionalCarnivalOptions <- c("lpFilename", "outputFolder", "cleanTmpFiles",
                                "keepLPFiles")
@@ -62,7 +62,7 @@ getOptionsList <- function(solver = "", onlyRequired = F) {
 #' @param solver  one of the solvers available from getSupportedSolvers().
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return carnival options as list. 
 #' @export
 #' @examples
 #' setCarnivalOptions(solver="lpSolve")
@@ -86,7 +86,7 @@ setCarnivalOptions <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 #' @param solver  one of the solvers available from getSupportedSolvers().
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return TRUE/FALSE depending on the status of the checks 
 #' @export
 #' @examples
 #' checkOptionsValidity(solver="lpSolve")
@@ -116,6 +116,7 @@ checkOptionsValidity <- function(solver = getSupportedSolvers()$lpSolve, ...) {
 #' Sets default CARNIVAL options for cplex.
 #'
 #' @param ... any possible options from the solver's list
+#' @return default CPLEX solver options as a list.
 #' @export
 #' @examples
 #' defaultCplexCarnivalOptions()
@@ -150,7 +151,7 @@ defaultCplexCarnivalOptions <- function(...){
 #'
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return default lpSolve solver options as a list.
 #' @export
 #' @examples
 #' defaultLpSolveCarnivalOptions()
@@ -183,7 +184,7 @@ defaultLpSolveCarnivalOptions <- function(...){
 #'
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return default CbB solver options as a list.
 #' @export
 #' @examples
 #' #defaultCbcSolveCarnivalOptions()
@@ -217,7 +218,7 @@ defaultCbcSolveCarnivalOptions <- function(...){
 #'
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return  additional CPLEX solver options as a list.
 #' @export
 #' @examples
 #' suggestedCplexSpecificOptions()
@@ -252,7 +253,7 @@ suggestedCplexSpecificOptions <- function(...) {
 #'
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return additional CbC solver options as a list.
 #' @export
 #' @examples
 #' suggestedCbcSpecificOptions()
@@ -280,7 +281,7 @@ suggestedCbcSpecificOptions <- function(...) {
 #'
 #' @param ... any possible options from the solver's list
 #'
-#' @return
+#' @return default CPLEX solver options as a list.
 #' @export
 #' @examples
 #' defaultCplexSpecificOptions()
