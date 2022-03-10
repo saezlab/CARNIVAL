@@ -13,7 +13,7 @@ writeSolverFile <- function(objectiveFunction = objectiveFunction,
   ## write the .lp file
   lpFilename <- carnivalOptions$filenames$lpFilename
   
-  write("Minimize", lpFilename, append = TRUE)
+  write("Minimize", lpFilename, append = FALSE)
   write(objectiveFunction, lpFilename, append = TRUE)
   write("Subject To", lpFilename, append = TRUE)
   write(allConstraints, lpFilename, append = TRUE)
