@@ -337,6 +337,7 @@ runFromLpCarnival <- function(lpFile = "",
 #'defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.
 #'
 #'@return The function will return a list of results containing:
+#'
 #'1. weightedSIF: A table with 4 columns containing the combined network
 #'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 #'Sign of the interaction (Sign), the Target of the interaction (Node2) and the
