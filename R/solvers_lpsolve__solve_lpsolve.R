@@ -3,13 +3,6 @@ solveWithLpSolve <- function(lpMatrix, carnivalOptions) {
   lpForm <- prepareLPMatrixSingle(lpMatrix, carnivalOptions)
   # lp solve assumes that all decision variables are positive. We should shift
   # the problem to the positive plane. 
-  
-  
-  # lpSolutionResults <- lp(direction = "min", objective.in = lpForm$obj,
-  #                         const.mat = lpForm$con, const.dir = lpForm$dir,
-  #                         const.rhs = lpForm$rhs, int.vec = lpForm$ints,
-  #                         binary.vec = lpForm$bins)$solution
-  # 
 
   lpForm_tr <- shiftConstraintSpace(lpForm)
   lpSolutionResults_tr <- lp(direction = "min", objective.in = lpForm_tr$obj, 
