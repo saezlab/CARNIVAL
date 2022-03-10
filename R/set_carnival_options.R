@@ -199,6 +199,7 @@ defaultCbcSolveCarnivalOptions <- function(...){
     solver = getSupportedSolvers()$cbc,
     solverPath = NULL,
     lpFilename = "",
+    threads = 1,
     outputFolder = getwd(),
     workdir = getwd(),
     betaWeight = 0.2,

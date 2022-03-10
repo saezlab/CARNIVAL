@@ -472,7 +472,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'@param alphaWeight Objective function: weight for mismatch penalty (default:
 #'1 - will only be applied once measurement file only contains discrete values)
 #'@param betaWeight Objective function: weight for node penalty (default: 0.2)
-#'@param threads CPLEX parameter: Number of threads to use
+#'@param threads CPLEX/CBC parameter: Number of threads to use
 #'default: 0 for maximum number possible threads on system
 #'@param dir_name Specify directory name to store results. by default set to
 #'NULL
@@ -484,6 +484,7 @@ runCarnivalWithManualConstraints <- function(perturbations,
 #'multi-threaded optimization, default: -1, (no cloning)
 
 #'@return The function will return a list of results containing:
+#'
 #'1. weightedSIF: A table with 4 columns containing the combined network
 #'solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 #'Sign of the interaction (Sign), the Target of the interaction (Node2) and the

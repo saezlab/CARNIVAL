@@ -73,7 +73,7 @@ pool (0,1,2 - default: 2 = most diversified solutions)}
 
 \item{betaWeight}{Objective function: weight for node penalty (default: 0.2)}
 
-\item{threads}{CPLEX parameter: Number of threads to use
+\item{threads}{CPLEX/CBC parameter: Number of threads to use
 default: 0 for maximum number possible threads on system}
 
 \item{cleanTmpFiles}{logic (default-TRUE), specifying if the tmp files made by
@@ -90,6 +90,7 @@ NULL}
 }
 \value{
 The function will return a list of results containing:
+
 1. weightedSIF: A table with 4 columns containing the combined network
 solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 Sign of the interaction (Sign), the Target of the interaction (Node2) and the
