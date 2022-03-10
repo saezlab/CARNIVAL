@@ -7,7 +7,7 @@ writeCplexCommandFile <- function(carnivalOptions){
   cplexCommandFilename <- carnivalOptions$filenames$cplexCommandFile
 
   write(paste0("read ", lpFilename),
-        cplexCommandFilename, append = TRUE)
+        cplexCommandFilename, append = FALSE)
   write(paste0("set mip tolerances mipgap ", carnivalOptions$mipGap),
         cplexCommandFilename, append = TRUE)
   write(paste0("set mip pool relgap ", carnivalOptions$poolrelGap),
