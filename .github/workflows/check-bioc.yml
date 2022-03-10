@@ -22,8 +22,12 @@
 
 on:
   push:
+    branches:
+      - master
   pull_request:
-
+    branches:
+      - master
+      
 name: R-CMD-check-bioc
 
 ## These environment variables control whether to run GHA code later on that is
