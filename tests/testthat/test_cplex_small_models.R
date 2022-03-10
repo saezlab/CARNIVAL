@@ -95,7 +95,7 @@ test_that("CPLEX, empty solution", {
                                 solver = "cplex",
                                 solverPath = cplexPath,cleanTmpFiles = FALSE,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cplex1",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -149,7 +149,7 @@ test_that("CPLEX, diamond shape, positive edges", {
                                 solver = "cplex",
                                 solverPath = cplexPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cplex2",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -210,7 +210,7 @@ test_that("CPLEX, 2 input, 2 output, negative edges", {
                                 solver = "cplex",
                                 solverPath = cplexPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cplex3",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -301,7 +301,7 @@ test_that("CPLEX, large network", {
                                 solver = "cplex",
                                 solverPath = cplexPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cplex4",
                                 threads = 1,
                                 betaWeight = 0.1)
     

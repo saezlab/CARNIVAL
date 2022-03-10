@@ -91,7 +91,7 @@ test_that("CBC, empty solution", {
                                 solver = "cbc",
                                 solverPath = cbcPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cbc1",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -144,7 +144,7 @@ test_that("CBC, diamond shape, positive edges", {
                                 solver = "cbc",
                                 solverPath = cbcPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cbc2",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -201,7 +201,7 @@ test_that("CBC, 2 input, 2 output, negative edges", {
                                 solver = "cbc",
                                 solverPath = cbcPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cbc3",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -291,7 +291,7 @@ test_that("check larger model with CBC solver", {
                                 solver = "cbc",
                                 solverPath = cbcPath,
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/cbc4",
                                 threads = 1,
                                 betaWeight = 0.1)
     

@@ -1,6 +1,4 @@
-
 library(dplyr)
-
 
 # helper to generate network
 inter <- function(x1,i,x2){
@@ -28,8 +26,6 @@ plotSolution <- function(result_actual,id,inputs, measurement){
         mutate(color.background = ifelse(Activity == 1,"#9acd32", "grey"),
                color.background = ifelse(Activity == -1,"red", color.background)) %>%
         mutate(borderWidth = 3)
-    
-    
     
     visNetwork::visNetwork(edges = net_edge,nodes = net_nodes) %>%
         visNetwork::visEdges(arrows = 'to', scaling = list(min = 2, max = 2)) %>%
@@ -59,7 +55,6 @@ plotPKN <- function(network, inputs, measurement){
 }
 
 
-
 # Tests with LP solve ------------------------------------------------------
 
 
@@ -80,10 +75,9 @@ test_that("lpSolve, empty solution", {
                                 netObj = network,
                                 solver = "lpSolve",
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/test1/",
                                 threads = 1,
                                 betaWeight = 0.1)
-    
     
     attr = result_actual$nodesAttributes
     attr <- attr[match(attr$Node,c("I1","M1","N1","N2")),]
@@ -131,10 +125,9 @@ test_that("lpSolve, diamond shape, positive edges", {
                                 netObj = network,
                                 solver = "lpSolve",
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/test2/",
                                 threads = 1,
                                 betaWeight = 0.1)
-    
     
     expect_length(result_actual, 4)
     expect_named(result_actual,expected =  c("weightedSIF", 
@@ -206,7 +199,7 @@ test_that("LPsolve, check model1 with inhibitory edge for LP solve", {
                                 netObj = network,
                                 solver = "lpSolve",
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/test3/",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -253,15 +246,13 @@ test_that("lpSolve, long-chain alternating signs", {
                     inter("N3", -1, "M1"))
     
     
-    
-    
     # obtain actual results
     result_actual = runCARNIVAL(inputObj = inputs, 
                                 measObj = measurement, 
                                 netObj = network,
                                 solver = "lpSolve",
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/test4/",
                                 threads = 1,
                                 betaWeight = 0.1)
     
@@ -315,16 +306,15 @@ test_that("lpSolve, 2 input, 2 output, negative edges", {
                                 netObj = network,
                                 solver = "lpSolve",
                                 timelimit = 60,
-                                dir_name = "./test_model1",
+                                dir_name = "./test_model1/test5",
                                 threads = 1,
                                 betaWeight = 0)
-    
     
     # plotPKN(network, inputs, measurement)
     # plotSolution(result_actual,1,inputs, measurement)
     
     # nodesAttributes
-    expect_true(nrow(result_actual$nodesAttributes)== 7)
+    expect_equal(nrow(result_actual$nodesAttributes), 7)
     
     attr = result_actual$nodesAttributes
     attr <- attr[match(c("I1","I2","M1","M2","N1","N2","N3"),attr$Node),]
@@ -344,7 +334,7 @@ test_that("lpSolve, 2 input, 2 output, negative edges", {
     
     # attributesAll
     expect_length(result_actual$attributesAll,1)
-    expect_true(sum(result_actual$attributesAll[[1]]$Activity)==-1)
-    expect_true(sum(abs(result_actual$attributesAll[[1]]$Activity))==7)
+    expect_equal(sum(result_actual$attributesAll[[1]]$Activity),-1)
+    expect_equal(sum(abs(result_actual$attributesAll[[1]]$Activity)),7)
     
 })

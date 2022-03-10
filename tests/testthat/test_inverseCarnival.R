@@ -77,11 +77,16 @@ test_that("lpSolve, inverseCarnival, negative measurement", {
                     inter("N2", 1, "M1"),
                     inter("N1", 1, "M1"))
     
+    options <- defaultLpSolveCarnivalOptions()
+    options$workdir = file.path(options$workdir,"work_lpsolve")
+    options$outputFolder = file.path(options$workdir,"work_lpsolve")
+    options$keepLPFiles = FALSE
+    
     # obtain actual result using LP solve
     result_actual = runInverseCarnival(measurements = measurement,
                                        priorKnowledgeNetwork = network,
                                        weights = NULL,
-                                       carnivalOptions = defaultLpSolveCarnivalOptions())
+                                       carnivalOptions = options)
     
     # plotSolution(result_actual,1,inputs = c(Perturbation = 1), measurement)
     
@@ -135,7 +140,10 @@ test_that("CPLEX, inverseCarnival, negative measurement", {
     
     options <-  defaultCplexCarnivalOptions()
     options$solverPath <- cplexPath
-    
+    options$workdir = file.path(options$workdir,"work_cplex")
+    options$outputFolder = file.path(options$workdir,"work_cplex")
+    options$keepLPFiles <- FALSE
+
     # obtain actual result using LP solve
     result_actual = runInverseCarnival(measurements = measurement,
                                        priorKnowledgeNetwork = network,
