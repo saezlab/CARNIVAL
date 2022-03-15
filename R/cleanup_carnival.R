@@ -32,6 +32,10 @@ cleanupCarnival <- function(carnivalOptions){
         file.remove("cplex.log")
       }
       
+      if(file.exists(carnivalOptions$filenames$cplexLog)){
+          file.remove(carnivalOptions$filenames$cplexLog)
+      }
+      
       if(file.exists(cplexCommandFile)){
         file.remove(cplexCommandFile)
       }
