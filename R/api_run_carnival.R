@@ -609,6 +609,12 @@ runCARNIVAL <- function(inputObj = NULL,
     measObj <- as.vector(t(measObj))
     names(measObj) <- measurementsNames
   }
+  
+  if (is.data.frame(weightObj)) {
+      weightsNames <- colnames(weightObj)
+      weightObj <- as.vector(t(weightObj))
+      names(weightObj) <- weightsNames
+  }
 
   if (is.null(inputObj)){
     result <- runInverseCarnival(measurements = measObj,
