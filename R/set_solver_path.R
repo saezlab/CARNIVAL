@@ -1,6 +1,11 @@
+#' searchForCPLEXSolver
+#' 
+#' search for interactive cplex executable in the default path
+#' 
+#' @return path to CPLEX if found or empty string ("") if not. 
 #TODO add windows support
 #check https://www.ibm.com/docs/en/icos/12.8.0.0?topic=v1280-installing-cplex-optimization-studio
-searchForSolver <- function(solver) {
+searchForCPLEXSolver <- function() {
   cplexBinaryLocation <- ""
   if (.Platform$OS.type %in% c("unix", "linux")) {
     #mac
@@ -17,27 +22,35 @@ searchForSolver <- function(solver) {
     
     cplexStudioLocation <- list.files(paste0(cplexStudioLocation, "/cplex/bin"), 
                                       full.names = TRUE)[1]
-    cplexBinaryLocation <- paste0(cplexStudioLocation, "/cplex")  
+    cplexBinaryLocation <- paste0(cplexStudioLocation, "/cplex")
+    
+    if(testRunCplex(cplexBinaryLocation)){
+        return(cplexBinaryLocation)
+    }else{
+        return("")
+    }
   } else {
     message("Automatic setup path for cplex solver is not support for Windows yet.")
+      cplexBinaryLocation = ""
   }
   
   return(cplexBinaryLocation)
 }
   
-testRunCplex <- function() {
-  cplexPath <- checkSolverPathInEnvironement("cplex")
-  lineToCplex <- "read simpleIlpProblem.lp optimize"
-  message("Test run of cplex")
-  results <- system(paste(cplexPath, "-c", lineToCplex), intern = TRUE) 
-  isSuccessfull <- any(grepl("Welcome", results)) && any(grep("Solution time", results))
-  
-  if (isSuccessfull) {
-    message("Test run finished successfully.")  
-  } else {
-    stop("Test run has failed. Solver lpSolve cannot be run.", 
-         paste(results, collapse = "\n"))
-  }
+#' checks if the the cplexPath exists
+#' 
+#' tries to interact with the cplex 
+#' @param cplexPath path to cplex to check
+#' @return TRUE if interaction was successful, FALSE otherwise
+testRunCplex <- function(cplexPath) {
+    
+    isSuccessfull <- tryCatch({
+            results = system(paste(cplexPath, "-c quit"), intern = TRUE)
+            any(grepl("Welcome", results))
+        },
+        error = function(cond){
+            return(FALSE)
+        })
 }
 
 testRunLpSolve <- function(){
@@ -47,9 +60,10 @@ testRunLpSolve <- function(){
   chess.dir <- rep (c("=", "<"), c(16, 26))
   chess.rhs <- rep (1, 42)
   
-  results <- lp ('max', chess.obj, , chess.dir, chess.rhs, dense.const = q8, 
+  results <- lp (direction = 'max', objective.in = chess.obj,
+                 const.dir = chess.dir, const.rhs =  chess.rhs, dense.const = q8, 
                 all.bin=TRUE, num.bin.solns=3)
-  isSuccessfull <- any(grepl("Success:", results))
+  isSuccessfull <- results$status == 0 
   
   if (isSuccessfull) {
     message("Test run finished successfully.")  
@@ -57,10 +71,13 @@ testRunLpSolve <- function(){
     stop("Test run has failed. Solver lpSolve cannot be run.", 
          paste(results, collapse = "\n"))
   }
+  return(isSuccessfull)
 }
 
-testRunCbc <- function() {
-  cbcPath <- system("which cbc", intern=TRUE)
+testRunCbc <- function(cbcPath) {
+    
+    if(!file.exists(cbcPath)) return(FALSE)
+    
   message("Test run of cbc")
   results <- system(paste(cbcPath, "simpleIlpProblem.lp"), intern = TRUE)
   isSuccessfull <- any(grepl("Welcome", results)) && any(grep("Total time", results))
@@ -70,6 +87,7 @@ testRunCbc <- function() {
     stop("Test run has failed. Solver cbc cannot be run.", 
          paste(results, collapse = "\n"))
   }
+  return(isSuccessfull)
 }
 
 addSolverPathToEnvironement <- function(cplexSolverPath) {

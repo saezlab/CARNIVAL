@@ -1,53 +1,47 @@
 ## Providing functions for fixing special characters in node identifiers
 ##
 ## Enio Gjerga, Olga Ivanova 2020-2021
-specialRegExpCharactersToFix <- c("*", "+", "=")
-specialCharactersToFix <- c("-", "<", ">", "/", " ")
 
-collectSpecialCharactersNames <- function(namesWithSpecialCharacters, nodesNames) {
-  counter <- 0
-  res <- lapply(namesWithSpecialCharacters, function(x) {
-    counter <<- counter + 1
-    if (x[1] != -1) {
-      substr(names[counter], x[1], x[1])  
-    }
-  })
-  names(res) <- nodesNames
-  
-  return(res)
-}
 
 correctIdentifiers <- function(nodesIds, replacementSymbol = "_",
-                               verbose = FALSE, keepMapping = FALSE ){
+                               verbose = FALSE){
   
-  preparedPattern <- paste0("\\", specialRegExpCharactersToFix, collapse = "|")
-  preparedPattern <- paste0(c(preparedPattern, specialCharactersToFix), collapse = "|")
+    nodesIds_new <- make.names(nodesIds)
+    nodesIds_new <- gsub(pattern = ".",replacement = replacementSymbol,x = nodesIds_new,fixed = TRUE)
+    
+    changedIdsindx <- which(nodesIds!=nodesIds_new)
+    
+    if(length(changedIdsindx)>0){
+        
+        # check if 2 names ended up to be the same after change
+        map_table <- data.frame(user.defined.id =  nodesIds[changedIdsindx],
+                                mapped.id = nodesIds_new[changedIdsindx])
+        map_table <- unique(map_table)
+        if (verbose) {
+            message("The following names changed in the network:")  
+            print(map_table)
+        }
+        
+        duplicated_corrected_nodeIds <- duplicated(map_table$mapped.id) | duplicated(map_table$mapped.id,fromLast = TRUE)
+        
+        if(any(duplicated_corrected_nodeIds)){
+            message("The following node names maps to the same ID:")
+            print(map_table[duplicated_corrected_nodeIds,])
+            stop("Multiple nodes in the PKN map to the same name after correcting
+                  their identifiers, check the table above and correct the names in the PKN manually (check ?make.names).")
+        } 
+    }  
   
-  if (verbose) {
-    idsWithSpecialCharacters <- gregexpr(pattern = preparedPattern, text = nodesIds) 
-    
-    resultsIds <- collectSpecialCharactersNames(idsWithSpecialCharacters, nodesIds)
-    
-    allSpecialCharactersFound <- unique(unlist(nodesIds))
-    allSubstitutedNamesTarget <- names(resultsIds[lengths(resultsIds) != 0])
-    
-    warning("Provided nodes have identifiers with characters ", 
-            paste0(allSpecialCharactersFound, sep = ", "), " and they will
-            be replaced with '_'")
-  }  
-  
-  nodesIds <- gsub(pattern = preparedPattern, x = nodesIds, replacement = replacementSymbol)  
-  return(nodesIds) 
+  return(nodesIds_new) 
 }
 
 correctNodeIdentifiersInNetwork <- function( network, replacementSymbol = "_", 
-                                             verbose = FALSE,
-                                             keepMapping = FALSE ){
+                                             verbose = FALSE){
   
-  network$source <- correctIdentifiers(network$source, replacementSymbol, 
-                                       verbose, keepMapping)
+  network$source <- correctIdentifiers(nodesIds = network$source, replacementSymbol, 
+                                       verbose)
   network$target <- correctIdentifiers(network$target, replacementSymbol, 
-                                       verbose, keepMapping)
+                                       verbose)
   
   return(network) 
 }
