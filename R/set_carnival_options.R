@@ -128,7 +128,7 @@ defaultCplexCarnivalOptions <- function(...){
     }
 
     options <- list(
-         solverPath = "",
+         solverPath = searchForCPLEXSolver(),
          solver = getSupportedSolvers()$cplex,
          lpFilename = "",
          cplexCommandFilename = "",
