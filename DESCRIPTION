@@ -24,11 +24,11 @@ Authors@R: c(
            role = "ctb"),
     person(given = "Attila",
            family = "Gabor",
-           role = "ctb",
+           role = "cre",
            email = "attila.gabor@uni-heidelberg.de"),
     person(given = "Olga",
            family = "Ivanova",
-           role = "cre",
+           role = "aut",
            email = "olga.ivanova@bioquant.uni-heidelberg.de")
            )
 Description: An upgraded causal reasoning tool from Melas et al in R with updated assignments of TFs' weights from PROGENy scores.
