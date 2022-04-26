@@ -20,6 +20,10 @@ solveWithCplex <- function(carnivalOptions) {
   message("Saving results...") 
   
   solutionFileName <- carnivalOptions$filenames$resultFile
+  if(!file.exists(solutionFileName)){
+      stop("CPLEX solution file is not found. CPLEX was likely interrupted (exceeding memory limit is the usual cause).
+           Try to increase the available resources (memory) or reducing the PKN. ")
+  }
   solution <- read.delim(file = solutionFileName)
   
   return(solution)
