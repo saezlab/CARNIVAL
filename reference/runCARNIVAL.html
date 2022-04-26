@@ -65,7 +65,7 @@
   solver <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lpSolve"</span>, <span class="st">"cplex"</span>, <span class="st">"cbc"</span>, <span class="st">"gurobi"</span><span class="op">)</span>,
   timelimit <span class="op">=</span> <span class="fl">3600</span>,
   mipGAP <span class="op">=</span> <span class="fl">0.05</span>,
-  poolrelGAP <span class="op">=</span> <span class="fl">0.0001</span>,
+  poolrelGAP <span class="op">=</span> <span class="fl">1e-04</span>,
   limitPop <span class="op">=</span> <span class="fl">500</span>,
   poolCap <span class="op">=</span> <span class="fl">100</span>,
   poolIntensity <span class="op">=</span> <span class="fl">4</span>,
@@ -76,7 +76,7 @@
   cleanTmpFiles <span class="op">=</span> <span class="cn">TRUE</span>,
   keepLPFiles <span class="op">=</span> <span class="cn">TRUE</span>,
   clonelog <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  dir_name <span class="op">=</span> <span class="st">"."</span>
+  dir_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -228,13 +228,11 @@ and is left for backward compatibility.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Enio Gjerga, Panuwat Trairatphisan, Attila Gabor, Olga
-Ivanova.</p>
+  <p></p><p>Developed by Enio Gjerga, Panuwat Trairatphisan, Attila Gabor, Olga Ivanova.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

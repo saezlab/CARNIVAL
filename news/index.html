@@ -52,39 +52,23 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.3.0" id="carnival-230">CARNIVAL 2.3.0<a class="anchor" aria-label="anchor" href="#carnival-230"></a></h2>
-<ul><li>bug fix: parsing the output of ILP solvers were incorrect,
-especially building the nodesAttributes. The bug resulted in
-inconsistencies between the reported nodes and interactions</li>
-<li>bug fix: empty workdir and outputFolder resulted in unhandled
-errors. From now on, current working directory is used for temporary and
-result files if not specified otherwise in the options</li>
-<li>bug fix: the function defaultCbcSolveCarnivalOptions() had a
-undefined variable.</li>
-<li>bug fix: lpSolve has a non-negativity constraint which was ignored
-so far. Now this issue is handled. lpSolve can be used for small
-networks and in tests.</li>
-<li>tests added: added many small-medium, general tests for lpSolve,
-CPLEX and CbC</li>
+<ul><li>bug fix: parsing the output of ILP solvers were incorrect, especially building the nodesAttributes. The bug resulted in inconsistencies between the reported nodes and interactions</li>
+<li>bug fix: empty workdir and outputFolder resulted in unhandled errors. From now on, current working directory is used for temporary and result files if not specified otherwise in the options</li>
+<li>bug fix: the function defaultCbcSolveCarnivalOptions() had a undefined variable.</li>
+<li>bug fix: lpSolve has a non-negativity constraint which was ignored so far. Now this issue is handled. lpSolve can be used for small networks and in tests.</li>
+<li>tests added: added many small-medium, general tests for lpSolve, CPLEX and CbC</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.2.0" id="carnival-220">CARNIVAL 2.2.0<a class="anchor" aria-label="anchor" href="#carnival-220"></a></h2>
-<ul><li>Changed API: introduced separate functions for different flavours of
-CARNIVAL.</li>
-<li>A more convenient way to work with CARNIVAL parameters. Parameters
-setup is possible through jsons and function calls.</li>
-<li>Better file naming to prevent concurrent file writing when running
-several instances of CARNIVAL.</li>
+<ul><li>Changed API: introduced separate functions for different flavours of CARNIVAL.</li>
+<li>A more convenient way to work with CARNIVAL parameters. Parameters setup is possible through jsons and function calls.</li>
+<li>Better file naming to prevent concurrent file writing when running several instances of CARNIVAL.</li>
 <li>An easy way to add more solvers.</li>
-<li>A possibility to tune CARNIVAL setups for cplex: manual addition of
-parameters is possible through jsons.</li>
-<li>General improvements and refactoring of the code, removed multiple
-duplications.</li>
-<li>Removed multiple experimental conditions in a matrix form (was not
-used).</li>
-<li>Inputs are transformed to vectors (except prior knowledge
-network).</li>
-<li>MetaInfo is saved: runId, parsed data (internal data
-representation), start time, CARNIVAL flavour.</li>
+<li>A possibility to tune CARNIVAL setups for cplex: manual addition of parameters is possible through jsons.</li>
+<li>General improvements and refactoring of the code, removed multiple duplications.</li>
+<li>Removed multiple experimental conditions in a matrix form (was not used).</li>
+<li>Inputs are transformed to vectors (except prior knowledge network).</li>
+<li>MetaInfo is saved: runId, parsed data (internal data representation), start time, CARNIVAL flavour.</li>
 <li>Reading from preparsed data and/or lp file is possible.</li>
 </ul></div>
     <div class="section level2">
@@ -109,13 +93,11 @@ representation), start time, CARNIVAL flavour.</li>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Enio Gjerga, Panuwat Trairatphisan, Attila Gabor, Olga
-Ivanova.</p>
+  <p></p><p>Developed by Enio Gjerga, Panuwat Trairatphisan, Attila Gabor, Olga Ivanova.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
