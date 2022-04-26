@@ -195,14 +195,20 @@ checkCarnivalOptions <- function(carnivalOptions) {
     carnivalOptions$solver <- getSupportedSolvers()$lpSolve
   }
   
-  if(is.null(carnivalOptions$workdir)) carnivalOptions$workdir = getwd()
-  if ( !dir.exists(carnivalOptions$workdir)) {
-    dir.create(carnivalOptions$workdir,recursive = TRUE)
+  if(is.null(carnivalOptions$workdir) | nchar(carnivalOptions$workdir)==0) carnivalOptions$workdir = getwd()
+  if (!dir.exists(carnivalOptions$workdir)) {
+    success = dir.create(carnivalOptions$workdir,recursive = TRUE)
+    if(!success){
+        stop(paste0("Unable to create working directory at: ", carnivalOptions$workdir))
+    }
   } 
   
-  if(is.null(carnivalOptions$outputFolder)) carnivalOptions$outputFolder = getwd()
+  if(is.null(carnivalOptions$outputFolder) | nchar(carnivalOptions$outputFolder)==0) carnivalOptions$outputFolder = getwd()
   if (!dir.exists(carnivalOptions$outputFolder)) {
-    dir.create(carnivalOptions$outputFolder,recursive = TRUE)
+      success = dir.create(carnivalOptions$outputFolder,recursive = TRUE)
+      if(!success){
+          stop(paste0("Unable to create folder for the outputs at: ", carnivalOptions$outputFolder))
+      }
   }
   
   reqOptions <- getOptionsList(carnivalOptions$solver, 

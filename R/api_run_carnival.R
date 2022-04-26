@@ -577,7 +577,7 @@ runCARNIVAL <- function(inputObj = NULL,
                         cleanTmpFiles = TRUE,
                         keepLPFiles = TRUE,
                         clonelog = -1,
-                        dir_name = ".") {
+                        dir_name = getwd()) {
   solver <- match.arg(solver)
 
   opts <- list(solverPath = solverPath,

@@ -13,7 +13,7 @@ runCARNIVAL(
   solver = c("lpSolve", "cplex", "cbc", "gurobi"),
   timelimit = 3600,
   mipGAP = 0.05,
-  poolrelGAP = 0.0001,
+  poolrelGAP = 1e-04,
   limitPop = 500,
   poolCap = 100,
   poolIntensity = 4,
@@ -24,7 +24,7 @@ runCARNIVAL(
   cleanTmpFiles = TRUE,
   keepLPFiles = TRUE,
   clonelog = -1,
-  dir_name = "."
+  dir_name = getwd()
 )
 }
 \arguments{
