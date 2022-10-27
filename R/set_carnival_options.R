@@ -202,6 +202,7 @@ defaultCbcSolveCarnivalOptions <- function(...){
     threads = 1,
     outputFolder = getwd(),
     workdir = getwd(),
+    timelimit = 600,
     betaWeight = 0.2,
     poolrelGap = 0.0001,
     cleanTmpFiles = TRUE,
