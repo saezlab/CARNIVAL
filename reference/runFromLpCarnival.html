@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -56,40 +56,55 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runFromLpCarnival</span><span class="op">(</span>
-  lpFile <span class="op">=</span> <span class="st">""</span>,
-  parsedDataFile <span class="op">=</span> <span class="st">""</span>,
-  carnivalOptions <span class="op">=</span> <span class="fu"><a href="defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runFromLpCarnival</span><span class="op">(</span></span>
+<span>  lpFile <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  parsedDataFile <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  carnivalOptions <span class="op">=</span> <span class="fu"><a href="defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>lpFile</dt>
 <dd><p>full path to .lp file</p></dd>
+
+
 <dt>parsedDataFile</dt>
 <dd><p>full path to preprocessed .RData file</p></dd>
+
+
 <dt>carnivalOptions</dt>
 <dd><p>the list of options for the run. See defaultLpSolveCarnivalOptions(),
 defaultLpSolveCarnivalOptions, defaultCbcCarnivalOptions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The function will return a list of results containing:
+    
+
+<p>The function will return a list of results containing:
 1. weightedSIF: A table with 4 columns containing the combined network
 solutions from CARNIVAL. It contains the Source of the interaction (Node1),
 Sign of the interaction (Sign), the Target of the interaction (Node2) and the
 weight of the interaction (Weight) which shows how often an interaction
-appears across all solutions.
-2. nodesAttributes: A table with 6 columns containing information about
+appears across all solutions.</p>
+
+
+<p>2. nodesAttributes: A table with 6 columns containing information about
 infered protein activity states and attributes. It contains the Protein IDs
 (Node); how often this node has taken an activity of 0, 1 and -1 across the
 solutions (ZeroAct, UpAct, DownAct); the average activities across solutions
-(AvgAct); and the node attribute (measured, target, inferred).
-3. sifAll: A list of separate network solutions.
-4. attributesAll: A list of separate inferred node activities in each
-solution.
-5. diagnostics: reports the convergence of optimization and reason of
+(AvgAct); and the node attribute (measured, target, inferred).</p>
+
+
+<p>3. sifAll: A list of separate network solutions.</p>
+
+
+<p>4. attributesAll: A list of separate inferred node activities in each
+solution.</p>
+
+
+<p>5. diagnostics: reports the convergence of optimization and reason of
 the termination. Only for CPLEX solver.</p>
     </div>
     <div id="details">
@@ -103,45 +118,45 @@ the termination. Only for CPLEX solver.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">lpFilePath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_lp_file_ex1.lp"</span>,</span>
-<span class="r-in">                         package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">parsedDataFilePath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_parsed_data_ex1.RData"</span>,</span>
-<span class="r-in">                                package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## lpSolve</span></span>
-<span class="r-in"><span class="co">#res1 = runFromLpCarnival(lpFile = lpFilePath,</span></span>
-<span class="r-in"><span class="co">#                         parsedDataFile = parsedDataFilePath,</span></span>
-<span class="r-in"><span class="co">#                         carnivalOptions = defaultLpSolveCarnivalOptions())</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#res1$weightedSIF ##see @return</span></span>
-<span class="r-in"><span class="co">#res1$nodesAttributes ## see @return</span></span>
-<span class="r-in"><span class="co">#res1$sifAll ## see @return</span></span>
-<span class="r-in"><span class="co">#res1$attributesAll ## see @return</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Examples for cbc and cplex are commented out because these solvers are not part of R environment</span></span>
-<span class="r-in"><span class="co">## and need to be installed separately</span></span>
-<span class="r-in"><span class="co">##</span></span>
-<span class="r-in"><span class="co">## cbc</span></span>
-<span class="r-in"><span class="co">## res2 = runFromLpCarnival(lpFile = lpFilePath,</span></span>
-<span class="r-in"><span class="co">##                          parsedDataFile = parsedDataFilePath,</span></span>
-<span class="r-in"><span class="co">##                          carnivalOptions = defaultLpCbcCarnivalOptions())</span></span>
-<span class="r-in"><span class="co">##</span></span>
-<span class="r-in"><span class="co">## res2$weightedSIF ##see @return</span></span>
-<span class="r-in"><span class="co">## res2$nodesAttributes ## see @return</span></span>
-<span class="r-in"><span class="co">## res2$sifAll ## see @return</span></span>
-<span class="r-in"><span class="co">## res2$attributesAll ## see @return</span></span>
-<span class="r-in"><span class="co">##</span></span>
-<span class="r-in"><span class="co">## cplex</span></span>
-<span class="r-in"><span class="co">## res3 = runFromLpCarnival(lpFile = lpFilePath,</span></span>
-<span class="r-in"><span class="co">##                          parsedDataFile = parsedDataFilePath,</span></span>
-<span class="r-in"><span class="co">##                          carnivalOptions = defaultLpCplexCarnivalOptions())</span></span>
-<span class="r-in"><span class="co">##</span></span>
-<span class="r-in"><span class="co">## res3$weightedSIF ##see @return</span></span>
-<span class="r-in"><span class="co">## res3$nodesAttributes ## see @return</span></span>
-<span class="r-in"><span class="co">## res3$sifAll ## see @return</span></span>
-<span class="r-in"><span class="co">## res3$attributesAll ## see @return</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">lpFilePath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_lp_file_ex1.lp"</span>,</span></span>
+<span class="r-in"><span>                         package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">parsedDataFilePath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_parsed_data_ex1.RData"</span>,</span></span>
+<span class="r-in"><span>                                package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## lpSolve</span></span></span>
+<span class="r-in"><span><span class="co">#res1 = runFromLpCarnival(lpFile = lpFilePath,</span></span></span>
+<span class="r-in"><span><span class="co">#                         parsedDataFile = parsedDataFilePath,</span></span></span>
+<span class="r-in"><span><span class="co">#                         carnivalOptions = defaultLpSolveCarnivalOptions())</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#res1$weightedSIF ##see @return</span></span></span>
+<span class="r-in"><span><span class="co">#res1$nodesAttributes ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">#res1$sifAll ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">#res1$attributesAll ## see @return</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Examples for cbc and cplex are commented out because these solvers are not part of R environment</span></span></span>
+<span class="r-in"><span><span class="co">## and need to be installed separately</span></span></span>
+<span class="r-in"><span><span class="co">##</span></span></span>
+<span class="r-in"><span><span class="co">## cbc</span></span></span>
+<span class="r-in"><span><span class="co">## res2 = runFromLpCarnival(lpFile = lpFilePath,</span></span></span>
+<span class="r-in"><span><span class="co">##                          parsedDataFile = parsedDataFilePath,</span></span></span>
+<span class="r-in"><span><span class="co">##                          carnivalOptions = defaultLpCbcCarnivalOptions())</span></span></span>
+<span class="r-in"><span><span class="co">##</span></span></span>
+<span class="r-in"><span><span class="co">## res2$weightedSIF ##see @return</span></span></span>
+<span class="r-in"><span><span class="co">## res2$nodesAttributes ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">## res2$sifAll ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">## res2$attributesAll ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">##</span></span></span>
+<span class="r-in"><span><span class="co">## cplex</span></span></span>
+<span class="r-in"><span><span class="co">## res3 = runFromLpCarnival(lpFile = lpFilePath,</span></span></span>
+<span class="r-in"><span><span class="co">##                          parsedDataFile = parsedDataFilePath,</span></span></span>
+<span class="r-in"><span><span class="co">##                          carnivalOptions = defaultLpCplexCarnivalOptions())</span></span></span>
+<span class="r-in"><span><span class="co">##</span></span></span>
+<span class="r-in"><span><span class="co">## res3$weightedSIF ##see @return</span></span></span>
+<span class="r-in"><span><span class="co">## res3$nodesAttributes ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">## res3$sifAll ## see @return</span></span></span>
+<span class="r-in"><span><span class="co">## res3$attributesAll ## see @return</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -156,7 +171,7 @@ the termination. Only for CPLEX solver.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

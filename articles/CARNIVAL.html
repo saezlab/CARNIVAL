@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ from expression footprints with CARNIVAL</h1>
                         <h4 data-toc-skip class="author">Enio Gjerga,
 Matteo Spatuzzi, Olga Ivanova,</h4>
             
-            <h4 data-toc-skip class="date">2022-06-07</h4>
+            <h4 data-toc-skip class="date">2022-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/CARNIVAL/blob/HEAD/vignettes/CARNIVAL.Rmd" class="external-link"><code>vignettes/CARNIVAL.Rmd</code></a></small>
       <div class="hidden name"><code>CARNIVAL.Rmd</code></div>
@@ -208,161 +208,161 @@ respectively</li>
 </h3>
 <p>Toy example for the CARNIVAL standard pipeline:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/CARNIVAL" class="external-link">CARNIVAL</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,
-                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,
-                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,
-                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Output dir</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample1"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample1"</span>
-
-<span class="co"># lpSolve</span>
-<span class="va">resultsLpSolve</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runVanillaCarnival.html">runVanillaCarnival</a></span><span class="op">(</span> perturbations <span class="op">=</span> <span class="va">toy_perturbations_ex1</span>, 
-                                      measurements <span class="op">=</span> <span class="va">toy_measurements_ex1</span>,
-                                      priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, 
-                                      carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saezlab/CARNIVAL" class="external-link">CARNIVAL</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,</span>
+<span>                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,</span>
+<span>                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,</span>
+<span>                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Output dir</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample1"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample1"</span></span>
+<span></span>
+<span><span class="co"># lpSolve</span></span>
+<span><span class="va">resultsLpSolve</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runVanillaCarnival.html">runVanillaCarnival</a></span><span class="op">(</span> perturbations <span class="op">=</span> <span class="va">toy_perturbations_ex1</span>, </span>
+<span>                                      measurements <span class="op">=</span> <span class="va">toy_measurements_ex1</span>,</span>
+<span>                                      priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, </span>
+<span>                                      carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></span></code></pre></div>
 <p>which generates the following output:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">resultsLpSolve</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## $weightedSIF</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="co">##   Node1  Sign Node2 Weight</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1       100</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> I2       -<span style="color: #BB0000;">1</span> N2         0</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M1       100</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> N1        1 M2       100</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> N2        1 M1         0</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> N2        1 M2         0</span>
-<span class="co">## </span>
-<span class="co">## $nodesAttributes</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span>
-<span class="co">##   Node  NodeType ZeroAct UpAct DownAct AvgAct</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> I2    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> M1    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> M2    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> N1    <span style="color: #949494;">""</span>             0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> N2    <span style="color: #949494;">""</span>           100     0       0      0</span>
-<span class="co">## </span>
-<span class="co">## $sifAll</span>
-<span class="co">## $sifAll[[1]]</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">##   Node1  Sign Node2</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1   </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> N1        1 M1   </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M2   </span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## $attributesAll</span>
-<span class="co">## $attributesAll[[1]]</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="co">##   Nodes Activity</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1           1</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> N1           1</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> I2           1</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> M1           1</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> M2           1</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">resultsLpSolve</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $weightedSIF</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
+<span><span class="co">##   Node1  Sign Node2 Weight</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> I2       -<span style="color: #BB0000;">1</span> N2         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M1       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> N1        1 M2       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> N2        1 M1         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> N2        1 M2         0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $nodesAttributes</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
+<span><span class="co">##   Node  NodeType ZeroAct UpAct DownAct AvgAct</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> I2    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> M1    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> M2    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> N1    <span style="color: #949494;">""</span>             0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> N2    <span style="color: #949494;">""</span>           100     0       0      0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $sifAll</span></span>
+<span><span class="co">## $sifAll[[1]]</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">##   Node1  Sign Node2</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> N1        1 M1   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M2   </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $attributesAll</span></span>
+<span><span class="co">## $attributesAll[[1]]</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">##   Nodes Activity</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> N1           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> I2           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> M1           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> M2           1</span></span></code></pre>
 <p>The output from CARNIVAL can be saved in <code>Rds</code> format like
 so:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">resultsLpSolve</span>, <span class="st">"ToyExample1/network_solution.Rds"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">resultsLpSolve</span>, <span class="st">"ToyExample1/network_solution.Rds"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="toy-example---2">Toy Example - 2<a class="anchor" aria-label="anchor" href="#toy-example---2"></a>
 </h3>
 <p>Toy example for the CARNIVAL inverted pipeline:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex2.RData"</span>,
-                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex2.RData"</span>,
-                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Output dir</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample2"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample2"</span>
-
-<span class="co"># lpSolve</span>
-<span class="va">toy_network_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">toy_network_ex2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">toy_network_ex2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"source"</span>, <span class="st">"interaction"</span>, <span class="st">"target"</span><span class="op">)</span>
-<span class="va">toy_measurements_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M1"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"M2"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"M3"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-
-<span class="va">inverseCarnivalResults</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runInverseCarnival.html">runInverseCarnival</a></span><span class="op">(</span> measurements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">toy_measurements_ex2</span><span class="op">)</span>, 
-                                              priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex2</span>, 
-                                              carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex2.RData"</span>,</span>
+<span>                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex2.RData"</span>,</span>
+<span>                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Output dir</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample2"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample2"</span></span>
+<span></span>
+<span><span class="co"># lpSolve</span></span>
+<span><span class="va">toy_network_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">toy_network_ex2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">toy_network_ex2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"source"</span>, <span class="st">"interaction"</span>, <span class="st">"target"</span><span class="op">)</span></span>
+<span><span class="va">toy_measurements_ex2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M1"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"M2"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"M3"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">inverseCarnivalResults</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runInverseCarnival.html">runInverseCarnival</a></span><span class="op">(</span> measurements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">toy_measurements_ex2</span><span class="op">)</span>, </span>
+<span>                                              priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex2</span>, </span>
+<span>                                              carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></span></code></pre></div>
 <p>which generates the following output:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">inverseCarnivalResults</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## $weightedSIF</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 14 × 4</span></span>
-<span class="co">##    Node1         Sign Node2 Weight</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> I1              -<span style="color: #BB0000;">1</span> N1         0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> I2               1 N1       100</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> I2               1 N2       100</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> I3              -<span style="color: #BB0000;">1</span> N2         0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> N1               1 M1       100</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> N1               1 M2       100</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> N2               1 M2       100</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> N2               1 M3       100</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Perturbation    -<span style="color: #BB0000;">1</span> I1         0</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> Perturbation    -<span style="color: #BB0000;">1</span> I2         0</span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> Perturbation    -<span style="color: #BB0000;">1</span> I3         0</span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> Perturbation     1 I1         0</span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> Perturbation     1 I2       100</span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> Perturbation     1 I3         0</span>
-<span class="co">## </span>
-<span class="co">## $nodesAttributes</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 9 × 6</span></span>
-<span class="co">##   Node         NodeType ZeroAct UpAct DownAct AvgAct</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1           <span style="color: #949494;">""</span>           100     0       0      0</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> I2           <span style="color: #949494;">""</span>             0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> I3           <span style="color: #949494;">""</span>           100     0       0      0</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> M1           <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> M2           <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> M3           <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> N1           <span style="color: #949494;">""</span>             0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">8</span> N2           <span style="color: #949494;">""</span>             0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">9</span> Perturbation <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## </span>
-<span class="co">## $sifAll</span>
-<span class="co">## $sifAll[[1]]</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 7 × 3</span></span>
-<span class="co">##   Node1         Sign Node2</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I2               1 N1   </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> I2               1 N2   </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> N1               1 M1   </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> N1               1 M2   </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> N2               1 M2   </span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> N2               1 M3   </span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> Perturbation     1 I2   </span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## $attributesAll</span>
-<span class="co">## $attributesAll[[1]]</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 7 × 2</span></span>
-<span class="co">##   Nodes        Activity</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I2                  1</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> N1                  1</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> N2                  1</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> Perturbation        1</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> M1                  1</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> M2                  1</span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> M3                  1</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">inverseCarnivalResults</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $weightedSIF</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 14 × 4</span></span></span>
+<span><span class="co">##    Node1         Sign Node2 Weight</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> I1              -<span style="color: #BB0000;">1</span> N1         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> I2               1 N1       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> I2               1 N2       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> I3              -<span style="color: #BB0000;">1</span> N2         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> N1               1 M1       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> N1               1 M2       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> N2               1 M2       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> N2               1 M3       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Perturbation    -<span style="color: #BB0000;">1</span> I1         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Perturbation    -<span style="color: #BB0000;">1</span> I2         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> Perturbation    -<span style="color: #BB0000;">1</span> I3         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">12</span> Perturbation     1 I1         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">13</span> Perturbation     1 I2       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">14</span> Perturbation     1 I3         0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $nodesAttributes</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 9 × 6</span></span></span>
+<span><span class="co">##   Node         NodeType ZeroAct UpAct DownAct AvgAct</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1           <span style="color: #949494;">""</span>           100     0       0      0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> I2           <span style="color: #949494;">""</span>             0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> I3           <span style="color: #949494;">""</span>           100     0       0      0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> M1           <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> M2           <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> M3           <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> N1           <span style="color: #949494;">""</span>             0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">8</span> N2           <span style="color: #949494;">""</span>             0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">9</span> Perturbation <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $sifAll</span></span>
+<span><span class="co">## $sifAll[[1]]</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 7 × 3</span></span></span>
+<span><span class="co">##   Node1         Sign Node2</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I2               1 N1   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> I2               1 N2   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> N1               1 M1   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> N1               1 M2   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> N2               1 M2   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> N2               1 M3   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> Perturbation     1 I2   </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $attributesAll</span></span>
+<span><span class="co">## $attributesAll[[1]]</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 7 × 2</span></span></span>
+<span><span class="co">##   Nodes        Activity</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I2                  1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> N1                  1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> N2                  1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> Perturbation        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> M1                  1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> M2                  1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> M3                  1</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="toy-example---3">Toy Example - 3<a class="anchor" aria-label="anchor" href="#toy-example---3"></a>
@@ -370,82 +370,82 @@ so:</p>
 <p>Toy example for the CARNIVAL standard pipeline with
 generateLPFileCarnival and runCarnivalFromLp:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,
-                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,
-                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,
-                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Output dir</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample3"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample3"</span>
-
-<span class="co"># lpSolve</span>
-<span class="fu"><a href="../reference/generateLpFileCarnival.html">generateLpFileCarnival</a></span><span class="op">(</span>perturbations <span class="op">=</span> <span class="va">toy_perturbations_ex1</span>,
-                       measurements <span class="op">=</span> <span class="va">toy_measurements_ex1</span>, 
-                       priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, 
-                       carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                                                  lpFile </span>
-<span class="co">##        "ToyExample3//lpFile_t09_08_33d07_06_2022n11.lp" </span>
-<span class="co">##                                          parsedDataFile </span>
-<span class="co">## "ToyExample3//parsedData_t09_08_33d07_06_2022n11.RData"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,</span>
+<span>                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,</span>
+<span>                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,</span>
+<span>                        package <span class="op">=</span> <span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">carnivalOptions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Output dir</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"ToyExample3"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">carnivalOptions</span><span class="op">$</span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="st">"ToyExample3"</span></span>
+<span></span>
+<span><span class="co"># lpSolve</span></span>
+<span><span class="fu"><a href="../reference/generateLpFileCarnival.html">generateLpFileCarnival</a></span><span class="op">(</span>perturbations <span class="op">=</span> <span class="va">toy_perturbations_ex1</span>,</span>
+<span>                       measurements <span class="op">=</span> <span class="va">toy_measurements_ex1</span>, </span>
+<span>                       priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, </span>
+<span>                       carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                                                  lpFile </span></span>
+<span><span class="co">##        "ToyExample3//lpFile_t11_03_15d27_10_2022n67.lp" </span></span>
+<span><span class="co">##                                          parsedDataFile </span></span>
+<span><span class="co">## "ToyExample3//parsedData_t11_03_15d27_10_2022n67.RData"</span></span></code></pre>
 <p>which writes two files, an Lp File and a parsed Data file. The next
 function takes these files as inputs and runs the vanilla (standard)
 CARNIVAL pipeline with them.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lpFilename</span> <span class="op">&lt;-</span> <span class="st">"toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp"</span>
-<span class="va">parsedDataFile</span> <span class="op">&lt;-</span> <span class="st">"toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData"</span>
-<span class="va">resultsFromLp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runFromLpCarnival.html">runFromLpCarnival</a></span><span class="op">(</span>lpFile <span class="op">=</span> <span class="va">lpFilename</span>,
-                                   parsedDataFile <span class="op">=</span> <span class="va">parsedDataFile</span>,
-                                   carnivalOptions <span class="op">=</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">lpFilename</span> <span class="op">&lt;-</span> <span class="st">"toy_files_vignettes/lpFile_t18_01_53d28_04_2021n4.lp"</span></span>
+<span><span class="va">parsedDataFile</span> <span class="op">&lt;-</span> <span class="st">"toy_files_vignettes/parsedData_t18_01_53d28_04_2021n4.RData"</span></span>
+<span><span class="va">resultsFromLp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runFromLpCarnival.html">runFromLpCarnival</a></span><span class="op">(</span>lpFile <span class="op">=</span> <span class="va">lpFilename</span>,</span>
+<span>                                   parsedDataFile <span class="op">=</span> <span class="va">parsedDataFile</span>,</span>
+<span>                                   carnivalOptions <span class="op">=</span> <span class="fu"><a href="../reference/defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>which generates the following output:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">resultsFromLp</span></code></pre></div>
-<pre><code><span class="co">## $weightedSIF</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="co">##   Node1  Sign Node2 Weight</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1       100</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> I2       -<span style="color: #BB0000;">1</span> N2         0</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M1       100</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> N1        1 M2       100</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> N2        1 M1         0</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> N2        1 M2         0</span>
-<span class="co">## </span>
-<span class="co">## $nodesAttributes</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span>
-<span class="co">##   Node  NodeType ZeroAct UpAct DownAct AvgAct</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> I2    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> M1    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> M2    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> N1    <span style="color: #949494;">""</span>             0   100       0    100</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> N2    <span style="color: #949494;">""</span>           100     0       0      0</span>
-<span class="co">## </span>
-<span class="co">## $sifAll</span>
-<span class="co">## $sifAll[[1]]</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">##   Node1  Sign Node2</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1   </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> N1        1 M1   </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M2   </span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## $attributesAll</span>
-<span class="co">## $attributesAll[[1]]</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="co">##   Nodes Activity</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> I1           1</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> N1           1</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> I2           1</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> M1           1</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> M2           1</span></code></pre>
+<code class="sourceCode R"><span><span class="va">resultsFromLp</span></span></code></pre></div>
+<pre><code><span><span class="co">## $weightedSIF</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
+<span><span class="co">##   Node1  Sign Node2 Weight</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> I2       -<span style="color: #BB0000;">1</span> N2         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M1       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> N1        1 M2       100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> N2        1 M1         0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> N2        1 M2         0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $nodesAttributes</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
+<span><span class="co">##   Node  NodeType ZeroAct UpAct DownAct AvgAct</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> I2    <span style="color: #949494;">"</span>P<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> M1    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> M2    <span style="color: #949494;">"</span>M<span style="color: #949494;">"</span>            0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> N1    <span style="color: #949494;">""</span>             0   100       0    100</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> N2    <span style="color: #949494;">""</span>           100     0       0      0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $sifAll</span></span>
+<span><span class="co">## $sifAll[[1]]</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">##   Node1  Sign Node2</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1        1 N1   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> N1        1 M1   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> N1        1 M2   </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $attributesAll</span></span>
+<span><span class="co">## $attributesAll[[1]]</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">##   Nodes Activity</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> I1           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> N1           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> I2           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> M1           1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> M2           1</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="gurobi-remote-services">Gurobi remote services<a class="anchor" aria-label="anchor" href="#gurobi-remote-services"></a>
@@ -463,43 +463,43 @@ following options to <code>carnivalOptions</code> parameter:</p>
 administrator. The number of nodes will need to be specified through
 workload a workload manager, such as <a href="https://slurm.schedmd.com/overview.html" class="external-link">slurm</a>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## R version 4.1.3 (2022-03-10)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] CARNIVAL_2.7.1 knitr_1.39    </span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##  [1] bslib_0.3.1       compiler_4.1.3    pillar_1.7.0      jquerylib_0.1.4  </span>
-<span class="co">##  [5] tools_4.1.3       bit_4.0.4         digest_0.6.29     jsonlite_1.8.0   </span>
-<span class="co">##  [9] evaluate_0.15     memoise_2.0.1     lifecycle_1.0.1   tibble_3.1.7     </span>
-<span class="co">## [13] pkgconfig_2.0.3   rlang_1.0.2       igraph_1.3.1      cli_3.3.0        </span>
-<span class="co">## [17] parallel_4.1.3    yaml_2.3.5        pkgdown_2.0.3     xfun_0.31        </span>
-<span class="co">## [21] fastmap_1.1.0     dplyr_1.0.9       stringr_1.4.0     generics_0.1.2   </span>
-<span class="co">## [25] desc_1.4.1        fs_1.5.2          sass_0.4.1        vctrs_0.4.1      </span>
-<span class="co">## [29] systemfonts_1.0.4 hms_1.1.1         bit64_4.0.5       tidyselect_1.1.2 </span>
-<span class="co">## [33] rprojroot_2.0.3   glue_1.6.2        R6_2.5.1          textshaping_0.3.6</span>
-<span class="co">## [37] fansi_1.0.3       vroom_1.5.7       rmarkdown_2.14    tidyr_1.2.0      </span>
-<span class="co">## [41] tzdb_0.3.0        purrr_0.3.4       readr_2.1.2       magrittr_2.0.3   </span>
-<span class="co">## [45] htmltools_0.5.2   ellipsis_0.3.2    lpSolve_5.6.15    ragg_1.2.2       </span>
-<span class="co">## [49] utf8_1.2.2        stringi_1.7.6     cachem_1.0.6      rjson_0.2.21     </span>
-<span class="co">## [53] crayon_1.5.1</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## R version 4.1.3 (2022-03-10)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Ubuntu 20.04.4 LTS</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] CARNIVAL_2.7.2 knitr_1.40    </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##  [1] bslib_0.4.0       compiler_4.1.3    pillar_1.8.1      jquerylib_0.1.4  </span></span>
+<span><span class="co">##  [5] tools_4.1.3       bit_4.0.4         digest_0.6.30     jsonlite_1.8.3   </span></span>
+<span><span class="co">##  [9] evaluate_0.17     memoise_2.0.1     lifecycle_1.0.3   tibble_3.1.8     </span></span>
+<span><span class="co">## [13] pkgconfig_2.0.3   rlang_1.0.6       igraph_1.3.5      cli_3.4.1        </span></span>
+<span><span class="co">## [17] parallel_4.1.3    yaml_2.3.6        pkgdown_2.0.6     xfun_0.34        </span></span>
+<span><span class="co">## [21] fastmap_1.1.0     withr_2.5.0       dplyr_1.0.10      stringr_1.4.1    </span></span>
+<span><span class="co">## [25] generics_0.1.3    desc_1.4.2        fs_1.5.2          sass_0.4.2       </span></span>
+<span><span class="co">## [29] vctrs_0.5.0       systemfonts_1.0.4 hms_1.1.2         bit64_4.0.5      </span></span>
+<span><span class="co">## [33] tidyselect_1.2.0  rprojroot_2.0.3   glue_1.6.2        R6_2.5.1         </span></span>
+<span><span class="co">## [37] textshaping_0.3.6 fansi_1.0.3       vroom_1.6.0       rmarkdown_2.17   </span></span>
+<span><span class="co">## [41] tidyr_1.2.1       tzdb_0.3.0        purrr_0.3.5       readr_2.1.3      </span></span>
+<span><span class="co">## [45] magrittr_2.0.3    htmltools_0.5.3   ellipsis_0.3.2    lpSolve_5.6.17   </span></span>
+<span><span class="co">## [49] ragg_1.2.4        utf8_1.2.2        stringi_1.7.8     cachem_1.0.6     </span></span>
+<span><span class="co">## [53] crayon_1.5.2      rjson_0.2.21</span></span></code></pre>
 </div>
 </div>
   </div>
@@ -521,7 +521,7 @@ workload a workload manager, such as <a href="https://slurm.schedmd.com/overview
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CARNIVAL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -56,50 +56,61 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">isInputValidCarnival</span><span class="op">(</span>
-  perturbations <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">measurements</span>,
-  <span class="va">priorKnowledgeNetwork</span>,
-  weights <span class="op">=</span> <span class="cn">NULL</span>,
-  carnivalOptions <span class="op">=</span> <span class="fu"><a href="defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">isInputValidCarnival</span><span class="op">(</span></span>
+<span>  perturbations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">measurements</span>,</span>
+<span>  <span class="va">priorKnowledgeNetwork</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  carnivalOptions <span class="op">=</span> <span class="fu"><a href="defaultLpSolveCarnivalOptions.html">defaultLpSolveCarnivalOptions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>perturbations</dt>
 <dd><p>(optional, if inverse CARNIVAL flavour is used further) vector of targets of perturbations.</p></dd>
+
+
 <dt>measurements</dt>
 <dd><p>vector of the measurements (i.e. DoRothEA/VIPER normalised
 enrichment scores)</p></dd>
+
+
 <dt>priorKnowledgeNetwork</dt>
 <dd><p>data frame of the prior knowledge network</p></dd>
+
+
 <dt>weights</dt>
 <dd><p>(optional) vector of the additional weights: e.g. PROGENy pathway
 scores or measured protein activities.</p></dd>
+
+
 <dt>carnivalOptions</dt>
 <dd><p>the list of options for the run. See defaultLpSolveCarnivalOptions(),
 defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>TRUE if everything passed the checks.</p>
+    
+
+<p>TRUE if everything passed the checks.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,</span>
-<span class="r-in">                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,</span>
-<span class="r-in">                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,</span>
-<span class="r-in">                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## lpSolve</span></span>
-<span class="r-in"><span class="co">#isInputValidCarnival(perturbations = toy_perturbations_ex1,</span></span>
-<span class="r-in"><span class="co">#                    measurements = toy_measurements_ex1,</span></span>
-<span class="r-in"><span class="co">#                    priorKnowledgeNetwork = toy_network_ex1,</span></span>
-<span class="r-in"><span class="co">#                    carnivalOptions = defaultLpSolveCarnivalOptions())</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_perturbations_ex1.RData"</span>,</span></span>
+<span class="r-in"><span>                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_measurements_ex1.RData"</span>,</span></span>
+<span class="r-in"><span>                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"toy_network_ex1.RData"</span>,</span></span>
+<span class="r-in"><span>                        package<span class="op">=</span><span class="st">"CARNIVAL"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## lpSolve</span></span></span>
+<span class="r-in"><span><span class="co">#isInputValidCarnival(perturbations = toy_perturbations_ex1,</span></span></span>
+<span class="r-in"><span><span class="co">#                    measurements = toy_measurements_ex1,</span></span></span>
+<span class="r-in"><span><span class="co">#                    priorKnowledgeNetwork = toy_network_ex1,</span></span></span>
+<span class="r-in"><span><span class="co">#                    carnivalOptions = defaultLpSolveCarnivalOptions())</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -114,7 +125,7 @@ defaultCplexCarnivalOptions, defaultCbcCarnivalOptions.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
