@@ -74,7 +74,7 @@ from expression footprints with CARNIVAL</h1>
                         <h4 data-toc-skip class="author">Enio Gjerga,
 Matteo Spatuzzi, Olga Ivanova,</h4>
             
-            <h4 data-toc-skip class="date">2022-10-27</h4>
+            <h4 data-toc-skip class="date">2023-01-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/saezlab/CARNIVAL/blob/HEAD/vignettes/CARNIVAL.Rmd" class="external-link"><code>vignettes/CARNIVAL.Rmd</code></a></small>
       <div class="hidden name"><code>CARNIVAL.Rmd</code></div>
@@ -389,9 +389,9 @@ generateLPFileCarnival and runCarnivalFromLp:</p>
 <span>                       priorKnowledgeNetwork <span class="op">=</span> <span class="va">toy_network_ex1</span>, </span>
 <span>                       carnivalOptions <span class="op">=</span> <span class="va">carnivalOptions</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                  lpFile </span></span>
-<span><span class="co">##        "ToyExample3//lpFile_t11_03_15d27_10_2022n67.lp" </span></span>
+<span><span class="co">##        "ToyExample3//lpFile_t14_12_14d10_01_2023n83.lp" </span></span>
 <span><span class="co">##                                          parsedDataFile </span></span>
-<span><span class="co">## "ToyExample3//parsedData_t11_03_15d27_10_2022n67.RData"</span></span></code></pre>
+<span><span class="co">## "ToyExample3//parsedData_t14_12_14d10_01_2023n83.RData"</span></span></code></pre>
 <p>which writes two files, an Lp File and a parsed Data file. The next
 function takes these files as inputs and runs the vanilla (standard)
 CARNIVAL pipeline with them.</p>
@@ -483,21 +483,21 @@ workload a workload manager, such as <a href="https://slurm.schedmd.com/overview
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] CARNIVAL_2.7.2 knitr_1.40    </span></span>
+<span><span class="co">## [1] CARNIVAL_2.7.2 knitr_1.41    </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] bslib_0.4.0       compiler_4.1.3    pillar_1.8.1      jquerylib_0.1.4  </span></span>
-<span><span class="co">##  [5] tools_4.1.3       bit_4.0.4         digest_0.6.30     jsonlite_1.8.3   </span></span>
-<span><span class="co">##  [9] evaluate_0.17     memoise_2.0.1     lifecycle_1.0.3   tibble_3.1.8     </span></span>
-<span><span class="co">## [13] pkgconfig_2.0.3   rlang_1.0.6       igraph_1.3.5      cli_3.4.1        </span></span>
-<span><span class="co">## [17] parallel_4.1.3    yaml_2.3.6        pkgdown_2.0.6     xfun_0.34        </span></span>
-<span><span class="co">## [21] fastmap_1.1.0     withr_2.5.0       dplyr_1.0.10      stringr_1.4.1    </span></span>
-<span><span class="co">## [25] generics_0.1.3    desc_1.4.2        fs_1.5.2          sass_0.4.2       </span></span>
-<span><span class="co">## [29] vctrs_0.5.0       systemfonts_1.0.4 hms_1.1.2         bit64_4.0.5      </span></span>
+<span><span class="co">##  [1] bslib_0.4.2       compiler_4.1.3    pillar_1.8.1      jquerylib_0.1.4  </span></span>
+<span><span class="co">##  [5] tools_4.1.3       bit_4.0.5         digest_0.6.31     jsonlite_1.8.4   </span></span>
+<span><span class="co">##  [9] evaluate_0.19     memoise_2.0.1     lifecycle_1.0.3   tibble_3.1.8     </span></span>
+<span><span class="co">## [13] pkgconfig_2.0.3   rlang_1.0.6       igraph_1.3.5      cli_3.5.0        </span></span>
+<span><span class="co">## [17] parallel_4.1.3    yaml_2.3.6        pkgdown_2.0.7     xfun_0.36        </span></span>
+<span><span class="co">## [21] fastmap_1.1.0     withr_2.5.0       dplyr_1.0.10      stringr_1.5.0    </span></span>
+<span><span class="co">## [25] generics_0.1.3    desc_1.4.2        fs_1.5.2          vctrs_0.5.1      </span></span>
+<span><span class="co">## [29] sass_0.4.4        systemfonts_1.0.4 hms_1.1.2         bit64_4.0.5      </span></span>
 <span><span class="co">## [33] tidyselect_1.2.0  rprojroot_2.0.3   glue_1.6.2        R6_2.5.1         </span></span>
-<span><span class="co">## [37] textshaping_0.3.6 fansi_1.0.3       vroom_1.6.0       rmarkdown_2.17   </span></span>
-<span><span class="co">## [41] tidyr_1.2.1       tzdb_0.3.0        purrr_0.3.5       readr_2.1.3      </span></span>
-<span><span class="co">## [45] magrittr_2.0.3    htmltools_0.5.3   ellipsis_0.3.2    lpSolve_5.6.17   </span></span>
+<span><span class="co">## [37] textshaping_0.3.6 fansi_1.0.3       vroom_1.6.0       rmarkdown_2.19   </span></span>
+<span><span class="co">## [41] tidyr_1.2.1       tzdb_0.3.0        purrr_1.0.0       readr_2.1.3      </span></span>
+<span><span class="co">## [45] magrittr_2.0.3    htmltools_0.5.4   ellipsis_0.3.2    lpSolve_5.6.17   </span></span>
 <span><span class="co">## [49] ragg_1.2.4        utf8_1.2.2        stringi_1.7.8     cachem_1.0.6     </span></span>
 <span><span class="co">## [53] crayon_1.5.2      rjson_0.2.21</span></span></code></pre>
 </div>
@@ -521,7 +521,7 @@ workload a workload manager, such as <a href="https://slurm.schedmd.com/overview
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
