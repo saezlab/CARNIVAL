@@ -110,7 +110,7 @@ convergenceTextToTable <- function(text) {
                 "Best Integer", "Best Bound", "ItCnt", "Gap" )
 
     # remove header:
-    text <- text[-1:-2]
+    #text <- text[-1:-2]
 
     # remove cuts
     cuts <- grep("Cuts", text)
