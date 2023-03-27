@@ -79,6 +79,9 @@
     <loc>/reference/processSolution.html</loc>
   </url>
   <url>
+    <loc>/reference/prune_network.html</loc>
+  </url>
+  <url>
     <loc>/reference/readOptions.html</loc>
   </url>
   <url>
@@ -92,6 +95,9 @@
   </url>
   <url>
     <loc>/reference/runVanillaCarnival.html</loc>
+  </url>
+  <url>
+    <loc>/reference/searchForCPLEXSolver.html</loc>
   </url>
   <url>
     <loc>/reference/sendTaskToSolver.html</loc>
@@ -116,6 +122,9 @@
   </url>
   <url>
     <loc>/reference/suggestedCplexSpecificOptions.html</loc>
+  </url>
+  <url>
+    <loc>/reference/testRunCplex.html</loc>
   </url>
   <url>
     <loc>/reference/writeCplexCommandFileFromJson.html</loc>
