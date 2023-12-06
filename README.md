@@ -174,11 +174,14 @@ al.](https://pubs.rsc.org/en/content/articlehtml/2015/ib/c4ib00294f):
 
 ## Studies where CARNIVAL was used
 
+> Triantafyllidis C.P. et al. [A machine learning and directed network optimization approach to uncover TP53 regulatory patterns](https://doi.org/10.1016/j.isci.2023.108291).
+>  *iScience* 26, 12 (2023), 108291. doi: 10.1016/j.isci.2023.108291
+
 > Buhl E.M. et al. [Dysregulated mesenchymal PDGFR‐β drives kidney
 > fibrosis](https://www.embopress.org/doi/10.15252/emmm.201911021) *EMBO
 > Mol Med (2020)e11021 doi: 10.15252/emmm.201911021*
 
-> Binenbaum I. et. al. [Bioinformatic framework for analysis of
+> Binenbaum I. et al. [Bioinformatic framework for analysis of
 > transcription factor changes as the molecular link between replicative
 > cellular senescence signaling pathways and
 > carcinogenesis](https://link.springer.com/content/pdf/10.1007/s10522-020-09866-y.pdf)
