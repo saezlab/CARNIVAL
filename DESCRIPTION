@@ -46,7 +46,8 @@ Imports:
     tibble,
     tidyr,
     rjson,
-    rmarkdown
+    rmarkdown,
+    visNetwork
 biocViews: Transcriptomics, GeneExpression, Network
 License: GPL-3
 LazyData: true
